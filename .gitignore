@@ -1,9 +1,37 @@
+# .gitignore
+
+
+# ----------
+# R
+# ----------
+
+.Rproj.user
+.Rhistory
+
+.RData
+
+.Ruserdata
+
+rclass1.Rproj
+
+
+# ----------
+# TeX
+# ----------
+
+*.tex
+
+# ----------
+# MacOS
+# ---------
+
+*.DS_Store
+.DS_Store
+__MACOSX/
+
 # History files
 .Rhistory
 .Rapp.history
-
-# Session Data files
-.RData
 
 # User-specific files
 .Ruserdata
