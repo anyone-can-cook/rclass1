@@ -1,0 +1,383 @@
+---
+title: "Lecture 13 problem set"
+author: "INSERT YOUR NAME HERE"
+date: ""
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 1
+    df_print: tibble 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+# Required reading and instructions  
+
+##  Required reading before next class
+
+
+## General Problem Set instructions  
+
+In this homework, you will specify `pdf_document` as the output format. You must have LaTeX installed in order to create pdf documents. 
+
+
+## Overview of problem set
+
+This problem set will ask you to write several functions to perform specific tasks. The problem set has several "Parts." Detailed instructions are given at the beginning of each "part." Generally speaking, this problem set provides more hints and "walks you through" the task more than the last few problem sets. This is because writing functions is difficult (a lot of little things that can go wrong and cause the function not to work) and because it is the end of the term and you likely have lots of assignments in other courses.
+
+## For all questons that ask you to write a function you must do the following:
+
+__Required steps for all questions that ask you to write a function__
+
+1. Perform the task/operation outside of a function
+    - Perform task for at least two different sets of "inputs"
+2. Write the function
+3. Call/test the function
+    - Call function for at least two different sets of input values
+
+Note: this is usually not a linear process; more often, it is a "two steps forward, one-step backwards" type process. For example:
+
+- You may successfully perform the task outside of a function, but then find out that approach does not work inside a function. So you go back to step (1) and develop a different approach to performing the task outside a function, and then attempt to implement this approach within a function.
+- You may write a function, and successfully call it for a set of input values, but then find the function doesn't work for another set of input values. When this happens you have to go back to revise __step 2__ (write the function) and/or go back to __step 1__ (perform task outside of function)
+
+# Load libraries
+
+```{r, message=FALSE}
+#install.packages("tidyverse") #uncomment if you haven't installed these packaged
+#install.packages("haven")
+#install.packages("labelled")
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+# Part 1: identify and "fix" missing values of variables  
+
+The questions for __Part 1__ are about writing functions for survey data that do these sorts of things:
+
+- Count the number of observations with missing values (in survey data missing values often represented by negative numbers or very high numbers)
+- Replace these (survey) missing values with `NA`
+
+__Note__: These functions won't work for "character" variables; don't worry about character variables when writing these functions
+
+## Question 1. Load High School Longitudinal Study of 2009 (HSLS) data frame  
+
+
+Run the code chunk below to load HSLS data, changes variable names from upper-case to lower-case, keeps selected variables, and does some cursory investigation of the data frame  
+\textcolor{red}{\textbf{/0.5}}
+
+```{r, results='hide'}
+rm(list = ls()) # remove all objects
+getwd()
+#list.files() # list files in directory w/ NLS data
+
+#Read Stata data into R using read_data() function from haven package
+hsls_stu <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/hsls/hsls_stu_small.dta", encoding=NULL)
+
+#change variable names to lowercase
+names(hsls_stu) <- tolower(names(hsls_stu))
+
+#names(hsls_stu)
+#hsls_stu %>% select(contains("s3")) %>% var_label() # variable labels
+
+#keep selected variables
+hsls_stu <- hsls_stu %>% select(stu_id,contains("univ"),
+  x2sex,x2race,x2paredu,s3classes,s3focus,s3clglvl,x4evratndclg,x4ps1sector)
+
+#investigate data frame
+str(hsls_stu)
+hsls_stu %>% var_label() # variable labels
+hsls_stu %>% val_labels() # value labels
+```
+
+## Question 2: Write a function called `num_negative` that prints the number of observations that have negative values for a specific variable  
+
+__SOLUTION__
+
+Perform task outside of function for a few variables  
+\textcolor{red}{\textbf{/1}}
+```{r, results='hide'}
+hsls_stu %>% select(x2race,x2paredu,s3classes,s3clglvl) %>% var_label()
+hsls_stu %>% select(x2race,x2paredu,s3classes,s3clglvl) %>% val_labels()
+
+hsls_stu %>% count(x2race)
+sum(hsls_stu$x2race<0) # count number of obs with negative values
+
+hsls_stu %>% count(x2paredu)
+sum(hsls_stu$x2paredu<0) # count number of obs with negative values
+
+hsls_stu %>% count(s3classes)
+sum(hsls_stu$s3classes<0) # count number of obs with negative values
+
+hsls_stu %>% count(s3clglvl)
+sum(hsls_stu$s3clglvl<0) # count number of obs with negative values
+```
+
+Write function and call function  
+\textcolor{red}{\textbf{/2}}
+```{r}
+num_negative <- function(x){
+
+  sum(x<0)
+}
+
+#Call function
+num_negative(hsls_stu$x2race)
+num_negative(hsls_stu$x2paredu)
+num_negative(hsls_stu$s3classes)
+num_negative(hsls_stu$s3clglvl)
+```
+
+## Question 3. Write function `num_missing` that counts number of missing observations for a variable and allows you to specify which values are associated with missing for that variable.   
+
+
+__Additional details__:
+
+- This function will take two arguments: 
+    1. `x` the variable (e.g., `hsls_stu$s3clglvl`)
+    2. `miss_vals`, the vector of values you want to associate with "missing" variable. 
+- Use the val_labels() function to identify the values associated with missing.
+    - HINT: `data_frame_name %>% select(varn_name) %>% val_labels()`
+- HINT for counting obs w/ particular values (Base R approach:
+    - `sum(data_frame_name$var_name %in% c(list of values separated by commas))`
+
+SOLUTION
+Perform task outside of function for a few variables  
+\textcolor{red}{\textbf{/1}}
+```{r, results='hide'}
+hsls_stu %>% select(x2race,x2paredu,s3classes,s3clglvl) %>% val_labels()
+
+hsls_stu %>% select(x2race) %>% val_labels()
+sum(hsls_stu$x2race %in% c(-9,-8,-7,-6))
+
+hsls_stu %>% select(s3classes) %>% val_labels()
+sum(hsls_stu$s3classes %in% c(-9,-8,-7,-6,-4))
+
+hsls_stu %>% select(s3clglvl) %>% val_labels()
+sum(hsls_stu$s3clglvl %in% c(-9,-8,-7,-6,-4,-1))
+```
+
+Write function and call function  
+\textcolor{red}{\textbf{/2}}
+```{r}
+num_missing <- function(x, miss_vals){
+
+  sum(x %in% miss_vals)
+}
+
+#Call function
+num_missing(hsls_stu$x2race,c(-9,-8,-7,-6))
+num_missing(hsls_stu$s3classes,c(-9,-8,-7,-6,-4))
+num_missing(hsls_stu$s3clglvl,c(-9,-8,-7,-6,-4,-1))
+```
+
+## Question 4. Write function `fix_missing` that replaces specific values of a variable (values associated with missing) with `NA`  
+
+
+This function will take two arguments: 
+
+1. `x` the variable you want to modify (e.g., `hsls_stu$s3clglvl_v2`)
+2. `miss_vals`, the vector of values you want to associate with "missing" variable. 
+
+__Additional details and hints__:
+
+- Prior to performing task outside of the function for a specific variable, create a second version ("`v2`") that is an exact copy of the original variable; and then perform task/call function on this "`v2`" variable rather than the original variable
+    - HINT for creating "`v2`" variables:
+        - `hsls_stu <- hsls_stu %>% mutate(s3classes_v2 = s3classes)`
+    - Why create these "`v2`" variables? 
+        - Generally, it is bad practice to change the value of "input" variables
+        - Creating these "`v2`" variables will allow you to experiment with completing this task without reading in dataset again
+    - __Note__: after you perform task outside the function, you may need to recreate these "`v2`" variables again before calling the function
+- Use the val_labels() function to identify the values associated with missing.
+    - HINT: `data_frame_name %>% select(var_name) %>% val_labels()`
+- Recommend using "Base R" approach rather than "Tidyverse/dplyr" approach when writing code to (A) perform task outside the function and (B) to perform task within function
+    - Why? Using dplyr functions within user-written-functions requires additional programming concepts we have not covered
+    - HINT for "Base R" approach to replacing values
+        - `data_frame_name$var_name_v2 <- ifelse(data_frame_name$var_name_v2 %in% c(list of values separated by commas),NA,data_frame_name$var_name_v2)`
+- Hints for calling the function:
+    - Use this approach:
+        - `data_frame_name$var_name_v2 <- fix_missing(data_frame_name$var_name_v2, c(list of values separated by commas))`
+    - Don't use this approach [will not replace values of the variables]
+        - `fix_missing(data_frame_name$var_name_v2, c(list of values separated by commas))`
+- After you call the function, check that it worked correctly by performing the following descriptive checks:
+    - frequency count (i.e., tabulation) of the original variable
+    - frequency count (i.e., tabulation) of the "`v2`" variable (whose values you just changed)
+    - two-way tabulation of the original variable by the "`v2`" variable
+        - HINT: `data_frame_name %>% group_by(var_name) %>% count(var_name_v2)`
+
+SOLUTION
+
+Create `v2` versions of three variables  
+\textcolor{red}{\textbf{/1}}
+```{r, results='hide'}
+hsls_stu <- hsls_stu %>% mutate(
+  x2race_v2 = x2race,
+  s3classes_v2 = s3classes,
+  s3clglvl_v2 = s3clglvl
+)
+
+#do "v2" versions still have variable labels and value labels? Yes
+hsls_stu %>% select(contains("v2")) %>% var_label()
+hsls_stu %>% select(contains("v2")) %>% val_labels()
+```
+
+Perform task outside of function for at least two variables  
+\textcolor{red}{\textbf{/1}}
+```{r}
+#s3classes_v2
+hsls_stu$s3classes_v2 <- ifelse(hsls_stu$s3classes_v2 %in% c(-9,-8,-7,-6,-4),NA,hsls_stu$s3classes_v2)
+
+hsls_stu %>% count(s3classes)
+hsls_stu %>% count(s3classes_v2)
+hsls_stu %>% group_by(s3classes) %>% count(s3classes_v2)
+
+#s3clglvl_v2
+hsls_stu$s3clglvl_v2 <- ifelse(hsls_stu$s3clglvl_v2 %in% c(-9,-8,-7,-6,-4,-1),NA,hsls_stu$s3clglvl_v2)
+
+hsls_stu %>% count(s3clglvl)
+hsls_stu %>% count(s3clglvl_v2)
+hsls_stu %>% group_by(s3clglvl) %>% count(s3clglvl_v2)
+```
+
+Write and call function  
+\textcolor{red}{\textbf{/2}}
+```{r}
+#Create fresh `v2` versions of variables
+hsls_stu <- hsls_stu %>% mutate(
+  x2race_v2 = x2race,
+  s3classes_v2 = s3classes,
+  s3clglvl_v2 = s3clglvl
+)
+
+fix_missing <- function(x, miss_val) {
+
+    ## in the vector, wherever the vector is the missval_num, make NA
+    x <- ifelse(x %in% miss_val,NA,x)
+
+}
+
+#fix_missing(hsls_stu$s3classes_v2, c(-9,-8,-7,-6,-4)) # this doesn't change values
+
+#s3classes_v2
+hsls_stu$s3classes_v2 <- fix_missing(hsls_stu$s3classes_v2, c(-9,-8,-7,-6,-4))
+
+hsls_stu %>% count(s3classes)
+hsls_stu %>% count(s3classes_v2)
+hsls_stu %>% group_by(s3classes) %>% count(s3classes_v2)
+
+#s3clglvl_v2
+hsls_stu$s3clglvl_v2 <- fix_missing(hsls_stu$s3clglvl_v2, c(-9,-8,-7,-6,-4,-1))
+
+hsls_stu %>% count(s3clglvl)
+hsls_stu %>% count(s3clglvl_v2)
+hsls_stu %>% group_by(s3clglvl) %>% count(s3clglvl_v2)
+```
+
+# Part 2: Create variables for percent of people in each race/ethnicity group
+
+In Part 2, you will load a data frame called `zip_data` that contains characteristics of each zip code and then you will write a function `pct_race()` that creates variables that measure the percent of people in each zip code who identify with a particular race/ethnicity group (e.g., create `pop_white_pct` from the input variables `pop_white` and `pop_total`)
+
+- The function `pct_race()` should take three arguments:
+    1. `pct_var`: the name of the variable you will create (e.g., `zip_data$pop_white_pct`)
+        - this variable does not yet exist in the data frame `zip_data`
+    2. `pop_var`: name of the variable that is the numerator for the percent race variable (e.g., `zip_data$pop_white`)
+        - this variable already exists in the data frame `zip_data`
+    3. `total_var`: name of the variable that is the denominator for the percent race variable (e.g., `zip_data$pop_total`)
+        - note: the variable `pop_toal` already exists in the data frame `zip_data` and will be the denominator for all percent race variables
+- Before creating function, create the percent race variable outside of a function for at least two race/ethnicity groups
+    - after you create a percent race variable, run some simple descriptive statistics to make sure 
+- Recommend using "Base R" approach to creating percent race variables (both when creating the variable outside of a function and creating variables within a function)
+    - HINT: `data_frame_name$var_name_pct <- (data_frame_name$var_name/zip_data$pop_total)*100`  
+    - If the new variable looks ok; for this problem set, just printing a few observations for the input variables and the output variable is sufficient
+    - If you want to remove a variable you previously created:
+        - SYNTAX: `data_fram_name$var_name <- NULL`
+- Hints for calling the function:
+    - Use this approach:
+        - `data_frame_name$var_name_pct <- pct_race(data_frame_name$var_name_pct,data_frame_name$var_name,data_frame_name$pop_total)`
+    - Don't use this approach [will not replace values of the variables]
+        - `pct_race(data_frame_name$var_name_pct,data_frame_name$var_name,data_frame_name$pop_total)`
+- After writing the function, call the function for at least three race/ethnicity groups
+    - after you create a percent race variable, run some simple descriptive statistics to make sure the new variable looks ok; for this problem set, just printing a few observations for the input variables and the output variable is sufficient
+    
+Run below code to load zip-code level data from the Census American Community Survey (ACS) and keep selected variables  
+\textcolor{red}{\textbf{/0.5}}
+```{r}
+#options(tibble.print_min=90)
+#options(tibble.print_min=10) 
+
+zip_data <- read.csv('https://github.com/ozanj/rclass/raw/master/data/acs/zip_to_state.csv', na.strings=c('','NA'),colClasses=c("zip_code"="character")) %>% 
+  filter(!(state_code %in% c("PR"))) %>%
+  select(state_code,zip_code,pop_total, pop_white, pop_black, pop_amerindian, pop_asian, pop_nativehawaii, pop_otherrace, pop_tworaces, pop_hispanic) %>%
+  rename(pop_nativeamer = pop_amerindian, pop_latinx = pop_hispanic)
+  
+names(zip_data)
+
+#Check if race/ethnicity variables add up to race total "pop_total"
+zip_data %>% 
+  mutate(pop_totalv2 = pop_white + pop_black + pop_nativeamer + pop_asian + pop_nativehawaii + pop_otherrace + pop_tworaces + pop_latinx) %>%
+  filter(pop_totalv2 == pop_total) %>%
+  count()
+```
+
+## Question 1: Create percent race variables outside of function  
+\textcolor{red}{\textbf{/1}}
+```{r}
+#white
+zip_data$pop_white_pct <- (zip_data$pop_white/zip_data$pop_total)*100
+
+zip_data %>% select(state_code,zip_code,pop_white,pop_total,pop_white_pct) %>% head(n=10)
+
+zip_data$pop_white_pct <- NULL # remove variable
+
+#latinx
+zip_data$pop_latinx_pct <- (zip_data$pop_latinx/zip_data$pop_total)*100
+
+zip_data %>% select(state_code,zip_code,pop_latinx,pop_total,pop_latinx_pct) %>% head(n=10)
+
+zip_data$pop_latinx_pct <- NULL # remove variable
+```
+
+## Question 2: Create percent race variables within function  
+\textcolor{red}{\textbf{/2}}
+```{r}
+
+pct_race <- function(pct_var,pop_var,total_var){
+
+  pct_var <- (pop_var/total_var)*100
+}
+#pct_race(zip_data$pop_white_pct,zip_data$pop_white,zip_data$pop_total) # this doesn't do anything
+
+
+#pct white
+zip_data$pop_white_pct <- pct_race(zip_data$pop_white_pct,zip_data$pop_white,zip_data$pop_total)
+
+zip_data %>% select(state_code,zip_code,pop_white,pop_total,pop_white_pct) %>% head(n=10)
+
+#pct latinx
+zip_data$pop_latinx_pct <- pct_race(zip_data$pop_latinx_pct,zip_data$pop_latinx,zip_data$pop_total)
+
+zip_data %>% select(zip_code,pop_latinx,pop_total,pop_latinx_pct) %>% head(n=10)
+
+#pop_tworaces
+zip_data$pop_tworaces_pct <- pct_race(zip_data$pop_tworaces_pct,zip_data$pop_tworaces,zip_data$pop_total)
+
+zip_data %>% select(zip_code,pop_tworaces,pop_total,pop_tworaces_pct) %>% head(n=10)
+```
+
+# Part 3: Think of a task you might want to write a function for  
+\textcolor{red}{\textbf{/1}}
+
+__Questions__
+
+- What is some task from your coursework, research assistantship, job, or your own research that you might write a function to complete?
+- Why would you want to accomplish this task with a function rather than copy and paste?
+- How would you go about developing the function?
+
+Don't spend more than 20 minutes answering Part 3. Your answer can be brief and you don't need to go into any technical details. I will ask students to share their ideas at the beginning of next class.
+

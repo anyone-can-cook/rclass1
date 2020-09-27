@@ -1,0 +1,119 @@
+---
+title: "Lecture 3 Problem Set"
+author: "INSERT YOUR NAME HERE"
+date: "INSERT DATE HERE"
+output: 
+  pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+In this problem set, you will investigate objects and data patterns via tidyverse
+
+
+# Step 1: Investigate Missing Observations
+
+Load tidyverse package [code already provided]
+```{r}
+#install.packages("tidyverse") #install if you do not have tidyverse installed
+library(tidyverse)
+```
+
+Load data frame object and use `count()` to tabulate the total number of visits each school received [code already provided]
+```{r}
+rm(list = ls()) # remove all objects
+getwd()
+
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"))
+#glimpse(df_school_all)
+
+df_school_all %>% count(total_visits)
+```
+
+
+1. In these questions, apply the `table()` function to the variable `school_type` within the object `df_school_all`.  Run the appropriate R code within the chunk below and write substantive responses below each question.
+
+    + In your own words, what does the `table()` function do?  
+
+    + What does the `useNA` argument of the `table()` function control?
+
+    + What is the default value of the `useNA` argument and what does this default value mean?
+
+    + What happens when you assign the value `"ifany"` to the `useNA` argument?
+
+    + What happens when you assign the value `"always"` to the `useNA` argument?
+
+    + In the below R code chunk, use the `table()` function to count the number of observations for each value `school_type` three different ways: 
+        + First, without specifying any value for `useNA`
+        + Second, by assigning the value `"ifany"` to the `useNA` argument
+        + Third,  by assigning the value `"always"` to the `useNA` argument
+        
+```{r}
+
+```
+
+# Step 2: Filter, select, arrange questions
+
+The data frame `df_school_all` has one observation for each high school (public and private). 
+
+- The variables that begin with `visits_by_...` identify how many off-campus recruiting visits the high school received from a particular public university. For example, UC Berkeley has the ID `110635` so the variable `visits_by_110635` identifies how many visits the high school received from UC Berkeley. 
+- The variable `total_visits` identifies the number of visits the high school received from all (16) public research universities in this data collection sample.
+
+For the questions below, imagine that you have been asked by a major news outlet to identify which high schools receive the most total number of off-campus recruiting visits from public universities. 
+
+- For all questions below, you can answer using one line of code or you can answer in several steps (e.g., first create new data frame, then print selected variables)
+- For questions that ask you to print the "top 10" observations, you can simply print the object and rely on the fact that the default option [for "tibble" data frames] is to print 10 observations OR you can wrap the command in the `head()` function and explicitly tell R to print 10 observations
+- Before conducting analyses, we'll rename the variable `avgmedian_inc_2564` to give it a shorter name.
+
+1. Rename the variable `avgmedian_inc_2564` to `med_inc` and assign new variable name to the existing object `df_school_all`
+```{r}
+
+```
+
+
+
+2. The news outlet is interested in comparing the in-state and out-of-state high school visits for [The University of Alabama](https://nces.ed.gov/globallocator/col_info_popup.asp?ID=100751) (IPEDS ID = 100751) variable `visits_by_100751`. Count the number of in-state public high schools that received at least one vist from The University of Alabama.      
+    - Note: You will need to use `filter` and the `count` function  
+    - Use commas to separate variables for this question (e.g. filter(dataframe, variable == something, variable == something))
+    - You can do this in one step by wrapping the `count` function around the `filter` function ; or you can do this in two steps by creating a new data frame first  
+```{r}
+
+```
+
+
+
+3. How many public in-state high schools visited by The University of Alabama enroll at least 50% Latinx students **or** 50% Black students? 
+    - hint: use the variables `pct_hispanic` and `pct_black`.
+```{r}
+
+```
+
+
+
+4. Now count the out-of-state public high schools that received at least one visit by the University of Alabama without using commas to separate conditions in your filter.  
+    - hint: `&` or `%in%`
+```{r}
+
+```
+
+
+
+
+5. How many public out-of-state high schools visited by The University of Alabama enroll at least 50% Latinx students **or** 50% Black students?
+```{r}
+
+```
+
+
+
+Once finished, knit to PDF and upload both .Rmd and PDF files.
+
+*Remember to use this naming convention "lastname_firstname_ps2"*
+

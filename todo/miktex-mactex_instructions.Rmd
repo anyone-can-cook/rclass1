@@ -1,0 +1,58 @@
+---
+title: "EDUC 263: MikTeX/MacTeX instructions"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions to install MacTeX (Mac Users)  
+
+  * [Here](https://www.youtube.com/watch?v=XlxiytGeWds&t=1s) is a youtube tutorial on how to install MacTeX  
+
+    1. Follow this link for MaxTeX installation [http://www.tug.org/mactex/]  
+    2. Select MacTeX Download  
+    3. Select MacTex.pkg (This may take a while)  
+    4. Once downloaded double click on package  
+    5. Follow instructions to install (May take a while)  
+    6. Open your applications  
+    7. Should have a folder titled “TeX”  
+    
+## Instructions to install MikTeX (Windows Users)  
+
+  * [Here](https://www.youtube.com/watch?v=yPnfHRE_W_g&t=1s) is a youtube tutorial on how to install MikTeX (watch first 10 minutes if needed)  
+
+    1. Follow this link for MikTeX installation [https://miktex.org/download]  
+    2. Select “Download”  
+    3. This is a large file, it may take a while  
+    4. Once download is complete (close browser)  
+    5. Proceed to corresponding folder in Downloads  
+    6. Start the MiKTex Net installer  
+    7. Agree to conditions  
+    8. Choose download MixTex and click next  
+    9. Select “Complete MikTex” and click next  
+    10. Choose a server and click next (usually any server is fine)  
+    11. Choose download destination on your computer  
+    12. Create a new folder by clicking on bottom left “Make New Folder” (give folder a name like so “MikTex_downloads” etc)  
+    13. Initiate download (this may take a while) if you receive an error, close application and start the download process again– this time choosing a different server.  
+    14. Once download is complete, close window and open previous download destination  
+    15. Open net installer from downloads again  
+    16. Make sure to select “Install MikTeX” this time  
+    17. Select “Complete MikTex” and continue  
+    18. Select “Install MikTeX only for me” and continue  
+    19. Leave default installation as is  
+    20. Leave settings as is  
+    21. Start the installation process (again this may take a while. . . )  
+    22. If you receive an error, start the installation process again with step 1 and choose another server from the list.  
+    23. After installation, close MikTex setup application  
+    24. Search for MikTek 2.9.7 on your computer and open MikTeK Console  
+    25. Open “Window Command Prompt” (black square with green > sign)  
+    26. Type “latex” and hit “Enter” on your keyboard  
+    27. You want to see (MikTeX and some version number)  
+    28. Close Windows Command Prompt and MikTeX console  
+    29. Go back to download destination and delete MikTeX stepup file  
+    
+    *Additional instructions [here](https://miktex.org/howto/install-miktex)*
+  

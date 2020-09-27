@@ -1,0 +1,572 @@
+---
+title: "Lecture 6 problem set"
+author: "INSERT YOUR NAME HERE"
+date: "November 9, 2018"
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 2 
+    df_print: tibble 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+\textcolor{red}{\textbf{Grade: /20}}   
+
+# Required reading and instructions  
+
+##  Required reading before next class
+
+- Work through slides from lecture 6 that we don't get to in class
+    - [REQUIRED] slides from section 4 "Tidying data", particularly 4.2 "gathering"
+    - [OPTIONAL] slides from section 5 "Missing data"
+- [OPTIONAL] GW chapter 12 (tidy data)
+    - Lecture 6 covers this material pretty closely, so read chapter if you can, but I get it if you don't have time
+- [OPTIONAL] Wickham, H. (2014). Tidy Data. _Journal of Statistical Software_, 59(10), 1-23. doi:10.18637/jss.v059.i10
+    - This is the journal article that introduced the data concepts covered in GW chapter 12 and created the packages related to tidying data  
+
+
+## General Problem Set instructions  
+
+In this homework, you will specify `pdf_document` as the output format. You must have LaTeX installed in order to create pdf documents. 
+
+If you have not yet installed MiKTeX/MacTeX, I recommend installing TinyTeX, which is much simpler to install!
+
+- Instructions for installation of TinyTeX can be found [Here](https://bookdown.org/yihui/rmarkdown/installation.html#installation)
+
+- General Instructions for Problem Sets [Here](https://github.com/ozanj/rclass/raw/master/lectures/problemset_resources.pdf)  
+
+## Mid-quarter evaluation
+- Please take 10 minutes to complete the anonymous mid-quarter evaluation
+[Here](https://goo.gl/forms/a471SnGfL3euYsww2)  
+
+****** 
+
+## Overview
+
+This problem set has three parts. 
+
+1. I'll ask you some definitional/conceptual questions about the concepts introduced in lecture
+1. Tidying untidy data: "spreading" (i.e., going from long to wide)
+    - this will be the longest part of the problem set because it is very common that data we find "in the wild" needs to be "spread" before it is tidy
+        - e.g., dataset has one row for each combination of university ID and enrollment age group, but you want a dataset with one row per university ID and one enrollment variable for each age group
+    - for these questions we'll use fall enrollment data from the Integrated Postsecondary Data System (IPEDS), specifically the fall enrollment sub-survey that focuses on enrollment by age group
+1. Tidying untidy data: "gathering" (i.e., going from wide to long)
+    - This section will be short because it is less common that datasets need to be "gathered" before they are tidy
+
+
+# Load library and data
+
+```{r results="hide"}
+#install.packages("tidyverse") #uncomment if you haven't installed these packaged
+#install.packages("haven")
+#install.packages("labelled")
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+    
+# Part I: Conceptual questions
+
+- According to Wickham, what is the difference between "data structure" and "data concepts" (he uses the term "data semantics")  
+\textcolor{red}{\textbf{/1}}
+    - Data structure refers to the the physical layout of the data (e.g., what the rows and columns in a dataset actually represent)  
+    - Data concepts – which were introduced by Wickham (2014) – refer to how the data should be structured
+
+- According to Wickham:  
+\textcolor{red}{\textbf{/1}} 
+    - what is an "observation"?  
+    ANSWER: An observation contains the values for all attributes measured on the same unit (like a person, or a day)…across attributes”
+    - give an example of an observation?  
+    ANSWER: Imagine a dataset consisting of demographic/socioeconomic data about 6th graders (e.g., age, address, parental education). An observation would contain the value of all attributes for one 6th grader
+    - What is the difference between an "observation" and a "row"?  
+    ANSWER: A row refers to the physical layout of a dataset (e.g., one row consisting of cells in that row) but there are no rules about the kind of information contained in the row; by contrast an observation contains the values of all attributes for a particular observational unit (e.g., person, organization-year)
+    - Under what condition is an observation the same thing as a row?  
+    ANSWER: When data is tidy (satisfies all three conditions of tidy data)
+
+
+- According to Wickham:  
+\textcolor{red}{\textbf{/1}} 
+    - what is a "variable?"  
+    ANSWER: “A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units”
+    - give an example of a variable  
+    ANSWER: Height, weight, or age for all students in a dataset that contains demographic data on 6th graders; note that a variable could be represented by two columns, but in a tidy dataset, each variable must be contained within one column
+    - what is the difference between a "variable" and a "column"  
+    ANSWER: A variable contains the values of an attribute for all observational units in a dataset; by contrast a column just refers to physical structure of the data and there are no rules about what kind of information belongs in a column
+    - Under what condition is a variable the same thing as a column  
+    ANSWER: When data is tidy
+    
+- According to Wickham:  
+\textcolor{red}{\textbf{/1}} 
+    - what is a "value"?  
+    ANSWER: "A single element within some data structure (e.g., vector, list), usually a number or a character string."
+    - give an example of a value  
+    ANSWER: The value of the variable height for one person in a dataset where each observation represents a person
+    - what is the difference between a "cell" and a value?  
+    ANSWER: A cell is just the contents of the intersection of one row and one column; by contrast, a value represents the value of one attribute for one observational unit
+    - Under what condition is a value the same thing as a cell?  
+    When data is tidy
+
+- What is the difference between the terms "unit of analysis" [an "ozan" term; not necessarily used outside this class] and "observational level" [A Wickham term]  
+\textcolor{red}{\textbf{/0.5}}  
+
+Wickham defines "observational level" as what each observation should represent in a tidy dataset (i.e., it is a data concept), whereas Ozan defines "unit of analysis" as what each row in the data actually represents (i.e., refers to data structure). 
+
+- What are the three rules of tidy data?  
+\textcolor{red}{\textbf{/0.5}} 
+
+    1. Each variable must have its own column.  
+    1. Each observation must have its own row.  
+    1. Each value must have its own cell.
+
+
+# Part II: Questions about spreading
+
+## Description of the data
+
+For these questions, we'll be using data from the Fall Enrollment survey component of the Integrated Postsecondary Education Data System (IPEDS)
+
+- specifically, we'll be using data from the survey sub-component that focuses on enrollment by age-group.
+- The dataset we'll be using contains data from Fall 2016 (i.e., Fall of the 2016-17 academic year)
+- Here is a link to a data dictionary (an excel file) for the enrollment by age dataset: [LINK](https://nces.ed.gov/ipeds/datacenter/data/EF2016B_Dict.zip)
+- In the dataset you load below:
+    - I've dropped a few of the variables from the raw enrollment by age data
+    - I've added a few variables from the "institutional characteristics" survey (e.g., institution name, state, sector) that should be pretty self explanatory if you examine the variable labels and/or value labels
+- the variable `unitid` is the ID variable for each college/university
+- the dataset has one observation for each combination of the variables unitid-efbage-lstudy
+
+## Overview of the spreading tasks
+
+- Load the data frame and assign it the name `age_f16_allvars_allobs`
+- Create three different data frame objects based on the data frame `age_f16_allvars_allobs`
+    - A dataframe `all_obs` that has fewer variables than `age_f16_allvars_allobs` but the same number of observations 
+        - this data frame has the most complex structure; we'll spread this one last
+    - A dataframe `agegroup1_obs` that has fewer variables than `age_f16_allvars_allobs` and keeps observations where age-group equals `1` (1. All age categories total)
+        - this data frame has the simplist structure; we'll spread this one first
+    - A dataframe `levstudy1_obs` that has fewer variables than `age_f16_allvars_allobs` and keeps observations where "level of study" equals `1` (1. All Students total)
+        - this data frame has the second simplist structure; we'll spread this one second
+- Questions related to spreading `agegroup1_obs`
+- Questions related to spreading `levstudy1_obs`
+- Questions related to spreading `all_obs`
+
+## Load data and create three new data frames
+
+- Load IPEDS data that contains fall enrollment by age
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE BELOW CODE CHUNK
+```{r}
+rm(list = ls()) # remove all objects
+#getwd()
+#list.files("../../../documents/rclass/data/ipeds/ef/age") # list files in directory w/ NLS data
+
+#Read Stata data into R using read_data() function from haven package
+age_f16_allvars_allobs <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/ef/age/ef_age_ic_fall_2016.dta", encoding=NULL)
+
+#rename a couple variables
+age_f16_allvars_allobs <- age_f16_allvars_allobs %>% rename(agegroup=efbage, levstudy=lstudy)
+
+#list variables and variable labels
+names(age_f16_allvars_allobs)
+age_f16_allvars_allobs %>% var_label()
+```
+
+- Create three new data frames based on `age_f16_allvars_allobs`
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE BELOW CODE CHUNK
+```{r}
+#Create dataframe that has fewer variables than `age_f16_allvars_allobs` but the same number of observations 
+all_obs <- age_f16_allvars_allobs %>%   
+  select(fullname,unitid,agegroup,levstudy,efage09,stabbr,sector,locale)
+
+glimpse(all_obs)
+
+#Create dataframe that keeps observations where age-group equals `1` (1. All age categories total)
+agegroup1_obs <- all_obs %>% 
+  filter(agegroup==1) %>% select(-agegroup)
+
+glimpse(agegroup1_obs)
+
+#Create dataframe keeps observations where "level of study" equals `1` (1. All Students total)
+levstudy1_obs <- all_obs %>% 
+  filter(levstudy==1) %>% select(-levstudy)
+
+glimpse(levstudy1_obs)
+```
+
+## Questions related to spreading the dataset `agegroup1_obs`  
+\textcolor{red}{\textbf{/0.5}}
+
+- Run whatever investigations seem helpful to you to get to know the data (e.g., list variable names, list variable variable labels, list variable values, tabulations). You may decide to comment out some of these investigations before you knit and submit the problem set so that your pdf doesn't get too long.
+
+```{r}
+#basic investigations of dataset
+names(agegroup1_obs)
+str(agegroup1_obs)
+agegroup1_obs %>% var_label()
+```
+
+Sort and print a few obs
+```{r}
+#sort
+agegroup1_obs <- agegroup1_obs %>% arrange(unitid,levstudy)
+
+#print a few obs
+agegroup1_obs %>% head(n=10) %>% as_factor
+```
+
+Frequencies
+```{r}
+#frequency of level of study variable
+agegroup1_obs %>% select(levstudy) %>% val_labels()
+agegroup1_obs %>% count(levstudy) %>% as_factor
+
+#frequency of sector variable
+agegroup1_obs %>% select(sector) %>% val_labels()
+agegroup1_obs %>% count(sector) %>% as_factor
+
+#frequency of locale variable
+agegroup1_obs %>% select(locale) %>% val_labels()
+agegroup1_obs %>% count(locale) %>% as_factor
+```
+
+
+
+- Run the following code, which confirms that there is one row per each combination of unitid-levstudy
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; BUT TRY TO UNDERSTAND WHAT EACH PART OF THE CODE IS DOING
+```{r}
+agegroup1_obs %>% group_by(unitid,levstudy) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+Using code from previous question as a guide, confirm that the object `agegroup1_obs` has more than one observation for each value of unitid  
+\textcolor{red}{\textbf{/0.5}} 
+
+```{r}
+agegroup1_obs %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+
+```
+
+
+- Diagnose whether the data frame `agegroup1_obs` meets each of the three criteria for tidy data  
+\textcolor{red}{\textbf{/2}} 
+    - YOUR ANSWER HERE: 
+        - Each variable must have its own column: false; the values of the column levstudy should each be variables with their own column
+        - Each observation must have its own row: false; there should be one row per college/university, but this data frame has one row per college-levstudy  
+        - Each value must have its own cell: true
+
+- what changes need to be made to `age_all` to make it tidy?
+    - YOUR ANSWER HERE: convert the values of the variable levstudy into their own variables; each variable will contain enrollment for that level of study
+
+
+- With respect to "spreading" to tidy a dataset, define the concept "key column"
+    - YOUR ANSWER HERE: Column name in the untidy data whose values will become variable names in the tidy data
+
+- What should the key column be in the data frame `agegroup1_obs`?
+    - YOUR ANSWER HERE: key column should be `levstudy`
+    
+- With respect to "spreading" to tidy a dataset, define the concept "value column"
+    - YOUR ANSWER HERE: Column name in untidy data that contains values for the new variables that will be created in the tidy data
+    
+- what should the value column be in the data frame `agegroup1_obs`?
+    - YOUR ANSWER HERE: value column should be `efage09`
+    
+Tidy the data frame `agegroup1_obs` and create a new object `agegroup1_obs_tidy`, then print a few observations  
+\textcolor{red}{\textbf{/1}} 
+
+```{r}
+agegroup1_obs %>% head(n=5)
+agegroup1_obs_tidy <- agegroup1_obs %>% spread(key = levstudy, value = efage09)
+agegroup1_obs_tidy %>% head(n=5)
+```
+
+Confirm that the new object `agegroup1_obs_tidy` contains one observation for each value of unitid  
+\textcolor{red}{\textbf{/0.5}} 
+```{r}
+agegroup1_obs_tidy %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+
+
+Create a new object `agegroup1_obs_tidy_v2` from the object `agegroup1_obs` by performing the following steps in one line of code with multiple pipes:  
+\textcolor{red}{\textbf{/1.5}} 
+
+- Create a variable `level` that is a character version of the variable `levstudy'
+- Drop the original variable `levstudy`
+- Tidy the dataset
+
+```{r}
+agegroup1_obs_tidy_v2 <- agegroup1_obs %>% 
+  mutate(level=recode(as.integer(levstudy),
+    `1` = "all",
+    `2` = "ug",
+    `5` = "grad")
+  ) %>% select(-levstudy) %>% # drop variable lstudy
+  spread(key = level, value = efage09)
+
+```
+
+Print a few observations of `agegroup1_obs_tidy_v2`; why is this data frame preferable over `agegroup1_obs_tidy`?  
+\textcolor{red}{\textbf{/0.5}} 
+```{r}
+head(agegroup1_obs_tidy_v2)
+```
+YOUR ANSWER HERE: more intuitive to have variable names that are not numbers
+
+
+
+## Questions related to spreading the dataset levstudy1_obs  
+\textcolor{red}{\textbf{/0.5}}
+
+- Run whatever investigations seem helpful to you to get to know the data frame `levstudy1_obs` (e.g., list variable names, list variable variable labels, list variable values, tabulations). You may decide to comment out some of these investigations before you knit and submit the problem set so that your pdf doesn't get too long.
+
+```{r}
+#basic investigations of dataset
+names(levstudy1_obs)
+str(levstudy1_obs)
+levstudy1_obs %>% var_label()
+```
+
+Sort and print a few obs
+```{r}
+#sort
+levstudy1_obs <- levstudy1_obs %>% arrange(unitid,agegroup)
+
+#print a few obs
+levstudy1_obs %>% head(n=10) %>% as_factor
+```
+
+Frequencies
+```{r}
+#frequency of level of study variable
+levstudy1_obs %>% select(agegroup) %>% val_labels()
+levstudy1_obs %>% count(agegroup) %>% as_factor
+```
+
+
+- Confirm that there is one row per each combination of unitid-agegroup  
+\textcolor{red}{\textbf{/0.5}} 
+
+```{r}
+levstudy1_obs %>% group_by(unitid,agegroup) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+Using code from previous question as a guide, confirm that the object `levstudy1_obs` has more than observation for each value of unitid  
+\textcolor{red}{\textbf{/0.5}}
+
+```{r}
+levstudy1_obs %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+
+```
+\textcolor{red}{\textbf{/0.5}}  
+
+- Why is the data frame `levstudy1_obs` not tidy?
+    - YOUR ANSWER HERE: the data frame has one row per college-agegroup; these rows do not meet the requirements of being observations because an observation contains all values for some unit.
+  
+- What changes need to be made to `levstudy1_obs` to make it tidy?
+    - YOUR ANSWER HERE: convert the values of the variable agegroup into their own variables; each variable will contain enrollment for that age group
+
+
+Tidy the data frame `levstudy1_obs` and create a new object `levstudy1_obs_tidy` (it is up to you whether you want to create character version of the variable `agegroup` prior to tidying) then print a few observations  
+\textcolor{red}{\textbf{/1.5}}
+
+```{r}
+levstudy1_obs %>% head(n=5)
+levstudy1_obs %>% count(agegroup) %>% as_factor()
+
+levstudy1_obs_tidy <- levstudy1_obs %>% 
+  mutate(age = recode(as.integer(agegroup),
+    `1`="age_all",
+    `2`="age_lt25",
+    `3`="age_lt18",
+    `4`="age_18_19",
+    `5`="age_20_21",
+    `6`="age_22_24",
+    `7`="age_25_plus",
+    `8`="age_25_29",
+    `9`="age_30-34",
+    `10`="age_35-39",
+    `11`="age_40_49",
+    `12`="age_50_64",
+    `13`="age_65_plus",
+    `14`="age_unknown")
+  ) %>% select(-agegroup) %>%
+  spread(key = age, value = efage09)
+
+levstudy1_obs_tidy %>% head(n=5)
+```
+
+Confirm that the new object `levstudy1_obs_tidy` contains one observation for each value of unitid  
+\textcolor{red}{\textbf{/0.5}}
+```{r}
+levstudy1_obs_tidy %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+
+## Questions related to spreading the dataset all_obs
+
+Investigate data frame `all_obs` if you want, but not required to show code  
+\textcolor{red}{\textbf{/0.5}}
+
+- Confirm that there is one row per each combination of unitid-agegroup-levstudy
+
+```{r}
+all_obs %>% group_by(unitid,agegroup,levstudy) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+- Why is the data frame `all_obs` not tidy?  
+\textcolor{red}{\textbf{/0.5}} 
+    - YOUR ANSWER HERE: the data frame has one row per college-agegroup-levstudy; these rows do not meet the requirements of being observations because an observation contains all values for some unit (e.g., a college)
+  
+- What changes need to be made to `all_obs` to make it tidy?
+    - YOUR ANSWER HERE: each combination of the variables agegroup and levstudy should be converted from a row into a variable of its own
+
+
+
+
+- The `spread()` function can only have a single key variable. we have two key variables: `agegroup` and `level`. Run the below code, which creates character versions of these two variables and then uses the `unit()` function to combine these two variables into a single variable. this code will create a new object all_obs_temp
+
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; BUT TRY TO UNDERSTAND WHAT EACH PART OF THE CODE IS DOING
+```{r}
+all_obs_temp <- all_obs %>% 
+  mutate(
+    age = recode(as.integer(agegroup),
+    `1`="age_all",
+    `2`="age_lt25",
+    `3`="age_lt18",
+    `4`="age_18_19",
+    `5`="age_20_21",
+    `6`="age_22_24",
+    `7`="age_25_plus",
+    `8`="age_25_29",
+    `9`="age_30-34",
+    `10`="age_35-39",
+    `11`="age_40_49",
+    `12`="age_50_64",
+    `13`="age_65_plus",
+    `14`="age_unknown"),
+  level=recode(as.integer(levstudy),
+    `1` = "lev_all",
+    `2` = "lev_ug",
+    `5` = "lev_grad")
+  ) %>% unite("age_lev", age, level) %>% 
+  select(-levstudy,-agegroup) 
+
+all_obs_temp %>% head(n=20)
+
+```
+
+Tidy the data frame `all_obs_temp` and create a new object `all_obs_tidy`; then print a few observations  
+\textcolor{red}{\textbf{/1}} 
+
+```{r}
+all_obs_tidy <- all_obs_temp %>%
+  spread(key=age_lev, value=efage09)
+
+all_obs_tidy %>% head(n=20)
+```
+
+- Confirm that the new object `all_obs_tidy` contains one observation for each value of unitid  
+\textcolor{red}{\textbf{/0.5}} 
+```{r}
+all_obs_tidy %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+
+
+# Part III: Questions about gathering
+
+Here, we load a table from NCES digest of education statistics that contains data about the total number of teachers in each state for particular years.
+
+```{r}
+load(url("https://github.com/ozanj/rclass/raw/master/data/nces_digest/nces_digest_table_208_30.RData"))
+table208_30
+```
+\textcolor{red}{\textbf{/0.5}}  
+
+- Why is the data frame `table208_30` not tidy?  
+    - YOUR ANSWER HERE:  Some of the column names (tot_fall_2000...) are not names of variables, but values of a variable, which results in a single variable (e.g., total fall enrollment) being spread across multiple columns
+  
+
+- What changes need to be made to `table208_30` to make it tidy?
+    - YOUR ANSWER HERE: "Gather" year columns or reshape from wide to long
+    
+
+Tidy the data frame `table208_30` and create a new object `table208_30_tidy`:  
+\textcolor{red}{\textbf{/1.5}} 
+
+- Recommended but optional: prior to gathering, rename the __names__ columns (i.e., the set of columns that represent values, not variables in your untidy data). specifically, rename these variables to remove characters prior to gathering (e.g., rename "tot_fall_2000" -> "2000"). See the end of section 4.2.1 for an example of how to do this.
+- after you tidy the data, print a few observations
+
+```{r}
+names(table208_30)
+names(table208_30)<- c("state","2000","2005","2009","2010", "2011")
+names(table208_30)
+
+table208_30_tidy <- table208_30 %>% 
+  gather(`2000`,`2005`,`2009`,`2010`, `2011`,  key = year, value = total_teachers)
+
+#sort data (optional)
+table208_30_tidy<- table208_30_tidy%>%
+  arrange(state,year)
+
+#examine data
+head(table208_30_tidy, n=20)
+```
+
+
+
+# Bonus Question:  
+\textcolor{red}{\textbf{/4}} 
+
+Run this code below to see create the data frame `allobs_v1` and examine its contents
+```{r}
+names(age_f16_allvars_allobs)
+#age_f16_allvars_allobs %>% var_label()
+
+allobs_v1 <- age_f16_allvars_allobs %>%
+  select(1:9, 13:19)
+names(allobs_v1)
+allobs_v1
+```
+
+Your task in this bonus question is to make the untidy data frame `allobs_v1` tidy. note that `allobs_v1` contains multiple enrollment variables (in addition to the variables `efbage` and `lstudy` which were in the previous data frames we tidied. 
+
+The end of Section 4.3 "Tidying data: spreading" of Lecture 6 states that the `spread()` function is not designed to create tidy datasets when there are multiple __value__ variables. Therefore, in order to spread to create a tidy dataset from an untidy dataset that has multiple __value__ variables, we would need to incorporate additional/alternative programming skills **not taught** in class.  and that is why this is a bonus question.
+
+Your end result should be a "tidy" version of `allobs_tidy`.  
+Hint: Google "How to spread mulitple value columns in R"
+
+Once finished, knit to (pdf) and upload both .Rmd and pdf files to class website under the week 6 tab  
+*Remember to use this naming convention "lastname_firstname_ps6"*

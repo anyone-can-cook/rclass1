@@ -1,0 +1,222 @@
+---
+title: "Lecture 6 problem set"
+author: "INSERT YOUR NAME HERE"
+date: "INSERT DATE"
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true # delete from problem set
+    toc_depth: 2 # delete from problem set
+    number_sections: false # delete from problem set
+    df_print: tibble # delete from problem set
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\textcolor{red}{\textbf{Grade: /20}}  
+
+# Instructions
+
+__General instructions__
+The purpose of this problem set is to familiarize yourself with a new dataset, the National Longitudinal Study of 1972 (NLS-72). NLS is a nationally representative, longitudinal study of 12th graders in 1972 with follow-up surveys throughout their postsecondary years. You will be using the Postsecondary Education Transcript File of the NLS-72, which contains information on transcripts from NLS-72 senior cohort members who reported attending a postsecondary institution after high school.
+
+
+# Load library and data
+You'll need to load the `tidyverse`, `haven` and `labelled` libraries in order to load and work with the NLS data. If these packages are not yet installed, then you must install before you load. Install in "console" rather than .Rmd file
+
+- Generic syntax: `install.packages("package_name")`
+- Install "haben": `install.packages("haven")`
+
+Note: when we __load__ package, name of package is not in quotes; but when we __install__ package, name of package is in quotes:
+
+- `install.packages("tidyverse")`
+- `library(tidyverse)`
+
+
+```{r, results="hide", message=FALSE, warning=FALSE}
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+```{r}
+rm(list = ls()) # remove all objects
+
+nls_crs<- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/nls72/nls72petscrs_v2.dta", encoding=NULL)
+```
+ 
+ 
+# Step 1: Investigate Variables
+
+1. Use `typeof`, `class`, `str`, and `attributes` functions to investigate the following variables: crsgrada, crsgradb, gradtype, crsecred.
+
+```{r}
+typeof(nls_crs$crsgrada)
+class(nls_crs$crsgrada)
+attributes(nls_crs$crsgrada)
+
+typeof(nls_crs$crsgradb)
+class(nls_crs$crsgradb)
+attributes(nls_crs$crsgradb)
+
+typeof(nls_crs$gradtype)
+class(nls_crs$gradtype)
+attributes(nls_crs$gradtype)
+
+typeof(nls_crs$crsecred)
+class(nls_crs$crsecred)
+attributes(nls_crs$crsecred)
+```
+
+# Step 2: Create New Variables
+
+1. `crsgrada` is the variable for letter course grades. Create a factor version of the `crsgrada` variable. Hint: knowing what class the variable is currently and investigating the variable using `count(crsgrada)` will be helpful to creating the new factor version. Retain the new factor version variable in the nls_crs dataframe using the variable name `crsgrad_fac`. Check that this new variable is a factor class. 
+```{r}
+nls_crs %>% count(crsgrada)
+
+nls_crs <- nls_crs %>% mutate(crsgrada_fac = factor(crsgrada))
+
+#alternative code from Karina
+#nls_crs$crsgrada_fac <- factor(nls_crs$crsgrada, levels = c("99", "A", "A-","A+", "AU", "B", "B-", "B+","C", "C-", "C+", "CR", "D", "D-", "D+","E", "F", "I", "NO", "P", "S", "U", "W", "WF", "WP"))
+
+
+typeof(nls_crs$crsgrada_fac)
+nls_crs %>% count(crsgrada_fac)
+class(nls_crs$crsgrada_fac)
+attributes(nls_crs$crsgrada_fac)
+```
+
+2. Create a numeric course grade version of the `crsgrada_fac` variable named `numgrade` with the following numeric values based on attribute levels from `crsgrada_fac` Hint: use `mutate()` and `recode()`. Retain this new `numgrade` variable. 
+    - A+= 4; A=4; A-=3.7; B+=3.3; B=3; B-=2.7; C+=2.3; C=2; C-=1.7; D+=1.3; D=1; D-=.7; F=0; E=0; WF=0
+    - All other letter grades should have missing values for `numgrade`. Hint: use the .default
+    - When recoded to missing `NA_real_` rather than `NA` due to `recode()` needing a double type/numeric class value to recode and `NA` is a logical)
+
+```{r}
+nls_crs <- nls_crs %>%  
+  mutate(numgrade = 
+    recode(crsgrada_fac,
+      "A+" =4,
+      "A" = 4,
+      "A-" = 3.7,
+      "B+" =3.3,
+      "B" = 3,
+      "B-" = 2.7,      
+      "C+" =2.3,
+      "C" = 2,
+      "C-" = 1.7,  
+      "D+" =1.3,
+      "D" = 1,
+      "D-" = 0.7, 
+      "F" = 0,
+      "E" = 0,
+      "WF" = 0,
+      .default = NA_real_
+    )
+  )
+
+nls_crs %>% count(numgrade)
+```
+
+
+
+3. `gradtype` is a labelled class variable for the type of grade given for each course. Retrieve the variable and value labels for `gradtype`. Get a count of `gradtype` showing the values and the value labels. Now, get another count by filtering for observations associated with "{MISSING}". 
+
+```{r}
+nls_crs %>% select(gradtype) %>% var_label()
+nls_crs %>% select(gradtype) %>% val_labels()
+
+nls_crs %>% count(gradtype) %>% as_factor()
+
+nls_crs %>% filter(gradtype==9) %>% count()
+
+```
+
+
+4. `crsgradb` is the variable for numerical course grades. There are several issues with this variable. First, missing observations for `crsgradb` are currently `999` and `999.999`.  The variable also has values greater than 4 (problematic when the highest possible grade A+ = 4). Create and retain a new `crsgradb_v2` variable that replaces all values greater than 4 for `crsgradb` to `NA`  (Hint: you can use the `mutate` and `if_else()` functions to either replace the value to NA or keep the current value of the variable based on whether the expression you specify evaluates to `TRUE` or `FALSE`. See below...
+  
+__ANSWER PROVIDED FOR YOU__
+```{r}
+#create frequency table. can use either of these two approaches
+table(nls_crs$crsgradb)
+nls_crs %>% count(crsgradb) 
+
+#create new variable
+nls_crs<- nls_crs %>% 
+  mutate(crsgradb_v2= ifelse(crsgradb>4, NA, crsgradb))
+
+```
+
+
+5. `crsecred` is the variable for how many total credits were possible for each course. Missing observations for `crsecred` are currently `999` and `999.999`.  Using code similar to Question 5, create and retain a new `crsecred_v2` variable that replaces values of `999` and `999.999` to `NA`. 
+
+```{r}
+nls_crs <- nls_crs%>% 
+  mutate(crsecredv2= ifelse(crsecred>=900, NA, crsecred))
+```
+
+6. Create a "final" numerical grade variable named `numgrade_v2` that incorporates values from observations where `gradtype==1` (i.e., "type of grade" is "letter") and incorporates values from observations where `gradtype==2` (i.e., "type of grade" is "numeric"). For, observations where `gradtype` indicates letter grades were used and `crsecred_v2` is not missing, value of `numgrade_v2` should be the value of the variable `numgrade` which you created previously. For observations where `gradtype` indicates that numeric grades were used and `crsecred_v2` is not missing, value of `numgrade_v2` should be the value of the variable `crsgradb_v2` which you created previously. Hint: use `mutate()` and `case_when()`.
+    - Note: For, observations where `gradtype` indicates letter grades, values of numeric variable `numgrade` you previously created should be as follows:
+        - A+= 4; A=4; A-=3.7; B+=3.3; B=3; B-=2.7; C+=2.3; C=2; C-=1.7; D+=1.3; D=1; D-=.7; F=0; E=0; WF=0
+        - and `numgrade` should be missing for all observations that do not have these above values.
+    
+```{r}
+nls_crs <- nls_crs %>% 
+    mutate(
+      numgrade_v2=case_when(
+        gradtype==1 & (!is.na(crsecredv2)) ~ numgrade,
+        gradtype==2 & (!is.na(crsecredv2)) ~ crsgradb_v2
+      )
+    )
+nls_crs %>% select(numgrade_v2) %>% summarize_all(.fun = list(mean,sd), na.rm = TRUE)
+```
+
+Alternative approach, using original input variables rather than variables you created in previous questions (set eval=FALSE)
+```{r, eval=FALSE}
+nls_crs <- nls_crs %>% 
+    mutate(
+      numgrade_v2=case_when(
+        crsgrada_fac %in% c("A+","A") & gradtype==1 & (!is.na(crsecredv2)) ~ 4,
+        crsgrada_fac=="A-" & gradtype==1 & (!is.na(crsecredv2)) ~ 3.7,
+        crsgrada_fac=="B+" & gradtype==1 & (!is.na(crsecredv2)) ~ 3.3,
+        crsgrada_fac=="B" & gradtype==1 & (!is.na(crsecredv2)) ~ 3,
+        crsgrada_fac=="B-" & gradtype==1 & (!is.na(crsecredv2)) ~ 2.7,
+        crsgrada_fac=="C+" & gradtype==1 & (!is.na(crsecredv2)) ~ 2.3,
+        crsgrada_fac=="C" & gradtype==1 & (!is.na(crsecredv2)) ~ 2,
+        crsgrada_fac=="C-" & gradtype==1 & (!is.na(crsecredv2)) ~ 1.7,
+        crsgrada_fac=="D+" & gradtype==1 & (!is.na(crsecredv2)) ~ 1.3,
+        crsgrada_fac=="D" & gradtype==1 & (!is.na(crsecredv2)) ~ 1,
+        crsgrada_fac=="D-" & gradtype==1 & (!is.na(crsecredv2)) ~ 0.7,
+        crsgrada_fac %in% c("F","E","WF") & gradtype==1 & (!is.na(crsecredv2)) ~ 0,
+        crsgradb<=4 & gradtype==2 & (!is.na(crsecredv2)) ~ crsgradb # use values of numeric var crsgradb
+      )
+    )
+
+```
+
+7. Use 'set_variable_labels' function to set variable labels to the new variables: 'numgrade', 'crsgradb_v2', 'crsecredv2' and 'numgrade_v2'. 
+
+```{r}
+nls_crs <- nls_crs %>% 
+  set_variable_labels(numgrade = "numeric grade version for 'crsgrada_fac'",
+                   crsgradb_v2 = "`crsgradb` without values greater than 4",
+                   crsecredv2 = "recode missing values for `crsecred`",
+                   numgrade_v2 = "final numerical grade")
+```
+
+8. First create a new variable named 'numgrade_v3', which equals to 1 if 'numgrade_v2' is greater than 3, and equals to 0 if 'numgrade_v2' is no greater than 3. Second use 'set_value_labels' function to add value labels to this new variables. Third change the variable into a factor variable. Investigate the class of this variable in each step. 
+
+```{r}
+nls_crs <- nls_crs %>% 
+  mutate(numgrade_v3 = if_else(numgrade_v2>3,1,0)) 
+class(nls_crs$numgrade_v3)
+
+nls_crs <- nls_crs %>% 
+  set_value_labels(numgrade_v3 = c("greater than 3" = 1,
+                                   "no greater than 3" = 0))
+class(nls_crs$numgrade_v3)
+
+nls_crs$numgrade_v3 <-as.factor(nls_crs$numgrade_v3)
+class(nls_crs$numgrade_v3)
+```

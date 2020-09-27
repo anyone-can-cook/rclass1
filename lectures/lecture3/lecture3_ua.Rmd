@@ -1,0 +1,1071 @@
+---
+title: "Lecture 3: Investigating objects" # potentially push to header
+subtitle:  "Managing and Manipulating Data Using R"
+author:  
+date: 
+classoption: dvipsnames  # for colors
+fontsize: 8pt
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: tibble #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header.tex
+      #after_body: table-of-contents.txt 
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+#knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+```{r, echo=FALSE, include=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists('transform-logical.png')){
+  download.file(url = 'https://raw.githubusercontent.com/ozanj/rclass/master/lectures/lecture2/transform-logical.png', 
+                destfile = 'transform-logical.png',
+                mode = 'wb')
+}
+```
+
+
+```{r echo=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists("fp1.JPG")) {
+  download.file(url ="https://github.com/ozanj/rclass/raw/master/lectures/lecture2/fp1.JPG",
+                destfile = 'fp1.JPG',
+                mode = 'wb')
+}
+```
+
+```{r echo=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists("fp2.JPG")) {
+  download.file(url ="https://github.com/ozanj/rclass/raw/master/lectures/lecture2/fp2.JPG",
+                destfile = 'fp2.JPG',
+                mode = 'wb')
+}
+# Introduction
+```
+
+
+
+### What we will do today
+
+\tableofcontents
+```{r, eval=FALSE, echo=FALSE}
+#Use this if you want TOC to show level 2 headings
+\tableofcontents
+#Use this if you don't want TOC to show level 2 headings
+\tableofcontents[subsectionstyle=hide/hide/hide]
+```
+
+
+### Libraries we will use today
+
+"Load" the package we will use today (output omitted)
+```{r, message=FALSE}
+library(tidyverse)
+```
+If package not yet installed, then must install before you load. Install in "console" rather than .Rmd file
+
+- Generic syntax: `install.packages("package_name")`
+- Install "tidyverse": `install.packages("tidyverse")`
+
+Note: when we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
+
+- `install.packages("tidyverse")`
+- `library(tidyverse)`
+
+
+### Load .Rdata data frames we will use today
+
+Data on off-campus recruiting events by public universities
+
+- Data frame object `df_event`
+    - One observation per university, recruiting event
+- Data frame object `df_school`
+    - One observation per high school (visited and non-visited)
+
+```{r}
+rm(list = ls()) # remove all objects in current environment
+
+getwd()
+#load dataset with one obs per recruiting event
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+#load("../../data/recruiting/recruit_event_somevars.Rdata")
+
+#load dataset with one obs per high school
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData"))
+#load("../../data/recruiting/recruit_school_somevars.Rdata")
+```
+
+
+#  Missing values [finish-up]
+
+### Missing values
+
+Missing values have the value `NA`
+
+- `NA` is a special keyword, not the same as the character string `"NA"`
+
+use `is.na()` function to determine if a value is missing
+
+- `is.na()` returns a logical vector
+```{r}
+is.na(5)
+is.na(NA)
+is.na("NA")
+typeof(is.na("NA")) # example of a logical vector
+
+nvector <- c(10,5,NA)
+is.na(nvector)
+typeof(is.na(nvector)) # example of a logical vector
+
+svector <- c("e","f",NA,"NA")
+is.na(svector)
+```
+
+### Missing values
+
+Missing values have the value `NA`
+
+- `NA` is a special keyword, not the same as the character string `"NA"`
+
+use `is.na()` function to determine if a value is missing
+
+- `is.na()` returns a logical vector
+```{r}
+is.na(5)
+is.na(NA)
+is.na("NA")
+typeof(is.na("NA")) # example of a logical vector
+
+nvector <- c(10,5,NA)
+is.na(nvector)
+typeof(is.na(nvector)) # example of a logical vector
+
+svector <- c("e","f",NA,"NA")
+is.na(svector)
+```
+
+### Missing values are "contagious"
+
+What does "contagious" mean?
+
+- operations involving a missing value will yield a missing value
+
+```{r}
+7>5
+7>NA
+0==NA
+2*c(0,1,2,NA)
+NA*c(0,1,2,NA)
+```
+###  Function and missing values, the `table()` function
+
+`table()` function useful for investigating categorical variables
+```{r}
+table(df_event$g12offered)
+```
+
+By default `table()` ignores `NA` values
+
+- `useNA` argument determines whether to include `NA` values
+    - "allowed values correspond to never ("no"); only if count is positive ("ifany"); and even for zero counts ("always")"
+```{r}
+nrow(df_event)
+table(df_event$g12offered, useNA="always")
+```
+Broader point:
+
+- Most functions that create descriptive statistics have options about how to treat missing values
+- When investigating data, good practice to _always_ show missing values
+
+Tip: 
+
+- command `str(df_event)` shows which variables have missing values
+```{r results="hide", echo=FALSE}
+str(df_event)
+```
+
+
+
+
+
+# Tidyverse vs. Base R
+
+### Why learn to "wrangle" data both via tidyverse and Base R?
+
+- __Base R__: "core" R commands for cleaning and manipulating data that are not part of any external package/library
+- __Tidyverse__ has become the leading way many people clean and manipulate data in R
+  - These packages make data wrangling simpler than "core" base R commands (most times)
+  - Tidyverse commands can be more more efficient (less lines of code, consolidate steps)
+
+\medskip
+- But you will inevitably run into edge cases where tidyverse commands don't work the way you expect them to and you'll need to use __base R__
+
+  - Ozan first learned R via tidyverse
+  - I first learned R via Base R
+
+\medskip
+- It's good to have a basic foundation on both approaches and then decide which you prefer for most data tasks!
+
+- this class will primarily use tidyverse approach 
+- future data science seminar will provide examples of edge cases where base R is necessary
+ 
+
+### Tidyverse  vs. base R  functions
+
+tidyverse | base R | operation
+-------|-------|-------
+`select()` |  `[ ]`+ `c()` __OR__ `subset()` | "extract" variables
+`filter()` | `[ ]`+ `$` __OR__ `subset()` | "extract" observations
+`arrange()` | `order()` | sorting data
+
+
+
+
+# Investigating data patterns via Tidyverse
+
+### Introduction to the `dplyr` library
+
+`dplyr`, a package within the `tidyverse` suite of packages, provide tools for manipulating data frames
+
+- Wickham describes functions within `dplyr` as a set of "verbs" that fall in the broader categories of __subsetting__, __sorting__, and __transforming__
+
+Today | Upcoming weeks
+------------- | -------------
+__Subsetting data__ | __Transforming data__
+- `select()` variables  | - `mutate()` creates new variables
+- `filter()` observations | - `summarize()` calculates across rows
+__Sorting data__ | - `group_by()` to calculate across rows within groups
+- `arrange()` | 
+
+All `dplyr` verbs (i.e., functions) work as follows
+
+1. first argument is a data frame
+1. subsequent arguments describe what to do with variables and observations in data frame
+    - refer to variable names without quotes
+1. result of the function is a new data frame
+
+## Select variables
+
+### Select variables using `select()` function
+
+Printing observations is key to investigating data, but datasets often have hundreds, thousands of variables
+
+`select()` function selects __columns__ of data (i.e., variables) you specify
+
+- first argument is the name of data frame object
+- remaining arguments are variable names, which are separated by commas and without quotes
+
+Without __assignment__ (`<-`), `select()` by itself simply prints selected vars
+```{r}
+#?select
+select(df_event,instnm,event_date,event_type,event_state,med_inc)
+```
+
+### Select variables using `select()` function
+
+Recall that all `dplyr` functions (e.g., `select()`) return a new data frame object
+
+- __type__ equals "list"
+- __length__ equals number of vars you select
+
+```{r}
+typeof(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+length(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+`glimpse()`: tidyverse function for viewing data frames
+
+- a cross between `str()` and simply printing data
+```{r, eval=FALSE}
+?glimpse
+glimpse(df_event)
+```
+
+`glimpse()` a `select()` set of variables
+```{r}
+glimpse(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+
+### Select variables using `select()` function
+
+With __assignment__ (`<-`), `select()` creates a new object containing only the variables you specify
+
+```{r}
+event_small <- select(df_event,instnm,event_date,event_type,event_state,med_inc)
+
+glimpse(event_small)
+```
+
+### Select
+
+`select()` can use "helper functions" `starts_with()`, `contains()`, and `ends_with()` to choose columns 
+```{r, eval=FALSE}
+?select
+```
+
+Example:
+```{r}
+#names(df_event)
+
+select(df_event,instnm,starts_with("event"))
+```
+
+<!--
+
+### Exercise
+
+The data frame `df_school` has one observation for each high school and indicators for whether the high school received a recruiting visit.
+
+```{r results="hide"}
+names(df_school)
+```
+1. Use `select()` to familiarize yourself with variables in the data frame
+1. Practice using the `contains()` and `ends_with()` helper functions to to choose variables
+
+
+-->
+
+
+### Rename variables
+
+
+
+`rename()` function renames variables within a data frame object
+
+\medskip Syntax:
+
+- `rename(obj_name, new_name = old_name,...)`
+\medskip
+```{r results="hide"}
+rename(df_event, g12_offered = g12offered, 
+       titlei = titlei_status_pub)
+names(df_event)
+```
+Variable names do not change permanently unless we combine rename with assignment
+\medskip
+```{r results="hide"}
+rename_event <- rename(df_event, g12_offered = g12offered, titlei = titlei_status_pub)
+names(rename_event)
+rm(rename_event)
+```
+
+## Filter rows
+
+### The `filter()` function
+
+`filter()` allows you to __select observations__ based on values of variables
+
+- Arguments
+    - first argument is name of data frame
+    - subsequent arguments are _logical expressions_ to filter the data frame
+    - Multiple expressions separated by commas work as __AND__ operators (e.g., condtion 1 `TRUE` AND condition 2 `TRUE`)
+
+- What is the result of a `filter()` command?
+    - `filter()` returns a data frame consisting of rows where the condition is `TRUE`
+
+```{r, eval=FALSE}
+?filter
+```
+
+Example from data frame object `df_school`, each obs is a high school
+
+- Show all obs where the high school received 1 visit from UC Berkeley (110635) [output omitted]
+```{r results="hide"}
+filter(df_school,visits_by_110635 == 1)
+```
+
+Note that resulting object is list, consisting of obs where condition `TRUE`
+```{r}
+nrow(df_school)
+nrow(filter(df_school,visits_by_110635 == 1))
+```
+
+### Filter, character variables
+
+Use single quotes `''` or double quotes `""` to refer to values of character variables
+```{r}
+glimpse(select(df_school, school_type,state_code))
+```
+Identify all private high schools in CA that got 1 visit by particular universities
+
+- UC-Berkeley (ID=110635)
+```{r results="hide"}
+filter(df_school,visits_by_110635 == 1, school_type == "private", 
+       state_code == "CA")
+```
+
+- University of Alabama (ID=100751)
+```{r results="hide"}
+filter(df_school,visits_by_100751 == 1, school_type == "private", 
+       state_code == "CA") 
+```
+
+- Visited once by Berkeley and University of Alabama
+```{r results="hide"}
+filter(df_school,visits_by_100751 == 1, visits_by_110635 == 1, 
+       school_type == "private", state_code == "CA") 
+```
+
+### Logical operators for comparisons
+
+Symbol | Meaning
+-------|-------
+`==` | Equal to
+`!=` | Not equal to
+`>` | greater than
+`>=` | greater than or equal to
+`<` | less than
+`<=` | less than or equal to
+`&` | AND 
+`|` | OR
+`%in` | includes
+
+\medskip 
+
+!["Boolean" operations, x=left circle, y=right circle, from Wichkam (2018)](transform-logical.png){width=50%}
+
+### Filters and comparisons, Demonstration
+
+Schools visited by Bama (100751) and/or Berkeley (110635)
+
+```{r results="hide"}
+#berkeley and bama
+filter(df_school,visits_by_100751 >= 1, visits_by_110635 >= 1) 
+filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
+#berkeley or bama
+filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1) 
+```
+Apply `count()` function on top of `filter()` function to count the number of observations that satisfy criteria
+
+- Avoids printing individual observations
+```{r}
+#Number of schools that git visit by Berkeley AND Bama
+count(filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1))
+#Number of schools that git visit by Berkeley OR Bama
+count(filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1))
+```
+
+### Filters and comparisons, >=
+
+\medskip Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama
+```{r}
+#at least 50% black
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+#at least 50% white
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+```
+### Filters and comparisons, not equals (`!=`)
+
+Count the number of high schools visited by University of Colorado (126614) that are not located in CO
+```{r}
+
+#number of high schools visited by U Colorado
+count(filter(df_school, visits_by_126614 >= 1))
+
+#number of high schools visited by U Colorado not located in CO
+count(filter(df_school, visits_by_126614 >= 1, state_code != "CO"))
+#number of high schools visited by U Colorado located in CO
+#count(filter(df_school, visits_by_126614 >= 1, state_code == "CO"))
+```
+### Filters and comparisons, %in% operator
+
+What if you wanted to count the number of schools visited by Bama (100751) in a group of states?
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code == "MA" |
+               state_code == "VT" | state_code == "ME"))
+```
+Easier way to do this is with `%in%` operator
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code %in% c("MA","ME","VT")))
+```
+
+Select the private high schools that got either 2 or 3 visits from Bama
+```{r}
+count(filter(df_school, visits_by_100751 %in% 2:3, school_type == "private"))
+```
+### Identifying data type and possible values helpful for filtering
+
+- `class()` and `str()` shows data type of a variable 
+- `table()` to show potential values of categorical variables
+
+```{r}
+class(df_event$event_type)
+str(df_event$event_type)
+table(df_event$event_type, useNA="always")
+class(df_event$event_state)
+str(df_event$event_state) # double quotes indicate character
+class(df_event$med_inc)
+str(df_event$med_inc)
+```
+
+Now that we know `event_type` is a character, we can filter values
+```{r}
+count(filter(df_event, event_type == "public hs", event_state =="CA"))
+#below code would return an error because variables are character
+#count(filter(df_event, event_type == public hs, event_state ==CA))
+```
+
+### Filtering and missing values
+
+Wickham (2018) states:
+
+- "`filter()` only includes rows where condition is TRUE; it excludes both `FALSE` and `NA` values. To preserve missing values, ask for them explicitly:"
+
+\medskip Investigate var `df_event$fr_lunch`, number of free/reduced lunch students
+
+- only available for visits to public high schools
+
+```{r}
+#visits to public HS with less than 50 students on free/reduced lunch
+count(filter(df_event,event_type == "public hs", fr_lunch<50))
+#visits to public HS, where free/reduced lunch missing
+count(filter(df_event,event_type == "public hs", is.na(fr_lunch)))
+#visits to public HS, where free/reduced is less than 50 OR is missing
+count(filter(df_event,event_type == "public hs", fr_lunch<50 | is.na(fr_lunch)))
+```
+
+### Exercise
+
+Task
+
+- Create a filter to identify all the high schools that recieved 1 visit from UC Berkeley (110635) AND 1 visit from CU Boulder (126614)[output omitted]
+
+### Solution
+
+```{r, results="hide"}
+filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+
+nrow(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+count(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+```
+
+
+- Must __assign__ to create new object based on filter
+```{r results="hide"}
+berk_boulder <- filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+count(berk_boulder)
+```
+
+### Exercises
+
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`  
+1. Count the number of recruiting events by Pitt at public or private high schools  
+1. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000  
+1. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000  
+
+
+### Solution  
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`
+```{r}
+count(filter(df_event, univ_id == 215293))
+```
+
+2. Count the number of recruiting events by Pitt at public or private high schools 
+```{r }
+str(df_event$event_type)
+table(df_event$event_type, useNA = "always")
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs"))
+```
+
+### Solution
+3. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs", event_state == "PA"))
+```
+
+4. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc < 100000))
+```
+
+### Solution
+5. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000
+
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc >= 100000))
+```
+
+6. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_state != "PA", 
+             (event_type == "public hs" & med_inc >= 100000) |
+               event_type == "private hs"))
+```
+
+## Arrange rows
+
+### `arrange()` function
+
+`arrange()` function "arranges" rows in a data frame; said different, it sorts observations
+
+\medskip
+Syntax: `arrange(x,...)`
+
+- First argument, `x`, is a data frame
+- Subsequent arguments are a "comma separated list of unquoted variable names"
+
+```{r, results="hide"}
+arrange(df_event, event_date)
+```
+Data frame goes back to previous order unless you __assign__ the new order
+```{r, results="hide"}
+df_event
+df_event <- arrange(df_event, event_date)
+df_event
+```
+### `arrange()` function
+
+Ascending and descending order
+
+- `arrange()` sorts in __ascending__ order by default
+- use `desc()` to sort a column by descending order
+```{r results="hide"}
+arrange(df_event, desc(event_date))
+```
+
+Can sort by multiple variables
+```{r results="hide"}
+arrange(df_event, univ_id, desc(event_date), desc(med_inc))
+
+#sort by university and descending by size of 12th grade class; combine with select
+select(arrange(df_event, univ_id, desc(g12)),instnm,event_type,event_date,g12)
+```
+
+### `arrange()`, missing values sorted at the end
+
+Missing values automatically sorted at the end, regardless of whether you sort ascending or descending
+
+Below, we sort by university, then by date of event, then by ID of high school
+```{r, results="hide"}
+#by university, date, ascending school id
+select(arrange(df_event, univ_id, desc(event_date), school_id),
+       instnm,event_date,event_type,school_id)
+
+#by university, date, descending school id
+select(arrange(df_event, univ_id, desc(event_date), desc(school_id)),
+       instnm,event_date,event_type,school_id)
+```
+Can sort by `is.na` to put missing values first
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
+       instnm,event_date,event_type,school_id)
+```
+
+### Exercise, arranging  
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Sort ascending by "univ_id" and descending by "event_date"  
+1. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+1. Now using the same variables from above, sort by `is.na` to put missing values in "school_id" first  
+
+### Solution 
+1. Sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+arrange(df_event, univ_id, desc(event_date))
+```
+
+### Solution
+2. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+select(arrange(df_event, univ_id, desc(event_date)), univ_id, event_date, 
+       instnm, event_type)
+```
+
+### Solution
+3. Select the variables "univ_id", "event_date", and "school_id" and sort  by `is.na` to put missing values in "school_id" first. 
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))), 
+       univ_id, event_date, school_id)
+```
+
+
+# Investigating data patterns using Base R
+
+### Tidyverse  vs. base R  functions
+
+tidyverse | base R | operation
+-------|-------|-------
+`select()` |  `[ ]`+ `c()` __OR__ `subset()` | "extract" variables
+`filter()` | `[ ]`+ `$` __OR__ `subset()` | "extract" observations
+`arrange()` | `order()` | sorting data
+
+
+
+## Subsetting using subsetting operators 
+
+### Subsetting to Extract Elements 
+
+Subsetting is the R word for accessing object elements. 
+
+\medskip
+Subsetting features can be used to select/exclude elements (i.e., variables and observations)
+
+- there are three subsetting operators: `[]`, `$` , `[[]]` 
+- these operators function differently based on vector types (e.g, atomic vectors, lists, data frames)
+
+### Subsetting Atomic Vectors via operators
+
+Six ways to subset an atomic vector using `[]`
+\medskip
+
+1. Using positive integers to return elements at specified positions
+
+```{r}
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+x[c(3, 1)]
+```
+
+2. Using negative integers to exclude elements at specified positions
+```{r}
+x[-c(3,1)] 
+```
+
+3. Using logicals to return elements where corresponding logical is `TRUE`
+```{r}
+x[x>3] #3
+```
+
+### Subsetting Atomic Vectors via operators
+
+Six ways to subset an atomic vector using `[]` continued...
+\medskip
+
+4. Empty `[]` returns original vector (useful for dataframes)
+```{r}
+x[] #4
+```
+5. Zero vector (useful for testing data)
+```{r}
+x[0]
+```
+6. Returning character elements with matching names
+```{r}
+y<- setNames(x, letters[1:5]) #6
+y[c("a", "b", "d" )] #6
+```
+
+
+### Subsetting Lists and Matrices via operators
+
+Subsetting lists (arrays and matrices too) via `[]` operator works the same as subsetting an atomic vector
+
+- `[]` simplifies output to the lowest possible dimensionality (i.e.,if you subset a (2D) matrix it will return a 1D vector with however many elements you subset)
+
+```{r}
+x <- list(1,2,"apple")
+y <- x[c(3, 1)]
+typeof(y)
+
+a <- matrix(1:9, nrow = 3)
+a #this is a 3X3 matrix
+
+b <- a[c(1,5 )]
+b #returns an integer vector with two elements
+```
+
+
+### Subsetting Single Elements from Vectors, Lists, and Matrices via operators
+Two other subsetting operators are used for extracting single elements, since subsetting lists with `[]` returns a smaller list
+
+- `[[]]`, `$` 
+-  `$` is shorthand operator equivalent to `x[["y"]]` and is used to access variables in a dataframe (will show this in upcoming slides)
+
+\medskip
+Example from Hadley: If x is a train carrying objects, then `x[[5]]` is the object in car 5 and `x[4:6]` is a smaller train made up of cars 4, 5, & 6.
+
+```{r}
+x <- list(1:3, "a", 4:6)
+
+y <- x[1] #this returns a list
+typeof(y)
+
+z <- x[[1]] #this is not a list
+typeof(z)
+```
+
+
+### Subsetting Data Frames to extract columns (variables) based on positionality
+
+Selecting columns from a data frame by subsetting with `[]` and a single index based on column positionality 
+```{r}
+df_event[1:4]
+```
+
+### Subsetting Data Frames to extract columns (variables) and rows (observations) based on positionality
+
+Selecting rows and columns from a data frame by subsetting with `[]` and a double index based on row/column positionality 
+```{r}
+#this returns the first 5 rows and first 3 columns
+df_event[1:5, 1:3]
+```
+
+```{r results="hide"}
+#this returns the first 5 rows and all columns [output omitted]
+df_event[1:5, ]
+```
+
+### Subsetting Data Frames to extract columns (variables) based on names
+
+Selecting columns from a data frame by subsetting with `[]` and list of column names 
+```{r}
+df_event[c("instnm", "univ_id", "event_state")] 
+```
+
+### Subsetting Data Frames with [] and $ 
+
+- Show all obs where the high school received 1 visit from UC Berkeley (110635) and all columns [output omitted]
+```{r results="hide"}
+x <- df_school[df_school$visits_by_110635 == 1, ]
+```
+
+- Show all obs where the high school received 1 visit from UC Berkeley (110635) and the first three columns [output omitted]
+```{r results="hide"}
+df_school[df_school$visits_by_110635 == 1, 1:3]
+```
+
+- Show all obs where high schools received 1 visit by Bama (100751) and Berkeley (110635)
+```{r results="hide"}
+df_school[df_school$visits_by_110635 == 1 & df_school$visits_by_100751 == 1, ]
+```
+
+### Subsetting Data Frames with [] and $ 
+
+- Show all public high schools with at least 50% Latinx (hispanic in data) student enrollment 
+
+```{r}
+#public high schools with at least 50% Latinx student enrollment 
+df_CA<- df_school[df_school$school_type == "public" 
+                  & df_school$pct_hispanic >= 50 
+                  & df_school$state_code == "CA", ]
+
+head(df_CA, n=3)
+nrow(df_CA)
+```
+
+
+### Subsetting Data Frames with [] and $, NA Observations
+
+- When extracting observations via subsetting operators, resulting dataframe will include rows where condition is `TRUE`; __as well as__ `NA` values. 
+
+- To remove missing values, ask for values that only evaluate to `TRUE` explicitly via  `which()`
+
+- Task: Show all public high schools with at least $50k median household incomes 
+
+__tidyverse__
+```{r, results="hide"}
+df_tv <- filter(df_event, event_type == "public hs" & med_inc>=50000)
+nrow(df_tv) #9,941 obs
+
+```
+
+__base R without `which()`__
+```{r, results="hide"}
+df_b1 <- df_event[df_event$event_type == "public hs" & df_event$med_inc>=50000, ]
+nrow(df_b1) #10,016 obs
+view(df_b1) #NAs sorted at the end of column
+```
+
+
+__base R with `which()`__
+```{r, results="hide"}
+df_b2 <- df_event[which(df_event$event_type == "public hs" & df_event$med_inc>=50000), ]
+nrow(df_b2) #9,941 obs, same as tidyverse way
+```
+
+
+## Subsetting using the subset function
+
+### Subset function
+
+The `subset()` is a base R function and easiest way to "filter" observations 
+
+- can be combined with `select()` base R function to select variables
+- can be combined with `count()` for quick comparisons or assignment to create new objects
+
+```{r}
+?subset
+```
+
+\medskip
+
+Syntax: __subset(x, subset, select, drop = FALSE)__
+
+- x is object to be subsetted
+- subset is the logical expression(s) indicating elements (rows) to keep
+- select indicates columns to select from data frame (if argument is not used default will keep all columns)
+- drop takes `TRUE` or `FALSE` if you want to preserve the original dimensions (only need to worry about dataframes when your subset output is a single column)
+
+
+### Subset function, examples 
+
+- Show all public high schools that are at least 50% Latinx (hispanic in data) student enrollment in California compared to number of schools that received visit by UC Berkeley
+
+```{r}
+#public high schools with at least 50% Latinx student enrollment 
+count(subset(df_school, school_type == "public" & pct_hispanic >= 50 
+             & state_code == "CA"))
+
+count(subset(df_school, school_type == "public" & pct_hispanic >= 50 
+             & state_code == "CA" & visits_by_110635 >= 1))
+
+```
+
+
+Can also use the %in% operator...
+-Show visits by Bama in multiple states
+```{r}
+count(subset(df_school, visits_by_100751 >= 1 & state_code %in% c("MA","ME","VT")))
+```
+
+
+### Subset function, examples 
+
+- Create new df with all public high schools that are at least 50% Latinx student enrollment in California __AND__ only keep variables `name` and `address` 
+
+```{r}
+#public high schools with at least 50% Latinx student enrollment 
+df_CA2 <- subset(df_school, school_type == "public" & pct_hispanic >= 50 
+             & state_code == "CA", select = c(name, address))
+head(df_CA2)
+nrow(df_CA2)
+```
+
+
+## Sorting data 
+
+### Base R `sort()` for vectors 
+
+
+`sort()` is a base R function that sorts vectors
+- Syntax: `sort(x, decreasing=FALSE, ...)`; where x is object being sorted
+- By default it sorts in ascending order (low to high)
+- Need to set decreasing argument to `TRUE` to sort from high to low
+
+```{r}
+?sort()
+x<- c(31, 5, 8, 2, 25)
+sort(x)
+sort(x, decreasing = TRUE)
+```
+
+
+### Base R `order()` for dataframes
+
+`order()` is a base R function that sorts vectors
+
+- Syntax: `order(..., na.last = TRUE, decreasing = FALSE)`
+- where `...` are variable(s) to sort by
+- By default it sorts in ascending order (low to high)
+- Need to set decreasing argument to `TRUE` to sort from high to low
+
+
+Descending argument only works when we want either one (and only) variable descending or all variables descending (when sorting by multiple vars)
+
+- use `-` when you want to indicate which variables are descending while using the default ascending sorting
+```{r results="hide"}
+df_event[order(df_event$event_date), ] 
+df_event[order(df_event$event_date, df_event$total_12), ]
+
+#sort descending via argument
+df_event[order(df_event$event_date, decreasing = TRUE), ] 
+df_event[order(df_event$event_date, df_event$total_12, decreasing = TRUE), ] 
+
+#sorting by both ascending and descending variables
+df_event[order(df_event$event_date, -df_event$total_12), ]
+```
+
+
+# Tidyverse vs base R examples [resource for you]
+
+### Extracting columns (variables)
+
+-Create a new dataframe by extracting the columns `instnm`, `event_date`, `event_type` from df_event. Use the `names()` function to show what columns/variables are in the newly created dataframe.
+
+__tidyverse__
+```{r}
+df_event_tv <- select(df_event, instnm, event_date, event_type)
+names(df_event_tv)
+```
+
+__base R__ using subsetting operators
+```{r}
+df_event_br1 <- df_event[, c("instnm", "event_date", "event_type")]
+names(df_event_br1)
+```
+
+__base R__ using `subset()` function
+```{r}
+df_event_br2 <- subset(df_event, select=c(instnm, event_date, event_type))
+names(df_event_br2)
+```
+
+
+### Extracting observations 
+
+-Create a new dataframe from df_schools that includes out-of-state public high schools with 50%+ Latinx student enrollment that received at least one visit by the University of California Berkeley.
+
+__tidyverse__
+```{r}
+df_school_tv <- filter(df_school, state_code != "CA" & school_type == "public" & pct_hispanic >= 50 & visits_by_110635 >=1 )
+nrow(df_school_tv)
+```
+
+__base R__ using subsetting operators
+```{r}
+df_school_br1 <- df_school[which(df_school$state_code != "CA" & df_school$school_type == "public" 
+                  & df_school$pct_hispanic >= 50 
+                  & df_school$visits_by_110635 >=1), ]
+nrow(df_school_br1)
+```
+
+__base R__ using `subset()` function
+```{r}
+df_school_br2 <- subset(df_school, state_code != "CA" & school_type == "public" & pct_hispanic >= 50 & visits_by_110635 >=1 )
+nrow(df_school_br2)
+```
+
+
+
+### Sorting observations 
+
+-Create a new dataframe from df_events that sorts by ascending by `event_date`, ascending `event_state`, and descending `pop_total` .
+
+__tidyverse__
+```{r results="hide"}
+df_event_tv <- arrange(df_event, event_date, event_state, desc(pop_total))
+```
+
+__base R__ using  `order()` function
+```{r results="hide"}
+df_event_br1 <- df_event[order(df_event$event_date, df_event$event_state, 
+                               -df_event$pop_total), ]
+```

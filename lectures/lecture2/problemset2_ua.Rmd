@@ -1,0 +1,101 @@
+---
+title: "Lecture 2 Problem Set"
+author: "INSERT YOUR NAME HERE"
+date: "INSERY DATE HERE"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+In this problem set, you will investigate objects and data patterns. 
+
+# Step 1: Make changes to YAML header
+
+Recommend reading R Markdown: The Definative Guide section 3.1 ([LINK HERE](https://bookdown.org/yihui/rmarkdown/html-document.html)) before answering these questions
+
+1. Add a table of contents to YAML header
+1. table of contents should have "depth" of 2
+1. table of contents should "float"
+1. add section numbering to headers
+
+
+Load tidyverse package [code already provided]
+```{r}
+#install.packages("tidyverse") #install if you do not have tidyverse installed
+library(tidyverse)
+```
+
+Load data frame object and use `count()` to tabulate the total number of visits each school received [code already provided]
+```{r}
+rm(list = ls()) # remove all objects
+getwd()
+
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"))
+#glimpse(df_school_all)
+
+df_school_all %>% count(total_visits)
+```
+
+
+# Step 2: Investigating objects
+
+1. Answer the following questions about the object `df_school_all` by running the appropriate R commands within the code chunk and writing any substantive response required next to the question. The code and substantive response for the first question will be answered for you as an example.
+    + What "type" of object is `df_school_all`?
+        + __ANSWER [FREEBIE]: the object df_school_all is a list type__
+    + What is the "length" of the object `df_school_all`? What does this specific value of length refer to? 
+        + __YOUR ANSWER HERE__ 
+    + how many "rows" are in the object `df_school_all`? what does each row represent?  
+        + __YOUR ANSWER HERE__ 
+        
+        
+```{r}
+#type of df_school_all 
+
+#length of df_school_all 
+
+#num of rows in df_school_all
+```
+        
+        
+\newline  
+
+2. In the below code chunk, use the `str()` function to describe the contents of `df_school_all` and then answer the following questions in text above the code chunk.  
+    + What does each element of the object `df_school_all` represent?  (hint Lecture 1.2)
+    
+    + Are the individual elements within `df_school_all` lists or vectors?  
+    
+    + Are the individual elements within `df_school_all` named or un-named? what do these element names refer to?  (hint use `names()`)
+    
+    
+```{r}
+
+```
+
+\newline
+
+3. These questions refer to the variable `school_type` within the object `df_school_all`. Run the appropriate R commands in the chunk below and write substantive responses below each question.
+
+    - What is the data "type" of `school_type`?
+    
+          - __ANSWER__:
+    - What is the "length" of `school_type`? What does this specific value of length refer to?
+    
+          - __ANSWER__:
+          
+```{r}
+
+```
+
+
+Once finished, knit to (HTML) and upload both .Rmd and HTML files
+
+*Remember to use this naming convention "lastname_firstname_ps2"*
+

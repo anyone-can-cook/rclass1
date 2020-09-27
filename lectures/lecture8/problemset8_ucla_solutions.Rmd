@@ -1,0 +1,415 @@
+---
+title: "Lecture 8 Problem Set Solutions"
+author: ""
+date: ""
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 2 
+    df_print: tibble 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+****** 
+
+## Overview
+
+This problem set has three parts. 
+
+1. I'll ask you some definitional/conceptual questions about the concepts introduced in lecture
+1. Tidying untidy data: reshaping from long to wide
+    - e.g., dataset has one row for each combination of university ID and enrollment age group, but you want a dataset with one row per university ID and one enrollment variable for each age group
+    - for these questions we'll use fall enrollment data from the Integrated Postsecondary Data System (IPEDS), specifically the fall enrollment sub-survey that focuses on enrollment by age group
+1. Tidying untidy data: reshaping from wide to long
+    - for these questions we'll use data from the NCES digest of education statistics that contains data about the total number of teachers in each state
+
+
+# Load library and data
+
+In order to use the `pivot_wider` and `pivot_longer` functions, you need to install the developer version of tidyr
+```{r results="hide"}
+#install.packages("devtools") #uncomment if you have not installed these packages
+#devtools::install_github("tidyverse/tidyr")
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+    
+# Part I: Conceptual questions
+
+- What is the difference between the terms "unit of analysis" [our term; not necessarily used outside this class] and "observational level" [A Wickham term]?  
+
+\textcolor{red}{\textbf{/0.5}}  
+
+ANSWER: Wickham defines "observational level" as what each observation should represent in a tidy dataset (i.e., it is a data concept), whereas Ozan defines "unit of analysis" as what each row in the data actually represents (i.e., refers to data structure)__. 
+ 
+
+- What are the three rules of tidy data?  
+
+\textcolor{red}{\textbf{/0.5}} 
+
+    1. Each variable must have its own column.  
+    1. Each observation must have its own row.  
+    1. Each value must have its own cell. 
+
+
+
+
+# Part II: Questions about reshaping long to wide
+
+## Description of the data
+
+For these questions, we'll be using data from the Fall Enrollment survey component of the Integrated Postsecondary Education Data System (IPEDS)
+
+- Specifically, we'll be using data from the survey sub-component that focuses on enrollment by age-group.
+- The dataset we'll be using data from Fall 2016 (i.e., Fall of the 2016-17 academic year)
+- Here is a link to a data dictionary (an excel file) for the enrollment by age dataset: [LINK](https://nces.ed.gov/ipeds/datacenter/data/EF2016B_Dict.zip)
+- In the dataset you load below:
+    - I've dropped a few of the variables from the raw enrollment by age data
+    - I've added a few variables from the "institutional characteristics" survey (e.g., institution name, state, sector) that should be pretty self explanatory if you examine the variable labels and/or value labels
+- the variable `unitid` is the ID variable for each college/university
+- the dataset has one observation for each combination of the variables unitid-efbage-lstudy
+
+
+## Overview of the reshaping long to wide tasks
+
+- Load the data frame and assign it the name `age_f16_allvars_allobs`
+- Create two different data frame objects based on the data frame `age_f16_allvars_allobs`
+    - A dataframe `agegroup1_obs` that has fewer variables than `age_f16_allvars_allobs` and keeps observations where age-group equals `1` (1. All age categories total)
+        - this data frame has the simplist structure; we'll reshape this one first
+    - A dataframe `levstudy1_obs` that has fewer variables than `age_f16_allvars_allobs` and keeps observations where "level of study" equals `1` (1. All Students total)
+        - we'll reshape this one second
+- Questions related to reshaping `agegroup1_obs`
+- Questions related to reshaping `levstudy1_obs`
+
+
+## Load data and create three new data frames
+
+- Load IPEDS data that contains fall enrollment by age
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE BELOW CODE CHUNK
+```{r}
+rm(list = ls()) # remove all objects
+#getwd()
+#list.files("../../../documents/rclass/data/ipeds/ef/age") # list files in directory w/ NLS data
+
+#Read Stata data into R using read_data() function from haven package
+age_f16_allvars_allobs <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/ef/age/ef_age_ic_fall_2016.dta", encoding=NULL)
+
+#rename a couple variables
+age_f16_allvars_allobs <- age_f16_allvars_allobs %>% rename(agegroup=efbage, levstudy=lstudy)
+
+#list variables and variable labels
+names(age_f16_allvars_allobs)
+age_f16_allvars_allobs %>% var_label()
+```
+
+- Create two new data frames based on `age_f16_allvars_allobs`
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE BELOW CODE CHUNK
+```{r}
+
+#Create dataframe that keeps observations where age-group equals `1` (1. All age categories total)
+agegroup1_obs <- age_f16_allvars_allobs %>%   
+  select(fullname,unitid,agegroup,levstudy,efage09,stabbr,locale,sector) %>% 
+  filter(agegroup==1) %>% 
+  select(-agegroup)
+
+glimpse(agegroup1_obs)
+
+#Create dataframe keeps observations where "level of study" equals `1` (1. All Students total)
+levstudy1_obs <- age_f16_allvars_allobs %>%   
+  select(fullname,unitid,agegroup,levstudy,efage09,stabbr,locale,sector) %>%  
+  filter(levstudy==1) %>% 
+  select(-levstudy)
+
+glimpse(levstudy1_obs)
+```
+
+
+## Questions related to reshaping the dataset `agegroup1_obs` from long to wide
+
+- Run whatever investigations seem helpful to you to get to know the data (e.g., list variable names, list variable variable labels, list variable values, tabulations). You may decide to comment out some of these investigations before you knit and submit the problem set so that your pdf doesn't get too long.
+\textcolor{red}{\textbf{/1}}  
+
+
+```{r}
+#basic investigations of dataset
+names(agegroup1_obs)
+str(agegroup1_obs)
+agegroup1_obs %>% var_label()
+```
+
+Sort and print a few obs
+```{r}
+#sort
+agegroup1_obs <- agegroup1_obs %>% arrange(unitid,levstudy)
+
+#print a few obs
+agegroup1_obs %>% head(n=10) %>% as_factor
+```
+
+Run some frequencies
+```{r}
+#frequency of level of study variable
+agegroup1_obs %>% select(levstudy) %>% val_labels()
+agegroup1_obs %>% count(levstudy) %>% as_factor
+
+#frequency of sector variable
+agegroup1_obs %>% select(sector) %>% val_labels()
+agegroup1_obs %>% count(sector) %>% as_factor
+
+#frequency of locale variable
+agegroup1_obs %>% select(locale) %>% val_labels()
+agegroup1_obs %>% count(locale) %>% as_factor
+```
+
+
+
+- Run the following code, which confirms that there is one row per each combination of unitid-levstudy
+
+NOTE: IN THIS QUESTION, WE GIVE YOU THE ANSWERS; BUT TRY TO UNDERSTAND WHAT EACH PART OF THE CODE IS DOING
+```{r}
+agegroup1_obs %>% group_by(unitid,levstudy) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+
+Using code from previous question as a guide, confirm that the object `agegroup1_obs` has more than one observation for each value of unitid
+\textcolor{red}{\textbf{/0.5}}  
+
+```{r}
+agegroup1_obs %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+\textcolor{red}{\textbf{/1.5}}  
+
+- Diagnose whether the data frame `agegroup1_obs` meets each of the three criteria for tidy data
+  - YOUR ANSWER HERE: 
+    - Each variable must have its own column: false; the values of the column levstudy should each be variables with their own column
+    - Each observation must have its own row: false; there should be one row per college/university, but this data frame has one row per college-levstudy
+    - Each value must have its own cell: true
+
+- What changes need to be made to `agegroup1_obs` to make it tidy?
+    - YOUR ANSWER HERE: convert the values of the variable levstudy into their own variables; each variable will contain enrollment for that level of study
+    
+- With respect to "reshaping long to wide" to tidy a dataset, define the "names_from" parameter.
+    - YOUR ANSWER HERE: the column name(s) in the untidy dataset whose values will become variable names in the tidy data
+
+- What should the "names_from" column be in the data frame `agegroup1_obs`?
+    - YOUR ANSWER HERE: names_from column should be `levstudy`
+    
+- With respect to "reshaping long to wide" to tidy a dataset, define the  "values_from" paramenter.
+    - YOUR ANSWER HERE: the column name(s) in the untidy dataset that contains the values for the new variables that will be created in the tidy dataset
+    
+- What should the "values_from" column be in the data frame `agegroup1_obs`?
+    - YOUR ANSWER HERE: values_from column should be `efage09`
+    
+Tidy the data frame `agegroup1_obs` and create a new object `agegroup1_obs_tidy`, then print a few observations
+\textcolor{red}{\textbf{/3}}  
+```{r}
+agegroup1_obs %>% head(n=5)
+
+agegroup1_obs_tidy <- agegroup1_obs %>% 
+  pivot_wider(names_from = levstudy, values_from = efage09)
+
+agegroup1_obs_tidy %>% head(n=5)
+```
+
+
+Confirm that the new object `agegroup1_obs_tidy` contains one observation for each value of unitid
+\textcolor{red}{\textbf{/0.5}}  
+
+```{r}
+agegroup1_obs_tidy %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+
+```
+
+
+
+Create a new object `agegroup1_obs_tidy_v2` from the object `agegroup1_obs` by performing the following steps in one line of code with multiple pipes:
+\textcolor{red}{\textbf{/3}}  
+
+- Create a variable `level` that is a character version of the variable `levstudy'
+- Drop the original variable `levstudy`
+- Tidy the dataset
+
+```{r} 
+attributes(agegroup1_obs$levstudy)
+
+agegroup1_obs_tidy_v2 <- agegroup1_obs %>% 
+  mutate(level= recode(as.integer(levstudy),
+                       `1`= "all",
+                       `2`= "ug",
+                       `5`= "grad")) %>%
+  select(-levstudy) %>%
+  pivot_wider(names_from = level, values_from = efage09)
+
+```
+
+Print a few observations of `agegroup1_obs_tidy_v2`; Why is this data frame preferable over `agegroup1_obs_tidy`?  
+\textcolor{red}{\textbf{/1}}  
+    - YOUR ANSWER HERE: more intuitive to have variable names that describe the data within that column rather than arbitrary numbers
+```{r}
+agegroup1_obs_tidy_v2 %>% head(n=5)
+```
+
+
+
+## Questions related to reshaping the dataset `levstudy1_obs` from long to wide
+
+- Run whatever investigations seem helpful to you to get to know the data frame `levstudy1_obs` (e.g., list variable names, list variable variable labels, list variable values, tabulations). You may decide to comment out some of these investigations before you knit and submit the problem set so that your pdf doesn't get too long.
+\textcolor{red}{\textbf{/1}}  
+
+```{r}
+#basic investigations of dataset
+names(levstudy1_obs)
+str(levstudy1_obs)
+levstudy1_obs %>% var_label()
+```
+
+Sort and print a few obs
+```{r}
+#sort
+levstudy1_obs <- levstudy1_obs %>% arrange(unitid,agegroup)
+
+#print a few obs
+levstudy1_obs %>% head(n=10) %>% as_factor
+```
+
+Run some frequencies
+```{r}
+#frequency of level of study variable
+levstudy1_obs %>% select(agegroup) %>% val_labels()
+levstudy1_obs %>% count(agegroup) %>% as_factor
+```
+
+
+- Confirm that there is one row per each combination of unitid-agegroup
+\textcolor{red}{\textbf{/0.5}}  
+
+```{r}
+levstudy1_obs %>% group_by(unitid,agegroup) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+Using code from previous question as a guide, confirm that the object `levstudy1_obs` has more than observation for each value of unitid
+\textcolor{red}{\textbf{/0.5}}  
+
+```{r}
+levstudy1_obs %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+\textcolor{red}{\textbf{/1}}  
+
+- Why is the data frame `levstudy1_obs` not tidy?
+    - YOUR ANSWER HERE: the data frame has one row per college-agegroup; these rows do not meet the requirements of being observations because an observation contains all values for some unit.
+- What changes need to be made to `levstudy1_obs` to make it tidy?
+    - YOUR ANSWER HERE: convert the values of the variable agegroup into their own variables; each variable will contain enrollment for that age group
+
+
+Tidy the data frame `levstudy1_obs` and create a new object `levstudy1_obs_tidy` (it is up to you whether you want to create character version of the variable `agegroup` prior to tidying) then print a few observations
+\textcolor{red}{\textbf{/3}}  
+
+```{r}
+levstudy1_obs %>% head(n=5)
+levstudy1_obs %>% count(agegroup) %>% as_factor()
+
+levstudy1_obs_tidy <- levstudy1_obs %>% 
+  mutate(age = recode(as.integer(agegroup),
+    `1`="age_all",
+    `2`="age_lt25",
+    `3`="age_lt18",
+    `4`="age_18_19",
+    `5`="age_20_21",
+    `6`="age_22_24",
+    `7`="age_25_plus",
+    `8`="age_25_29",
+    `9`="age_30-34",
+    `10`="age_35-39",
+    `11`="age_40_49",
+    `12`="age_50_64",
+    `13`="age_65_plus",
+    `14`="age_unknown")
+  ) %>% select(-agegroup) %>%
+  pivot_wider(names_from = age, values_from = efage09)
+
+levstudy1_obs_tidy %>% head(n=5)
+```
+
+
+Confirm that the new object `levstudy1_obs_tidy` contains one observation for each value of unitid
+\textcolor{red}{\textbf{/0.5}}  
+
+```{r}
+levstudy1_obs_tidy %>% group_by(unitid) %>% # group by vars
+  summarise(n_per_group=n()) %>% # create a measure of number of observations per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group
+  count(n_per_group) # frequency of number of observations per group
+```
+
+
+# Part III: Questions about reshaping wide to long
+
+Here, we load a table from NCES digest of education statistics that contains data about the total number of teachers in each state for particular years.
+```{r}
+load(url("https://github.com/ozanj/rclass/raw/master/data/nces_digest/nces_digest_table_208_30.RData"))
+
+#covert character variables for teacher totals to integers
+table208_30[2:6] <- data.frame(lapply(table208_30[2:6],as.integer))
+
+table208_30
+```
+
+\textcolor{red}{\textbf{/1}}  
+
+- Why is the data frame `table208_30` not tidy?  
+    - YOUR ANSWER HERE: Some of the column names (tot_fall_2000...) are not names of variables, but values of a variable, which results in a single variable (e.g., total fall enrollment) being spread across multiple columns.
+
+- What changes need to be made to `table208_30` to make it tidy?
+    - YOUR ANSWER HERE: Create `year` column or reshape from wide to long
+    
+
+Tidy the data frame `table208_30` and create a new object `table208_30_tidy`:
+\textcolor{red}{\textbf{/3}}  
+
+- hint: use the `cols = starts_with()` and `names_prefix=()` options for `pivot_longer()`
+- after you tidy the data, print a few observations
+
+```{r}
+table208_30_tidy<- table208_30 %>%
+  pivot_longer(
+    cols = starts_with("tot_fall_"),
+    names_to = "year",
+    names_prefix = ("tot_fall_"),
+    values_to = "tot_tchrs"
+  )
+
+#examine data
+head(table208_30_tidy, n=20)
+```
+
+
+Once finished, knit to (pdf) and upload both .Rmd and pdf files. 
+*Remeber to use this naming convention "lastname_firstname_ps8"*
+

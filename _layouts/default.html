@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ "/css/main.css" | relative_url }}">
+
+  </head>
+
+
+  <body>
+    <nav>
+<ul>
+<li><a href="{{"/" | relative_url }}">Home</a></li>
+<li><a href="{{"/about" | relative_url }}">About</a></li>
+<li><a href="{{"/resources" | relative_url }}">Class Resources</a></li>
+</ul>
+    </nav>
+<div class="container">
+
+  {{ content }}
+
+</div>
+
+  <footer>
+   <ul>
+   <li><a href="mailto:ozanj@ucla.edu">Professor's email</a></li>
+   <li><a href="mailto:lixin12171217@gmail.com">TA's email</a></li>
+   <li><a href="https://piazza.com/ucla/fall2019/educ263/home">piazza.com</a></li>
+   </ul>
+  </footer>
+  </body>
+
+</html>

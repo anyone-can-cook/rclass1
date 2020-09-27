@@ -1,0 +1,166 @@
+---
+title: "Problem Set #11"
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 2 
+    df_print: tibble 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Required reading and instructions 
+
+_Reading_
+
+- GW chapter 14 (Strings) and chapter 16 (Dates and Times)
+    - Lecture 11 covers this material pretty closely, so read chapters if you can, but I get it if you don't have time
+
+_Instructions_
+
+The goal for the first part of this problem set is to get some practice working with strings by detecting, extracting, and cleaning hyperlinks within the Jeopardy dataset we used in Lecture 11. 
+
+This `stringr` resource may be of a help in completing this problem set: [__LINK__](https://stringr.tidyverse.org/articles/regular-expressions.html)
+
+
+# Load libraries and data
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(stringr)
+library(lubridate)
+```
+
+```{r}
+jeopardy <- read_csv("https://raw.githubusercontent.com/ozanj/rclass/master/data/text_data/JEOPARDY_CSV.csv")
+```
+
+
+# Working with Strings Questions
+
+1. Detect any hyperlinks within `Questions`. Hyperlinks are formatted in HTML as `<a href>` tags. Extract the contents within these `<a href>` into a seperate `href_tag` variable. 
+
+THIS ANSWER IS GIVEN TO YOU.
+```{r}
+
+#detect <a href> tags to see formatting
+jeopardy %>% 
+  select(Question) %>%
+  filter(str_detect(Question, "<a href="))
+
+
+# extract <a href> tags
+jeopardy <- jeopardy %>% 
+  mutate(
+    href_tag=str_extract(Question, "<a href=\"(.*)\">")
+)
+
+# see the new variable
+jeopardy %>% 
+  select(href_tag) %>%
+  filter(str_detect(href_tag, "<a href=") )
+
+```
+
+
+
+
+2. Plug in the regular expression used above `"<a href=\"(.*)\""`  into the regular expression field on the website [__https://regex101.com__](https://regex101.com) and test a few observations of `Question` from the jeapardy dataframe (Keep PRCE as the flavor). Using the explanation provided on the match, but in your own words!, explain what the regualar `"<a href=\"(.*)\""` does. Be sure to explain what the following operators are doing: `.`, `*`, `\`. 
+
+    - _YOUR ANSWER HERE_: 
+
+
+
+3. Subset `href_tag` using `str_sub()` to remove the `<a href="`  portion of the string. Then remove the `">`at the end of the string. Hint: start and end arguments can be left blank to return any remaining characters and you can mix positive/negative integers as start/end arguments to indicate what positions of the string you'd like to keep. Assign the result of both these tasks to a new varible called `links`. 
+```{r}
+
+#remove start `<a href="`  portion
+jeopardy <- jeopardy %>% 
+  mutate(
+    links=str_sub(href_tag, 10, )
+)
+
+#remove the `">`at the end of the string
+jeopardy <- jeopardy %>% 
+  mutate(
+    links=str_sub(links, 1, -3)
+)
+
+# see the new variable
+jeopardy %>% 
+  select(links)
+
+
+```
+
+
+4. Many of the hyperlinks within `Questions` are files with various common extensions: `.pdf`, `.mp3`, `.jpg`, `.mov`, `.wmv`, etc. Using regular expressions, detect and extract these extensions from the variable `links` into a new variable called `extns`. Hint: There are various ways to accomplish this. If it's helpful, only detect and extract extensions if `links` observations end with these extentions.
+
+```{r}
+#detect extensions at end of string
+jeopardy %>% 
+  select(links) %>%
+  filter(str_detect(links, "\\.[:alnum:][:alnum:][:alnum:]$"))
+
+
+# extract extensions 
+jeopardy <- jeopardy %>% 
+  mutate(
+    extns=str_extract(links, "\\.([:alnum:][:alnum:][:alnum:])$")
+)
+
+#remove . from extensions using sub_replace
+jeopardy <- jeopardy %>% 
+  mutate(
+    extns=str_replace(extns, "\\.", "")
+)
+
+#tabulate extns
+jeopardy %>% 
+  count(extns)
+```
+
+
+
+5. Detect and extract dates from `Questions` in __any one__ format (mm/dd/yyyy, mm-dd-yyyy, yyyy/mm/dd) into a new variable called `date`. The goal here is not to get "the right answer" but get you to explore various ways to extract patterns. Don't spend too much time on this, but create a regular expression that extracts __at least__ one date observation within `date` (in whichever format).
+
+```{r}
+
+jeopardy %>% 
+  select(Question) %>%
+  filter(str_detect(Question, "(\\d{1,2}([.-/])\\d{1,2}([.-/])\\d{1,4})"))
+
+
+#remove . from extensions using sub_replace
+jeopardy <- jeopardy %>% 
+  mutate(
+    date=str_extract(Question, "(\\d{1,2}([.-/])\\d{1,2}([.-/])\\d{1,4})")
+)
+
+#tabulate extns
+jeopardy %>% 
+  count(date)
+```
+
+
+6. Using the `lubridate` library, convert the `date` variable from the previous question into a date object called `datev2`. Check the type and class of the `datev2`. FYI- if your `date` variables are not in a consistent format you may get a warning regarding how many observations `failed to parse.` 
+
+```{r}
+
+#some strings will not parse due to 2-digit and 4-digit years
+
+
+# convert to time object
+jeopardy<- jeopardy %>%
+  mutate(
+    date_obj= dmy(date)
+    
+  )
+
+#check class
+typeof(jeopardy$date)
+class(jeopardy$date)
+```
+
