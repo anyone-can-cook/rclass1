@@ -1,34 +1,487 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
-  <head>
-    <title>{{ page.title }}</title>
+	<head>
+		<title>EDUC 263</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/> 
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
 
-    <link rel="stylesheet" type="text/css" href="{{ "/css/main.css" | relative_url }}">
+		<!-- Header -->
+			<section id="header">
+				<header>
+					<span class="image avatar"><img src="images/anyone_can_cook.png" alt="" /></span>
+					<h1 id="logo"><a href="#">EDUC 263</a></h1>
+					<p>Introduction to Programming & <br />
+					Data Management Using R<br /></p>
+				</header>
+				<nav id="nav">
+					<ul>
+						<li><a href="#one" class="active">About</a></li>
+						<li><a href="#two">Syllabus & Resources</a></li>
+						<li><a href="#three">Lecture Materials</a></li>
+						<li><a href="#four">Readings & Assignments</a></li>
+					</ul>
+				</nav>
+				<footer>
+					<ul class="icons">
+						<li><a href="https://twitter.com/ozanjaquette" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://github.com/ozanj" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="mailto:ozanj@ucla.edu" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+				</footer>
+			</section>
 
-  </head>
+		<!-- Wrapper -->
+			<div id="wrapper">
 
+				<!-- Main -->
+					<div id="main">
 
-  <body>
-    <nav>
-<ul>
-<li><a href="{{"/" | relative_url }}">Home</a></li>
-<li><a href="{{"/about" | relative_url }}">About</a></li>
-<li><a href="{{"/resources" | relative_url }}">Class Resources</a></li>
-</ul>
-    </nav>
-<div class="container">
+						<!-- One -->
+							<section id="one">
+								<div class="container">
+									<header class="major">
+										<h2>EDUC 263: Introduction to Programming and Data Management Using R</h2>
+										<h3>Fall 2020</h3>
+										<p>This course has two foundational goals: (1) to develop core skills in “data management,” which are important regardless of which programming language you use, and (2) to learn the fundamentals of the R programming language.</p>
+									</header>
+								</div>
+							</section>
 
-  {{ content }}
+						<!-- Two -->
+							<section id="two">
+								<div class="container">
+									<h3>Syllabus & Resources</h3>
+									<p>Class materials including the syllabus, course textbook, and GitHub are linked below.</p>
+									<ul class="feature-icons">
+										<li class="icon solid fa-book"><a href="https://github.com/ozanj/rclass/raw/master/syllabus/syllabus.pdf">Syllabus</a></li>
+										<li class="icon solid fa-book-open"><a href= "http://r4ds.had.co.nz/">Textbook: R for Data Science</a></li>
+										<li class="icon solid fa-file-download"><a href="https://github.com/ozanj/rclass/raw/master/todo/educ263_todo.pdf">Software installation</a></li>
+										<li class="icon solid fa-folder-open"><a href="https://github.com/ozanj/rclass/raw/master/lectures/problemset_resources.pdf">Problemset resources</a></li>
+										<li class="icon solid fa-code"><a href="https://rstudio.com/resources/cheatsheets/">R Cheatsheets</a></li>
+										<li class="icon solid fa-users"><a href="https://github.com/ozanj/rclass">Class GitHub</a></li>
+									</ul>
+								</div>
+							</section>
 
-</div>
+						<!-- Three -->
+							<section id="three">
+								<div class="container">
+									<h3>Lecture Materials</h3>
+									<p>Some text here. </p>
 
-  <footer>
-   <ul>
-   <li><a href="mailto:ozanj@ucla.edu">Professor's email</a></li>
-   <li><a href="mailto:lixin12171217@gmail.com">TA's email</a></li>
-   <li><a href="https://piazza.com/ucla/fall2019/educ263/home">piazza.com</a></li>
-   </ul>
-  </footer>
-  </body>
+									<div id="lectures" class="wrapper">
+									  <button class="collapsible"> Lectures (by topic) </button>
+									  <div class="content">
+									  	<div class="container-collapse">
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse1">Introduction to R</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse1" class="panel-collapse collapse">
+									  					<div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse2">Investigating data patterns in Base R</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse2" class="panel-collapse collapse">
+									  					<div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse3">Pipes and dplyr functions</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse3" class="panel-collapse collapse">
+									  					<div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse4">Strings and Dates</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse4" class="panel-collapse collapse">
+									  					<div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse5">Attributes and Class</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse5" class="panel-collapse collapse">
+									  				  <div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse6">Data Quality</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse6" class="panel-collapse collapse">
+									  				  <div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse7">Tidy Data</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse7" class="panel-collapse collapse">
+									  				  <div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  		<div class="panel-group">
+									  			<div class="panel panel-default">
+									  				<div class="panel-heading">
+									  					<h4 class="panel-title">
+									  						<a data-toggle="collapse" href="#collapse8">Joining data</a>
+									  					</h4>
+									  				</div>
+									  				<div id="collapse8" class="panel-collapse collapse">
+									  				  <div class="panel-body">HTML</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">.Rmd</div>
+									  					<div class="indent-one"></div>
+									  					<div class="panel-body">Video Recordings</div>
+									  					<div class="indent-one"></div>
+									  				</div>
+									  			</div>
+									  		</div>
+									  	</div>   		
+									  	</div>
+									  </div>
+								</div>
+							</section>
 
+						<!-- Four -->
+							<section id="four">
+								<div class="container">
+									<h3>Readings & Assignments</h3>
+									<p>Some text here.</p>
+									  <div id="assignments" class="wrapper">
+									    <button class="collapsible">Weekly readings and assignments</button>
+									    <div class="content">
+									    	<div class="container-collapse">
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse9">Week 1 (Do before 10/09/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse9" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 1 due 10/09/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse10">Week 2 (Do before 10/16/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse10" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 2 due 10/16/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse11">Week 3 (Do before 10/23/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse11" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 3 due 10/23/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse12">Week 4 (Do before 10/30/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse12" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 4 due 10/30/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse13">Week 5 (Do before 11/06/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse13" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 5 due 11/06/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse14">Week 6 (Do before 11/13/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse14" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 6 due 11/13/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse15">Week 7 (Do before 11/20/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse15" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 7 due 11/20/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse16">Week 8 (Thanksgiving break, No class)</a>
+									    					</h4>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse17">Week 9 (Do before 12/04/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse17" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 8 due 12/04/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse18">Week 10 (Do before 12/11/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse18" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 9 due 12/11/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    		<div class="panel-group">
+									    			<div class="panel panel-default">
+									    				<div class="panel-heading">
+									    					<h4 class="panel-title">
+									    						<a data-toggle="collapse" href="#collapse19">Finals Week (Do before 12/18/20 class)</a>
+									    					</h4>
+									    				</div>
+									    				<div id="collapse19" class="panel-collapse collapse">
+									    					<div class="panel-body">Required Readings</div>
+									    					<div class="indent-one">
+	    						    							<ul>
+	    						    								<li><a href=""></a></li>
+	    						    					 		</ul>
+									    					</div>
+									    					<div class="panel-body">Encouraged Readings</div>
+									    					<div class="indent-one"></div>
+									    					<div class="panel-footer">Problem set 10 due 12/18/20 @ 10am</div>
+									    					<div class="indent-one"></div>
+									    				</div>
+									    			</div>
+									    		</div>
+									    	</div>
+									    </div>
+									</div>
+								</div>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="container">
+							<ul class="copyright">
+								<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/collapse.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	</body>
 </html>
