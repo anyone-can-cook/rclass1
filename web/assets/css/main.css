@@ -1807,7 +1807,7 @@ input, select, textarea {
   		font-weight: bold;
 		line-height: 1.5em;
   		padding: 7px;
-  		width: 80%;
+  		width: 90%;
   		border: 3px solid #4acaa8;
   		text-align: left;
   		outline: none;
@@ -1868,7 +1868,7 @@ input, select, textarea {
   		color: #777;
 		cursor: pointer;
 		padding: 15px;
-		width: 80%;
+		width: 90%;
 		border: 2px solid #e7e7e7;
 		text-align: left;
 	}
