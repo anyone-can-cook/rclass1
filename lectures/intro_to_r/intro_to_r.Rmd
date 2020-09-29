@@ -211,11 +211,9 @@ Three ways to execute commands in R
 
 # R objects and data structures
 
-## Overview
-
 ### Preview of lecture on objects
 
-- The remainder of lecture is a conceptual and practical introduction to "objects" in R
+- This section of the lecture provides a conceptual and practical introduction to "objects" in R
 - This lecture is a broad overview that introduces some general programming and applies some of these concepts to data
 - **Important**: the goal is to begin to develop familiarity with concepts that we will introduce in more detail in later weeks
     - Therefore, I don't expect you to understand or retain all this information perfectly
@@ -224,6 +222,7 @@ Three ways to execute commands in R
 ### Assignment
 
 __Assignment__ refers creating an "object" and assigning values to it
+
 - The object may be a variable, a dataset, a bit of text that reads "la la la"
 - `<-` is the assignment operator
   - in other languages `=` is the assignment operator
@@ -350,7 +349,8 @@ One difference between atomic vectors and lists: __homogeneous__ vs. __heterogen
 
 Here is a link to a visual representation of the Grolemund and Wickham classification
 
-- [LINK HERE](https://github.com/ozanj/rclass/raw/master/lectures/lecture1/data-structures-overview.png)
+![Overview of data structures (Grolemund and Wickham, 2018)](data-structures-overview.png){width=60%}
+
 
 
 
