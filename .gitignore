@@ -23,6 +23,7 @@ rclass1.Rproj
 # ----------
 
 *.tex
+!lectures/beamer_header.tex
 
 # ----------
 # MacOS
