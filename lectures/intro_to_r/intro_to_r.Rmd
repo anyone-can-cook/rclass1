@@ -82,7 +82,7 @@ library(tidyverse)
 
 "[RStudio](https://www.rstudio.com/products/rstudio/features/) is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management."
 
-![](pane_layout.png)
+![](pane_layout.png){width=60%}
 
 ### R Markdown
 
@@ -130,6 +130,7 @@ Some of the other stuff R can create/do:
 
 - [Websites](https://bookdown.org/yihui/rmarkdown/websites.html); [journals](https://bookdown.org/yihui/rmarkdown/journals.html); [books](https://bookdown.org/); [web-scraping](https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/); network analysis; machine learning/artificial intelligence
 
+<!-- 
 
 # What is this course about?
 
@@ -145,7 +146,8 @@ Some of the other stuff R can create/do:
   - Make sure that you have created analysis variables correctly
 
 ### Why I don't call this class "R for data science"
-
+ 
+ 
 Learn to walk before you can run!
 
 - "data science" implies doing fancy, sexy things like mapping, network analysis, web-scraping, etc.
@@ -161,6 +163,8 @@ This class is for anyone who wants to work with data, that is people who want to
 - researchers who want to do "data science" oreinted research 
 - analysts working at think tanks/non-profits or as institutional researchers
 - journalists who create interactive data visualizations
+
+-->
 
 
 # Executing R commands
@@ -214,10 +218,9 @@ Three ways to execute commands in R
 ### Preview of lecture on objects
 
 - This section of the lecture provides a conceptual and practical introduction to "objects" in R
-- This lecture is a broad overview that introduces some general programming and applies some of these concepts to data
-- **Important**: the goal is to begin to develop familiarity with concepts that we will introduce in more detail in later weeks
-    - Therefore, I don't expect you to understand or retain all this information perfectly
-    - So just focus on understanding as much as you can and please interrupt me to ask questions if you have them!
+- **Important**: goal is to begin to develop familiarity with concepts that we will introduce in more detail in later weeks
+    - I don't expect you to understand or retain all this information perfectly
+    - So just focus on understanding as much as you can and ask any questions that come to mind
 
 ### Assignment
 
@@ -226,10 +229,11 @@ __Assignment__ refers creating an "object" and assigning values to it
 - The object may be a variable, a dataset, a bit of text that reads "la la la"
 - `<-` is the assignment operator
   - in other languages `=` is the assignment operator
-  - good practice to put a space before and after assignment operator
 - general syntax:
   - `object_name <- object_values`
+  - good practice to put a space before and after assignment operator
 
+\medskip 
 ```{r}
 # Create an object and assign value
 a <- 5
@@ -241,15 +245,11 @@ b
 
 ### Objects
 
-Most statistical software (e.g., SPSS, Stata) operates on datasets, which consist of rows of observations and columns of variables
-
-- Usually, these packages can open only one dataset at a time
-
 R is an "object-oriented" programming language (like Python, JavaScript). So, what is an "object"?
 
 - formal computer science definitions are confusing because they require knowledge of concepts we haven't introduced yet
 - More intuitively, I think objects as anything I assign values to
-    - For example, below, "`a`" and "`b`" are objects I assigned values to
+    - For example, below, `a` and `b` are objects I assigned values to
 ```{r}
 a <- 5
 a
@@ -260,19 +260,42 @@ b
 
 - Ben Skinner (my R guru) says "Objects are like boxes in which we can put things: data, functions, and even other objects."
 
+Most commercial statistical software packages (e.g., SPSS, Stata) operates on datasets, which consist of rows of observations and columns of variables
+
+- Usually, these packages can open only one dataset at a time
+- By contrast, in R everything is an object and there is no limit to the number of objects R can hold (except memory)
+
+<!--
+
 ### Objects
 
-- Objects can be categorized by "__type__" (which we will discuss today) and by "__class__" (which we will discuss in later weeks)
-    - e.g., a date is an object with a numeric _type_ and a date _class_
-    - a dataset is an object with a particular type and class
+Understanding what an "object" is in R can be confusing because almost everything is an object
+
 - There is no limit to the number of objects R can hold (except memory)
+- Objects can be categorized by "__type__" (which we will discuss today) and by "__class__" (which we will discuss more in later weeks)
+
+\medskip 
+
+Object "type" refers to how the object is stored internally by R
+
+- Some object "types" require more memory than others
+- For example, an "integer" storage type takes up less money than a "character" storage type
+  - therefore, it makes sense to store the value `5` as an integer rather than a character
+
+\medskip 
+
+"Class" is an "attribute" of an object -- built on top of object type -- that defines what things you can do to an object
+
+- For example, a date is an object with a numeric _type_ and a date _class_
 - R "functions" do different things to different types/classes of objects
-    - e.g., date functions are meant to process objects with type=numeric and class=date; these functions don't work on objects with type=character (e.g., "yay!")
+  - e.g., date functions are meant to process objects with type=numeric and class=date; these functions don't work on objects with type=character (e.g., "yay!")
+
+-->
 
 
 ### Vectors
 
-The fundamental object in R is the "vector"
+The fundamental data structure in R is the "vector"
 
 - A vector is a collection of values
 - The individual values within a vector are called "elements"
@@ -293,7 +316,7 @@ Vector where the elements are characters
 animals <- c("lions", "tigers", "bears", "oh my") # create object called animals
 animals
 ```
-### Student task (do with the person next to you)
+### Student task
 
 Either in the R console or within the R markdown file, do the following:
 
@@ -323,7 +346,11 @@ v3 <- c(1, 2, 3, "a", "b")
 v3 # print value
 ```
 
-Note: the data in a vector must be only one type or mode (numeric, character, or logical). You can’t mix modes in the same vector.
+<!--
+When printing object `v3` numbers were printed with quotations around them (e.g., `"1"`), because they are stored as "characters" 
+
+- Why? A vector must be only one "type" (numeric, character, or logical). You can’t mix modes in the same vector.
+-->
 
 ### Formal classification of vectors in R
 
@@ -331,14 +358,14 @@ Here, I introduce the classification of vectors by Grolemund and Wickham
 
 There are two broad types of vectors
 
-1. __Atomic vectors__. An object that contains elements. There are six types of atomic vectors: 
+1. __Atomic vectors__. An object that contains elements. Six "types" of atomic vectors: 
     - __logical__, __integer__, __double__, __character__, __complex__, and __raw__. 
         - __Integer__ and __double__ vectors are collectively known as __numeric__ vectors.
 
 2. __Lists__. Like atomic vectors, lists are objects that contain elements
     - elements within a list may be atomic vectors
     - elements within a list may also be other lists; that is lists can contain other lists
-    - This sounds vague and confusing; I'll explain and give examples below
+
     
 One difference between atomic vectors and lists: __homogeneous__ vs. __heterogeneous__ elements
 
@@ -347,9 +374,9 @@ One difference between atomic vectors and lists: __homogeneous__ vs. __heterogen
 
 ### Formal classification of vectors in R
 
-Here is a link to a visual representation of the Grolemund and Wickham classification
+Visual representation of the Grolemund and Wickham classification
 
-![Overview of data structures (Grolemund and Wickham, 2018)](data-structures-overview.png){width=60%}
+![Overview of data structures (Grolemund and Wickham, 2018, chapter 20)](data-structures-overview.png){width=60%}
 
 
 
@@ -358,7 +385,7 @@ Here is a link to a visual representation of the Grolemund and Wickham classific
 
 __Grolemund and Wickham classification__:
 
-1. __Atomic vectors__. six types: logical, integer, double, character, complex, raw. 
+1. __Atomic vectors__. six "types": logical, integer, double, character, complex, raw. 
 2. __Lists__
 
 Problem with this classification:
@@ -371,9 +398,8 @@ __Classification used by my R Guru Ben Skinner__:
 - data __type__: logical, numeric (integer and double), character, etc.
 - data __structure__: vector, list, matrix, etc.
 
-I find Skinner's classification more intuitive conceptually. However, it isn't consistent with R functions or the way R thinks about objects. 
+I find Skinner's classification more intuitive conceptually. However, it isn't completely consistent with how R and R functions think about objects
 
-If you find this classification of data _type_ and data _structure_ helpful, totally fine to think of objects in this way while you start to learn R.
 
 ## Atomic vectors
 
@@ -576,12 +602,6 @@ c(1,1,1)+c(1,0,2)
 c(1,1,1)*c(1,0,2)
 ```
 
-## Matrices
-
-### Matrices
-
-should I add slide about matrices?
-
 ## Lists
 
 ### Lists
@@ -710,13 +730,16 @@ str(x2$c)
 \medskip A data frame is a list with the following characteristics:
 
 - Data type can differ across elements (like all lists)
-- Each __element__ in data frame must be a __vector__, not a __list__
-    - Each element (column) is a variable
+- Each element (column) is a variable
 - Each element in a data frame must have the same length
     - The length of an element is the number of observations (rows)
-    - so each variable in data frame must have same number of observations
+    - Thus, each variable in data frame has same number of observations
 - Each element is named
     - these element names are the variable names
+- Typically, each __element__(variable) in data frame is a __vector__
+  - Elements can also be lists. Happens when the variable has a complicated data structure 
+    - e.g., a variable that identifies the "@" mentions in a tweet
+    
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -725,7 +748,7 @@ df <- select(mtcars,mpg,cyl,hp) # ignore for now
 
 ```{r}
 names(df)
-head(df, n=5) # print first 5 rows
+head(df, n=4) # print first few rows
 ```
 
 Additionally, data frames have "attributes"; we'll discuss those in upcoming weeks
@@ -733,7 +756,7 @@ Additionally, data frames have "attributes"; we'll discuss those in upcoming wee
 ### A data frame is a named list
 
 ```{r}
-df
+head(df, n= 5)
 typeof(df)
 names(df)
 length(df) # length=number of variables
@@ -778,7 +801,7 @@ Basic data stuctures
 2. __Lists__: 
     - Data type can differ across elements
 
-Takeaways
+Takeaways, continued
 
 - These data structures (vectors, lists) and data types (e.g., character, numeric, logical) are the basic building blocks of all object oriented programming languages
 - Application to statistical analysis
@@ -786,6 +809,206 @@ Takeaways
     - The individual elements -- columns/variables -- within a dataset are just vectors
 - These structures and data types are foundational for all "data science" applications
     - e.g., mapping, webscraping, network analysis, etc.
+
+## Matrices
+
+### Matrices
+
+A **matrix** is a collection of elements arranged in a two-dimensional rectangular layout
+
+- A matrix is another "data structure," in addition to vectors and lists
+- Create a matrix named `m` with 2 rows and 3 columns
+```{r}
+m <- matrix( 
+  c(2, 4, 3, 1, 5, 7), # the data elements 
+  nrow=2,              # number of rows 
+  ncol=3,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+
+m # print matrix m
+```
+
+Investigate matrix `m`
+```{r}
+typeof(m) # type = "double"
+str(m) # type = numeric; has two rows and three columns
+class(m) # class = matrix; more on class later
+```
+### Matrices
+
+Like atomic vectors, matrices are homogenous data structures
+```{r}
+m2 <- matrix( 
+  c(2, 4, 3, "a", "b", "c"), # the data elements 
+  nrow=2,              # number of rows 
+  ncol=3,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+
+m2
+```
+
+Investigate matrix `m`
+```{r}
+typeof(m2) # type = "character"
+str(m2) # type = character; has two rows and three columns
+```
+Why are data frames based on lists rather than matrices?
+
+- a matrix is a homogenous data structure, so you couldn't have both a numeric variable and a character variable
+- a list is a heterogeneous data structure, allowing for variables of different underlying data types
+
+### Matrices
+
+How are matrices used in R
+
+- the underlying code for statistical models uses matrices (e.g., covariance matrix, matrix of regression coefficients)
+- For most data manipulation tasks, matrices used much less frequently than vectors and lists
+  - In this course, we won't use matrices much at all
+- Particular applications (e.g., social network analysis) make frequent use of matrices
+
+### Matrices
+
+How are matrices used in R
+
+- Create an "adjacency matrix," which defines whether actors are connected to one another in a social network
+```{r}
+a <- matrix( 
+  c(NA,NA,NA,NA,
+    1,NA,NA,NA,
+    1,0,NA,NA,
+    0,1,0,NA), # the data elements 
+  nrow=4,              # number of rows 
+  ncol=4,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+a_names <- c("a","b","c","d") # create vector of actor names
+rownames(a) <- a_names # assign names to rows
+colnames(a) <- a_names # assign names to columns
+a
+```
+
+## Practical example
+
+### Network data of recruiting visits from colleges to high schools
+
+For this example, don't worry about understanding the code
+
+- We will explain this code over coming weeks
+
+Object `g_2mode_privu` contains:
+
+- off-campus recruiting visits from private colleges/universities to private high schools
+- load `g_2mode_privu`
+
+```{r, include = FALSE, results="hide"}
+#install.packages("igraph") # install igraph package
+library(igraph) # load igraph package
+```
+
+```{r, results = "hide"}
+# load igraph object of visits by private colleges/universities to private high schools
+load(url("https://github.com/cyouh95/recruiting-chapter/raw/master/data/g_2mode_privu.rda"))
+```
+
+Investigate object `g_2mode_privu`
+```{r}
+typeof(g_2mode_privu) # igraph package stores network data as type = list
+class(g_2mode_privu) # class = igraph
+```
+The "vertices" consit of colleges and high schools
+```{r}
+vcount(g_2mode_privu) # 1356 "nodes" or "vertices"
+table(V(g_2mode_privu)$type) # 1330 private high schools; 26 private colleges/universities
+```
+An "edge" occurs when two vertices are connected to one another
+
+- in `g_2mode_privu`, an edge occurs when a particular college visits a particular high school
+```{r}
+ecount(g_2mode_privu)
+```
+
+### Network data of recruiting visits from colleges to high schools
+
+An igraph object (type = list; class = igraph) can be decomposed into:
+
+- a dataframe that contains characteristics (referred to as "attributes" in network literature) of the vertices
+- a matrix that identifies whether two vertices are connected by an edge
+
+Create a data frame of vertex attributes
+```{r, results="hide"}
+df_attr <- as_data_frame(x = g_2mode_privu, what = "vertices")
+
+typeof(df_attr) # type = list
+length(df_attr) # length = number of variables
+class(df_attr) # data.frame
+str(df_attr)
+```
+
+### Network data of recruiting visits from colleges to high schools
+
+```{r, include = FALSE, results="hide"}
+#install.packages("tidyverse")
+library(tidyverse) # load tidyverse package
+```
+
+Examine data frame of vertex attributes
+```{r, results = "hide"}
+#df_attr %>% glimpse()
+# vertices = universities
+df_attr %>% filter(type == TRUE) %>% select(unitid,univ_name_ipeds,state_code_ipeds, classification_ipeds)
+
+# vertices = high schools
+df_attr %>% filter(type == FALSE) %>% select(ppin,name_pss,city_pss, state_code_pss)
+```
+
+Examine individual variables within data frame
+
+- takeaway: invidividual variables within data frame are vectors!
+```{r, results = "hide"}
+typeof(df_attr$name_pss) # vector of type = character
+str(df_attr$name_pss) # length of vector is number of obs
+
+typeof(df_attr$total_enrolled_pss) # vector of type = integer
+str(df_attr$total_enrolled_pss)
+```
+### Network data of recruiting visits from colleges to high schools
+
+Create adjacency matrix of which colleges visited which high schools
+```{r}
+adj_mat <- as_adjacency_matrix(graph = g_2mode_privu, type = "both", 
+                               sparse = FALSE)
+```
+
+Investigate adjacency matrix
+```{r}
+typeof(adj_mat) # a numeric "double" object
+class(adj_mat) # matrix class
+#str(adj_mat) # 1,356 rows by 1,356 columns
+```
+Print a few cells, visits by colleges (columns) to high schools (rows)
+
+- colleges: "`139658`" = Emory University; "`147767`" = Northwestern University; "`152080`" = University of Notre Dame
+```{r}
+#syntax: object_name[<rows to print>,<columns to print>]
+adj_mat[c("00000226","00000237","00000714"),c("139658","147767","152080")]
+```
+### Network data of recruiting visits from colleges to high schools
+
+Plot the 2-mode network
+```{r, echo = FALSE}
+plot(
+  x = g_2mode_privu, 
+  vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$univ_abbrev_ipeds, ""),
+  vertex.color = if_else(V(g_2mode_privu)$type, "lightblue", "salmon"),
+  vertex.shape = if_else(V(g_2mode_privu)$type, "circle", "circle"),
+  vertex.size = if_else(V(g_2mode_privu)$type, 7, 2),
+  edge.lty = 1,
+  layout = layout_with_kk,
+  margin = -.6
+)
+```
 
 # Using R functions
 
