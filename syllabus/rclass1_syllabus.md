@@ -32,6 +32,35 @@ Data management consists of acquiring, investigating, cleaning, combining, and m
 
 The course will be taught in R, a free, open-source programming language. R has become the most popular language for statistical analysis, surpassing SPSS, Stata, and SAS. What differentiates R from these other languages is the thousands of open-source "libraries" created by R users. R is one of the most popular languages for "data science" because R libraries have been created for web-scraping, mapping, network analysis, etc.  By learning R you can be confident that you know a programming language that can run any modeling technique you might need and has amazing capabilities for data collection and data visualization. By learning fundamentals of R in this course, you will be "one step away" from web-scraping, network analysis, interactive maps, quantitative text analysis, or whatever other data science application you are interested in.
 
+## Course information
+
+<table class="table table-striped table-hover table-responsive" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Resource </th>
+   <th style="text-align:left;"> Link </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Class website </td>
+   <td style="text-align:left;"> https://anyone-can-cook.github.io/rclass1/ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Class zoom link </td>
+   <td style="text-align:left;"> https://ucla.zoom.us/j/94774035711 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Questions &amp; Discussion </td>
+   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Announcements </td>
+   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements </td>
+  </tr>
+</tbody>
+</table>
+
 ## Prerequisite Requirements 
 
 - Students must have taken at least a one-semester introductory statistics course
