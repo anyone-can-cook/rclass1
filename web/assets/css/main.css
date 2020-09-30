@@ -3445,3 +3445,12 @@ input, select, textarea {
 	  list-style-type: circle;
 	}
 	
+	#lectures .container > div ul {
+	  margin: 1em 1em 0.2em;
+	  list-style-type: circle;
+	}
+
+	#readings .container > div ul {
+	  margin: 1em 1em 0.2em;
+	  list-style-type: circle;
+	}
