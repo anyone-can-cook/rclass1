@@ -43,30 +43,33 @@ The course will be taught in R, a free, open-source programming language. R has 
 
 ## Instructor
 
-- Ozan Jaquette
+**Ozan Jaquette**  
+
 - Pronouns: he/him/his
 - Office: Moore Hall, Room 3038
 - Email: [ozanj@ucla.edu](ozanj@ucla.edu)
 - Office hours:
-  - Zoom office hours TBA
+  - Zoom office hours: Thursdays 3-4pm, zoom [link](https://ucla.zoom.us/j/2545750562)
   - And by appointment
 
 ## Teaching assistants
 
-- Patricia Martín
+**Patricia Martín**  
+
 - Pronouns: she/her/hers
 - Email: [pmarti@g.ucla.edu](pmarti@g.ucla.edu)
 - Office hours:
-  - Zoom office hours TBA
+  - Zoom office hours: Wednesdays 10-11am, zoom [link](https://ucla.zoom.us/j/97212264332)
   - And by appointment
 
 \med
 
-- Crystal Han
+**Crystal Han**  
+
 - Pronouns: she/her/hers
 - Email: [cyouh95@ucla.edu](cyouh95@ucla.edu)
 - Office hours:
-  - Zoom office hours TBA
+  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/97212264332)
   - And by appointment
 
 # Course learning goals
@@ -93,27 +96,40 @@ The course will be taught in R, a free, open-source programming language. R has 
 
 ## Course structure
 
-For the first two weeks of the course, we will have synchronous lectures and classtime will be from 8:30am to 11:20am on Fridays. In the subsequent weeks, we will have asynchronous (pre-class) lectures and meet just from 10am to 11:20am for a synchronous workshop-style class. Weekly homework will consist of students working through the lectures on their own and a modest amount of required reading.
+For the first two weeks of the course, we will have synchronous lectures and class time will be on Fridays from 8:30am to 11:20am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 10am to 11:20am. Weekly homework will consist of students working through the lectures on their own and a modest amount of required reading.
 
 1. __Asynchronous (pre-class) lectures__. Weekly asynchronous lectures will be posted on the course website with the expectation that students work through the lecture in advance of our weekly synchronous class meeting. Lecture materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, short videos (e.g., 15 to 30 total minutes per week) that provide a high-level discussion of important and/or challenging concepts from the lecture slides, but not a line-by-line recitation of the lecture; and, third, the .Rmd file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will be able to "learn by doing" in that they can run R code on their own computer while they work through lecture materials on their own.
-1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The majority of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and TA will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
+1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The majority of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
 
 # Classroom environment
 
 We all have a responsibility to ensure that every member of the class feels valued and safe. 
 Be mindful that our words and body language affects others in ways we might not fully understand. We have a responsibility to express our ideas in a way that doesn't make disparaging generalizations and doesn't make people feel excluded. As an instructor, I am responsible for setting an example through my own conduct.
 
-Learning regression, while trying to get a handle on R and unfamiliar data can feel overwhelming! We must create an environment where students feel comfortable asking questions and talking about what they did not understand. Discomfort is part of the learning process. Unburdern yourself from the weight of being an "expert." Focus your energy on improving and helping your classmates improve.
+Learning data management, while trying to get a handle on R and unfamiliar data can feel overwhelming! We must create an environment where students feel comfortable asking questions and talking about what they did not understand. Discomfort is part of the learning process. Unburdern yourself from the weight of being an "expert." Focus your energy on improving and helping your classmates improve.
 
 ##  Towards an anti-racist learning experience
 
-Every course should be an anti-racist course, even when the subject matter is broadly oriented. In this course we'll engage with research that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. We will discuss whether the language, the framing, the analyses, and even the research question of a study contribute to problematic beliefs. If so, how can we do better? It is also critical that we acknowledge that the social and economic marginalization reflected in data is rooted in systemic oppression that upholds opportunity for some at the expense of others. We should all be thinking about our own role in upholding these systems.
+While this course is largely focused on data management and programming in R, we acknowledge that racism and white supremacy are rooted in every aspect of data. Everything from the way data are gathered, the questions asked (or not asked), the ways numbers are given meaning through notions of objectivity, how the data are cleaned, how variables are created, etc. In this course we'll engage with research that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. We will discuss whether the language, the framing, the analyses, and even the research question of a study contribute to problematic beliefs. If so, how can we do better? It is also critical that we acknowledge that the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy. We should all be thinking about our own role in upholding these systems.
 
 # Course website and communication
+
+## Course zoom link  
+
+EDUC 263: Intro to Programming & Data Management Using R
+Time: Fridays 08:30 AM Pacific Time (US and Canada) (*Only for the first two weeks)  
+
+- All subsequent weeks, class will start at 10am
+
+Join Zoom Meeting  
+
+- https://ucla.zoom.us/j/94774035711  
+- Passcode: 058301  
 
 ## Course website
 
 All course related material can be found on the [course website](https://anyone-can-cook.github.io/rclass1). Pre-recorded lecture videos, lecture slides (PDF/HTML), and .Rmd files will be posted on the class website under the associated sections. Additional resources (e.g., syllabus) may also be posted on the class website. 
+
 
 ## Course discussion
 
@@ -158,7 +174,7 @@ Required software we will be using:
 
 - **_[R](https://cloud.r-project.org/)_**, statistical programming language [**FREE!**]
 - **[RStudio](https://rstudio.com/products/rstudio/download/)**, integrated development environment for R  [**FREE!**]
-- Link to tips for software installation [HERE](https://github.com/ozanj/rclass/raw/master/todo/educ263_todo.pdf).
+- Link to tips for software installation [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/todo/educ263_todo.pdf).
 
 
 # Assignments and grading
@@ -184,13 +200,13 @@ Since you will be working together, it is understandable that answers for many q
 
 A general strategy I recommend for completing the problem sets is as follows: (1) after lecture, do the reading associated with that lecture; (2) try doing the problem set on your own; (3) communicate with your group to work through the problem set, with a particular focus on areas group members find challenging.
 
-Link to problem set expectations and helpful resources [HERE](https://github.com/ozanj/rclass/raw/master/lectures/problemset_resources.pdf).
+Link to problem set expectations and helpful resources [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/lectures/problemset_resources/problemset_resources.pdf).
 
 ## Attendance and participation (10 percent of total grade)
 
 Students are expected to participate in the weekly class meetings by being attentive, supportive, by asking questions, or by answering questions posed by others on Zoom. Additionally, students can receive strong participation grades by asking questions and answering questions on GitHub issues. 
 
-Students are required to attend the weekly class meetings. Each unexcused absence results in a loss of 20% from your attendance/participation grade. Three or more unexcused absences will result in a failing grade for the course. 
+Students are required to attend the weekly class meetings (unless you have talked to the instructors about this beforehand). Each unexcused absence results in a loss of 20% from your attendance/participation grade. Three or more unexcused absences will result in a failing grade for the course. 
 
 An excused absence is a professional opportunity that you discuss with me beforehand or a medical, or family emergency.  Excused absences will not result in a loss of attendance points.  However, you will be responsible for all material covered in that class and you will be expected to turn in homework assignments on time.
 
@@ -255,7 +271,7 @@ An excused absence is a professional opportunity that you discuss with me before
 
 ## Learning during a global pandemic
 
-With the ongoing spread of the COVID-19 pandemic, we understand that right now is a challenging time for everybody. Many of us may be experiencing added stress or responsibilties that make learning and completing classwork difficult. If you are having trouble keeping up with the class, please reach out to the teaching team and we will help work out a plan with you. We want to be accomodating to everyone's unique situation and hope to make this class an enjoyable learning experience for all.
+With the ongoing spread of the COVID-19 pandemic, we understand that right now is a challenging time for everybody. Many of us may be experiencing added stress or responsibilties that make learning and completing classwork difficult. If you are having trouble keeping up with the class, please reach out to the teaching team and we will help work out a plan with you. We understand that right now is a precarious time and in the event that you or someone in your family and/or shared living space gets sick, we ask that you please reach out to us as soon as you are able to. We want to be accomodating to everyone's unique situation and hope to make this class an enjoyable learning experience for all.
 
 ## Online collaboration/netiquette
 
@@ -266,6 +282,15 @@ You will communicate with instructors and peers virtually through a variety of t
 -	It is expected that students may disagree with the research presented or the opinions of their fellow classmates. To disagree is fine but to disparage others' views is unacceptable. All comments should be kept civil and thoughtful.
 - It is imperative that we respect one another in this course, and all other spaces. One way to gain/show respect is to actively listen to one another. Please do not text, tweet, email, Facebook, LinkedIn, browse the internet, and such during class.
 - In the unlikely event that Zoom is down, please be sure to check your email often for instructions on how we will complete that class session in an asynchronous manner.
+
+**Class Zoom guidelines**  
+
+All synchronous class sessions will be held online, via Zoom. Below, we have outlined some general guidelines about Zoom learning. As we continue learning together, we can add to and change the below list. I'm open to your feedback and your experiences as we continue to learn how to learn via Zoom.  
+
+- **Video**: We will not require students to turn on their video during synchronous lectures. We encourage students to turn on their video only if they feel comfortable doing so-- particularly during small group breakout rooms.  
+- **Audio**: We ask students to mute their microphones when they are not speaking. We encourage the use of earphones or headphones if you are in a space with background noise.  
+- **Zoom outage**: In the unlikely event that zoom is down, the instructors will email the class with instruction for completing the class section in an asynchronous manner. Therefore, if Zoom is not functioning properly during the class period, be sure to check your email often.  
+- **Internet connectivity**: We understand that having access to a stable internet connection and/or electronic equipment is a privilege. With that in mind, we want to provide a space where everyone has the resources they need to do well in the class. If you have any issues with your internet connection and/or don't have access to electronic equipment, please reach out to the instructors.   
 
 ## Academic accomodations
 
@@ -397,13 +422,3 @@ Title IX prohibits gender discrimination, including sexual harassment, domestic 
 - __NON-CONFIDENTIAL RESOURCES__: You can also report sexual violence or sexual harassment directly to the University's Title IX Coordinator, 2255 Murphy Hall, titleix\@conet.ucla.edu, (310) 206-3417. Reports to law enforcement can be made to UCPD at (310) 825-1491. These offices may be required to pursue an official investigation.
 
 *Faculty and TAs are required under the UC Policy on Sexual Violence and Sexual Harassment to inform the Title IX Coordinator should they become aware that you or any other student has experienced sexual violence or sexual harassment.*  
-
-## Undergraduate Writing Center
-
-Peer learning facilitators (PLFs) are undergraduates who understand the challenges of writing at UCLA. Scheduled appointment and walk-in options are available, see www.wp.ucla.edu/uwc for more information about writing programs and to get assistance with your writing.
-
--	Due to COVID-19, all physical UWC offices will be closed until further notice
--	All UWC appointments are now online via Zoom and Google Docs
--	Offer virtual drop-in appointments Mon – Thurs from 10am-9pm, Fri from 10am-3pm and Sun from 6-9pm
-
-For additional campus resources and student services, please review [this document](https://ucla.app.box.com/s/st51pify842ouoc24ae2r80s9sesavmy). 

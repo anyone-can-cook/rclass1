@@ -1,6 +1,6 @@
 ---
 title: "Problem Set Resources and Guideline"
-date: "9/27/2019"
+date: "9/30/2020"
 output: pdf_document
 urlcolor: blue
 ---
@@ -12,67 +12,60 @@ knitr::opts_chunk$set(echo = TRUE)
 # Resources 
 ## **1.** Re-watch these videos on working with relative and absolute paths  
 
-  * Absolute versus relative file paths [Youtube link](https://www.youtube.com/watch?v=ephId3mYu9o)  
-  * Relative paths and working directory in R [Youtube link](https://www.youtube.com/watch?v=fe6GA200dks)  
+- Absolute versus relative file paths [Youtube link](https://www.youtube.com/watch?v=ephId3mYu9o)  
+- Relative paths and working directory in R [Youtube link](https://www.youtube.com/watch?v=fe6GA200dks)  
   
 ## **2.** `list.files()` command  
-  * The list.files command will list the files in the current working directory  
-  * To learn more type `?list.files` in the console 
+
+- The list.files command will list the files in the current working directory  
+- To learn more type `?list.files` in the console  
+
 ```{r}
 ?list.files
 list.files() #currently in rclass project folder
 ```
-  * Alternatively, you could set the path to the folder you would like to list files
+
+- Alternatively, you could set the path to the folder you would like to list files
 ```{r}
 list.files(path = "data/ipeds")
 ```
-## **3.** To view the filepath of your current/working directory use the `getwd()` function.  
-  * Note that when you use the `getwd()` function from a code chunk in .Rmd, the filepath will be the directory where the .Rmd file is saved. 
+## **3.** To view the filepath of your working directory use the `getwd()` function.  
+
+- Note that when you use the `getwd()` function from a code chunk in .Rmd, the filepath will be the directory where the .Rmd file is saved. 
 ```{r}
 getwd()
 ```
-  * This pdf "problemset_instructions.Rmd" is saved in the rclass folder (current working directory)  
+
+- This pdf "problemset_instructions.Rmd" is saved in the problemset_resources folder (current working directory)  
   
 ## **4.** To set your working directory, use the `setwd()` function.  
-  * Note that when `setwd()` is executed within a code chunk, the working directory changes only for that code chunk and will revert back to previous working directory in another code chunk.  
+
+- Note that when `setwd()` is executed within a code chunk, the working directory changes only for that code chunk and will revert back to previous working directory in another code chunk.  
   
 ```{r}
 getwd()
-setwd("lecture2")
+setwd("../intro_to_r")
 ```
 
 ## **5.** Once problem sets are complete, knit to pdf or html (depending on instructions)  
 
-- Select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF" or "Knit to HTML" 
-- Go to class website https://ozanj.github.io/rclass/resources/ and each week collapsible will have a link titled "Sumbit Problem Set Here"  
-- Select the link and submit both .Rmd and pdf/html files  
-- Make sure to use this naming convention "lastname_firstname_ps#" 
+- Select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF" or "Knit to HTML"  
+- Go to class website https://anyone-can-cook.github.io/rclass1/ in the "Readings & Assignments" section and under each week, there will be a link titled "Problem set submission link"  
+- Click on the link and submit both .Rmd and pdf/html files  
+- Make sure to use this naming convention "lastname_firstname_ps#"
 
-## **6.** Problem sets  
 
-- All problem sets are worth the same. The lowest problem set grade will be dropped from the calculate of your final grade. 
+## **6.** Questions & Class discussion  
 
-- Submit problem sets on Piazza. Link to Piazza: https://piazza.com/ucla/fall2019/educ263/home
+- We encourage you to post any questions related to the problem sets and/or lectures as a GitHub issue. You can post issues here https://github.com/anyone-can-cook/rclass1_student_issues.  
 
-    - Select "Q&A" at the top
-    
-    - Select "New Post" tab on the left corner
-    
-    - Post Type: Note
-    
-    - Post to: select "Instructor(s)", delete the "Instructors" tag and enter "Xin Li" (Be sure NOT post to the entire class but just TA)
-    
-    - Select Folder(s): ps_submit_1
-    
-    - Summary: using this naming convention "lastname_firstname_ps1"
-    
-    - Details: insert lastname_firstname_ps1.Rmd & lastname_firstname_ps1.pdf file
-    
-    - At the bottom, you can preview your post before posting
-    
-    - Once you are ready, you can post your note
-    
-    - TA will give feedback to your post
+- **Issue guidelines**  
+
+  - Clear title describing your issue (e.g. PS1: file directory question)  
+  - Provide enough background information about your issue including a description, your code, any relevant links, etc.  
+  - Assign and/or mention `@` the instructors (@ozanj, @mpatricia01, @cyouh95) in your issue.  
+  - Assign and/or mention members of your group, if applicable.
+
     
     
 ## **7.** Homework Groups  
