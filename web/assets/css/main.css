@@ -2849,7 +2849,7 @@ input, select, textarea {
 
 			#header > header .avatar {
 				display: block;
-				margin: 0 auto 2.25em auto;
+				margin: 0 auto 2em auto;
 				width: 8em;
 			}
 
@@ -2862,6 +2862,7 @@ input, select, textarea {
 				color: #d2f2e9;
 				font-style: italic;
 				margin: 1em 0 0 0;
+				line-height: 1.5;
 			}
 
 		#header > footer {
@@ -2910,7 +2911,7 @@ input, select, textarea {
 						border: 0;
 						color: #ffffff !important;
 						display: block;
-						padding: 0.85em 0;
+						padding: 0.7em 0;
 						text-decoration: none;
 					}
 
@@ -2999,7 +3000,7 @@ input, select, textarea {
 				}
 
 				#header > footer {
-					padding: 1.5em;
+					padding: 0.5em;
 				}
 
 		/* Wrapper */
@@ -3422,3 +3423,25 @@ input, select, textarea {
 			}
 
 	}
+	
+	/* Custom */
+	
+	#communication .feature-icons {
+	  margin-bottom: 0;
+	  margin-top: 2em;
+	}
+	
+	#communication .container > div {
+	  margin-left: 1.34em;
+    padding: 0.5em 1em;
+    border-left: 2px lightgrey solid;
+    font-size: 90%;
+    line-height: 1.5;
+    color: #444;
+	}
+	
+	#communication .container > div ul {
+	  margin: 1em 1em 0.2em;
+	  list-style-type: circle;
+	}
+	
