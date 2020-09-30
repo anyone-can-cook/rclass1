@@ -1165,7 +1165,7 @@ sum(10,5,NA,na.rm=TRUE)
 sum(10,5,10,20,NA,na.rm=TRUE)
 ```
 
-# Appendices
+# Appendix
 
 ## Directories and filepaths 
 
@@ -1173,72 +1173,14 @@ sum(10,5,10,20,NA,na.rm=TRUE)
 
 - Give you a very brief overview of "directories" (i.e., folders) and "filepaths" (tells you where folder is located) in R
 - Why? After this overview we will ask you to create the directory structure you will use for all files related to this class
-- Your problem set due before class next Friday will give you more practice with filepaths and we have created a short document that may be helpful in working through this problem set [LINK](https://github.com/ozanj/rclass/raw/master/lectures/problemset_resources.pdf) 
+- Your problem set due before class next Friday will give you more practice with filepaths and we have created a short document that may be helpful in working through this problem set [LINK](https://github.com/anyone-can-cook/rclass1/blob/master/lectures/problemset_resources/problemset_resources.pdf) 
 
 ### Working directory
 
 __(Current) Working directory__
 
-- the folder/directory in which you are currently working
-- this is where R looks for files
-- Files located in your current working directory can be accessed without specifying a filepath because R automatically looks in this folder
-
-Function `getwd()` shows current working directory
-```{r}
-getwd()
-```
-Command `list.files()` lists all files located in working directory
-```{r, results="hide"}
-list.files()
-```
-
-### Working directory, "Code chunks" vs. "console" and "R scripts"
-
-When you run __code chunks__ in RMarkdown files (.Rmd), the working directory is set to the filepath where the .Rmd file is stored
-
-```{r}
-getwd()
-
-```
-
-```{r, results="hide"}
-list.files()
-```
-
-When you run code from the __R Console__ or an __R Script__, the working directory is:
-
-- if you are working on an R "Project", the working director is the main directory for the project
-
-
-```{r, results="hide"}
-getwd()
-```
-
-### Absolute vs. relative filepath  
-**Absolute file path**:  The absolute file path is the complete list of directories needed to locate a file or folder.  
-`setwd("/Users/pm/Desktop/rclass/lectures/lecture2")`
-
-
-**Relative file path**:  The relative file path is the path relative to your current location/directory. Assuming your current working directory is in the "lecture2" folder and you want to change your directory to the data folder, your relative file path would look something like this:  
-`setwd("../../data")`  
-
-            File path shortcuts
-
-| **Key** | **Description** |
-| ------ | -------- |
-| ~    | tilde is a shortcut for user's home directory (mine is my name pm)   |
-| ../    | moves up a level   |
-| ../../    | moves up two level   |
-
-
-## Appendix: directories and filepaths [slides pulled from fall 2019 lecture 2; patricia - eliminate duplicate text from above]
-
-### Working directory
-
-__(Current) Working directory__
-
-- the folder/directory in which you are currently working
-- this is where R looks for files
+- The folder/directory in which you are currently working
+- This is where R looks for files
 - Files located in your current working directory can be accessed without specifying a filepath because R automatically looks in this folder
 
 Function `getwd()` shows current working directory
@@ -1260,7 +1202,7 @@ getwd()
 list.files()
 ```
 
-When you run code from the __R Console__ or an __R Script__, the working directory is....
+When you run code from the __R Console__ or an __R Script__, the working directory is your R Project directory (we'll cover this in the next section).
 
 
 Command `getwd()` shows current working directory
@@ -1270,10 +1212,10 @@ getwd()
 
 ### Absolute vs. relative filepath  
 **Absolute file path**:  The absolute file path is the complete list of directories needed to locate a file or folder.  
-`setwd("/Users/pm/Desktop/rclass/lectures/lecture2")`
+`setwd("/Users/pm/Desktop/rclass1/lectures/intro_to_r")`
 
 
-**Relative file path**:  The relative file path is the path relative to your current location/directory. Assuming your current working directory is in the "lecture2" folder and you want to change your directory to the data folder, your relative file path would look something like this:  
+**Relative file path**:  The relative file path is the path relative to your current location/directory. Assuming your current working directory is in the "intro_to_r" folder and you want to change your directory to the data folder, your relative file path would look something like this:  
 `setwd("../../data")`  
 
             File path shortcuts
@@ -1297,14 +1239,14 @@ You should have 1 folder on your desktop called red. Inside the red folder you h
 Here is a visual of how it should look...  
 
 ### File path visual  
-![](fp1.JPG)
-![](fp2.JPG)  
+![](fp1.JPG){width=200px}
+![](fp2.JPG){width=200px}
 
 ### Exercise continued  
 Let's say we want to get to the green folder using the absolute file path.  
 1. View your current working directory `getwd()`  
 2. Set your working directory to the green folder using the absolute file path  
-3. Now set your working directory to the orange folder using the relative file path  (hint: ../)  
+3. Now set your working directory to the orange folder using the relative file path  (hint: use `../`)  
 
 
 ### Solution
@@ -1324,7 +1266,7 @@ getwd()
 
 What is an "R project"?
 
-- helps you keep all files for a project in one place
+- Helps you keep all files for a project in one place
 - When you open an R project, the file-path of your current working directory is automatically set to the file-path of your R-project
 
 Why are we asking you to create R project and download a specific directory structure?
@@ -1335,28 +1277,25 @@ Why are we asking you to create R project and download a specific directory stru
 
 ### Follow these steps to create "R project" and directory structure
 
-1. Download this zip folder: [LINK HERE](https://github.com/ozanj/rclass/raw/master/rclass.zip)
-    - this zip file contains the shell file directory you should use for this class
+1. Download this zip folder: [LINK HERE](https://github.com/anyone-can-cook/rclass1/blob/master/rclass1.zip)
+    - This zip file contains the shell file directory you should use for this class
     - Unzip the folder
-        - contains folder named "rclass"; this is the folder that will contain all materials for this course
-        - "rclass" contains two folders: "data" and "lectures"
-    - Move "rclass" folder to your preferred location (e.g, documents, desktop, dropbox, etc)
+        - Contains folder named "rclass1"; this is the folder that will contain all materials for this course
+        - "rclass1" contains two folders: "data" and "lectures"
+    - Move "rclass1" folder to your preferred location (e.g, documents, desktop, dropbox, etc)
 2. In RStudio, click on "File" >> "New Project" >> "Existing Directory" >> "New Project"
-    - "Browse" to find "rclass" folder you just saved
+    - "Browse" to find "rclass1" folder you just saved
     - Then click on Create Project
-3. Save the following files in "rclass/lectures/lecture1"
-    - lecture1.1.Rmd
-    - lecture1.1.pdf
-    - lecture1.2.Rmd
-    - lecture1.2.Pdf
-    - lecture1.2.R
+3. Save the following files in "rclass1/lectures/intro_to_r"
+    - intro_to_r.Rmd
+    - intro_to_r.pdf
 
 ### Next, you follow these steps
 
-- you can add any additional sub-folders you want to the "rclass" folder
+- You can add any additional sub-folders you want to the "rclass1" folder
     - e.g., "syllabus", "resources"
 - You can add any additional files you want to the sub-directory folders you unzipped
-    - e.g., in "rclass/lectures/lecture1" you might add an additional document of notes you took
+    - e.g., in "rclass1/lectures/intro_to_r" you might add an additional document of notes you took
 
 
 ## R Markdown
@@ -1367,7 +1306,7 @@ Why are we asking you to create R project and download a specific directory stru
 - R Markdown documents embed R code, output associated with R code, and text into one document
 - An R Markdown document is a "'Living' document that updates every time you compile ["knit"] it"
 - R Markdown documents have the extension .Rmd
-    - can think of them as text files with the extension .Rmd rather than .txt
+    - Can think of them as text files with the extension .Rmd rather than .txt
 - At top of .Rmd file you specify the "output" style, which dictates what kind of formatted document will be created
     - e.g., `html_document` or `pdf_document`
 - When you compile ["knit"] a .Rmd file, the resulting formatted document can be an HTML document, a PDF document, an MS Word document, or many other types
@@ -1383,12 +1322,12 @@ RMarkdown creates many types of static and dynamic/interactive documents
 
 How I use R Markdown
 
-- journal manuscripts; reports; presentations; for taking notes when I am learning new methods or reading an empirical paper
+- Journal manuscripts; reports; presentations; for taking notes when I am learning new methods or reading an empirical paper
 
 How we will be using R Markdown files in this class:
 
-- homework you submit will be .Rmd files, with "output" style will be `html_document` or `pdf_document`
-- lectures we write are .Rmd files, where we the output style will be `beamer_presentation` or `html_document`
+- Homework you submit will be .Rmd files, where "output" style will be `html_document` or `pdf_document`
+- Lectures we write are .Rmd files, where the output style will be `beamer_presentation` or `html_document`
     - `beamer_presentation` is essentially a PDF document, where each page is a slide
 
 ### Creating RMarkdown documents
@@ -1399,13 +1338,13 @@ Approach for creating a RMarkdown document.
 
 1. Point-and-click from within RStudio
     - Click on _File_ >> _New File_ >> _R Markdown_ >> _Document_ >> choose _HTML_ >> click _OK_
-        - optional: add title (this is not the file name, just what appears at top of document)
-        - optional: add author name
-    - save the .Rmd file; _File_ >> _Save As_
-        - any file name
-        - recommend  you save it in same folder you saved this lecture
+        - Optional: add title (this is not the file name, just what appears at top of document)
+        - Optional: add author name
+    - Save the .Rmd file; _File_ >> _Save As_
+        - Any file name
+        - Recommend  you save it in same folder you saved this lecture
     - "Knit" the entire .Rmd file
-        - point-and-click OR shortcut: __Cmd/Ctrl + Shift + k__
+        - Point-and-click OR shortcut: __Cmd/Ctrl + Shift + k__
 
 ```{r eval=FALSE, echo=FALSE}
 # 2. From blank text file
@@ -1425,9 +1364,9 @@ An RMarkdown (.Rmd) file consists of several parts
 
 1. __YAML header__
     - YAML stands for "yet another markup language"
-    - controls settings that apply to the whole document (e.g., "output" should be html_document or pdf_document, whether to include table of contents, etc.)
+    - Controls settings that apply to the whole document (e.g., "output" should be `html_document` or `pdf_document`, whether to include table of contents, etc.)
     - YAML header goes at very top of document
-    - starts with a line of three horizontal dashes `---`; ends with a line of three horizontal dashes `---`
+    - Starts with a line of three horizontal dashes `---`; ends with a line of three horizontal dashes `---`
 2. __Text__ in body of .Rmd file
     - e.g., headings; description of results, etc.
 3. __R code chunks__ in body of .Rmd file
@@ -1464,20 +1403,20 @@ Common/important output types:
 
 - __html_document__: R Markdown originally designed to create HTML documents
     - Most features/code in .Rmd files were written for html_document
-    - many of these features are available in other output types
+    - Many of these features are available in other output types
     - When learning R Markdown, best to start by learning html_document
 - __pdf_document__: Requires installation of `tinytex` R package or LaTeX (MiKTeX/MacTeX)
     - How it works:
-        - You write .Rmd code; 
+        - You write .Rmd code
         - When you compile, this .Rmd code is transformed into LaTeX code
         - LaTeX "engine" creates the formatted .pdf file
     - Can include some of the same features available for _html_document_
     - Can insert LaTeX commands in .Rmd file with _pdf_document_ output
 - __beamer_presentation__: Requires installation of LaTeX
     - "beamer" is the name for presentations written in LaTeX
-    - essentially creates PDF of presentation slides
+    - Essentially creates PDF of presentation slides
     - Lectures for this class created with _beamer_presentation_ output
-    - note: YAML header includes `beamer_header.tex` file, which creates some formatting rules and additional commands
+    - Note: YAML header includes `beamer_header.tex` file, which creates some formatting rules and additional commands
 
 ### Learning more about R Markdown
 
@@ -1495,22 +1434,22 @@ How you will learn R Markdown
 - Lectures written as .Rmd file
     - During class run "code chunks" and try to "knit" entire .Rmd file
 - I'll assign __small__ amount of reading on R Markdown
-    - prior to next week:
-        - spend 15 minutes familiarizing yourself with [Quick Reference](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+    - Prior to next week:
+        - Spend 15 minutes familiarizing yourself with [Quick Reference](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
         - Read section [3.1 of R Markdown: The Definative Guide](https://bookdown.org/yihui/rmarkdown/html-document.html), about creating html_document
 - Homework must be written in .Rmd file
-    - you submit .Rmd file AND output of compiled file
-    - for next week, you will submit homework as html_document output
+    - You will submit .Rmd file AND output of compiled file
+    - For next week, you will submit homework as html_document output
 
 ### Directory structure for this class
 
 In order to be able to "knit" entire lectures [rather than just run specific code chunks] make sure that you have the following directory structure:
 
-- rclass
+- rclass1
     - lectures
-        - lecture1
+        - intro_to_r/
         - ...
-        - lecture10
+        - join_data/
         - beamer_header.tex
 
 What is beamer_header.tex?
@@ -1523,7 +1462,7 @@ What is beamer_header.tex?
       in_header: ../beamer_header.tex
 ```
 - This runs beamer_header.tex; assumes that beamer_header.tex is located one level up from your current directory
-- If you don't have beamer_header.tex saved to appropriate place, you can download it here [LINK](https://github.com/ozanj/rclass/raw/master/lectures/beamer_header.tex)
+- If you don't have beamer_header.tex saved to appropriate place, you can download it here [LINK](https://github.com/anyone-can-cook/rclass1/blob/master/lectures/beamer_header.tex)
 - Note: we may revise beamer_header.tex as we work out formatting bugs
 
 
