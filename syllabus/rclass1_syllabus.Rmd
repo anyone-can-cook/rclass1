@@ -24,13 +24,28 @@ output:
 
 ---
 
+# Course information
+
+```{r echo=FALSE, message=FALSE}
+library(kableExtra)
+library(tidyverse)
+
+t <- c("Class website", "Class zoom link", "Questions & Discussion", "Announcements")
+l <- c("https://anyone-can-cook.github.io/rclass1/", "https://ucla.zoom.us/j/94774035711", "https://github.com/anyone-can-cook/rclass1_student_issues", "https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements")
+
+info <- tibble(t, l)
+
+kable(info,col.names = c("Resource","Link"), escape = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
+```
+
 # Course description
 
 This course has two foundational goals: (1) to develop core skills in "data management," which are important regardless of which programming language you use, and (2) to learn the fundamentals of the R programming language.
 
 Data management consists of acquiring, investigating, cleaning, combining, and manipulating data. Most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, cleaning the data and creating analysis datasets is often more time consuming than conducting analyses.  This course teaches the fundamental data management and data manipulation skills necessary for creating analysis datasets.
 
-The course will be taught in R, a free, open-source programming language. R has become the most popular language for statistical analysis, surpassing SPSS, Stata, and SAS. What differentiates R from these other languages is the thousands of open-source "libraries" created by R users. R is one of the most popular languages for "data science," because R libraries have been created for web-scraping, mapping, network analysis, etc.  By learning R you can be confident that you know a programming language that can run any modeling technique you might need and has amazing capabilities for data collection and data visualization. By learning fundamentals of R in this course, you will be "one step away" from web-scraping, network analysis, interactive maps, quantitative text analysis, or whatever other data science application you are interested in.
+The course will be taught in R, a free, open-source programming language. R has become the most popular language for statistical analysis, surpassing SPSS, Stata, and SAS. What differentiates R from these other languages is the thousands of open-source "libraries" created by R users. R is one of the most popular languages for "data science" because R libraries have been created for web-scraping, mapping, network analysis, etc.  By learning R you can be confident that you know a programming language that can run any modeling technique you might need and has amazing capabilities for data collection and data visualization. By learning fundamentals of R in this course, you will be "one step away" from web-scraping, network analysis, interactive maps, quantitative text analysis, or whatever other data science application you are interested in.
 
 ## Prerequisite Requirements 
 
@@ -96,21 +111,23 @@ The course will be taught in R, a free, open-source programming language. R has 
 
 ## Course structure
 
-For the first two weeks of the course, we will have synchronous lectures and class time will be on Fridays from 8:30am to 11:20am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 10am to 11:20am. Weekly homework will consist of students working through the lectures on their own and a modest amount of required reading.
+For the first two weeks of the course, we will have synchronous lectures and class time will be on Fridays from 8:30am to 11:20am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 10am to 11:20am. Weekly homework will consist of students working through the lectures on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
 
 1. __Asynchronous (pre-class) lectures__. Weekly asynchronous lectures will be posted on the course website with the expectation that students work through the lecture in advance of our weekly synchronous class meeting. Lecture materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, short videos (e.g., 15 to 30 total minutes per week) that provide a high-level discussion of important and/or challenging concepts from the lecture slides, but not a line-by-line recitation of the lecture; and, third, the .Rmd file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will be able to "learn by doing" in that they can run R code on their own computer while they work through lecture materials on their own.
-1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The majority of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
+1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The bulk of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
 
 # Classroom environment
 
 We all have a responsibility to ensure that every member of the class feels valued and safe. 
 Be mindful that our words and body language affects others in ways we might not fully understand. We have a responsibility to express our ideas in a way that doesn't make disparaging generalizations and doesn't make people feel excluded. As an instructor, I am responsible for setting an example through my own conduct.
 
-Learning data management, while trying to get a handle on R and unfamiliar data can feel overwhelming! We must create an environment where students feel comfortable asking questions and talking about what they did not understand. Discomfort is part of the learning process. Unburdern yourself from the weight of being an "expert." Focus your energy on improving and helping your classmates improve.
+Learning data management, while trying to get a handle on R and unfamiliar, data can feel overwhelming! We must create an environment where students feel comfortable asking questions and talking about what they did not understand. Discomfort is part of the learning process. Unburdern yourself from the weight of being an "expert." Focus your energy on improving and helping your classmates improve.
 
-##  Towards an anti-racist learning experience
+##  Towards an anti-racist, anti-heteronormative learning experience
 
-While this course is largely focused on data management and programming in R, we acknowledge that racism and white supremacy are rooted in every aspect of data. Everything from the way data are gathered, the questions asked (or not asked), the ways numbers are given meaning through notions of objectivity, how the data are cleaned, how variables are created, etc. In this course we'll engage with research that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. We will discuss whether the language, the framing, the analyses, and even the research question of a study contribute to problematic beliefs. If so, how can we do better? It is also critical that we acknowledge that the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy. We should all be thinking about our own role in upholding these systems.
+This course teaches data management and R programming, tools that are often percieved as objective, independent of context and content. We must acknowledge that racism, white supremacy, and heteronormative ideas of gender identity and sexual orientation are are rooted in every aspect of data. These seemingly objective rules (e.g., "the right way to handle data") affect the way data are gathered, how variables are created, the questions asked (or not asked), etc. 
+
+In this course we will utilize data that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. It is critical to acknowledge that the processes used to create these datadata (e.g., how data collected, the categories chosen to represent identity) are often based on notions of white supremacy and heteronormativity. When you encounter a data management strategy that that may cause harm, we encourage you to raise concerns. It maybe that your instructor/TAs may need to think more critically about strategies they have been using for a long time! It is also critical that we acknowledge that the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy and heteronormativity. We should all be reflecting about our own role in upholding these systems.
 
 # Course website and communication
 
