@@ -30,6 +30,26 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
   #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
 ```
 
+```{r, echo=FALSE, include=FALSE}
+#THIS CODE DOWNLOADS THE MOST RECENT VERSION OF THE FILE beamer_header.tex AND SAVES IT TO THE DIRECTORY ONE LEVEL UP FROM THIS .RMD LECTURE FILE
+download.file(url = 'https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/beamer_header.tex', 
+              destfile = '../beamer_header.tex',
+              mode = 'wb')
+```
+
+```{r, echo=FALSE, include=FALSE}
+# Download images
+imgs <- c('fp1.JPG', 'fp2.JPG', 'data-structures-overview.png', 'pane_layout.png')
+
+for (i in imgs) {
+  if(!file.exists(i)){
+  download.file(url = paste0('https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/intro_to_r/', i), 
+                destfile = i,
+                mode = 'wb')
+  }
+}
+```
+
 # What is R? Why R?
 
 ### What is R?
