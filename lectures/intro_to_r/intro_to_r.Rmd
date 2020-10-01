@@ -244,7 +244,7 @@ Three ways to execute commands in R
 
 ### Assignment
 
-__Assignment__ refers creating an "object" and assigning values to it
+__Assignment__ refers to creating an "object" and assigning values to it
 
 - The object may be a variable, a dataset, a bit of text that reads "la la la"
 - `<-` is the assignment operator
@@ -278,9 +278,9 @@ b
 ```
     
 
-- Ben Skinner (my R guru) says "Objects are like boxes in which we can put things: data, functions, and even other objects."
+- Ben Skinner (my R maven) says "Objects are like boxes in which we can put things: data, functions, and even other objects."
 
-Most commercial statistical software packages (e.g., SPSS, Stata) operates on datasets, which consist of rows of observations and columns of variables
+Most commercial statistical software packages (e.g., SPSS, Stata) operate on datasets, which consist of rows of observations and columns of variables
 
 - Usually, these packages can open only one dataset at a time
 - By contrast, in R everything is an object and there is no limit to the number of objects R can hold (except memory)
@@ -413,7 +413,7 @@ Problem with this classification:
 - Not conceptually intutive
 - Technically, lists are a type of vector, but people often think of atomic vectors and lists as fundamentally different things
 
-__Classification used by my R Guru Ben Skinner__:
+__Classification used by my R maven Ben Skinner__:
 
 - data __type__: logical, numeric (integer and double), character, etc.
 - data __structure__: vector, list, matrix, etc.
@@ -450,7 +450,7 @@ length("Tommy")
 
 \medskip The "type" of an atomic vector refers to the elements within the vector. 
 
-While there are six "types" of actomic vectors, we'll focus on the following types:
+While there are six "types" of atomic vectors, we'll focus on the following types:
 
 - numeric: 
     - "integer" (e.g., 5)
@@ -564,7 +564,7 @@ typeof(c(TRUE,TRUE,NA,1.5,"howdy!"))
 
 All vectors can be "named" (i.e., name individual elements within vector)
 
-Example of creating an unamed vector
+Example of creating an unnamed vector
 
 - the `str()` function "compactly display[s] the internal structure of an R object" [from help file]; very useful for describing objects
 ```{r}
@@ -701,7 +701,7 @@ str(x1)
 - second element is a list with length=2
     - first element is character vector with length=1
     - second element is character vector with length=1
-- third element is with length=3
+- third element is a list with length=3
     - first element is numeric vector with length=1
     - second element is numeric vector with length=1
     - third element is numeric vector with length=1
@@ -753,10 +753,10 @@ str(x2$c)
 - Each element (column) is a variable
 - Each element in a data frame must have the same length
     - The length of an element is the number of observations (rows)
-    - Thus, each variable in data frame has same number of observations
+    - Thus, each variable in a data frame has same number of observations
 - Each element is named
     - these element names are the variable names
-- Typically, each __element__(variable) in data frame is a __vector__
+- Typically, each __element__(variable) in a data frame is a __vector__
   - Elements can also be lists. Happens when the variable has a complicated data structure 
     - e.g., a variable that identifies the "@" mentions in a tweet
     
@@ -937,7 +937,7 @@ Investigate object `g_2mode_privu`
 typeof(g_2mode_privu) # igraph package stores network data as type = list
 class(g_2mode_privu) # class = igraph
 ```
-The "vertices" consit of colleges and high schools
+The "vertices" consist of colleges and high schools
 ```{r}
 vcount(g_2mode_privu) # 1356 "nodes" or "vertices"
 table(V(g_2mode_privu)$type) # 1330 private high schools; 26 private colleges/universities
@@ -1042,7 +1042,7 @@ plot(
 2. __process__ the input.
 3. __return__ (A) a new object or (B) a visualizatoin (e.g., plot)
 
-For example, `sum()` function calcualtes sum of elements in a vector
+For example, `sum()` function calculates sum of elements in a vector
 
 1. __input__. takes in a vector of elements (numeric or logical)
 2. __processing__. Calculates the sum of elements
@@ -1082,7 +1082,7 @@ Usually, function arguments have names
 seq(from=10, to=20, by=2)
 seq(10,20,2)
 ```
-Many function arguments have "default values", set by whoever wrote function
+Many function arguments have "default values", set by whoever wrote the function
 
 - if you don't specify a value for that argument, the default value is inserted
 - e.g., partial list of default values for `seq()`: `seq(from=1, to=1, by=1)`
@@ -1093,7 +1093,7 @@ seq(10) # R assigned value of 10 to "to" rather than "from" or "by"
 ```
 ### Function arguments, the `na.rm` argument
 
-When R performs calculation and an input has value `NA`, output value is `NA`
+When R performs a calculation and an input has value `NA`, output value is `NA`
 ```{r}
 5+4+NA
 ```
@@ -1136,7 +1136,7 @@ __Contents of help files__
 
 \medskip __Practice!__
 
-- when you encounter new function, spend two minutes reading help file
+- when you encounter a new function, spend two minutes reading the help file
 - over time, help files will feel less cryptic and will start to feel helpful
 
 ### Function arguments, the dot-dot-dot (`...`) argument
@@ -1218,7 +1218,7 @@ getwd()
 **Relative file path**:  The relative file path is the path relative to your current location/directory. Assuming your current working directory is in the "intro_to_r" folder and you want to change your directory to the data folder, your relative file path would look something like this:  
 `setwd("../../data")`  
 
-            File path shortcuts
+            File path shortcuts (Mac)
 
 | **Key** | **Description** |
 | ------ | -------- |
@@ -1315,7 +1315,7 @@ Why are we asking you to create R project and download a specific directory stru
 
 ### How people use R Markdown
 
-RMarkdown creates many types of static and dynamic/interactive documents
+R Markdown creates many types of static and dynamic/interactive documents
 
 - Example of [static policy report](https://emraresearch.org/sites/default/files/2019-03/joyce_report.pdf)
 - Example of [dynamic/interactive presentation](https://ozanj.github.io/joyce_report/#/title)
@@ -1330,7 +1330,7 @@ How we will be using R Markdown files in this class:
 - Lectures we write are .Rmd files, where the output style will be `beamer_presentation` or `html_document`
     - `beamer_presentation` is essentially a PDF document, where each page is a slide
 
-### Creating RMarkdown documents
+### Creating R Markdown documents
 
 __Do this with a partner__
 
@@ -1338,7 +1338,7 @@ Approach for creating a RMarkdown document.
 
 1. Point-and-click from within RStudio
     - Click on _File_ >> _New File_ >> _R Markdown_ >> _Document_ >> choose _HTML_ >> click _OK_
-        - Optional: add title (this is not the file name, just what appears at top of document)
+        - Optional: add title (this is not the file name, just what appears at the top of document)
         - Optional: add author name
     - Save the .Rmd file; _File_ >> _Save As_
         - Any file name
@@ -1360,12 +1360,12 @@ Approach for creating a RMarkdown document.
 
 ### Components of a .Rmd file
 
-An RMarkdown (.Rmd) file consists of several parts
+An R Markdown (.Rmd) file consists of several parts
 
 1. __YAML header__
     - YAML stands for "yet another markup language"
     - Controls settings that apply to the whole document (e.g., "output" should be `html_document` or `pdf_document`, whether to include table of contents, etc.)
-    - YAML header goes at very top of document
+    - YAML header goes at the very top of the document
     - Starts with a line of three horizontal dashes `---`; ends with a line of three horizontal dashes `---`
 2. __Text__ in body of .Rmd file
     - e.g., headings; description of results, etc.
@@ -1394,7 +1394,7 @@ Two ways to execute R commands in .Rmd file:
 
 Comment on default settings for RStudio:
 
-- When you knit entire .Rmd file, "objects" created within .Rmd file will not be available after file comples
+- When you knit entire .Rmd file, "objects" created within .Rmd file will not be available after file compiles
 - When you run code chunk (or selected lines in chunk), objects created by lines you run will be in your "environment" until you remove them or quit R session
 
 ### Output types of .Rmd file
