@@ -1850,9 +1850,8 @@ input, select, textarea {
 	}
 
 	.indent-one {
-  		padding-left: 25pt;
+  	padding-left: 25pt;
  		padding-right: 25pt;
-  		padding-bottom: 20pt;
 	}
 
 	.indent-two {
@@ -1899,6 +1898,10 @@ input, select, textarea {
   		color: #777;
   		padding-left: 10pt;
 
+	}
+	
+	.panel-footer {
+	  margin-bottom: 1.5em;
 	}
 
 
@@ -3433,24 +3436,25 @@ input, select, textarea {
 	
 	#communication .container > div {
 	  margin-left: 1.34em;
-    padding: 0.5em 1em;
-    border-left: 2px lightgrey solid;
-    font-size: 90%;
-    line-height: 1.5;
-    color: #444;
+	  padding: 0.5em 1em;
+	  border-left: 2px lightgrey solid;
+	  font-size: 90%;
+	  line-height: 1.5;
+	  color: #444;
 	}
 	
 	#communication .container > div ul {
 	  margin: 1em 1em 0.2em;
 	  list-style-type: circle;
 	}
-	
-	#lectures .container > div ul {
-	  margin: 1em 1em 0.2em;
-	  list-style-type: circle;
-	}
 
+	#lectures .container > div ul,
 	#readings .container > div ul {
-	  margin: 1em 1em 0.2em;
 	  list-style-type: circle;
+	  line-height: 2;
+	}
+	
+	#readings .container > div ul ul {
+	  margin-left: 1em;
+	  list-style-type: disc;
 	}
