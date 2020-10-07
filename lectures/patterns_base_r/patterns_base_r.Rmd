@@ -37,7 +37,7 @@ download.file(url = 'https://raw.githubusercontent.com/anyone-can-cook/rclass1/m
 ```
 
 ```{r, echo=FALSE, include=FALSE, eval = FALSE}
-# Download images
+# Download images saved on github site
 imgs <- c('transform-logical.png','fp1.JPG', 'fp2.JPG')
 for (i in imgs) {
   if(!file.exists(i)){
@@ -46,6 +46,26 @@ for (i in imgs) {
                 mode = 'wb')
   }
 }
+
+# download images from Advanced R book
+
+  # the 3 carriage train
+  download.file(url = 'https://d33wubrfki0l68.cloudfront.net/1f648d451974f0ed313347b78ba653891cf59b21/8185b/diagrams/subsetting/train.png', 
+                destfile = 'three_carriage_train.png',
+                mode = 'wb')
+  
+  # the 1 car train vs. contents of car 1
+  download.file(url = 'https://d33wubrfki0l68.cloudfront.net/aea9600956ff6fbbc29d8bd49124cca46c5cb95c/28eaa/diagrams/subsetting/train-single.png', 
+                destfile = 'one_carriage_train_vs_contents.png',
+                mode = 'wb')
+  
+  
+  # different versions of smaller trains
+  download.file(url = 'https://d33wubrfki0l68.cloudfront.net/ef5798a60926462b9fc080afb0145977eca70b83/039f5/diagrams/subsetting/train-multiple.png', 
+                destfile = 'smaller_trains.png',
+                mode = 'wb')
+  
+
 ```
 
 
@@ -992,117 +1012,207 @@ str(x[3])
 str(x[[3]])
 ```
 
-### Subset single element from object using [[]] operator, lists
+- Applying `[[]]` to a list
+  - Understanding what `[]` vs. `[[]]` does to a list is very important but requires some explanation!
 
-Create list
+### Subsetting lists using `[]` vs. `[[]]`, introduce "train metaphor"
+
+_Advanced R_ [chapter 4.3](https://adv-r.hadley.nz/subsetting.html#subset-single) by Wickham uses the "train metaphor" to explain a list vs. **contents** of a list and how this relates to `[]` vs. `[[]]`
+
+
+Below code chunk makes a list named `x` that contains 3 elements
 ```{r}
-list_a <- list(1:3, "a", 4:6)
-str(list_a) # print list
+x <- list(1:3, "a", 4:6) # create list object x
+```
+
+In our train metaphor, object `x` is a train that contains 3 carriages
+
+[![](three_carriage_train.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
+
+### Subsetting lists using `[]` vs. `[[]]`, introduce "train metaphor"
+
+list object `x` is a train that contains 3 carriages
+
+```{r, out.width = "45%", echo = FALSE}
+library(knitr)
+include_graphics("three_carriage_train.png")
+#[![](three_carriage_train.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
+```
+
+When we "subset a list" -- that is, extract one or more elements from the list -- we have two broad choices (image below)
+
+```{r, out.width = "45%", echo = FALSE}
+library(knitr)
+include_graphics("one_carriage_train_vs_contents.png")
+# [![](one_carriage_train_vs_contents.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
 ```
 
 
-- Apply `[]` to list: returns list with elements you requested
+
+1. Extracting elements using `[]` always returns a list, usually one with fewer elements
+    - you can think of this as a train with fewer carriages
 ```{r}
-str(list_a[1])
+str(x[1]) # returns a list
 ```
-
-- Applying `[[]]` to list gives the "contents" of the list, rather than list itself
-```{r}
-str(list_a[[1]])
-```
-
-### The "object" `[]` versus the "contents of the object" `[[]]`
-
-START EDITING HERE!
-
-Wickham "Advanced R" chapter 4.3 uses the "train metaphor" to differentiate the "object" from the "contents of the object" [LINK]
-
-- We will use this train metaphor to understand the difference between a list (the object) and the contents of the list (contents of the object)
-
-```{r, eval = FALSE}
-- Subsetting an object using `[[]]` returns the selected element itself, which might not be of the same type as the original object
-  - E.g., Using `[[]]` to select an element from a list that is a numeric vector will return that numeric vector and not a list containing that numeric vector, like what `[]` would return
-    - Let `x` be a list with 3 elements (_Think of it as a train with 3 cars_)
-    [![](https://d33wubrfki0l68.cloudfront.net/1f648d451974f0ed313347b78ba653891cf59b21/8185b/diagrams/subsetting/train.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
-    - `x[1]` will be a list containing the 1st element, which is a numeric vector (i.e., _train with the 1st car_)
-    - `x[[1]]` will be the numeric vector itself (i.e., _the objects within the 1st car_)
-    [![](https://d33wubrfki0l68.cloudfront.net/aea9600956ff6fbbc29d8bd49124cca46c5cb95c/28eaa/diagrams/subsetting/train-single.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
-    - *Source: Subsetting from [R for Data Science](https://adv-r.hadley.nz/subsetting.html)*
-- Object attributes are removed when using `[[]]`
-  - E.g., Using `[[]]` on a named object returns just the selected element itself without the name attribute
-
-
-```
-
-
-
-### Subset single element from object using [[]] operator
-
-- We can only use `[[]]` to extract a single element rather than multiple elements
-
-Wickham "Advanced R" chapter 4.3 [[LINK HERE](https://adv-r.hadley.nz/subsetting.html#subset-single)] uses "Train Metaphor" to differentiate list vs. contents of list
-
-The list is the entire train. Create a list with three elements (three "carriages")
-```{r}
-list_a <- list(1:3, "a", 4:6)
-str(list_a)
-```
-When extracting element(s) of a list you have two options:
-
-1. Extracting elements using `[]` always returns a smaller list (smaller train)
-```{r}
-str(list_a[1]) # returns a list
-```
-2. Extracting element using `[[]]` returns contents of particular carriage
+2. Extracting element using `[[]]` returns **_contents_** of particular carriage
     - I say applying `[[]]` to a list or data frame returns a simpler object that moves up one level of hierarchy
 ```{r}
-str(list_a[[1]]) # returns an atomic vector
+str(x[[1]]) # returns an atomic vector
 ```
-    
 
-    
-### Subset single element from object using [[]] operator
 
-In contrast to `[]`, we use `[[]]` to extract individual elements rather than multiple elements
 
-- we could write `x[4]` or `x[4:6]`
-- we could write `x[[4]]` but not `x[[4:6]]`
+### Subset lists using `[]` vs. `[[]]`, deepen understanding of `[]`
 
-### Subset single element from object using [[]] operator
+<!-- Use train metaphor to deepen understanding of using `[]` to subset the list object `x` -->
 
-Just like `[]` can use `[[]]` to return contents of __named__ elements, specified using quotes
+Rules about applying subset operator `[]` to a list
+
+- Applying `[]` to a list always returns a list
+- Resulting list contains 1 or more elements depending on what typed inside `[]`
+
+Here is a list object named `x`
+```{r}
+x <- list(1:3, "a", 4:6)
+```
+
+Here is an image of a few "trains" that can be created by applying `[]` to `x`
+<!-- [![](smaller_trains.png)](https://adv-r.hadley.nz/subsetting.html#subset-single){height=50%} -->
+
+```{r, out.width = "45%", echo = FALSE}
+library(knitr)
+include_graphics("smaller_trains.png")
+```
+
+And here is code to create the "trains" shown in above image (output omitted)
+```{r, results = "hide"}
+x[1:2]
+x[-2]
+x[c(1,1)]
+x[0]
+x[] # returns the original list; not shown in above train picture
+```
+
+### Subset lists using `[]` vs. `[[]]`, deepen understanding of `[[]]`
+
+Rules about applying subset operator `[[]]` to a list
+
+- Can apply `[[]]` to return the **contents** of a **single element** of a list
+
+
+Create list `x` and show "train" Image of applying `x[1]` vs. `x[[1]]`
+
+```{r}
+x <- list(1:3, "a", 4:6)
+```
+
+```{r, out.width = "45%", echo = FALSE}
+library(knitr)
+include_graphics("one_carriage_train_vs_contents.png")
+```
+
+
+Object created by `x[1]` is a list with one element (output omitted)
+```{r, results = "hide"}
+x[1]
+str(x[1])
+```
+
+Object created by `x[[1]]` is a vector with 3 elements (output omitted)
+
+- `x[[1]]` gives us "contents" of element 1
+- Since element 1 contains a numeric vector, object created by `x[[1]]` is a numeric vector
+```{r, results = "hide"}
+x[[1]]
+str(x[[1]])
+```
+
+### Subset lists using `[]` vs. `[[]]`, deepen understanding of `[[]]`
+
+Rules about applying subset operator `[[]]` to a list
+
+- Can apply `[[]]` to return the **contents** of a **single element** of a list
+
+```{r}
+x <- list(1:3, "a", 4:6) # create list x
+```
+
+
+We cannot use `[[]]` to subset multiple elements of a list (output omitted)
+
+- e.g., we could write `x[[2]]` but not `x[[2:3]]`
+```{r, eval = FALSE}
+x[[c(2)]] # this works, subset element 2 using [[]]
+x[[c(2,3)]] # this doesn't work; subset element 2 and 3 using [[]]
+x[c(2,3)] # this works; subset element 2 and 3 using []
+```
+### Subset lists using `[]` vs. `[[]]`, deepen understanding of `[[]]`
+
+Like `[]`, can use `[[]]` to return contents of __named__ elements specified using quotes
 
 - syntax: `obj_name[["element_name"]]`
+
+Same list as before, but this time elements named
 ```{r}
-list_b <- list(var1=1:3, var2="a", var3=4:6)
-str(list_b)
-
-str(list_b["var1"])
-
-str(list_b[["var1"]])
+x <- list(var1=1:3, var2="a", var3=4:6)
 ```
-Works the same with data frames
-```{r}
-str(df_event["zip"])
 
+Subset list `x` using `[[]]` element names vs. element position
+```{r}
+x[["var1"]]
+  # x[[1]] # same as above
+x[["var3"]]
+  # x[[3]] # same as above
+```
+
+We can do the same thing with data frames because data frames are lists
+
+- e.g., `df_event[["zip"]]` returns contents of element named `"zip"`
+- object created by `df_event[["zip"]]` is character vector of length = 18,680
+```{r}
+# df_event[["zip"]] # this works but long output
 str(df_event[["zip"]])
+typeof(df_event[["zip"]])
+length(df_event[["zip"]])
 ```
 
+
+
+### General rules of applying `[]` vs `[[]]` to (nested) objects
+
+What we just learned about applying `[]` vs `[[]]` to lists applies more generally to "nested objects"
+
+- "nested objects" are objects with a hierarchical structure such that an element of an object contains another object
+
+
+General rules of applying `[]` vs. `[[]]` to nested objects
+
+- subset any object `x` using `[]` will return object with same data structure as `x`
+- subset any object `x` using `[[]]` will return an object thay may or may not have same data structure of `x`
+  - if object `x` is not a nested object, then applying `[[]]` to a single element of `x` will return object with same data structure as `x`
+  - if object `x` has a nested data structure, then then applying `[[]]` to a single element of `x` will "move up one level of hierarchy" to extract the **contents** of element `x`
+  
 
 ### Subset lists/data frames using $
 
-`obj_name$element_name` shorthand operator for `obj_name[["element_name"]]`
 
 ```{r}
-str(list_b)
-
-list_b[["var1"]]
-list_b$var1
-
-str(list_b[["var1"]])
-str(list_b$var1)
+x <- list(var1=1:3, var2="a", var3=4:6)
 ```
+
+`obj_name$element_name` is shorthand operator for `obj_name[["element_name"]]`
+
+
+These three lines of code all give the same result
+```{r}
+x[[1]]
+x[["var1"]]
+x$var1
+```
+
 `df_name$var_name`: easiest way in base R to refer to variable in a data frame
+
+- these two lines of code are equivalent
 ```{r}
 str(df_event[["zip"]])
 str(df_event$zip)
