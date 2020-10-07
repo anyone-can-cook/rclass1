@@ -74,7 +74,7 @@ The course will be taught in R, a free, open-source programming language. R has 
 - Pronouns: she/her/hers
 - Email: [pmarti@g.ucla.edu](pmarti@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Wednesdays 10-11am, zoom [link](https://ucla.zoom.us/j/97212264332)
+  - Zoom office hours: Wednesdays 10-11am, zoom [link](https://ucla.zoom.us/j/97724535140)
   - And by appointment
 
 \med
