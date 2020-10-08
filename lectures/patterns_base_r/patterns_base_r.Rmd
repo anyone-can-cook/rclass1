@@ -116,7 +116,7 @@ This section introduces some base R functions to describe objects (some of these
 - object type, `typeof()`
 - object length (number of elements), `length()`
 - object structure, `str()`
-- number of rows and columns, `ncol()` and `nrow`
+- number of rows and columns, `ncol()` and `nrow()`
 
 I use the functions `typeof()`, `length()`, `str()` anytime I encounter a new object
 
@@ -307,7 +307,7 @@ dim(x)
   - `x`: an R object
   - `value`: a character vector with same length as object `x` or `NULL`
 - value/return
-  - `names(x)` returns a character vector of legnth = `length(x)` in which each element is the name of the element of `x`
+  - `names(x)` returns a character vector of length = `length(x)` in which each element is the name of the element of `x`
 
 Example, get names (of atomic vector)
 ```{r}
@@ -379,7 +379,7 @@ Refer to specific named elements of an object using this syntax:
 When object is data frame, refer to specific variables using this syntax: 
 
 - `data_frame_name$varname`
-- __This approach to isolating variables very useful for investigating data__
+- __This approach to isolating variables is very useful for investigating data__
 
 ```{r}
 #df_event$instnm
@@ -388,9 +388,9 @@ typeof(df_event$med_inc)
 ```
 ### Variable names
 
-\medskip Data frames are lists with following criteria:
+\medskip Data frames are lists with the following criteria:
 
-- each element of list is (usually) a vector; each element of list is a variable
+- each element of the list is (usually) a vector; each element of list is a variable
 - length of data frame = number of variables
 ```{r}
 length(df_event)
@@ -415,7 +415,7 @@ str(df_event$med_inc)
 
 The object `df_school` has one obs per high school
 
-- variable `visits_by_100751` shows number of visits by University of Alabama to each high school
+- variable `visits_by_100751` shows number the of visits by University of Alabama to each high school
 - like all variables in a data frame, the var `visits_by_100751` is just a vector
 ```{r}
 typeof(df_school$visits_by_100751)
@@ -448,9 +448,10 @@ df_event
 ```{r eval=FALSE}
 View(df_event)
 ```
-3. `head()` to show the first _n_ rows
+3. `head()` to show the first _n_ rows. The default is 6 rows.
 ```{r results="hide"}
 #?head
+#head(df_event)
 head(df_event, n=5)
 ```
 
@@ -500,7 +501,7 @@ Print specific elements (i.e., observations) of variable based on element positi
 
 - syntax: `obj_name$var_name[<element position>]`
 - vectors don't have "rows" or "columns"; they just have elements
-- syntax be combined with sequences (e.g., print first 10 observations)
+- syntax combined with sequences (e.g., print first 10 observations)
 ```{r}
 df_event$event_state[1:10] # print obs 1-10 of variable "event_state"
 df_event$event_type[6:10] # print obs 6-10 of variable "event_type"
@@ -533,28 +534,28 @@ c(df_event$event_state[1:5],df_event$event_type[1:5])
 ### Exercise
 
 
-Create a printing exercise using the df_school data frame
+Printing exercise using the df_school data frame
 
-1. Use `obj_name[<rows>,<cols>]` to print the first 5 rows and 3 columns of data frame
-1. Use head() to print first 4 observations
-1. Use `obj_name$var_name[1:10]` to print the first 10 observations of a variable
+1. Use the `obj_name[<rows>,<cols>]` syntax to print the first 5 rows and 3 columns of the `df_school` data frame
+1. Use the `head()` function to print the first 4 observations
+1. Use the `obj_name$var_name[1:10]` syntax to print the first 10 observations of a variable in the `df_school` data frame
 1. Use combine() to print the first 3 observations of variables "school_type" & "name"
 
 ### Solution
 
-1. Use `obj_name[<rows>,<cols>]` to print the first 5 rows and 3 columns of data frame
+1. Use the `obj_name[<rows>,<cols>]` syntax to print the first 5 rows and 3 columns of the `df_school` data frame
 ```{r}
 df_school[1:5,1:3]
 ```
 
 ### Solution
-2. Use head() to print first 4 observations
+2. Use the `head()` function to print the first 4 observations
 ```{r}
 head(df_school, n=4)
 ```
 
 ### Solution
-3. Use `obj_name$var_name[1:10]` to print the first 10 observations of a variable
+3. Use the `obj_name$var_name[1:10]` syntax to print the first 10 observations of a variable in the `df_school` data frame
 ```{r}
 df_school$name[1:10]
 ```
@@ -680,7 +681,7 @@ nrow(df_school)
 "Subsetting" a vector refers to isolating particular elements of a vector
 
 - I sometimes refer to this as "accessing elements of a vector"
-- subsestting elements of a vector is similar to "filtering" rows of a data-frame
+- subsetting elements of a vector is similar to "filtering" rows of a data-frame
 - `[]` is the subsetting function for vectors
 
 Six ways to subset an atomic vector using `[]`
@@ -950,9 +951,9 @@ df_event[1:5, c("instnm", "event_state", "event_type")]
 
 Use subsetting operators from base R in extracting columns (variables), observations:
 
-1. Use both "single index" and "double index" in subsetting to create a new dataframe by extracting the columns `instnm`, `event_date`, `event_type` from df_event. And show what columns (variables) are in the newly created dataframe. 
+1. Use both "single index" and "double index" in subsetting to create a new dataframe by extracting the columns `instnm`, `event_date`, `event_type` from the `df_event` data frame. And show what columns (variables) are in the newly created dataframe. 
 
-2. Use subsetting to return rows 1-5 of columns `state_code`, `name`, `address` from df_school.
+2. Use subsetting to return rows 1-5 of columns `state_code`, `name`, `address` from the `df_school` data frame.
 
 
 ### Solution to Student Exercises
@@ -979,7 +980,7 @@ df_school[1:5, c("state_code", "name", "address")]
 
 ### Subset single element from object using [[]] operator, atomic vectors
 
-So far we have used `[]` to excract elements from an object
+So far we have used `[]` to extract elements from an object
 
 - Apply `[]` to atomic vector: returns atomic vector with elements you requested
 - Apply `[]` to list: returns list with elements you requested
@@ -1220,11 +1221,11 @@ df_school[df_school$visits_by_110635 >= 1, ]
 
 - All obs where the high school received at least 1 visit from UC Berkeley and the first three columns
 ```{r results="hide"}
-df_school[df_school$visits_by_110635 == 1, 1:3]
+df_school[df_school$visits_by_110635 >= 1, 1:3]
 ```
 - All obs where the high school received at least 1 visit from UC Berkeley and variables "state_code" "school_type" "name"
 ```{r results="hide"}
-df_school[df_school$visits_by_110635 == 1, c("state_code","school_type","name")]
+df_school[df_school$visits_by_110635 >= 1, c("state_code","school_type","name")]
 ```
 
 ### Subsetting Data Frames with [] combined with $
@@ -1457,11 +1458,11 @@ nrow(df_school_v2)
 
 Using `subset()` from base R:
 
-1. Create a new dataframe by extracting the columns `instnm`, `event_date`, `event_type` from df_event. And show what columns (variables) are in the newly created dataframe. 
+1. Create a new dataframe by extracting the columns `instnm`, `event_date`, `event_type` from `df_event` data frame. And show what columns (variables) are in the newly created dataframe. 
 
-2. Create a new dataframe from df_school that includes out-of-state public high schools with 50%+ Latinx student enrollment that received at least one visit by the University of California Berkeley (var= visits_by_110635). And count the number of observations.
+2. Create a new dataframe from the `df_school` data frame that includes out-of-state public high schools with 50%+ Latinx student enrollment that received at least one visit by the University of California Berkeley (var= visits_by_110635). And count the number of observations.
 
-3. Count the number of public schools from CA, FL or MA that received one or two visits from UC Berkeley from df_school.
+3. Count the number of public schools from CA, FL or MA that received one or two visits from UC Berkeley from the `df_school` data frame.
 
 4. Subset all public out-of-state high schools visited by University of California Berkeley that enroll at least 50% Black students, and only keep variables `state_code`, `name` and `zip_code`.
 
@@ -1549,7 +1550,7 @@ df_event[order(df_event$event_date, -df_event$total_12), ]
 
 ### Example, sorting
 
--Create a new dataframe from df_events that sorts by ascending by `event_date`, ascending `event_state`, and descending `pop_total`.
+- Create a new dataframe from df_events that sorts by ascending by `event_date`, ascending `event_state`, and descending `pop_total`.
 
 __base R__ using  `order()` function:
 
