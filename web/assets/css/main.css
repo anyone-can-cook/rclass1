@@ -1900,8 +1900,8 @@ input, select, textarea {
 
 	}
 	
-	.panel-footer {
-	  margin-bottom: 1.5em;
+	.panel-group .panel-footer {
+	  border-top: 1px #ddd solid;
 	}
 
 
