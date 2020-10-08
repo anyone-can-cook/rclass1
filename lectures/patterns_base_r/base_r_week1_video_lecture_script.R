@@ -38,10 +38,46 @@ list_x <- list(1:3, "a", 4:6)
 ## functions to investigate objects, typeof(), length(), str(), names()
 ## ---------------------------
 
+#typeof(), length(), str(), names()
+?typeof
+
+x
+
+typeof(x)
+length(x)
+str(x)
+names(x)
+
+list_x <- list(var1=1:3, var2="a", var3=4:6) # same as above, but here we name the elements
+
+list_x
+typeof(list_x)
+length(list_x)
+str(list_x)
+names(list_x)
+names_list_x <- names(list_x)
+
+names_list_x
+str(names_list_x)
+
+typeof(df_event)
+length(df_event)
+str(df_event)
+names(df_event)
+
 
 ## ---------------------------
 ## intro to sub-setting atomic vectors using []
 ## ---------------------------
+
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+
+x[]
+x[1]
+x[c(1)]
+x[c(1,4)]
+x[1:3]
+x[4:6]
 
 # simplest approach: subset based on element position
 
@@ -79,17 +115,39 @@ df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2] # for fir
 
 
 ## ---------------------------
-## functions to investigate objects, typeof(), length(), str(), names()
-## ---------------------------
-
-## ---------------------------
 ## subsetting elements, focus on train metaphor and [] vs. [[]]
 ## ---------------------------
 
 
+list_x <- list(1:3, "a", 4:6) 
+
+list_x[1:2]
+str(list_x[1:2])
+
+str(list_x[])
+
+list_x[[1]]
+
+str(list_x[[1]])
+
+str(list_x[1])
 
 
+list_x <- list(var1=1:3, var2="a", var3=4:6) # same as above, but here we name the elements
 
+names(list_x)
+
+list_x[[1]]
+list_x[["var1"]]
+
+typeof(df_event)
+names(df_event)
+
+df_event[["event_type"]]
+
+typeof(df_event[["event_type"]])
+length(df_event[["event_type"]])
+str(df_event[["event_type"]])
 
 
 ## -----------------------------------------------------------------------------
