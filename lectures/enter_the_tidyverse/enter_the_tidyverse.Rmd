@@ -28,9 +28,19 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
   #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
 ```
 
-# Introduction
+```{r, echo=FALSE, include=FALSE, eval = FALSE}
+# Download images saved on github site
+imgs <- c('transform-logical.png')
+for (i in imgs) {
+  if(!file.exists(i)){
+  download.file(url = paste0('https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/enter_the_tidyverse/', i), 
+                destfile = i,
+                mode = 'wb')
+  }
+}
+```
 
-### What we will do today
+### Lecture outline
 
 \tableofcontents
 
@@ -40,6 +50,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
 #Use this if you don't want TOC to show level 2 headings
 \tableofcontents[subsectionstyle=hide/hide/hide]
 ```
+
+# Introduction
 
 ### Libraries we will use today
 
@@ -61,9 +73,37 @@ Note: when we load package, name of package is not in quotes; but when we instal
 
 
 
-## Data for lecture
+## Data for lecture sections on select(), filter(), and arrange() functions
 
-### Lecture data: prospects purchased by Western Washington U.
+### Load .Rdata data frames, `df_event` and `df_school`
+
+Data on off-campus recruiting events by public universities
+
+- Data frame object `df_event`
+    - One observation per university, recruiting event
+- Data frame object `df_school`
+    - One observation per high school (visited and non-visited)
+
+```{r}
+rm(list = ls()) # remove all objects in current environment
+
+getwd()
+#load dataset with one obs per recruiting event
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+#load("../../data/recruiting/recruit_event_somevars.Rdata")
+
+#load dataset with one obs per high school
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData"))
+#load("../../data/recruiting/recruit_school_somevars.Rdata")
+```
+
+## Data for lecture sections on pipes and mutate() function
+
+### Load .Rdata data frame `wwlist`, "prospects" purchased by Western Washington U.
+
+Note: we won't use this data frame until the lecture section on "pipes"
+
+- You can ignore `wwlist` data frame for lecture sections on select(), filter(), and arrange() functions
 
 The "Student list" business
 
@@ -79,12 +119,9 @@ load(url("https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_m
 Object `wwlist`
 
 - De-identified list of prospective students purchased by Western Washington University from College Board
-- We collected these data using FOIA request
-    - ASIDE: Become an expert on collecting data via FOIA requests and you will become a superstar!
+- We collected these data using public records requests request
 
-
-
-### Lecture 3 data: prospects purchased by Western Washington U.
+### Data frame `wwlist`, "prospects" purchased by Western Washington U.
 
 Observations on `wwlist`
 
@@ -97,19 +134,19 @@ dim(wwlist)
 Variables on `wwlist`
 
 - some vars provide de-identified data on individual prospects
-    - e.g., `psat_range`, `state`, `sex`, `ethn_code`
+  - e.g., `psat_range`, `state`, `sex`, `ethn_code`
 - some vars provide data about zip-code student lives in
-    - e.g., `med_inc`, `pop_total`, `pop_black`
+  - e.g., `med_inc`, `pop_total`, `pop_black`
 - some vars provide data about school student enrolled in
-    - e.g., `fr_lunch` is number of students on free/reduced lunch
-    - note: bad merge between prospect-level data and school-level data
+  - e.g., `fr_lunch` is number of students on free/reduced lunch
+  - note: bad merge between prospect-level data and school-level data
 ```{r, results="hide"}
 names(wwlist)
 str(wwlist)
 glimpse(wwlist) # tidyverse function, similar to str()
 ```
 
-### Lecture 3 data: prospects purchased by Western Washington U.
+### Data frame `wwlist`, "prospects" purchased by Western Washington U.
 
 Variable `firstgen` identifies whether prospect is a first-generation college student
 
@@ -126,14 +163,523 @@ str(wwlist$firstgen)
 ```{r}
 table(wwlist$firstgen, useNA = "always")
 ```
-3. Isolate all the first-gen prospects
-```{r}
+3. Isolate all the first-gen prospects (output omitted)
+```{r results="hide"}
 filter(wwlist, firstgen == "Y")
 ```
 
 
+# Investigating data patterns
+
+### Introduction to the `dplyr` library
+
+`dplyr`, a package within the `tidyverse` suite of packages, provide tools for manipulating data frames
+
+- Wickham describes functions within `dplyr` as a set of "verbs" that fall in the broader categories of __subsetting__, __sorting__, and __transforming__
+
+Today | Upcoming weeks
+------------- | -------------
+__Subsetting data__ | __Transforming data__
+- `select()` variables  | - `mutate()` creates new variables
+- `filter()` observations | - `summarize()` calculates across rows
+__Sorting data__ | - `group_by()` to calculate across rows within groups
+- `arrange()` | 
+
+All `dplyr` verbs (i.e., functions) work as follows
+
+1. first argument is a data frame
+1. subsequent arguments describe what to do with variables and observations in data frame
+    - refer to variable names without quotes
+1. result of the function is a new data frame
+
+## select() variables
+
+### Select variables using `select()` function
+
+Printing observations is key to investigating data, but datasets often have hundreds, thousands of variables
+
+`select()` function selects __columns__ of data (i.e., variables) you specify
+
+- first argument is the name of data frame object
+- remaining arguments are variable names, which are separated by commas and without quotes
+
+Without __assignment__ (`<-`), `select()` by itself simply prints selected vars
+```{r}
+#?select
+select(df_event,instnm,event_date,event_type,event_state,med_inc)
+```
+
+### Select variables using `select()` function
+
+Recall that all `dplyr` functions (e.g., `select()`) return a new data frame object
+
+- __type__ equals "list"
+- __length__ equals number of vars you select
+
+```{r}
+typeof(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+length(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+`glimpse()`: tidyverse function for viewing data frames
+
+- a cross between `str()` and simply printing data
+```{r, eval=FALSE}
+?glimpse
+glimpse(df_event)
+```
+
+`glimpse()` a `select()` set of variables
+```{r}
+glimpse(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+
+### Select variables using `select()` function
+
+With __assignment__ (`<-`), `select()` creates a new object containing only the variables you specify
+
+```{r}
+event_small <- select(df_event,instnm,event_date,event_type,event_state,
+  med_inc)
+
+glimpse(event_small)
+```
+
+### Select
+
+`select()` can use "helper functions" `starts_with()`, `contains()`, and `ends_with()` to choose columns 
+```{r, eval=FALSE}
+?select
+```
+
+Example:
+```{r}
+#names(df_event)
+
+select(df_event,instnm,starts_with("event"))
+```
+
+<!--
+
+### Exercise
+
+The data frame `df_school` has one observation for each high school and indicators for whether the high school received a recruiting visit.
+
+```{r results="hide"}
+names(df_school)
+```
+1. Use `select()` to familiarize yourself with variables in the data frame
+1. Practice using the `contains()` and `ends_with()` helper functions to to choose variables
 
 
+-->
+
+
+### Rename variables
+
+
+
+`rename()` function renames variables within a data frame object
+
+\medskip Syntax:
+
+- `rename(obj_name, new_name = old_name,...)`
+\medskip
+```{r results="hide"}
+rename(df_event, g12_offered = g12offered, 
+       titlei = titlei_status_pub)
+names(df_event)
+```
+Variable names do not change permanently unless we combine rename with assignment
+\medskip
+```{r results="hide"}
+rename_event <- rename(df_event, g12_offered = g12offered, titlei = titlei_status_pub)
+names(rename_event)
+rm(rename_event)
+```
+
+## filter() rows
+
+### The `filter()` function
+
+`filter()` allows you to __select observations__ based on values of variables
+
+- Arguments
+    - first argument is name of data frame
+    - subsequent arguments are _logical expressions_ to filter the data frame
+    - Multiple expressions separated by commas work as __AND__ operators (e.g., condtion 1 `TRUE` AND condition 2 `TRUE`)
+
+- What is the result of a `filter()` command?
+    - `filter()` returns a data frame consisting of rows where the condition is `TRUE`
+
+```{r, eval=FALSE}
+?filter
+```
+
+Example from data frame object `df_school`, each obs is a high school
+
+- Show all obs where the high school received 1 visit from UC Berkeley (110635) [output omitted]
+```{r results="hide"}
+filter(df_school,visits_by_110635 == 1)
+```
+
+Note that resulting object is list, consisting of obs where condition `TRUE`
+```{r}
+nrow(df_school)
+nrow(filter(df_school,visits_by_110635 == 1))
+```
+
+### Filter, character variables
+
+Use single quotes `''` or double quotes `""` to refer to values of character variables
+```{r}
+glimpse(select(df_school, school_type,state_code))
+```
+Identify all private high schools in CA that got 1 visit by particular universities
+
+- UC-Berkeley (ID=110635)
+```{r results="hide"}
+filter(df_school,visits_by_110635 == 1, school_type == "private", 
+       state_code == "CA")
+```
+
+- University of Alabama (ID=100751)
+```{r results="hide"}
+filter(df_school,visits_by_100751 == 1, school_type == "private", 
+       state_code == "CA") 
+```
+
+- Visited once by Berkeley and University of Alabama
+```{r results="hide"}
+filter(df_school,visits_by_100751 == 1, visits_by_110635 == 1, 
+       school_type == "private", state_code == "CA") 
+```
+
+### Logical operators for comparisons
+
+logical operators useful for: filter obs w/ `filter()`; create variables w/ `mutate()`
+
+- logical operators also work when using Base R functions
+
+Operator symbol | Operator meaning
+-------|-------
+`==` | Equal to
+`!=` | Not equal to
+`>` | greater than
+`>=` | greater than or equal to
+`<` | less than
+`<=` | less than or equal to
+`&` | AND 
+`|` | OR
+`%in` | includes
+
+- Visualization of "Boolean" operators (e.g., AND, OR, AND NOT)
+
+!["Boolean" operations, x=left circle, y=right circle, from Wichkam (2018)](transform-logical.png){width=40%}
+
+### Aside: `count()` function
+
+\medskip `count()` function from `dplyr` package counts the number of obs by group
+```{r, eval=FALSE, echo=FALSE}
+?count
+```
+
+__Syntax__ [see help file for full syntax]
+
+- `count(x,...)`
+
+__Arguments__ [see help file for full arguments]
+
+- `x`: an object, often a data frame
+- `...`: variables to group by
+
+Examples of using `count()`
+
+- Without vars in `...` argument, counts number of obs in object
+```{r, results="hide"}
+count(df_school)
+  # df_school %>% count() # same as above but using pipes
+str(count(df_school))
+  # #df_school %>% count() %>% str() # same as above but using pipes
+```
+- With vars in `...` argument, counts number of obs per variable value
+    - This is the best way to create frequency table, better than `table()`
+    - note: by default, `count()` always shows `NAs` [this is good!]
+```{r, results="hide"}
+count(df_school,school_type)
+  # df_school %>% count(school_type) # same as above but using pipes
+str(count(df_school,school_type))
+  # df_school %>% count(school_type) %>% str() # same as above but using pipes
+```
+
+### Filters and comparisons, Demonstration
+
+Schools visited by Bama (100751) and/or Berkeley (110635)
+
+```{r results="hide"}
+#berkeley and bama
+filter(df_school,visits_by_100751 >= 1, visits_by_110635 >= 1) 
+filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
+#berkeley or bama
+filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1) 
+```
+Apply `count()` function on top of `filter()` function to count the number of observations that satisfy criteria
+
+- Avoids printing individual observations
+```{r}
+#Number of schools that git visit by Berkeley AND Bama
+count(filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1))
+#Number of schools that git visit by Berkeley OR Bama
+count(filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1))
+```
+
+### Filters and comparisons, >=
+
+\medskip Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama
+```{r}
+#at least 50% black
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+#at least 50% white
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+```
+### Filters and comparisons, not equals (`!=`)
+
+Count the number of high schools visited by University of Colorado (126614) that are not located in CO
+```{r}
+
+#number of high schools visited by U Colorado
+count(filter(df_school, visits_by_126614 >= 1))
+
+#number of high schools visited by U Colorado not located in CO
+count(filter(df_school, visits_by_126614 >= 1, state_code != "CO"))
+#number of high schools visited by U Colorado located in CO
+#count(filter(df_school, visits_by_126614 >= 1, state_code == "CO"))
+```
+### Filters and comparisons, %in% operator
+
+What if you wanted to count the number of schools visited by Bama (100751) in a group of states?
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code == "MA" |
+               state_code == "VT" | state_code == "ME"))
+```
+Easier way to do this is with `%in%` operator
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code %in% c("MA","ME","VT")))
+```
+
+Select the private high schools that got either 2 or 3 visits from Bama
+```{r}
+count(filter(df_school, visits_by_100751 %in% 2:3, school_type == "private"))
+```
+### Identifying data type and possible values helpful for filtering
+
+- `typeof()` and `str()` shows internal data type of a variable 
+- `table()` to show potential values of categorical variables
+
+```{r}
+typeof(df_event$event_type)
+str(df_event$event_type)
+table(df_event$event_type, useNA="always")
+typeof(df_event$event_state)
+str(df_event$event_state) # double quotes indicate character
+typeof(df_event$med_inc)
+str(df_event$med_inc)
+```
+
+Now that we know `event_type` is a character, we can filter values
+```{r}
+count(filter(df_event, event_type == "public hs", event_state =="CA"))
+#below code would return an error because variables are character
+#count(filter(df_event, event_type == public hs, event_state ==CA))
+```
+
+### Filtering and missing values
+
+Wickham (2018) states:
+
+- "`filter()` only includes rows where condition is TRUE; it excludes both `FALSE` and `NA` values. To preserve missing values, ask for them explicitly:"
+
+\medskip Investigate var `df_event$fr_lunch`, number of free/reduced lunch students
+
+- only available for visits to public high schools
+
+```{r}
+#visits to public HS with less than 50 students on free/reduced lunch
+count(filter(df_event,event_type == "public hs", fr_lunch<50))
+#visits to public HS, where free/reduced lunch missing
+count(filter(df_event,event_type == "public hs", is.na(fr_lunch)))
+#visits to public HS, where free/reduced is less than 50 OR is missing
+count(filter(df_event,event_type == "public hs", fr_lunch<50 | is.na(fr_lunch)))
+```
+
+### Exercise
+
+Task
+
+- Create a filter to identify all the high schools that recieved 1 visit from UC Berkeley (110635) AND 1 visit from CU Boulder (126614)[output omitted]
+
+### Solution
+
+```{r, results="hide"}
+filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+
+nrow(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+count(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+```
+
+
+- Must __assign__ to create new object based on filter
+```{r results="hide"}
+berk_boulder <- filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+count(berk_boulder)
+```
+
+### Exercises
+
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`  
+1. Count the number of recruiting events by Pitt at public or private high schools  
+1. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000  
+1. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000  
+
+
+### Solution  
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`
+```{r}
+count(filter(df_event, univ_id == 215293))
+```
+
+2. Count the number of recruiting events by Pitt at public or private high schools 
+```{r }
+str(df_event$event_type)
+table(df_event$event_type, useNA = "always")
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs"))
+```
+
+### Solution
+3. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs", event_state == "PA"))
+```
+
+4. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc < 100000))
+```
+
+### Solution
+5. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000
+
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc >= 100000))
+```
+
+6. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_state != "PA", 
+             (event_type == "public hs" & med_inc >= 100000) |
+               event_type == "private hs"))
+```
+
+## arrange() rows (i.e., sort rows)
+
+### `arrange()` function
+
+`arrange()` function "arranges" rows in a data frame; said different, it sorts observations
+
+\medskip
+Syntax: `arrange(x,...)`
+
+- First argument, `x`, is a data frame
+- Subsequent arguments are a "comma separated list of unquoted variable names"
+
+```{r, results="hide"}
+arrange(df_event, event_date)
+```
+Data frame goes back to previous order unless you __assign__ the new order
+```{r, results="hide"}
+df_event
+df_event <- arrange(df_event, event_date)
+df_event
+```
+### `arrange()` function
+
+Ascending and descending order
+
+- `arrange()` sorts in __ascending__ order by default
+- use `desc()` to sort a column by descending order
+```{r results="hide"}
+arrange(df_event, desc(event_date))
+```
+
+Can sort by multiple variables
+```{r results="hide"}
+arrange(df_event, univ_id, desc(event_date), desc(med_inc))
+
+#sort by university and descending by size of 12th grade class; combine with select
+select(arrange(df_event, univ_id, desc(g12)),instnm,event_type,event_date,g12)
+```
+
+### `arrange()`, missing values sorted at the end
+
+Missing values automatically sorted at the end, regardless of whether you sort ascending or descending
+
+Below, we sort by university, then by date of event, then by ID of high school
+```{r, results="hide"}
+#by university, date, ascending school id
+select(arrange(df_event, univ_id, desc(event_date), school_id),
+       instnm,event_date,event_type,school_id)
+
+#by university, date, descending school id
+select(arrange(df_event, univ_id, desc(event_date), desc(school_id)),
+       instnm,event_date,event_type,school_id)
+```
+Can sort by `is.na` to put missing values first
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
+       instnm,event_date,event_type,school_id)
+```
+
+### Exercise, arranging  
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Sort ascending by "univ_id" and descending by "event_date"  
+1. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+1. Now using the same variables from above, sort by `is.na` to put missing values in "school_id" first  
+
+### Solution 
+1. Sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+arrange(df_event, univ_id, desc(event_date))
+```
+
+### Solution
+2. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+select(arrange(df_event, univ_id, desc(event_date)), univ_id, event_date, 
+       instnm, event_type)
+```
+
+### Solution
+3. Select the variables "univ_id", "event_date", and "school_id" and sort  by `is.na` to put missing values in "school_id" first. 
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))), 
+       univ_id, event_date, school_id)
+```
 
 # Pipes
 
@@ -279,6 +825,7 @@ count(wwlist,school_category)
 wwlist %>% count(school_category)
 wwlist %>% count(school_category) %>% str()
 ```
+
 ### pipe operators and new lines
 
 \medskip Often want to insert line breaks to make long line of code more readable
@@ -457,479 +1004,6 @@ wwlist %>%
 ```{r}
 rm(wwlist_temp)
 ```
-
-# Investigating data patterns [tidyverse]
-
-### Introduction to the `dplyr` library
-
-`dplyr`, a package within the `tidyverse` suite of packages, provide tools for manipulating data frames
-
-- Wickham describes functions within `dplyr` as a set of "verbs" that fall in the broader categories of __subsetting__, __sorting__, and __transforming__
-
-Today | Upcoming weeks
-------------- | -------------
-__Subsetting data__ | __Transforming data__
-- `select()` variables  | - `mutate()` creates new variables
-- `filter()` observations | - `summarize()` calculates across rows
-__Sorting data__ | - `group_by()` to calculate across rows within groups
-- `arrange()` | 
-
-All `dplyr` verbs (i.e., functions) work as follows
-
-1. first argument is a data frame
-1. subsequent arguments describe what to do with variables and observations in data frame
-    - refer to variable names without quotes
-1. result of the function is a new data frame
-
-## Select variables
-
-### Select variables using `select()` function
-
-Printing observations is key to investigating data, but datasets often have hundreds, thousands of variables
-
-`select()` function selects __columns__ of data (i.e., variables) you specify
-
-- first argument is the name of data frame object
-- remaining arguments are variable names, which are separated by commas and without quotes
-
-Without __assignment__ (`<-`), `select()` by itself simply prints selected vars
-```{r}
-#?select
-select(df_event,instnm,event_date,event_type,event_state,med_inc)
-```
-
-### Select variables using `select()` function
-
-Recall that all `dplyr` functions (e.g., `select()`) return a new data frame object
-
-- __type__ equals "list"
-- __length__ equals number of vars you select
-
-```{r}
-typeof(select(df_event,instnm,event_date,event_type,event_state,med_inc))
-length(select(df_event,instnm,event_date,event_type,event_state,med_inc))
-```
-`glimpse()`: tidyverse function for viewing data frames
-
-- a cross between `str()` and simply printing data
-```{r, eval=FALSE}
-?glimpse
-glimpse(df_event)
-```
-
-`glimpse()` a `select()` set of variables
-```{r}
-glimpse(select(df_event,instnm,event_date,event_type,event_state,med_inc))
-```
-
-### Select variables using `select()` function
-
-With __assignment__ (`<-`), `select()` creates a new object containing only the variables you specify
-
-```{r}
-event_small <- select(df_event,instnm,event_date,event_type,event_state,med_inc)
-
-glimpse(event_small)
-```
-
-### Select
-
-`select()` can use "helper functions" `starts_with()`, `contains()`, and `ends_with()` to choose columns 
-```{r, eval=FALSE}
-?select
-```
-
-Example:
-```{r}
-#names(df_event)
-
-select(df_event,instnm,starts_with("event"))
-```
-
-<!--
-
-### Exercise
-
-The data frame `df_school` has one observation for each high school and indicators for whether the high school received a recruiting visit.
-
-```{r results="hide"}
-names(df_school)
-```
-1. Use `select()` to familiarize yourself with variables in the data frame
-1. Practice using the `contains()` and `ends_with()` helper functions to to choose variables
-
-
--->
-
-
-### Rename variables
-
-
-
-`rename()` function renames variables within a data frame object
-
-\medskip Syntax:
-
-- `rename(obj_name, new_name = old_name,...)`
-\medskip
-```{r results="hide"}
-rename(df_event, g12_offered = g12offered, 
-       titlei = titlei_status_pub)
-names(df_event)
-```
-Variable names do not change permanently unless we combine rename with assignment
-\medskip
-```{r results="hide"}
-rename_event <- rename(df_event, g12_offered = g12offered, titlei = titlei_status_pub)
-names(rename_event)
-rm(rename_event)
-```
-
-## Filter rows
-
-### The `filter()` function
-
-`filter()` allows you to __select observations__ based on values of variables
-
-- Arguments
-    - first argument is name of data frame
-    - subsequent arguments are _logical expressions_ to filter the data frame
-    - Multiple expressions separated by commas work as __AND__ operators (e.g., condtion 1 `TRUE` AND condition 2 `TRUE`)
-
-- What is the result of a `filter()` command?
-    - `filter()` returns a data frame consisting of rows where the condition is `TRUE`
-
-```{r, eval=FALSE}
-?filter
-```
-
-Example from data frame object `df_school`, each obs is a high school
-
-- Show all obs where the high school received 1 visit from UC Berkeley (110635) [output omitted]
-```{r results="hide"}
-filter(df_school,visits_by_110635 == 1)
-```
-
-Note that resulting object is list, consisting of obs where condition `TRUE`
-```{r}
-nrow(df_school)
-nrow(filter(df_school,visits_by_110635 == 1))
-```
-
-### Filter, character variables
-
-Use single quotes `''` or double quotes `""` to refer to values of character variables
-```{r}
-glimpse(select(df_school, school_type,state_code))
-```
-Identify all private high schools in CA that got 1 visit by particular universities
-
-- UC-Berkeley (ID=110635)
-```{r results="hide"}
-filter(df_school,visits_by_110635 == 1, school_type == "private", 
-       state_code == "CA")
-```
-
-- University of Alabama (ID=100751)
-```{r results="hide"}
-filter(df_school,visits_by_100751 == 1, school_type == "private", 
-       state_code == "CA") 
-```
-
-- Visited once by Berkeley and University of Alabama
-```{r results="hide"}
-filter(df_school,visits_by_100751 == 1, visits_by_110635 == 1, 
-       school_type == "private", state_code == "CA") 
-```
-
-### Logical operators for comparisons
-
-Symbol | Meaning
--------|-------
-`==` | Equal to
-`!=` | Not equal to
-`>` | greater than
-`>=` | greater than or equal to
-`<` | less than
-`<=` | less than or equal to
-`&` | AND 
-`|` | OR
-`%in` | includes
-
-\medskip 
-
-!["Boolean" operations, x=left circle, y=right circle, from Wichkam (2018)](transform-logical.png){width=50%}
-
-### Filters and comparisons, Demonstration
-
-Schools visited by Bama (100751) and/or Berkeley (110635)
-
-```{r results="hide"}
-#berkeley and bama
-filter(df_school,visits_by_100751 >= 1, visits_by_110635 >= 1) 
-filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
-#berkeley or bama
-filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1) 
-```
-Apply `count()` function on top of `filter()` function to count the number of observations that satisfy criteria
-
-- Avoids printing individual observations
-```{r}
-#Number of schools that git visit by Berkeley AND Bama
-count(filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1))
-#Number of schools that git visit by Berkeley OR Bama
-count(filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1))
-```
-
-### Filters and comparisons, >=
-
-\medskip Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama
-```{r}
-#at least 50% black
-count(filter(df_school, school_type == "public", pct_black >= 50, 
-             state_code == "AL"))
-count(filter(df_school, school_type == "public", pct_black >= 50, 
-             state_code == "AL", visits_by_100751 >= 1))
-#at least 50% white
-count(filter(df_school, school_type == "public", pct_white >= 50, 
-             state_code == "AL"))
-count(filter(df_school, school_type == "public", pct_white >= 50, 
-             state_code == "AL", visits_by_100751 >= 1))
-```
-### Filters and comparisons, not equals (`!=`)
-
-Count the number of high schools visited by University of Colorado (126614) that are not located in CO
-```{r}
-
-#number of high schools visited by U Colorado
-count(filter(df_school, visits_by_126614 >= 1))
-
-#number of high schools visited by U Colorado not located in CO
-count(filter(df_school, visits_by_126614 >= 1, state_code != "CO"))
-#number of high schools visited by U Colorado located in CO
-#count(filter(df_school, visits_by_126614 >= 1, state_code == "CO"))
-```
-### Filters and comparisons, %in% operator
-
-What if you wanted to count the number of schools visited by Bama (100751) in a group of states?
-```{r}
-count(filter(df_school,visits_by_100751 >= 1, state_code == "MA" |
-               state_code == "VT" | state_code == "ME"))
-```
-Easier way to do this is with `%in%` operator
-```{r}
-count(filter(df_school,visits_by_100751 >= 1, state_code %in% c("MA","ME","VT")))
-```
-
-Select the private high schools that got either 2 or 3 visits from Bama
-```{r}
-count(filter(df_school, visits_by_100751 %in% 2:3, school_type == "private"))
-```
-### Identifying data type and possible values helpful for filtering
-
-- `class()` and `str()` shows data type of a variable 
-- `table()` to show potential values of categorical variables
-
-```{r}
-class(df_event$event_type)
-str(df_event$event_type)
-table(df_event$event_type, useNA="always")
-class(df_event$event_state)
-str(df_event$event_state) # double quotes indicate character
-class(df_event$med_inc)
-str(df_event$med_inc)
-```
-
-Now that we know `event_type` is a character, we can filter values
-```{r}
-count(filter(df_event, event_type == "public hs", event_state =="CA"))
-#below code would return an error because variables are character
-#count(filter(df_event, event_type == public hs, event_state ==CA))
-```
-
-### Filtering and missing values
-
-Wickham (2018) states:
-
-- "`filter()` only includes rows where condition is TRUE; it excludes both `FALSE` and `NA` values. To preserve missing values, ask for them explicitly:"
-
-\medskip Investigate var `df_event$fr_lunch`, number of free/reduced lunch students
-
-- only available for visits to public high schools
-
-```{r}
-#visits to public HS with less than 50 students on free/reduced lunch
-count(filter(df_event,event_type == "public hs", fr_lunch<50))
-#visits to public HS, where free/reduced lunch missing
-count(filter(df_event,event_type == "public hs", is.na(fr_lunch)))
-#visits to public HS, where free/reduced is less than 50 OR is missing
-count(filter(df_event,event_type == "public hs", fr_lunch<50 | is.na(fr_lunch)))
-```
-
-### Exercise
-
-Task
-
-- Create a filter to identify all the high schools that recieved 1 visit from UC Berkeley (110635) AND 1 visit from CU Boulder (126614)[output omitted]
-
-### Solution
-
-```{r, results="hide"}
-filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
-
-nrow(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
-count(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
-```
-
-
-- Must __assign__ to create new object based on filter
-```{r results="hide"}
-berk_boulder <- filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
-count(berk_boulder)
-```
-
-### Exercises
-
-
-Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
-
-1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`  
-1. Count the number of recruiting events by Pitt at public or private high schools  
-1. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA  
-1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000  
-1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000  
-1. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000  
-
-
-### Solution  
-1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`
-```{r}
-count(filter(df_event, univ_id == 215293))
-```
-
-2. Count the number of recruiting events by Pitt at public or private high schools 
-```{r }
-str(df_event$event_type)
-table(df_event$event_type, useNA = "always")
-count(filter(df_event, univ_id == 215293, event_type == "private hs" |
-               event_type == "public hs"))
-```
-
-### Solution
-3. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA
-```{r}
-count(filter(df_event, univ_id == 215293, event_type == "private hs" |
-               event_type == "public hs", event_state == "PA"))
-```
-
-4. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000
-```{r}
-count(filter(df_event, univ_id == 215293, event_type == "public hs",
-             event_state != "PA", med_inc < 100000))
-```
-
-### Solution
-5. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000
-
-```{r}
-count(filter(df_event, univ_id == 215293, event_type == "public hs",
-             event_state != "PA", med_inc >= 100000))
-```
-
-6. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000
-```{r}
-count(filter(df_event, univ_id == 215293, event_state != "PA", 
-             (event_type == "public hs" & med_inc >= 100000) |
-               event_type == "private hs"))
-```
-
-## Arrange rows
-
-### `arrange()` function
-
-`arrange()` function "arranges" rows in a data frame; said different, it sorts observations
-
-\medskip
-Syntax: `arrange(x,...)`
-
-- First argument, `x`, is a data frame
-- Subsequent arguments are a "comma separated list of unquoted variable names"
-
-```{r, results="hide"}
-arrange(df_event, event_date)
-```
-Data frame goes back to previous order unless you __assign__ the new order
-```{r, results="hide"}
-df_event
-df_event <- arrange(df_event, event_date)
-df_event
-```
-### `arrange()` function
-
-Ascending and descending order
-
-- `arrange()` sorts in __ascending__ order by default
-- use `desc()` to sort a column by descending order
-```{r results="hide"}
-arrange(df_event, desc(event_date))
-```
-
-Can sort by multiple variables
-```{r results="hide"}
-arrange(df_event, univ_id, desc(event_date), desc(med_inc))
-
-#sort by university and descending by size of 12th grade class; combine with select
-select(arrange(df_event, univ_id, desc(g12)),instnm,event_type,event_date,g12)
-```
-
-### `arrange()`, missing values sorted at the end
-
-Missing values automatically sorted at the end, regardless of whether you sort ascending or descending
-
-Below, we sort by university, then by date of event, then by ID of high school
-```{r, results="hide"}
-#by university, date, ascending school id
-select(arrange(df_event, univ_id, desc(event_date), school_id),
-       instnm,event_date,event_type,school_id)
-
-#by university, date, descending school id
-select(arrange(df_event, univ_id, desc(event_date), desc(school_id)),
-       instnm,event_date,event_type,school_id)
-```
-Can sort by `is.na` to put missing values first
-```{r}
-select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
-       instnm,event_date,event_type,school_id)
-```
-
-### Exercise, arranging  
-
-Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
-
-1. Sort ascending by "univ_id" and descending by "event_date"  
-1. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
-1. Now using the same variables from above, sort by `is.na` to put missing values in "school_id" first  
-
-### Solution 
-1. Sort ascending by "univ_id" and descending by "event_date"  
-```{r}
-arrange(df_event, univ_id, desc(event_date))
-```
-
-### Solution
-2. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
-```{r}
-select(arrange(df_event, univ_id, desc(event_date)), univ_id, event_date, 
-       instnm, event_type)
-```
-
-### Solution
-3. Select the variables "univ_id", "event_date", and "school_id" and sort  by `is.na` to put missing values in "school_id" first. 
-```{r}
-select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))), 
-       univ_id, event_date, school_id)
-```
-
 
 
 # Creating variables using mutate (tidyverse approach)
@@ -1676,111 +1750,4 @@ school_v2_temp %>% count(state_type)
 #school_v2_temp %>% filter(is.na(school_type)) %>% count(state_type) #no missing
 ```
 
-
-
-# Base R appraoch to creating new variables 
-
-
-### Base R approach to creating new variables
-
-Create new variables using assignment operator `<-` and subsetting operators `[]` and `$` to create new variables and set conditions of the input variables 
-
-\medskip
-
-Pseudo syntax: `df$newvar <- ...` 
-
-- where `...` argument is expression(s)/calculation(s) used to create new variables
-    - expressions can include subsetting operators and/or other base R functions
-
-\medskip
-
-__Task__: Create measure of percent of students on free-reduced lunch
-
-__base R approach__
-```{r}
-school_v2_temp<- school_v2 #create copy of dataset; not necessary
-school_v2_temp$pct_fr_lunch <- 
-   school_v2_temp$num_fr_lunch/school_v2_temp$total_students
-
-#investigate variable you created
-str(school_v2_temp$pct_fr_lunch)
-school_v2_temp$pct_fr_lunch[1:5] # print first 5 obs
-```
-
-__tidyverse approach (with pipes)__
-```{r}
-school_v2_temp <- school_v2 %>% 
-  mutate(pct_fr_lunch = num_fr_lunch/total_students) 
-```
-
-### Base R approach to creating new variables
-
-If creating new variable based on the condition/values of input variables, basically the tidyverse equivalent of `mutate()` __with__ `if_else()` or `recode()`
-
-\medskip
-
-- Pseudo syntax: `df$newvar[logical condition]<- new value` 
-- `logical condition`: a condition that evaluates to `TRUE` or `FALSE`
-
-###  Base R approach to creating new variables
-
-__Task__: Create 0/1 indicator if school has median income greater than $100k
-
-__tidyverse approach (using pipes)__
-```{r}
-school_v2_temp %>% select(med_inc) %>% 
-  mutate(inc_gt_100k= if_else(med_inc>100000,1,0)) %>%
-  count(inc_gt_100k) # note how NA values of med_inc treated
-```
-
-__Base R approach__
-```{r}
-school_v2_temp$inc_gt_100k<-NA #initialize an empty column with NAs 
-                              # otherwise you'll get warning
-school_v2_temp$inc_gt_100k[school_v2_temp$med_inc>100000] <- 1
-school_v2_temp$inc_gt_100k[school_v2_temp$med_inc<=100000] <- 0
-count(school_v2_temp, inc_gt_100k)
-```
-
-### Base R approach to creating new variables 
-
-__Task__: Using data frame `wwlist` and input vars `state` and `firstgen`, create a 4-category var with following categories:
-
-- "instate_firstgen"; "instate_nonfirstgen"; "outstate_firstgen"; "outstate_nonfirstgen"
-
-__tidyverse approach (using pipes)__
-```{r}
-wwlist_temp <- wwlist %>% 
-  mutate(state_gen = case_when(
-    state == "WA" & firstgen =="Y" ~ "instate_firstgen",
-    state == "WA" & firstgen =="N" ~ "instate_nonfirstgen",
-    state != "WA" & firstgen =="Y" ~ "outstate_firstgen",
-    state != "WA" & firstgen =="N" ~ "outstate_nonfirstgen")
-  )
-str(wwlist_temp$state_gen)
-wwlist_temp %>% count(state_gen)
-```
-
-
-### Base R approach to creating new variables 
-
-__Task__: Using  `wwlist` and input vars `state` and `firstgen`, create a 4-category var
-
-__base R approach__
-```{r}
-wwlist_temp <- wwlist 
-
-wwlist_temp$state_gen <- NA
-wwlist_temp$state_gen[wwlist_temp$state == "WA" 
-  & wwlist_temp$firstgen =="Y"] <- "instate_firstgen"
-wwlist_temp$state_gen[wwlist_temp$state == "WA" 
-  & wwlist_temp$firstgen =="N"] <- "instate_nonfirstgen"
-wwlist_temp$state_gen[wwlist_temp$state != "WA" 
-  & wwlist_temp$firstgen =="Y"] <- "outstate_firstgen"
-wwlist_temp$state_gen[wwlist_temp$state != "WA" 
-  & wwlist_temp$firstgen =="N"] <- "outstate_nonfirstgen"
-
-str(wwlist_temp$state_gen)
-count(wwlist_temp, state_gen)
-```
 

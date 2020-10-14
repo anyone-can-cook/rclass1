@@ -1203,61 +1203,178 @@ str(df_event$zip)
 ```
 
 
-## Subsetting data frames with [] combined with $
+## Subset Data frames by combining [] and $
 
-### Subsetting Data Frames with [] combined with $ 
+### Subset Data Frames by combining `[]` and `$`, Motivation
 
-Syntax: `df_name[df_name$var_name <condition>, ]`
+Motivation
 
-- Note: Uses "double index" `df_name[<rows>, <columns>]` syntax
-- __Cannot__ use "single index" `df_name[<columns>]`
+- When working with data frames we often want to isolate those observations that satisfy certain conditions
+- This is often referred to as "filtering"
+  - We filter observations based on the values of one or more variables
+- Perhaps you have seen "filtering" in Microsoft Excel
+  - open some spreadsheet that contains variables (columns) and observations (rows)
+  - click on `Data` >> `Filter` and then filter observations based on values of variable(s)
 
-Examples (output omitted)
 
-- All observations where the high school received at least 1 visit from UC Berkeley (var=`visits_by_110635`) and all columns
+Filtering example using data frame `df_school`
+
+- Observations: 
+  - One observation per high school (public and private)
+- Variables: 
+  - high school characteristics; number of off-campus recruiting visits from particular universities
+  - NCES ID for UC Berkeley is `110635`
+  - variable `visits_by_110635` shows number of visits a high school received from UC Berkeley
+- **Task**:
+  - Isolate observations where the high school received at least 1 visit from UC Berkeley
+  
+  
+### Subset Data Frames by combining `[]` and `$`
+
+**Task**:
+
+- Using `df_school`, isolate obs where school received at least 1 visit from UC Berkeley
+
+General syntax: `df_name[df_name$var_name <condition>, ]`
+
+- Note that syntax uses "double index" `df_name[<rows>, <columns>]` syntax
+  - Therefore, the `<condition>` in above syntax is isolating `<rows>`
+- __Cannot__ use "single index" syntax `df_name[<columns>]`
+
+
+Solution to task (output omitted)
+
+- Note: below code filters observations but keeps all variables
 ```{r results="hide"}
 df_school[df_school$visits_by_110635 >= 1, ]
 ```
+### Subset Data Frames by combining `[]` and `$`, decompose syntax
 
-- All obs where the high school received at least 1 visit from UC Berkeley and the first three columns
+**Task**: Isolate obs where school received at least 1 visit from UC Berkeley
+
+- general syntax: `df_name[df_name$var_name <condition>, ]`
+- solution: `df_school[df_school$visits_by_110635 >= 1, ]`
+
+```{r results="hide", include = FALSE}
+df_school[df_school$visits_by_110635 >= 1, ]
+```
+
+Decomposing syntax `df_school[df_school$visits_by_110635 >= 1, ]`
+
+- `df_school$visits_by_110635 >= 1`: returns a logical (`TRUE`/`FALSE`) atomic vector with length equal to number of obs in `df_school`
+
+```{r results="hide"}
+str(df_school$visits_by_110635 >= 1)
+```
+- `df_school[df_school$visits_by_110635 >= 1, ]`
+  - uses "double index" `df_name[<rows>, <columns>]` syntax to extract rows, columns
+  - rows: extract rows where `df_school$visits_by_110635 >= 1` is `TRUE`
+  - columns: since `<columns>` is empty, extracts all columns
+
+__key point__
+
+- `df_name[df_name$var_name <condition>, ]` is an example of "subset a vector approach #3": "Using logicals to return elements where condition `TRUE`"
+- example using atomic vectors (output omitted)
+```{r results="hide"}
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+x[x>3]
+```
+
+
+### Subset Data Frames by combining `[]` and `$`, keep desired columns
+
+- General syntax to filter desired observations (rows) and variables (columns) of data frame:
+
+- `df_name[df_name$var_name <condition>, <desired columns>]`
+
+__Tasks__ (output omitted)
+
+- Extract observations where the high school received at least 1 visit from UC Berkeley and the first three columns
 ```{r results="hide"}
 df_school[df_school$visits_by_110635 >= 1, 1:3]
 ```
-- All obs where the high school received at least 1 visit from UC Berkeley and variables "state_code" "school_type" "name"
+- Extract observations where the high school received at least 1 visit from UC Berkeley and variables "state_code" "school_type" "name"
 ```{r results="hide"}
 df_school[df_school$visits_by_110635 >= 1, c("state_code","school_type","name")]
 ```
 
-### Subsetting Data Frames with [] combined with $
+### Subset Data Frames by combining `[]` and `$`, more examples
 
-- Syntax: `df_name[df_name$var_name <condition>, ]`
+Syntax: 
 
-- Can be combined with `nrow()` to avoid printing many rows
+- filter based on one variable: 
+  - `df_name[df_name$var_name <condition>, <columns>]`
+- Example syntax to filter based on two conditions being true
+  - `df_name[df_name$var_name <condition> & df_name$var_name <condition>, <columns>]`
 
-\medskip
-Count obs where high schools received at least 1 visit by Bama (100751) and at least one visit by Berkeley (110635)
+Pro tip:
+
+- wrap above syntax within `nrow()` function to count how many observations (rows) satisfy the condition (as opposed to printing all rows that satisfy condition)
+
+__Tasks__
+
+- Count obs where high schools received at least 1 visit by Bama (100751) **and** at least one visit by Berkeley (110635)
 
 ```{r}
-#[] combined with $ approach
-nrow(df_school[df_school$visits_by_110635 >= 1
+nrow(df_school[df_school$visits_by_110635 >= 1 
   & df_school$visits_by_100751 >= 1, ])
-
-# Equivalent
-nrow(df_school[df_school[["visits_by_110635"]] >= 1
-  & df_school[["visits_by_100751"]] >= 1, ])
-
+#nrow(df_school[df_school[["visits_by_110635"]] >= 1 & df_school[["visits_by_100751"]] >= 1, ]) # same
 ```
 
-### Subsetting Data Frames with [] and $, NA Observations
+- Count obs where schools received 1+ visit by Bama **or** 1+ visit by Berkeley
+```{r}
+nrow(df_school[df_school$visits_by_110635 >= 1 
+  | df_school$visits_by_100751 >= 1, ])
+```
+### Logical operators for comparisons
+
+- Logical operators to isolate/filter observations of data frame
+
+Symbol | Meaning
+-------|-------
+`==` | Equal to
+`!=` | Not equal to
+`>` | greater than
+`>=` | greater than or equal to
+`<` | less than
+`<=` | less than or equal to
+`&` | AND 
+`|` | OR
+`%in` | includes
+
+\medskip 
+
+- Visualization of "Boolean" operators (e.g., AND, OR, AND NOT)
+
+!["Boolean" operations, x=left circle, y=right circle, from Wichkam (2018)](transform-logical.png){width=40%}
+
+### Subset Data Frames by combining `[]` and `$`, more examples
+
+CRYSTAL/PATRICIA - ADD 2-3 MORE EXAMPLES OF FILTERING ON THIS SLIDE, USING SOME OF THE LOGICAL OPERATORS FROM PREVIOUS SLIDE
+
+### Subset Data Frames by combining `[]` and `$`, `NA` Observations
+
+Filtering observations of data frame using `[]` combined with `$` is more complicated in the presence of missing values (`NA` values)
+
+\medskip 
+
+The next few slides will explain 
+
+- why it is more complicated
+- how to filter correctly when `NA`s are present
+
+### Subset Data Frames by combining `[]` and `$`, `NA` Observations
 
 When sub-setting via `[]` combined with `$`, result will include:
 
 - rows where condition is `TRUE`
 - __as well as__ rows with `NA` (missing) values for condition. 
 
-Task: How many events at public high schools with at least $50k median household income
+__Task__ (using `df_event`, which has one obs per university, recruiting event)
 
-- extracting observations via `[]` combined with `$`
+- How many events at public high schools with at least $50k median household income?
+
+Extracting observations via `[]` combined with `$`
 ```{r}
 #num obs event_type=="public hs" and med_inc is missing
 nrow(df_event[df_event$event_type == "public hs" 
@@ -1272,7 +1389,7 @@ nrow(df_event[df_event$event_type == "public hs"
   & df_event$med_inc>=50000 , ])
 ```
 
-### Subsetting Data Frames with [] and $, NA Observations
+### Subset Data Frames by combining `[]` and `$`, `NA` Observations
 
 To exclude rows where condition is `NA` if subset using `[]` combined w/ `$`
 
@@ -1330,12 +1447,14 @@ nrow(df_event[which(df_event$event_type == "public hs" & df_event$event_inst =="
               & df_event$med_inc > 30000 ), ])
 ```
 
-# Subsetting using subset() function
+
+# Subset using subset() function
 
 ### Subset function
 
-The `subset()` is a base R function and easiest way to "filter" observations 
+The `subset()` is a base R function to "filter" observations from some object `x`
 
+- object `x` can be a matrix, data frame, list
 - `subset()` automatically excludes elements/rows with `NA` for condition
 - Can also use `subset()` to select variables
 - `subset()` can be combined with:
@@ -1356,6 +1475,7 @@ Syntax [when object is data frame]: __subset(x, subset, select, drop = FALSE)__
 - `drop` to preserve original __dimensions__ [SKIP]
     - can take values `TRUE` or `FALSE`; default is `FALSE`
     - only need to worry about dataframes when subset output is single column
+
 
 ### Subset function, examples 
 
@@ -1501,8 +1621,154 @@ subset(df_school, school_type == "public" & state_code != "CA"
        select = c(state_code, name, zip_code))
 ```
 
- 
-# Sorting data 
+# Creating variables
+
+### Create new data frame based on `df_school_all`
+
+Data frame `df_school_all` has one obs per US high school and then variables identifying number of visits by particular universities
+```{r}
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"))
+names(df_school_all)
+```
+### Create new data frame based on `df_school_all`
+
+Create new version of data frame, called `school_v2`, which we'll use to introduce how to create new variables
+```{r, results='hide'}
+library(tidyverse) # below code use tidyverse functions and pipe operator
+school_v2 <- df_school_all %>% 
+  select(-contains("inst_")) %>% # remove vars that start with "inst_"
+  rename( # rename selected variables
+    visits_by_berkeley = visits_by_110635,
+    visits_by_boulder = visits_by_126614,
+    visits_by_bama = visits_by_100751,
+    visits_by_stonybrook = visits_by_196097,
+    visits_by_rutgers = visits_by_186380,
+    visits_by_pitt = visits_by_215293,
+    visits_by_cinci = visits_by_201885,
+    visits_by_nebraska = visits_by_181464,
+    visits_by_georgia = visits_by_139959,
+    visits_by_scarolina = visits_by_218663,
+    visits_by_ncstate = visits_by_199193,
+    visits_by_irvine = visits_by_110653,
+    visits_by_kansas = visits_by_155317,
+    visits_by_arkansas = visits_by_106397,
+    visits_by_sillinois = visits_by_149222,
+    visits_by_umass = visits_by_166629,
+    num_took_read = num_took_rla,
+    num_prof_read = num_prof_rla,
+    med_inc = avgmedian_inc_2564
+  )
+
+glimpse(school_v2)
+```
+
+### Base R approach to creating new variables
+
+Create new variables using assignment operator `<-` and subsetting operators `[]` and `$` to create new variables and set conditions of the input variables 
+
+\medskip
+
+Pseudo syntax: `df$newvar <- ...` 
+
+- where `...` argument is expression(s)/calculation(s) used to create new variables
+    - expressions can include subsetting operators and/or other base R functions
+
+\medskip
+
+__Task__: Create measure of percent of students on free-reduced lunch
+
+__base R approach__
+```{r}
+school_v2_temp<- school_v2 #create copy of dataset; not necessary
+school_v2_temp$pct_fr_lunch <- 
+   school_v2_temp$num_fr_lunch/school_v2_temp$total_students
+
+#investigate variable you created
+str(school_v2_temp$pct_fr_lunch)
+school_v2_temp$pct_fr_lunch[1:5] # print first 5 obs
+```
+
+__tidyverse approach (with pipes)__
+```{r}
+school_v2_temp <- school_v2 %>% 
+  mutate(pct_fr_lunch = num_fr_lunch/total_students) 
+```
+
+### Base R approach to creating new variables
+
+If creating new variable based on the condition/values of input variables, basically the tidyverse equivalent of `mutate()` __with__ `if_else()` or `recode()`
+
+\medskip
+
+- Pseudo syntax: `df$newvar[logical condition]<- new value` 
+- `logical condition`: a condition that evaluates to `TRUE` or `FALSE`
+
+###  Base R approach to creating new variables
+
+__Task__: Create 0/1 indicator if school has median income greater than $100k
+
+__tidyverse approach (using pipes)__
+```{r}
+school_v2_temp %>% select(med_inc) %>% 
+  mutate(inc_gt_100k= if_else(med_inc>100000,1,0)) %>%
+  count(inc_gt_100k) # note how NA values of med_inc treated
+```
+
+__Base R approach__
+```{r}
+school_v2_temp$inc_gt_100k<-NA #initialize an empty column with NAs 
+                              # otherwise you'll get warning
+school_v2_temp$inc_gt_100k[school_v2_temp$med_inc>100000] <- 1
+school_v2_temp$inc_gt_100k[school_v2_temp$med_inc<=100000] <- 0
+count(school_v2_temp, inc_gt_100k)
+```
+
+### Creating variables
+
+__Task__: Using data frame `wwlist` and input vars `state` and `firstgen`, create a 4-category var with following categories:
+
+- "instate_firstgen"; "instate_nonfirstgen"; "outstate_firstgen"; "outstate_nonfirstgen"
+
+__tidyverse approach (using pipes)__
+```{r}
+load(url("https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_merged.RData"))
+wwlist_temp <- wwlist %>% 
+  mutate(state_gen = case_when(
+    state == "WA" & firstgen =="Y" ~ "instate_firstgen",
+    state == "WA" & firstgen =="N" ~ "instate_nonfirstgen",
+    state != "WA" & firstgen =="Y" ~ "outstate_firstgen",
+    state != "WA" & firstgen =="N" ~ "outstate_nonfirstgen")
+  )
+str(wwlist_temp$state_gen)
+wwlist_temp %>% count(state_gen)
+```
+
+### Base R approach to creating new variables 
+
+__Task__: Using  `wwlist` and input vars `state` and `firstgen`, create a 4-category var
+
+__base R approach__
+```{r}
+wwlist_temp <- wwlist 
+
+wwlist_temp$state_gen <- NA
+wwlist_temp$state_gen[wwlist_temp$state == "WA" 
+  & wwlist_temp$firstgen =="Y"] <- "instate_firstgen"
+wwlist_temp$state_gen[wwlist_temp$state == "WA" 
+  & wwlist_temp$firstgen =="N"] <- "instate_nonfirstgen"
+wwlist_temp$state_gen[wwlist_temp$state != "WA" 
+  & wwlist_temp$firstgen =="Y"] <- "outstate_firstgen"
+wwlist_temp$state_gen[wwlist_temp$state != "WA" 
+  & wwlist_temp$firstgen =="N"] <- "outstate_nonfirstgen"
+
+str(wwlist_temp$state_gen)
+count(wwlist_temp, state_gen)
+```
+
+# Appendix
+
+
+## Sorting data 
 
 ### Base R `sort()` for vectors 
 
