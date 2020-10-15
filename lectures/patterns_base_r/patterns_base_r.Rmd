@@ -1340,7 +1340,7 @@ Symbol | Meaning
 `<=` | less than or equal to
 `&` | AND 
 `|` | OR
-`%in` | includes
+`%in%` | includes
 
 \medskip 
 
@@ -1350,7 +1350,30 @@ Symbol | Meaning
 
 ### Subset Data Frames by combining `[]` and `$`, more examples
 
-CRYSTAL/PATRICIA - ADD 2-3 MORE EXAMPLES OF FILTERING ON THIS SLIDE, USING SOME OF THE LOGICAL OPERATORS FROM PREVIOUS SLIDE
+**Example**: Count the number of out-of-state high schools that UC Berkeley visited.
+
+\smallskip
+
+```{r}
+nrow(df_school[df_school$visits_by_110635 >= 1 &
+                 df_school$state_code != df_school$inst_110635, ])
+```
+
+\bigskip\bigskip
+
+**Example**: Count the number of schools in the Northeast that received a visit from either UC Berkeley, U of Alabama, or CU Boulder.
+
+\smallskip
+
+```{r}
+northeast_states <- c('CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'NJ', 'NY', 'PA')
+
+nrow(df_school[df_school$state_code %in% northeast_states &
+                 (df_school$visits_by_110635 >= 1 |
+                    df_school$visits_by_100751 >= 1 |
+                    df_school$visits_by_126614 >= 1), ])
+```
+
 
 ### Subset Data Frames by combining `[]` and `$`, `NA` Observations
 
