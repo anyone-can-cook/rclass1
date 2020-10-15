@@ -328,21 +328,47 @@ nrow(df_school)
 nrow(filter(df_school,visits_by_110635 == 1))
 ```
 
+### The `filter()` function, base R equivalents
+
+**Task**: Count the number of high schools that received 1 visit from UC Berkeley.
+
+\bigskip
+
+**[tidyverse]** Using `filter()`:\smallskip
+```{r}
+nrow(filter(df_school, visits_by_110635 == 1))
+```
+
+\bigskip
+
+**[base R]** Using `[]` and `$`:\smallskip
+```{r}
+nrow(df_school[df_school$visits_by_110635 == 1, ])
+```
+
+\bigskip
+
+**[base R]** Using `subset()`:\smallskip
+```{r}
+nrow(subset(df_school, visits_by_110635 == 1))
+```
+
 ### Filter, character variables
 
 Use single quotes `''` or double quotes `""` to refer to values of character variables
 ```{r}
-glimpse(select(df_school, school_type,state_code))
+glimpse(select(df_school, school_type, state_code))
 ```
+
 Identify all private high schools in CA that got 1 visit by particular universities
 
-- UC-Berkeley (ID=110635)
+- Visited once by UC Berkeley (ID=110635)
 ```{r results="hide"}
 filter(df_school,visits_by_110635 == 1, school_type == "private", 
        state_code == "CA")
 ```
 
-- University of Alabama (ID=100751)
+- Visited once by University of Alabama (ID=100751)
 ```{r results="hide"}
 filter(df_school,visits_by_100751 == 1, school_type == "private", 
        state_code == "CA") 
@@ -352,6 +378,36 @@ filter(df_school,visits_by_100751 == 1, school_type == "private",
 ```{r results="hide"}
 filter(df_school,visits_by_100751 == 1, visits_by_110635 == 1, 
        school_type == "private", state_code == "CA") 
+```
+
+### Filter by multiple conditions, base R equivalents
+
+**Task**: Count the number of private high schools in CA that received 1 visit each from UC Berkeley and University of Alabama.
+
+\medskip
+
+**[tidyverse]** Using `filter()`:\smallskip
+```{r}
+nrow(filter(df_school, visits_by_100751 == 1, visits_by_110635 == 1, 
+            school_type == "private", state_code == "CA"))
+```
+
+\medskip
+
+**[base R]** Using `[]` and `$`:\smallskip
+```{r}
+nrow(df_school[df_school$visits_by_100751 == 1 &
+                 df_school$visits_by_110635 == 1 &
+                 df_school$school_type == "private" &
+                 df_school$state_code == "CA", ])
+```
+
+\medskip
+
+**[base R]** Using `subset()`:\smallskip
+```{r}
+nrow(subset(df_school, visits_by_100751 == 1 & visits_by_110635 == 1 &
+            school_type == "private" & state_code == "CA"))
 ```
 
 ### Logical operators for comparisons
@@ -413,54 +469,92 @@ str(count(df_school,school_type))
 
 ### Filters and comparisons, Demonstration
 
-Schools visited by Bama (100751) and/or Berkeley (110635)
+Schools visited by Bama (100751) and/or Berkeley (110635)\bigskip
 
 ```{r results="hide"}
-#berkeley and bama
+# Berkeley AND Bama
 filter(df_school,visits_by_100751 >= 1, visits_by_110635 >= 1) 
 filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
-#berkeley or bama
-filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1) 
+
+df_school[df_school$visits_by_100751 >= 1 &
+            df_school$visits_by_110635 >= 1, ] # using [] and $
+
+subset(df_school,visits_by_100751 >= 1 &
+         visits_by_110635 >= 1) # using subset()
 ```
+
+\bigskip
+
+```{r results="hide"}
+# Berkeley OR Bama
+filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1)
+
+df_school[df_school$visits_by_100751 >= 1 |
+            df_school$visits_by_110635 >= 1, ] # using [] and $
+
+subset(df_school,visits_by_100751 >= 1 |
+         visits_by_110635 >= 1) # using subset()
+```
+
+### Filters and comparisons, Demonstration (cont.)
+
 Apply `count()` function on top of `filter()` function to count the number of observations that satisfy criteria
 
-- Avoids printing individual observations
+- Avoids printing individual observations\medskip
+
 ```{r}
-#Number of schools that git visit by Berkeley AND Bama
-count(filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1))
-#Number of schools that git visit by Berkeley OR Bama
-count(filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1))
+# Number of schools that git visit by Berkeley AND Bama
+count(filter(df_school, visits_by_100751 >= 1 & visits_by_110635 >= 1))
+
+# Number of schools that git visit by Berkeley OR Bama
+count(filter(df_school, visits_by_100751 >= 1 | visits_by_110635 >= 1))
 ```
 
-### Filters and comparisons, >=
+- Note: You could also use any of the base R equivalents from the previous slide
 
-\medskip Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama
+### Filters and comparisons, `>=`
+
+Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama:\medskip 
+
 ```{r}
-#at least 50% black
+# at least 50% black
 count(filter(df_school, school_type == "public", pct_black >= 50, 
              state_code == "AL"))
+
+# at least 50% black and received visit by Bama
 count(filter(df_school, school_type == "public", pct_black >= 50, 
              state_code == "AL", visits_by_100751 >= 1))
-#at least 50% white
+```
+
+### Filters and comparisons, `>=` (cont.)
+
+Number of public high schools that are at least 50% White in Alabama compared to number of schools that received visit by Bama:\medskip 
+
+```{r}
+# at least 50% white
 count(filter(df_school, school_type == "public", pct_white >= 50, 
              state_code == "AL"))
+
+# at least 50% white and received visit by Bama
 count(filter(df_school, school_type == "public", pct_white >= 50, 
              state_code == "AL", visits_by_100751 >= 1))
 ```
+
 ### Filters and comparisons, not equals (`!=`)
 
 Count the number of high schools visited by University of Colorado (126614) that are not located in CO
 ```{r}
-
 #number of high schools visited by U Colorado
 count(filter(df_school, visits_by_126614 >= 1))
 
 #number of high schools visited by U Colorado not located in CO
 count(filter(df_school, visits_by_126614 >= 1, state_code != "CO"))
+
 #number of high schools visited by U Colorado located in CO
 #count(filter(df_school, visits_by_126614 >= 1, state_code == "CO"))
 ```
-### Filters and comparisons, %in% operator
+
+### Filters and comparisons, `%in%` operator
 
 What if you wanted to count the number of schools visited by Bama (100751) in a group of states?
 ```{r}
@@ -483,10 +577,9 @@ count(filter(df_school, visits_by_100751 %in% 2:3, school_type == "private"))
 
 ```{r}
 typeof(df_event$event_type)
-str(df_event$event_type)
+str(df_event$event_type)  # double quotes indicate character
 table(df_event$event_type, useNA="always")
-typeof(df_event$event_state)
-str(df_event$event_state) # double quotes indicate character
+
 typeof(df_event$med_inc)
 str(df_event$med_inc)
 ```
