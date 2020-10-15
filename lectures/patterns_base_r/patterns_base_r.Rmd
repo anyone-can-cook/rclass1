@@ -1316,9 +1316,11 @@ __Tasks__
 - Count obs where high schools received at least 1 visit by Bama (100751) **and** at least one visit by Berkeley (110635)
 
 ```{r}
-nrow(df_school[df_school$visits_by_110635 >= 1 
-  & df_school$visits_by_100751 >= 1, ])
-#nrow(df_school[df_school[["visits_by_110635"]] >= 1 & df_school[["visits_by_100751"]] >= 1, ]) # same
+nrow(df_school[df_school$visits_by_110635 >= 1 & 
+                 df_school$visits_by_100751 >= 1, ])
+# Equivalently:
+# nrow(df_school[df_school[["visits_by_110635"]] >= 1 & 
+#                df_school[["visits_by_100751"]] >= 1, ])
 ```
 
 - Count obs where schools received 1+ visit by Bama **or** 1+ visit by Berkeley
@@ -1355,19 +1357,25 @@ Symbol | Meaning
 \smallskip
 
 ```{r}
+# The `inst_110635` variable contains the home state of UC Berkeley
+unique(df_school$inst_110635)
+
+# Filter for schools visited by UC Berkeley AND whose state is not "CA"
 nrow(df_school[df_school$visits_by_110635 >= 1 &
                  df_school$state_code != df_school$inst_110635, ])
 ```
 
-\bigskip\bigskip
+\bigskip
 
 **Example**: Count the number of schools in the Northeast that received a visit from either UC Berkeley, U of Alabama, or CU Boulder.
 
 \smallskip
 
 ```{r}
+# Vector containing states located in the Northeast region
 northeast_states <- c('CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'NJ', 'NY', 'PA')
 
+# Filter for schools in the Northeast AND visited by any of the 3 univs
 nrow(df_school[df_school$state_code %in% northeast_states &
                  (df_school$visits_by_110635 >= 1 |
                     df_school$visits_by_100751 >= 1 |
