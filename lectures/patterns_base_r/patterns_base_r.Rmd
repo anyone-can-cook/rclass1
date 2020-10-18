@@ -1648,7 +1648,7 @@ Solution to 4
 
 ```{r}
 subset(df_school, school_type == "public" & state_code != "CA" 
-       & visits_by_100751 >= 1 & pct_hispanic >= 50, 
+       & visits_by_110635 >= 1 & pct_black >= 50, 
        select = c(state_code, name, zip_code))
 ```
 
