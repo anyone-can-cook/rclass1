@@ -503,10 +503,10 @@ Apply `count()` function on top of `filter()` function to count the number of ob
 - Avoids printing individual observations\medskip
 
 ```{r}
-# Number of schools that git visit by Berkeley AND Bama
+# Number of schools that get visit by Berkeley AND Bama
 count(filter(df_school, visits_by_100751 >= 1 & visits_by_110635 >= 1))
 
-# Number of schools that git visit by Berkeley OR Bama
+# Number of schools that get visit by Berkeley OR Bama
 count(filter(df_school, visits_by_100751 >= 1 | visits_by_110635 >= 1))
 ```
 
@@ -778,7 +778,7 @@ select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
 
 ### What are "pipes", %>%
 
-__Pipes__ are a means of perfoming multiple steps in a single line of code
+__Pipes__ are a means of performing multiple steps in a single line of code
 
 - When writing code, the pipe symbol is `%>%`
 - Basic flow of using pipes in code:
@@ -1040,7 +1040,7 @@ wwlist %>% filter(firstgen == "Y", state == "WA") %>% count()
 
 __Task__: frequency table of `school_type` for non first-gen prospects from WA
 
-__without pipes__
+__Without pipes__
 ```{r}
 wwlist_temp <- filter(wwlist, firstgen == "N", state == "WA")
 table(wwlist_temp$school_type, useNA = "always")
