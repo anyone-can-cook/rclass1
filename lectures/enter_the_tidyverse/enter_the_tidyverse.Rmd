@@ -781,28 +781,48 @@ select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
 
 __Pipes__ are a means of performing multiple steps in a single line of code
 
-The __pipe__ `%>%` is an "operator"
-
+- When writing code, the pipe symbol is `%>%`
 - The pipe operator `%>%` is created by the **magrittr** package, which is not part of base R
 - However, the magrittr package is automatically loaded when you load the tidyverse package
 
+```{r, eval = FALSE}
+?magrittr::`%>%`
+```
 
+### What are "pipes", %>%
 
-- When writing code, the pipe symbol is `%>%`
+pipe syntax: `LHS %>% RHS`
+  
+- `LHS` (refers to "left hand side" of the pipe) is an object or function 
+- `RHS` (refers to "right hand side" of the pipe) is a function
+
+What do pipes do?
+
+- Pipes work from left to right: `LHS %>% RHS`
+- The object created by `LHS` becomes the first argument of the function (`RHS`) to the right of the `%>%` pipe symbol 
 - Basic flow of using pipes in code:
-    - `object %>% some_function %>% some_function %>% some_function`    
-- Pipes work from left to right:
-    - The object from left of `%>%` pipe symbol is input as the first argument of the function to the right of the `%>%` pipe symbol 
-    - In turn, the resulting output becomes the input (the first argument) of the function to the right of the next `%>%` pipe symbol 
-- Pipes are part of __tidyverse__ suite of packages, not __base R__
-    
+  - `object %>% some_function1 %>% some_function2 %>% some_function3`    
+  - The output of `some_function1` becomes the input (the first argument) of the function `some_function2` to the right of the `%>%` pipe symbol 
+
+Example of using pipes to calculate mean value of atomic vector
+```{r}
+1:10 # an atomic vector
+
+mean(1:10) # calculate mean without pipes
+1:10 %>% mean() # calculate mean with pipes
+```
+- without pipes: first we write function, data object `1:10` is first argument of `mean` function
+- with pipes: first we write data object, then we "pipe" (verb) the object as first argument of `mean` function
+
+### What are "pipes", %>%
+
 \medskip
 
 Intuitive mnemonic device for understanding pipes
 
 - whenever you see a pipe `%>%` think of the words "__and then...__"
 
-\medskip
+
 
 Example: isolate all the first-generation prospects [output omitted]
 
