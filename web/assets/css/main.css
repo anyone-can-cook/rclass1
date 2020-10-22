@@ -1772,7 +1772,6 @@ input, select, textarea {
 
 	header h3 + p {
 		font-size: 1.1em;
-		margin-top: -0.35em;
 		line-height: 1.5em;
 	}
 
@@ -1785,7 +1784,7 @@ input, select, textarea {
 	}
 
 	header.major h2 {
-		color: #4acaa8;
+		color: #4bc5ba;
 		font-size: 2.5em;
 		line-height: 1.15em
 	}
@@ -1811,6 +1810,7 @@ input, select, textarea {
   		border: 3px solid #4acaa8;
   		text-align: left;
   		outline: none;
+  		transition: background-color 0.2s ease-in-out;
   	}
 
 	.active, .collapsible:hover {
@@ -1823,10 +1823,15 @@ input, select, textarea {
 		font-weight: bold;
 		float: right; 
 		margin-left: 5px;
+		transition: transform 0.25s ease-out;
 	}
 
-	.active:after {
+	.collapsible.active:after {
 		content: "\2212";
+	}
+	
+	.collapsible:not(.active):after {
+	  transform: rotate(-90deg);
 	}
 
 	.content {
@@ -1876,7 +1881,10 @@ input, select, textarea {
 	.panel-group {
 		border: 1px solid #4acaa8;
 		margin-top: 5pt;
-
+	}
+	
+	.panel-group .panel {
+	  border-radius: 0;
 	}
 
 	.panel-title {
@@ -2955,7 +2963,7 @@ input, select, textarea {
 		border-top: 0;
 		color: #c0c0c0;
 		overflow: hidden;
-		padding: 4em 0 2em 0;
+		padding: 2em 0 1em 0;
 	}
 
 		#footer .copyright {
@@ -3321,7 +3329,7 @@ input, select, textarea {
 		/* Main */
 
 			#main > section > .container {
-				padding: 2em 0 0 0;
+				padding: 2em 0 1em 0;
 			}
 
 		/* Footer */
@@ -3457,14 +3465,4 @@ input, select, textarea {
 	#readings .container > div ul ul {
 	  margin-left: 1em;
 	  list-style-type: disc;
-	}
-
-
-	.heading {
-		font-family: "Lato", sans-serif;
-  		font-size: 1em;
-  		font-weight: bold;
-  		color: #777;
-  		padding-left: 10pt;
-
 	}
