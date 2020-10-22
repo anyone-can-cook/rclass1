@@ -778,6 +778,16 @@ select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
 
 ### What are "pipes", %>%
 
+The __pipe__ `%>%` is an "operator"
+
+- The pipe operator `%>%` is created by the **magrittr** package, which is not part of base R
+- However, the magrittr package is automatically loaded when you load the tidyverse package
+
+
+
+
+### What are "pipes", %>%
+
 __Pipes__ are a means of perfoming multiple steps in a single line of code
 
 - When writing code, the pipe symbol is `%>%`
