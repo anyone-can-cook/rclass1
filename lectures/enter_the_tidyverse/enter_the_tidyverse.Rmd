@@ -1494,7 +1494,7 @@ Usually a good idea to investigate "input" variables __before__ creating analysi
 str(school_v2$med_inc) # investigate variable type
 school_v2 %>% count(med_inc) # frequency count, but this isn't very helpful
 
-school_v2 %>% filter(is.na(med_inc)) %>% count() 
+school_v2 %>% filter(is.na(med_inc)) %>% count()
 # shows number of obs w/ missing med_inc
 ```
 Create variable
