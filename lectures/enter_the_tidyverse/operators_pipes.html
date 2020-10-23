@@ -1609,7 +1609,7 @@ div.tocify {
 <p>It is important to understand operator precedence and associativity when working with data in general, but particularly when we use logical operators like <code>&amp;</code> or <code>|</code> to filter data.</p>
 <p><br></p>
 <p><strong>Operator Precedence</strong></p>
-<p>Operator Precedence refers to the order in which operators are executed. If you recall <a href="https://study.com/academy/lesson/what-is-pemdas-definition-rule-examples.html#:~:text=PEMDAS%20is%20an%20acronym%20for,until%20the%20calculation%20is%20complete.">PEMDAS</a>, multiplication <code>*</code> takes precedence over addition <code>+</code>.</p>
+<p>Operator Precedence refers to the order in which operators are executed. Operators with higher precedence are evaluated first and operators with the lowest precedence are evaluated last. If you recall <a href="https://study.com/academy/lesson/what-is-pemdas-definition-rule-examples.html#:~:text=PEMDAS%20is%20an%20acronym%20for,until%20the%20calculation%20is%20complete.">PEMDAS</a>, multiplication <code>*</code> takes precedence over addition <code>+</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="dv">6</span></span></code></pre></div>
 <pre><code>## [1] 13</code></pre>
 <p>If we add a parenthesis to the equation, our answer changes.</p>
@@ -1618,6 +1618,10 @@ div.tocify {
 <p><br></p>
 <p><strong>Operator Associativity</strong></p>
 <p>When you are working with operators with the same precedence, the execution of the operators is determined through associativity.</p>
+<blockquote>
+<p>Operators with same precedence follows operator associativity defined for its operator group. In R, operators can either follow left-associative, right-associative or have no associativity. Operators with left-associative are evaluted from left to right, operators with right-associative are evaluated from right to left and operators with no associativity, does not follow any predefined order.</p>
+</blockquote>
+<p><em>Credit: <a href="https://www.w3adda.com/r-tutorial/r-operator-precedence">R Operator Precedence</a></em></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="dv">8</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="dv">8</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">4</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span></code></pre></div>
