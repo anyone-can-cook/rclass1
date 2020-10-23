@@ -796,23 +796,20 @@ pipe syntax: `LHS %>% RHS`
 - `LHS` (refers to "left hand side" of the pipe) is an object or function 
 - `RHS` (refers to "right hand side" of the pipe) is a function
 
-What do pipes do?
+How pipes work:
 
-- Pipes work from left to right: `LHS %>% RHS`
-- The object created by `LHS` becomes the first argument of the function (`RHS`) to the right of the `%>%` pipe symbol 
-- Basic flow of using pipes in code:
-  - `object %>% some_function1 %>% some_function2 %>% some_function3`    
-  - The output of `some_function1` becomes the input (the first argument) of the function `some_function2` to the right of the `%>%` pipe symbol 
+- Object created by `LHS` becomes the first argument of the function (`RHS`) to the right of the `%>%` pipe symbol 
+- Basic code flow: `object %>% function1 %>% function2 %>% function3`    
+- Output of `some_function1` becomes the input (the first argument) of the function `some_function2` to the right of the `%>%` pipe symbol 
 
 Example of using pipes to calculate mean value of atomic vector
 ```{r}
 1:10 # an atomic vector
-
 mean(1:10) # calculate mean without pipes
 1:10 %>% mean() # calculate mean with pipes
 ```
-- without pipes: first we write function, data object `1:10` is first argument of `mean` function
-- with pipes: first we write data object, then we "pipe" (verb) the object as first argument of `mean` function
+- no pipe: (1) write function; (2) data object `1:10` is 1st argument of `mean()`
+- pipe: (1) write data object; (2) "pipe" (verb) object as 1st argument of `mean()` 
 
 ### What are "pipes", %>%
 
@@ -831,9 +828,40 @@ Example: isolate all the first-generation prospects [output omitted]
 wwlist %>% filter(firstgen == "Y")
 ```
     
+below code in words:
+
+- start with `wwlist` __and then__ select a few vars __and then__ filter __and then__ sort  __and then__ investigate structre of object
+```{r}
+wwlist %>% select(firstgen, state, med_inc_zip) %>% 
+  filter(firstgen == "Y", state == "WA") %>% 
+  arrange(desc(med_inc_zip)) %>% str()
+```
+
+### More intuition on the pipe operator, `%>%`
+
+Example: apply "structure" function `str()` to `wwlist` with and without pipes
+```{r, results="hide"}
+str(wwlist) # without pipe
+wwlist %>% str() # with pipe
+```
+
+I use the `str()` when I add new `%>%`; shows what kind of object being piped in
+
+- task: select a few vars from `wwlist`; isolate first-gen students in WA; sort descending by income (output omitted)
+
+```{r, eval = FALSE}
+wwlist %>% select(firstgen, state, med_inc_zip) %>% str()
+
+wwlist %>% select(firstgen, state, med_inc_zip) %>% 
+  filter(firstgen == "Y", state == "WA") %>% str()
+
+wwlist %>% select(firstgen, state, med_inc_zip) %>% 
+  filter(firstgen == "Y", state == "WA") %>% 
+  arrange(desc(med_inc_zip)) %>% str()
+```
 
 
-### Do task with and without pipes
+### Compare data tasks, with and without pipes
 
 Task: Using object `wwlist` print data for "first-gen" prospects (`firstgen == "Y"`)
 ```{r, results='hide'}
@@ -849,43 +877,11 @@ Comparing the two approaches:
 - In "pipes" approach, you don't specify object `wwlist` as first argument in `filter()`
     - Why? Because `%>%` "pipes" the object to the left of the `%>%` operator into the function to the right of the `%>%` operator
     
-Main takeaway:
-
-- When writing code using pipes, functions to right of `%>%` pipe operator should not explicitly name object that is the input to the function. 
-- Rather, object to the left of `%>%` pipe operator is automatically the input.
-    
-
-### More intuition on the pipe operator, `%>%`
-
-The pipe operator "pipes" (verb) an object from left of `%>%` operator into the function to the right of the %>% operator
-
-Example, the "structure" function `str()`, with and without pipes
-
-- Examine syntax for `str()`: `str(object, ...)`
-```{r, eval=FALSE}
-?str
-```
-
-- Investigate structure of dataframe `wwlist` without and with pipes
-```{r, results="hide"}
-str(wwlist) # without pipe
-
-wwlist %>% str() # with pipe
-```
-
-Questions:
-
-- In the pipes approach, `wwlist %>% str()`, why didn't we need to insert argument values inside `str()`
-- What would happen if we just ran this line of code?
-```{r, eval=FALSE}
-str()
-```
 
 
-### Do task with and without pipes
+### Compare data tasks, with and without pipes
 
-__Task__: Using object `wwlist`, print data for "first-gen" prospects for selected variables [output omitted]
-
+__Task__: Using object `wwlist`, print data for "first-gen" prospects for selected variables 
 ```{r, results='hide'}
 #Without pipes
 select(filter(wwlist, firstgen == "Y"), state, hs_city, sex)
@@ -905,7 +901,7 @@ Comparing the two approaches:
 
 \medskip
 
-__Important__: `str()` function helpful for understanding what object is piped in from one function to another
+`str()` helpful to understand object piped in from one function to another
 ```{r, results="hide"}
 #object that was "piped" into `select()` from `filter()`
 wwlist %>% filter(firstgen == "Y") %>% str()
@@ -1047,6 +1043,33 @@ Other relevant links
 - [Link to Skinner's personal website](https://www.btskinner.io/)
     - A lot of cool stuff here
 
+### Which objects and functions are pipeable
+
+Which objects and functions are "pipeable" (i.e., work with pipes)
+
+- function is pipeable if it takes a data object as first argument and returns an object of same type
+-	In general, doesn’t seem to be any limit on which kinds of objects are pipeable (could be atomic vector, list, data frame)
+
+```{r, result = "hide"}
+# applying pipes to atomic vectors
+1:10 %>% mean
+1:10 %>% mean %>% str()
+```
+
+But some pipeable functions restrict which kinds of data objects they accept
+
+-	In particular, the `dplyr` functions (e.g., `filter`, `arrange`, etc.) expect the first argument to be a data frame. 
+- `dpylr` functions won’t even accept a list as first argument, even though data frames are a particular class of list
+
+```{r, eval = FALSE}
+wwlist %>% filter(firstgen == "Y") %>% str()
+
+as.data.frame(wwlist)  %>% str()
+as.data.frame(wwlist) %>% filter(firstgen == "Y") %>% str()
+
+as.list(wwlist)  %>% str()
+# as.list(wwlist) %>% filter(firstgen == "Y") %>% str() # error
+```
 
 ### Do task with and without pipes [STUDENTS WORK ON THEIR OWN]
 
@@ -1127,7 +1150,7 @@ rm(wwlist_temp)
 ```
 
 
-# Creating variables using mutate (tidyverse approach)
+# Creating variables using mutate
 
 ### Our plan for learning how to create new variables
 
@@ -1424,7 +1447,7 @@ school_v2 %>%
 
 __Description__
 
-- if `logical condition` `TRUE`, assign a value; if `logical condition` `FALSE` assign a value
+- if `<condition>` `TRUE`, assign value; if `<condition>` `FALSE` assign value
 
 __Usage (i.e., syntax)__
 
@@ -1471,8 +1494,7 @@ Usually a good idea to investigate "input" variables __before__ creating analysi
 str(school_v2$med_inc) # investigate variable type
 school_v2 %>% count(med_inc) # frequency count, but this isn't very helpful
 
-school_v2 %>% filter(is.na(med_inc)) %>% count(med_inc) 
-school_v2 %>% filter(is.na(med_inc)) %>% count()
+school_v2 %>% filter(is.na(med_inc)) %>% count() 
 # shows number of obs w/ missing med_inc
 ```
 Create variable
