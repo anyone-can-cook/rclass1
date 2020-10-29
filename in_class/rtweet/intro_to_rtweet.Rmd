@@ -40,9 +40,10 @@ We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will 
 ```{r}
 # library(rtweet)
 # 
-# p12 <- c("uaadmissions", "FutureSunDevils", "caladmissions", "UCLAAdmission",
-#          "futurebuffs", "uoregon", "BeaverVIP", "USCAdmission",
-#          "engagestanford", "UtahAdmissions", "UW", "WSUPullman")
+p12 <- c("uaadmissions", "FutureSunDevils", "caladmissions", "UCLAAdmission","futurebuffs", "uoregon", "BeaverVIP", "USCAdmission","engagestanford", "UtahAdmissions", "UW", "WSUPullman")
+p12
+p12_temp_df <- search_tweets(paste0("from:", p12, collapse = " OR "), n = 200)
+p12_temp_df %>% glimpse()
 # p12_full_df <- search_tweets(paste0("from:", p12, collapse = " OR "), n = 500)
 #
 # saveRDS(p12_full_df, "p12_dataset.RDS")
