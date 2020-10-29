@@ -1,5 +1,5 @@
 ---
-title: "EDUC 263: Introduction to Programming and Data Management Using R"
+title: "EDUC 263: Introduction to Programming and Data Management"
 subtitle: "Fall 2020"
 author: 
 date: 
@@ -30,8 +30,8 @@ output:
 library(kableExtra)
 library(tidyverse)
 
-t <- c("Class website", "Class Zoom link", "Questions & Discussion", "Announcements")
-l <- c("https://anyone-can-cook.github.io/rclass1/", "https://ucla.zoom.us/j/94774035711", "https://github.com/anyone-can-cook/rclass1_student_issues", "https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements")
+t <- c("Class website (public)", "Questions & Discussion (private)", "Announcements (private)", "Class Zoom link")
+l <- c("https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues", "https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements", "https://ucla.zoom.us/j/94774035711")
 
 info <- tibble(t, l)
 
@@ -41,11 +41,15 @@ kable(info,col.names = c("Resource","Link"), escape = T) %>%
 
 # Course description
 
-This course has two foundational goals: (1) to develop core skills in "data management," which are important regardless of which programming language you use, and (2) to learn the fundamentals of the R programming language.
+The primary goals of this course are (1) to teach fundamental skills of “data management,” which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one the most popular languages for "data science."  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups. Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom.
+
+## Extended description
 
 Data management consists of acquiring, investigating, cleaning, combining, and manipulating data. Most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, cleaning the data and creating analysis datasets is often more time consuming than conducting analyses.  This course teaches the fundamental data management and data manipulation skills necessary for creating analysis datasets.
 
 The course will be taught in R, a free, open-source programming language. R has become the most popular language for statistical analysis, surpassing SPSS, Stata, and SAS. What differentiates R from these other languages is the thousands of open-source "libraries" created by R users. R is one of the most popular languages for "data science" because R libraries have been created for web-scraping, mapping, network analysis, etc.  By learning R you can be confident that you know a programming language that can run any modeling technique you might need and has amazing capabilities for data collection and data visualization. By learning fundamentals of R in this course, you will be "one step away" from web-scraping, network analysis, interactive maps, quantitative text analysis, or whatever other data science application you are interested in.
+
+The data management and programming skills you learn in this course will transfer to other programming languages (e.g., Python).
 
 ## Prerequisite Requirements 
 
@@ -107,6 +111,7 @@ The course will be taught in R, a free, open-source programming language. R has 
     - Summarize and collapse observations by group
     - Reshape and "tidy" untidy data
 1. Learn guidelines and practical strategies for ensuring data quality when cleaning data and creating analysis variables
+1. Become proficient at using Github -- the industry standard platform used by programmers to collaborate on projects -- to ask questions about course material and to collaborate with your classmates
 
 
 ## Course structure
@@ -115,6 +120,21 @@ For the first two weeks of the course, we will have synchronous lectures and cla
 
 1. __Asynchronous (pre-class) lectures__. Weekly asynchronous lectures will be posted on the course website with the expectation that students work through the lecture in advance of our weekly synchronous class meeting. Lecture materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, short videos (e.g., 15 to 30 total minutes per week) that provide a high-level discussion of important and/or challenging concepts from the lecture slides, but not a line-by-line recitation of the lecture; and, third, the .Rmd file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will be able to "learn by doing" in that they can run R code on their own computer while they work through lecture materials on their own.
 1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The bulk of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
+
+## How to succeed in this class
+
+In just a few words, the keys to success in this class are: __start early, ask for help, help others__
+
+Here are some substantive tips to help you succeed:
+
+- Work through weekly asynchronous lecture materials as soon as you can
+  - The weekly asynchronous lecture materials (lecture PDF, lecture .Rmd file with code, short video lecture) are the core of this course. Lecture materials are designed for you to run the code on your computer as you work through the lecture. Therefore, treat each lecture as an active learning experience rather than passively reading slides.
+- Start the weekly problem set early so that have time to seek help on questions you are struggling with
+- If you can't figure something out, ask for help!
+  - Discuss with your problem set group
+  - Ask a question on github
+  - Come to office hours
+- Be supportive of your classmates and together we will create a classroom environment where we all help each other succeed!  
 
 # Classroom environment
 
@@ -241,6 +261,19 @@ kable(grade,col.names = c("Letter Grade", "Percentage"), escape = T) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, position = "left")
 ```
 
+# Course topics and schedule
+
+Below is an overview of course topics and schedule. Topics and schedule are subject to change at the discretion of the instructor. Topics may be cut if we need to devote more time to learning the most central topics. It is unlikely that additional topics will be added. The official course schedule, including weekly required reading and optional reading, will be posted on the [course website](https://anyone-can-cook.github.io/rclass1).
+
+1. Introduction to R
+1. Investigating data patterns in Base R
+1. Pipes and dplyr functions
+1. Strings and dates
+1. Attributes and class
+1. Data quality
+1. Tidy data
+1. Joining data
+
 # Course policies
 
 ## Learning during a global pandemic
@@ -287,20 +320,6 @@ __UCLA policy__
 __This class__  
 
   - Given that 90% of course grade is based on problem sets, the primary academic honesty concern that could come up in this class is copying problem set solutions from somebody else and passing this in as your own work.
-
-
-# Course schedule
-
-Below is an overview of the tentative course schedule, which is subject to change at the discretion of the instructor. Topics may be cut if we need to devote more time to learning the most central topics. It is unlikely that additional topics will be added. The official course schedule, required reading, and optional reading will be posted on the [course website](https://anyone-can-cook.github.io/rclass1).
-
-1. Introduction to R
-1. Investigating data patterns in Base R
-1. Pipes and dplyr functions
-1. Strings and dates
-1. Attributes and class
-1. Data quality
-1. Tidy data
-1. Joining data
 
 
 # Campus resources
