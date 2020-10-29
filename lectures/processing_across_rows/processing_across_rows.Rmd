@@ -37,18 +37,6 @@ download.file(url = 'https://raw.githubusercontent.com/ozanj/rclass/master/lectu
 
 # Introduction
 
-
-### Logistics
-
-__Required reading for next week:__
-
-- Grolemund and Wickham 5.6 - 5.7 (grouped summaries and mutates)
-- Xie, Allaire, and Grolemund 4.1 (R Markdown, ioslides presentations) [LINK HERE](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) and 4.3 (R Markdown, Beamer presentations) [LINK HERE](https://bookdown.org/yihui/rmarkdown/beamer-presentation.html). Why?:
-\medskip
-    - Lectures for this class are `beamer_presentation` output type.
-\medskip    
-    - `ioslides_presentation` are the most basic presentation output format for RMarkdown, so learning about `ioslides` will help you understand `beamer`
-
 ### What we will do today
 
 \tableofcontents
@@ -124,7 +112,7 @@ So far, we have focused on ``processing across variables''
 
 __Note__
 
-- in today's lecture, I'll use the terms "observations" and "rows" interchangeably
+- In today's lecture, I'll use the terms "observations" and "rows" interchangeably
 
 __Creation of analysis datasets often requires calculations across obs__
 
@@ -248,10 +236,18 @@ Below, we'll use `class()` function to show whether data frame is grouped
 Grouping is not retained unless you __assign__ it
 ```{r}
 class(df_event)
+```
+
+```{r results='hide'}
 df_event %>% group_by(univ_id, event_type, event_state)
 df_event_grp <- df_event %>% group_by(univ_id, event_type, event_state) # using pipes
+```
+
+```{r}
 class(df_event_grp)
 ```
+
+### Un-grouping an object 
 
 Use `ungroup(object)` to un-group grouped data
 ```{r}
@@ -365,7 +361,8 @@ rm(df_event_temp)
 df_event %>% summarize(num_events=n(), 
                        max_inc=max(med_inc, na.rm = FALSE))
 ```
-__Takeaways__
+
+### __Takeaways__
 
 - by default, objects created by `summarize()` are data frames that contain variables created within `summarize()` and one observation [per "by group"]
 - most "helper" functions (e.g., `max()`, `mean()` have option `na.rm` to keep/remove missing obs before performing calculations)
@@ -421,7 +418,7 @@ df_event %>% mutate(non_miss_inc = is.na(med_inc)==0) %>%
   summarize(
     n = sum(non_miss_inc, na.rm = TRUE), #SAMPLE SIZE all
     avg_inc = mean(med_inc, na.rm = TRUE), # MEAN
-    std_inc = sd(med_inc, na.rm = TRUE), # STANDARD DEVIATION all events
+    std_inc = sd(med_inc, na.rm = TRUE) # STANDARD DEVIATION all events
   )
 ```
 __Task__:  same as above but separate measures for: all events; in-state; out-of-state
@@ -545,6 +542,8 @@ df_event %>%
 # combinations that include non-factor grouping variables are still 
 # silently dropped even with .drop=FALSE.
 ```
+
+### Combining `summarize()` and `group_by`
 Make a graph, showing in/out state as fill color of bar
 ```{r, eval=FALSE}
 df_event %>% group_by(instnm, event_type, event_inst) %>% 
@@ -641,7 +640,7 @@ Use one code chunk for this exercise. You could tackle this a step at a time and
 1. Using the `event_berk` object, filter observations where `event_state` is VA and group by `event_type`.  
     1. Using the summarize function to create a variable that represents the count for each `event_type`.  
     1. Create a variable that represents the sum of missing obs for `med_inc`.  
-    1. create a variable that represents the sum of non-missing obs for `med_inc`.  
+    1. Create a variable that represents the sum of non-missing obs for `med_inc`.  
     1. **Bonus**: Arrange variable you created representing the count of each `event_type` in descending order. 
 
 
@@ -801,7 +800,7 @@ event_berk %>% filter(event_type == "public hs") %>% # filter public hs visits
   summarize(
     n_events=n(), # number of events by group
     n_nonmiss_inc = sum(!is.na(med_inc)), # w/ nonmissings values median inc,
-    p_incgt100k = mean(med_inc>100000, , na.rm=TRUE)) # proportion visits to $100K+ commmunities 
+    p_incgt100k = mean(med_inc>100000, na.rm=TRUE)) # proportion visits to $100K+ commmunities 
 ```
 
 ### `summarize()`: Other "helper" functions
@@ -1135,6 +1134,7 @@ df_event %>%
   summarize_at(.vars = c("med_inc","event_date"),
      .funs = list(avg = mean, low = min, high = max), na.rm = TRUE)
 ```
+
 
 ### summarize_if() affects variables that satisfy some condition
 
