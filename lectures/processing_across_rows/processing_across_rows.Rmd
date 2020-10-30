@@ -37,7 +37,7 @@ download.file(url = 'https://raw.githubusercontent.com/ozanj/rclass/master/lectu
 
 # Introduction
 
-### What we will do today
+### Lecture outline
 
 \tableofcontents
 
@@ -326,38 +326,49 @@ __Useful functions (i.e., "helper functions")__
 - Standalone functions called *within* `summarize()`, e.g., `mean()`, `n()`
 - e.g., count function `n()` takes no arguments; returns number of rows in group
 
-__Example__: Count total number of events (output omitted)
-```{r, results="hide"}
-summarize(df_event, num_events=n()) # without pipes
-df_event %>% summarize(num_events=n()) # using pipes
-```
-
 
 
 ### Investigate objects created by `summarize()`
 
 __Example__: Count total number of events
+
+- function `n()` from `dplyr` package (`dplyr::n`) returns the size of the current group
 ```{r, results="hide"}
-df_event %>% summarize(num_events=n()) 
-df_event %>% summarize(num_events=n()) %>% str()
+#?n # dplyr function n() gives current group size
+summarize(df_event, num_events=n()) # without pipes
+
+df_event %>% summarize(num_events=n()) # with pipes
+df_event %>% summarize(num_events=n()) %>% str() # use str to see what pipe returned
 ```
 __Example__: What is max value of `med_inc` across all events
+
+- function `max()` from `base` package (`base::max`) returns max value
 ```{r, results="hide"}
+#?max # base R function max() returns max value
 df_event %>% summarize(max_inc=max(med_inc, na.rm = TRUE))
 df_event %>% summarize(max_inc=max(med_inc, na.rm = TRUE)) %>% str()
 ```
+### Investigate objects created by `summarize()`
+
 __Example__: Count total number of events AND max value of median income
-```{r, results="hide"}
+```{r}
 df_event %>% summarize(num_events=n(), 
                        max_inc=max(med_inc, na.rm = TRUE))
-df_event %>% summarize(num_events=n(), 
+df_event %>% summarize(num_events=n(), # show object returned by pipe
                        max_inc=max(med_inc, na.rm = TRUE)) %>% str()
-#keep object created by summarize
+```
+We can use assignment to keep the object created by `summarize()`
+```{r, results = "hide"}
 df_event_temp <- df_event %>% summarize(num_events=n(), 
                        max_inc=max(med_inc, na.rm = TRUE))
 df_event_temp
 rm(df_event_temp)
-#what if we forgot na.rm = TRUE
+```
+
+What if we forgot `na.rm = TRUE`? 
+
+- then `max_inc` equals `NA` cuz can't perform calculation on `NA` values
+```{r, results = "hide"}
 df_event %>% summarize(num_events=n(), 
                        max_inc=max(med_inc, na.rm = FALSE))
 ```
