@@ -49,7 +49,8 @@ Documentation and resources:
 <br>
 **What is the `rtweet` package?**
 
-- R package for interacting with Twitter's API (application programming interface)
+- R package for interacting with Twitter's API
+- An API ([application programming interface](https://en.wikipedia.org/wiki/API)) is a computing interface which defines interactions between multiple software intermediaries (e.g., the kinds of calls or requests that can be made)
 - We can use it to make requests to Twitter's API and request data
 
 <br>
@@ -70,12 +71,17 @@ Documentation and resources:
   Press Esc/Ctrl + C to abort
   ```
   
-<div align="center"><img style="max-width:75%" src="twitter_auth.png" alt="Twitter authentication" /></div>
+<div align="center"><img style="max-width:75%" src="https://anyone-can-cook.github.io/rclass1/in_class/rtweet/twitter_auth.png" alt="Twitter authentication" /></div>
 
 # `search_tweets()` function
 
 <br>
-**The `search_tweets()` function**:
+**Description**:
+
+`search_tweets()` is a function from the `rtweet` package that returns Twitter statuses matching a user-provided search query.
+
+<br>
+**Usage**:
 
 ```{r, eval=FALSE}
 ?search_tweets
