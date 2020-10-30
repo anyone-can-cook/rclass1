@@ -126,8 +126,8 @@ p12 <- c('uaadmissions', 'FutureSunDevils', 'caladmissions', 'UCLAAdmission',
          'engagestanford', 'UtahAdmissions', 'UW', 'WSUPullman')
 
 # Use `OR` to search for tweets containing any of the handles
-q <- paste0('from:', p12, collapse = ' OR ')
-q
+my_query <- paste0('from:', p12, collapse = ' OR ')
+my_query
 ```
 
 ```{r, echo=FALSE}
@@ -137,7 +137,7 @@ p12_df <- readRDS(url('https://github.com/anyone-can-cook/rclass2/raw/master/dat
 
 ```{r, eval=FALSE}
 # Request Twitter data
-p12_df <- search_tweets(q, n = 500)
+p12_df_2 <- search_tweets(my_query, n = 500)
 ```
 
 <br>

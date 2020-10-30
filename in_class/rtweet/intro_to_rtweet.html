@@ -1676,11 +1676,11 @@ Press Esc/Ctrl + C to abort</code></pre></li>
 <span id="cb5-4"><a href="#cb5-4"></a>         <span class="st">&#39;engagestanford&#39;</span>, <span class="st">&#39;UtahAdmissions&#39;</span>, <span class="st">&#39;UW&#39;</span>, <span class="st">&#39;WSUPullman&#39;</span>)</span>
 <span id="cb5-5"><a href="#cb5-5"></a></span>
 <span id="cb5-6"><a href="#cb5-6"></a><span class="co"># Use `OR` to search for tweets containing any of the handles</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a>q &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;from:&#39;</span>, p12, <span class="dt">collapse =</span> <span class="st">&#39; OR &#39;</span>)</span>
-<span id="cb5-8"><a href="#cb5-8"></a>q</span></code></pre></div>
+<span id="cb5-7"><a href="#cb5-7"></a>my_query &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;from:&#39;</span>, p12, <span class="dt">collapse =</span> <span class="st">&#39; OR &#39;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>my_query</span></code></pre></div>
 <pre><code>[1] &quot;from:uaadmissions OR from:FutureSunDevils OR from:caladmissions OR from:UCLAAdmission OR from:futurebuffs OR from:uoregon OR from:BeaverVIP OR from:USCAdmission OR from:engagestanford OR from:UtahAdmissions OR from:UW OR from:WSUPullman&quot;</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Request Twitter data</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>p12_df &lt;-<span class="st"> </span><span class="kw">search_tweets</span>(q, <span class="dt">n =</span> <span class="dv">500</span>)</span></code></pre></div>
+<span id="cb7-2"><a href="#cb7-2"></a>p12_df_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">search_tweets</span>(my_query, <span class="dt">n =</span> <span class="dv">500</span>)</span></code></pre></div>
 <p><br> <strong>Analyze data</strong>:</p>
 <p><code>search_tweets()</code> conveniently returns the data in a dataframe, so it’s ready for you to perform data manipulations!</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Inspect dataframe</span></span>
