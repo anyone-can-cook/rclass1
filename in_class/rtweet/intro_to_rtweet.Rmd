@@ -7,14 +7,12 @@ output:
   html_document:
     toc: true
     toc_depth: 2
-    toc_float: true # toc_float option to float the table of contents to the left of the main document content. floating table of contents will always be visible even when the document is scrolled
-      #collapsed: false # collapsed (defaults to TRUE) controls whether the TOC appears with only the top-level (e.g., H2) headers. If collapsed initially, the TOC is automatically expanded inline when necessary
-      #smooth_scroll: true # smooth_scroll (defaults to TRUE) controls whether page scrolls are animated when TOC items are navigated to via mouse clicks
+    toc_float: true
     number_sections: true
-    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk    
-    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax    
-    theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
-    df_print: tibble #options: default, tibble, paged
+    fig_caption: true
+    highlight: tango
+    theme: default
+    df_print: tibble
 
 ---
 
@@ -49,7 +47,8 @@ Documentation and resources:
 <br>
 **What is the `rtweet` package?**
 
-- R package for interacting with Twitter's API (application programming interface)
+- R package for interacting with Twitter's API
+- An API ([application programming interface](https://en.wikipedia.org/wiki/API)) is a computing interface which defines interactions between multiple software intermediaries (e.g., the kinds of calls or requests that can be made)
 - We can use it to make requests to Twitter's API and request data
 
 <br>
@@ -70,12 +69,17 @@ Documentation and resources:
   Press Esc/Ctrl + C to abort
   ```
   
-<div align="center"><img style="max-width:75%" src="twitter_auth.png" alt="Twitter authentication" /></div>
+<div align="center"><img style="max-width:75%" src="https://anyone-can-cook.github.io/rclass1/in_class/rtweet/twitter_auth.png" alt="Twitter authentication" /></div>
 
 # `search_tweets()` function
 
 <br>
-**The `search_tweets()` function**:
+**Description**:
+
+`search_tweets()` is a function from the `rtweet` package that returns Twitter statuses matching a user-provided search query.
+
+<br>
+**Usage**:
 
 ```{r, eval=FALSE}
 ?search_tweets
