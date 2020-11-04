@@ -704,6 +704,54 @@ str_c(..., sep = "", collapse = NULL)
   - `sep`: String to insert between input vectors
   - `collapse`: Optional string used to combine input vectors into single string
 
+ADDED 11/3/2020. JUST MESSING AROUND TO SEE HOW IT TREATS ELEMENTS OF A VECTOR VS. SEPARATE VECTORS
+```{r}
+str_c("a","b", sep = "", collapse = NULL)
+str_c("a","b", sep = "~", collapse = NULL)
+
+str_c("a","b", sep = "", collapse = ";")
+str_c("a","b", sep = "~", collapse = ";")
+
+str_c(c("a"),c("b"), sep = "~", collapse = ";")
+str_c(c("a"),c("b"), sep = "", collapse = ";")
+```
+
+```{r}
+s1 <- c("s1e1","s1e2","s1e3")
+s2 <- c("s2e1","s2e2","s2e3")
+s3 <- c("s3e1","s3e2","s3e3","s3e4","s3e5","s3e6")
+
+str_c(s1, sep = "", collapse = NULL)
+str_c(s1, sep = "", collapse = NULL) %>% length()
+str_c(s1, sep = "", collapse = NULL) %>% str_length()
+
+
+str_c(s1, sep = "~", collapse = NULL)
+str_c(s1, sep = "~", collapse = ";")
+
+```
+
+ADDED 11/3/2020. JUST MESSING AROUND TO SEE HOW IT TREATS ELEMENTS OF A VECTOR VS. SEPARATE VECTORS
+```{r}
+s1 <- c("a","b","c")
+s2 <- c("d","e","f")
+s3 <- c("a","b","c","d","e","f")
+
+str_c("a","b", sep = "", collapse = NULL)
+
+str_c(s1, sep = "", collapse = NULL)
+str_c(s2, sep = "", collapse = NULL)
+str_c(s3, sep = "", collapse = NULL)
+str_c(s1,s2, sep = "", collapse = NULL)
+
+# add a separator
+str_c(s1, sep = "~", collapse = NULL)
+str_c(s2, sep = "~", collapse = NULL)
+str_c(s3, sep = "~", collapse = NULL)
+str_c(s1,s2, sep = "~", collapse = NULL)
+
+```
+
 <br>
 <details><summary>**Example**: Using `str_c()` on strings</summary>
 
