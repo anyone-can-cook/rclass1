@@ -65,21 +65,17 @@ head(p12_df)
 What is an **object**?
 
 - Everything in R is an object
-- We can classify objects based on their class and type
-  - The class of the object determines what kind of functions we can apply to it
-- Objects may be combined to form data structures
+- We can classify objects based on their **class** and **type**
+  - `class()`: What kind of object is it (high-level)?
+    - The class of the object determines what kind of functions we can apply to it
+  - `typeof()`: What is the object's data type (low-level)?
+- Objects may be combined to form **data structures**
 
 [![](https://d33wubrfki0l68.cloudfront.net/1d1b4e1cf0dc5f6e80f621b0225354b0addb9578/6ee1c/diagrams/data-structures-overview.png){width=400px}](https://r4ds.had.co.nz/vectors.html)
 
 *Credit: [R for Data Science](https://r4ds.had.co.nz/vectors.html)*
 
 <br>
-Basic **data structures**:
-
-- [Atomic vectors](#atomtic-vectors)
-- [Lists](#lists)
-  - [Dataframes](#dataframes)
-  
 Basic **data types**:
 
 - Logical (`TRUE`, `FALSE`)
@@ -87,11 +83,11 @@ Basic **data types**:
 - Integer (e.g., `1L`, `4L`, where `L` tells R to store as `integer` type)
 - Character (e.g., `"R is fun"`)
 
-Functions for investigating R objects (From [Data Types and Structures](https://swcarpentry.github.io/r-novice-inflammation/13-supp-data-structures/))
+Basic **data structures**:
 
-- `str()`: Compactly display the internal structure of an R object
-- `class()`: What kind of object is it (high-level)?
-- `typeof()`: What is the object's data type (low-level)?
+- [Atomic vectors](#atomtic-vectors)
+- [Lists](#lists)
+  - [Dataframes](#dataframes)
 
 ## Atomtic vectors
 
@@ -217,9 +213,9 @@ typeof(df)
 
 </details>
 
-## Converting between classes
+## Converting between types
 
-Functions for converting between classes:
+Functions for converting between types:
 
 - `as.logical()`: Convert to `logical`
 - `as.numeric()`: Convert to `numeric`
@@ -388,168 +384,27 @@ class(my_string)
 typeof(my_string)
 ```
 
-
-## Special Characters
-
-> "A sequence in a string that starts with a `\` is called an **escape sequence** and allows us to include special characters in our strings."
-
-*Credit: [Escape sequences](https://campus.datacamp.com/courses/string-manipulation-with-stringr-in-r/string-basics?ex=4) from DataCamp*
-
-Common **special characters**:
-
-- `\'`: literal single quote
-- `\"`: literal double quote
-- `\\`: literal backslash
-- `\n`: newline
-- `\t`: tab
-
-These characters followed by a backslash `\` take on a new meaning. The `n` by itself is just an `n`. When you add a backslash to the `\n` you are escaping it and making it a special character where `\n` now represents a newline.
-
 <br>
-__The `writeLines()` function__:
-
-```{r, eval = FALSE}
-?writeLines
-
-# SYNTAX AND DEFAULT VALUES
-writeLines(text, con = stdout(), sep = "\n", useBytes = FALSE)
-```
-
-- "`writeLines()` displays quotes and backslashes as they would be read, rather than as R stores them." (From [writeLines](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/writeLines) documentation)
-- When we include **escape sequences** in the string, it is helpful to use `writeLines()` to see how the escaped string looks
-- `writeLines()` will also output the string without showing the outer pair of double quotes that R uses to store it, so we only see the content of the string
-
-
-<br>
-<details><summary>**Example**: Escaping single quotes</summary>
+**Note**: To include quotes as part of the string, we can either use the other type of quotes to surround the string (i.e., `'` or `"`) or escape the quote using a backslash (`\`). _We won't be going in-depth into escaping characters for this class, but see appendix for more details if you are interested._
 
 ```{r}
-my_string <- 'Escaping single quote \' within single quotes'
+# Include quote by using the other type of quotes to surround the string 
+my_string <- "There's no issues with this string."
+my_string
+
+# Include quote of the same type by escaping it with a backslash
+my_string <- 'There\'s no issues with this string.'
 my_string
 ```
 
-Alternatively, we could've just created the string using double quotes:
-
-```{r}
-my_string <- "Single quote ' within double quotes does not need escaping"
+```{r, eval=F}
+# This would not work
+my_string <- 'There's an issue with this string.'
 my_string
 ```
 
-Using `writeLines()` shows us only the content of the string without the outer pair of double quotes that R uses to store strings:
-
-```{r}
-writeLines(my_string)
-```
-</details>
-
-<br>
-<details><summary>**Example**: Escaping double quotes</summary>
-
-```{r}
-my_string <- "Escaping double quote \" within double quotes"
-my_string
-```
-
-Alternatively, we could've just created the string using single quotes:
-
-```{r}
-my_string <- 'Double quote " within single quotes does not need escaping'
-my_string
-```
-
-Notice how the backslash still showed up in the above output to escape our double quote from the outer pair of double quotes that R uses to store the string. This is no longer an issue if we use `writeLines()` to only show the string content:
-
-```{r}
-writeLines(my_string)
-```
-</details>
-
-<br>
-<details><summary>**Example**: Escaping double quotes within double quotes </summary>
-
-```{r}
-my_string <- "I called my mom and she said \"Echale ganas!\""
-my_string
-```
-
-Using `writeLines()` shows us only the content of the string without the backslashes:
-
-```{r}
-writeLines(my_string)
-```
-</details>
-
-
-<br>
-<details><summary>**Example**: Escaping backslashes</summary>
-
-To include a literal backslash in the string, we need to escape the backslash with another backslash:
-
-```{r}
-my_string <- "The executable is located in C:\\Program Files\\Git\\bin"
-my_string
-```
-
-Use `writeLines()` to see the escaped string:
-
-```{r}
-writeLines(my_string)
-```
-</details>
-
-<br>
-<details><summary>**Example**: Other special characters</summary>
-
-```{r}
-my_string <- "A\tB\nC\tD"
-my_string
-```
-
-Use `writeLines()` to see the escaped string:
-
-```{r}
-writeLines(my_string)
-```
-</details>
-
 <br>
 
-### Escape special characters using Twitter data   
-
-Let's take a look at some tweets from our PAC-12 universities. 
-
-- Let's start by grabbing observations 1-3 from the `text` column.
-
-```{r}
-#Twitter example of \n newline special characters
-p12_df$text[1:3]
-```
-
-
-- Using `writeLines()` we can see the contents of the strings as they would be read, rather than as R stores them.
-```{r}
-writeLines(p12_df$text[1:3])
-```
-
-<br>
-<details><summary>**Example**: Escaping double quotes using Twitter data </summary>  
-
-- Using Twitter data you may encounter a lot of strings with double quotes.
-
-    - In the example below, our string includes special characters `\"` and `\n` to escape the double quotes and the newline character. 
-```{r}
-#Twitter example of \" double quotes special characters
-p12_df$text[24]
-```
-
-- Using `writeLines()` we can see the contents of the strings as they would be read, rather than as R stores them.  
-
-    - We no longer see the escaped characters `\"` or `\n`
-```{r}
-writeLines(p12_df$text[24])
-```
-</details>
-<br>
 
 # `stringr` package
 
@@ -704,6 +559,8 @@ str_c(..., sep = "", collapse = NULL)
   - `sep`: String to insert between input vectors
   - `collapse`: Optional string used to combine input vectors into single string
 
+<!--
+
 ADDED 11/3/2020. JUST MESSING AROUND TO SEE HOW IT TREATS ELEMENTS OF A VECTOR VS. SEPARATE VECTORS
 ```{r}
 str_c("a","b", sep = "", collapse = NULL)
@@ -752,10 +609,57 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 
 ```
 
-<br>
-<details><summary>**Example**: Using `str_c()` on strings</summary>
+-->
 
-Each string input is treated as a character vector of size 1:
+<br>
+**Example**: Using `str_c()` on one vector
+
+Since we only provided one input vector, it has nothing to concatenate with, so `str_c()` will just return the same vector:
+
+```{r}
+str_c(c("a", "b", "c"))
+```
+
+Note that specifying the `sep` argument will also not have any effect because we only have one input vector, and `sep` is the separator between multiple vectors:
+
+```{r}
+str_c(c("a", "b", "c"), sep = "~")
+```
+
+As seen above, `str_c()` returns a vector by default (because the default value for the `collapse` argument is `NULL`). But we can specify a string for `collapse` in order to collapse the elements of the output vector into a single string:
+
+```{r}
+str_c(c("a", "b", "c"), collapse = "|")
+```
+
+<br>
+**Example**: Using `str_c()` on more than one vector
+
+When we provide multiple input vectors, we can see that the vectors get concatenated element-wise:
+
+```{r}
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"))
+```
+
+The default separator for each element-wise concatenation is an empty string (`""`), but we can customize that by specifying the `sep` argument:
+
+```{r}
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~")
+```
+
+Again, we can specify the `collapse` argument in order to collapse the elements of the output vector into a single string:
+
+```{r}
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), collapse = "|")
+
+# Specifying both `sep` and `collapse`
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~", collapse = "|")
+```
+
+<br>
+**Example**: Using `str_c()` on strings
+
+We can think of a string as being a character vector of size 1. For example, passing 3 strings into `str_c()` is like passing in 3 vectors of size 1 each. Remember that vectors are concatenated element-wise, so these strings will be joined:
 
 ```{r}
 str_c("a", "b", "c")
@@ -767,7 +671,25 @@ We can use `sep` to specify how the elements are separated:
 str_c("a", "b", "c", sep = "~")
 ```
 
-Note that we can also use any other input that can be coerced to character:
+Since we only have 1 element in each vector, the output from `str_c()` is a vector of length 1. Thus, `collapse` will not be useful here since it works to collapse multiple elements in the output vector into a single string:
+
+```{r}
+str_c("a", "b", "c", collapse = "|")
+```
+
+<br>
+<details><summary>**Example**: Using `str_c()` on types other than character</summary>
+
+When we provide a non-character vector (such as a numeric or logical vector), it will get coerced into a character vector:
+
+```{r}
+str_c(c("a", "b", "c"), c(1, 2, 3), c(TRUE, FALSE, FALSE))
+
+# Specifying both `sep` and `collapse`
+str_c(c("a", "b", "c"), c(1, 2, 3), c(TRUE, FALSE, FALSE), sep = "~", collapse = "|")
+```
+
+Note that we can also use any other single element input (other than string) that can be coerced to character:
 
 ```{r}
 str_c(TRUE, 1.5, 2L, "X")
@@ -776,38 +698,19 @@ str_c(TRUE, 1.5, 2L, "X")
 </details>
 
 <br>
-<details><summary>**Example**: Using `str_c()` on single vector</summary>
-
-Since we only provided one input vector, each individual element has nothing to concatenate with:
-
-```{r}
-str_c(c("a", "b", "c"))
-```
-
-But we can still specify the `collapse` argument to collapse the elements to a single string:
-
-```{r}
-str_c(c("a", "b", "c"), collapse = "|")
-```
-
-</details>
-
-<br>
-<details><summary>**Example**: Using `str_c()` on multiple vectors</summary>
+<details><summary>**Example**: Using `str_c()` on vectors of different lengths</summary>
 
 When multiple vectors are provided, they are joined together element-wise, recycling the elements of the shorter vectors:
 
 ```{r, warning = FALSE}
 str_c("#", c("a", "b", "c", "d"), c(1, 2, 3), c(TRUE, FALSE))
-```
 
-We can specify `sep` and `collapse`:
-
-```{r, warning = FALSE}
+# Specifying both `sep` and `collapse`
 str_c("#", c("a", "b", "c", "d"), c(1, 2, 3), c(TRUE, FALSE), sep = "~", collapse = "|")
 ```
 
 </details>
+
 
 <br>
 <details><summary>**Example**: Using `str_c()` on dataframe columns</summary>
@@ -1464,4 +1367,169 @@ scorpio_start + ddays(30) + dhours(1)
 ```
 
 </details>
+<br>
+
+# Appendix
+
+## Special Characters
+
+> "A sequence in a string that starts with a `\` is called an **escape sequence** and allows us to include special characters in our strings."
+
+*Credit: [Escape sequences](https://campus.datacamp.com/courses/string-manipulation-with-stringr-in-r/string-basics?ex=4) from DataCamp*
+
+Common **special characters**:
+
+- `\'`: literal single quote
+- `\"`: literal double quote
+- `\\`: literal backslash
+- `\n`: newline
+- `\t`: tab
+
+These characters followed by a backslash `\` take on a new meaning. The `n` by itself is just an `n`. When you add a backslash to the `\n` you are escaping it and making it a special character where `\n` now represents a newline.
+
+<br>
+__The `writeLines()` function__:
+
+```{r, eval = FALSE}
+?writeLines
+
+# SYNTAX AND DEFAULT VALUES
+writeLines(text, con = stdout(), sep = "\n", useBytes = FALSE)
+```
+
+- "`writeLines()` displays quotes and backslashes as they would be read, rather than as R stores them." (From [writeLines](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/writeLines) documentation)
+- When we include **escape sequences** in the string, it is helpful to use `writeLines()` to see how the escaped string looks
+- `writeLines()` will also output the string without showing the outer pair of double quotes that R uses to store it, so we only see the content of the string
+
+
+<br>
+<details><summary>**Example**: Escaping single quotes</summary>
+
+```{r}
+my_string <- 'Escaping single quote \' within single quotes'
+my_string
+```
+
+Alternatively, we could've just created the string using double quotes:
+
+```{r}
+my_string <- "Single quote ' within double quotes does not need escaping"
+my_string
+```
+
+Using `writeLines()` shows us only the content of the string without the outer pair of double quotes that R uses to store strings:
+
+```{r}
+writeLines(my_string)
+```
+</details>
+
+<br>
+<details><summary>**Example**: Escaping double quotes</summary>
+
+```{r}
+my_string <- "Escaping double quote \" within double quotes"
+my_string
+```
+
+Alternatively, we could've just created the string using single quotes:
+
+```{r}
+my_string <- 'Double quote " within single quotes does not need escaping'
+my_string
+```
+
+Notice how the backslash still showed up in the above output to escape our double quote from the outer pair of double quotes that R uses to store the string. This is no longer an issue if we use `writeLines()` to only show the string content:
+
+```{r}
+writeLines(my_string)
+```
+</details>
+
+<br>
+<details><summary>**Example**: Escaping double quotes within double quotes </summary>
+
+```{r}
+my_string <- "I called my mom and she said \"Echale ganas!\""
+my_string
+```
+
+Using `writeLines()` shows us only the content of the string without the backslashes:
+
+```{r}
+writeLines(my_string)
+```
+</details>
+
+
+<br>
+<details><summary>**Example**: Escaping backslashes</summary>
+
+To include a literal backslash in the string, we need to escape the backslash with another backslash:
+
+```{r}
+my_string <- "The executable is located in C:\\Program Files\\Git\\bin"
+my_string
+```
+
+Use `writeLines()` to see the escaped string:
+
+```{r}
+writeLines(my_string)
+```
+</details>
+
+<br>
+<details><summary>**Example**: Other special characters</summary>
+
+```{r}
+my_string <- "A\tB\nC\tD"
+my_string
+```
+
+Use `writeLines()` to see the escaped string:
+
+```{r}
+writeLines(my_string)
+```
+</details>
+
+<br>
+
+### Escape special characters using Twitter data   
+
+Let's take a look at some tweets from our PAC-12 universities. 
+
+- Let's start by grabbing observations 1-3 from the `text` column.
+
+```{r}
+#Twitter example of \n newline special characters
+p12_df$text[1:3]
+```
+
+
+- Using `writeLines()` we can see the contents of the strings as they would be read, rather than as R stores them.
+```{r}
+writeLines(p12_df$text[1:3])
+```
+
+<br>
+<details><summary>**Example**: Escaping double quotes using Twitter data </summary>  
+
+- Using Twitter data you may encounter a lot of strings with double quotes.
+
+    - In the example below, our string includes special characters `\"` and `\n` to escape the double quotes and the newline character. 
+```{r}
+#Twitter example of \" double quotes special characters
+p12_df$text[24]
+```
+
+- Using `writeLines()` we can see the contents of the strings as they would be read, rather than as R stores them.  
+
+    - We no longer see the escaped characters `\"` or `\n`
+```{r}
+writeLines(p12_df$text[24])
+```
+</details>
+
 
