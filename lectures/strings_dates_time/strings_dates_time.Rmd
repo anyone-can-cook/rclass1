@@ -18,6 +18,11 @@ output:
 
 ---
 
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
 # Introduction
 
 Load packages:
@@ -741,9 +746,17 @@ str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~", collapse 
 ```
 
 <br>
-**Example**: Using `str_c()` on strings
+**Example**: Using `str_c()` on "strings"
 
-We can think of a string as being a character vector of size 1. For example, passing 3 strings into `str_c()` is like passing in 3 vectors of size 1 each. Remember that vectors are concatenated element-wise, so these strings will be joined:
+What do we mean by "strings"?
+
+- Informally, We can think of a "string" as being a character vector with `length()` equal to 1 (i.e., one element). 
+- Another way to think of it, a "string" is anything you put in between quotes". 
+- Loosely, we can also think of individual elements within a character vector as strings
+
+Below, passing 3 strings into `str_c()` is like passing in 3 vectors of size 1 each. 
+
+- Remember that vectors are concatenated element-wise, so these strings will be joined like this:
 
 ```{r}
 str_c("a", "b", "c")
