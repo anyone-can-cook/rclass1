@@ -2012,6 +2012,133 @@ div.tocify {
 ##  $ A: chr  &quot;x&quot; &quot;y&quot; &quot;z&quot;
 ##  $ B: num  1 2 3</code></pre>
 </details>
+<br>
+<details>
+<p><summary><strong>Example</strong>: Practical example of converting type</summary></p>
+<p>When working with data, it may be helpful to label values for certain variables. Data files often come with a codebook that defines how values are coded. Let’s look at an example of labeling values and how converting data type may come into play.</p>
+<p>We’ll look at the <code>FIPS</code> variable from the <a href="https://nces.ed.gov/ipeds/use-the-data">Integrated Postsecondary Education Data System (IPEDS)</a> data. The <a href="https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code#FIPS_state_codes">state FIPS code</a> is a numeric code that identifies a state. For example, <code>1</code> is the FIPS code for <code>Alabama</code>, <code>2</code> is the FIPS code for <code>Alaska</code>, etc. We’ll want to label each numeric value in the <code>FIPS</code> column with the corresponding state name.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="co"># Library for labeling variables and values in a dataframe</span></span>
+<span id="cb80-2"><a href="#cb80-2"></a><span class="kw">library</span>(labelled)</span>
+<span id="cb80-3"><a href="#cb80-3"></a></span>
+<span id="cb80-4"><a href="#cb80-4"></a><span class="co"># Read in IPEDS data and codebook</span></span>
+<span id="cb80-5"><a href="#cb80-5"></a>ipeds_df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017.csv&#39;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">na.strings=</span><span class="kw">c</span>(<span class="st">&#39;&#39;</span>, <span class="st">&#39;NA&#39;</span>), <span class="dt">stringsAsFactors =</span> F)</span>
+<span id="cb80-6"><a href="#cb80-6"></a>ipeds_values &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017_values.csv&#39;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">na.strings=</span><span class="kw">c</span>(<span class="st">&#39;&#39;</span>, <span class="st">&#39;NA&#39;</span>), <span class="dt">stringsAsFactors =</span> F)</span>
+<span id="cb80-7"><a href="#cb80-7"></a></span>
+<span id="cb80-8"><a href="#cb80-8"></a><span class="co"># The codebook defines how variables are coded, such as STABBR, FIPS, and other variables</span></span>
+<span id="cb80-9"><a href="#cb80-9"></a><span class="kw">head</span>(ipeds_values)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 6
+##   varnumber varname codevalue valuelabel frequency percent
+##       &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;
+## 1     10016 STABBR  AL        Alabama           95    1.33
+## 2     10016 STABBR  AK        Alaska            10    0.14
+## 3     10016 STABBR  AZ        Arizona          137    1.92
+## 4     10016 STABBR  AR        Arkansas          86    1.2 
+## 5     10016 STABBR  CA        California       729   10.2 
+## 6     10016 STABBR  CO        Colorado         118    1.65</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a><span class="co"># Filter codebook for just the values for the FIPS variable</span></span>
+<span id="cb82-2"><a href="#cb82-2"></a>fips_values &lt;-<span class="st"> </span>ipeds_values <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(varname <span class="op">==</span><span class="st"> &#39;FIPS&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(varname, codevalue, valuelabel)</span>
+<span id="cb82-3"><a href="#cb82-3"></a><span class="kw">head</span>(fips_values)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   varname codevalue valuelabel
+##   &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;     
+## 1 FIPS    1         Alabama   
+## 2 FIPS    2         Alaska    
+## 3 FIPS    4         Arizona   
+## 4 FIPS    5         Arkansas  
+## 5 FIPS    6         California
+## 6 FIPS    8         Colorado</code></pre>
+<p><br> When we read in the data from the CSV files, R automatically tries to determine the data type of each variable. As seen below, the <code>FIPS</code> column from the <code>ipeds_df</code> that we want to label is of type <code>integer</code>, while the <code>codevalue</code> column from the codebook is of type <code>character</code> (since not all values are numeric):</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="co"># Type of `FIPS` column</span></span>
+<span id="cb84-2"><a href="#cb84-2"></a><span class="kw">str</span>(ipeds_df<span class="op">$</span>FIPS)</span></code></pre></div>
+<pre><code>##  int [1:7153] 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="co"># Type of `codevalue` column</span></span>
+<span id="cb86-2"><a href="#cb86-2"></a><span class="kw">str</span>(fips_values<span class="op">$</span>codevalue)</span></code></pre></div>
+<pre><code>##  chr [1:59] &quot;1&quot; &quot;2&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; &quot;8&quot; &quot;9&quot; &quot;10&quot; &quot;11&quot; &quot;12&quot; &quot;13&quot; &quot;15&quot; &quot;16&quot; ...</code></pre>
+<p><br> This discrepancy becomes a problem when we try to label the value using the <code>labelled</code> library:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="co"># Error: `x` and `labels` must be same type</span></span>
+<span id="cb88-2"><a href="#cb88-2"></a><span class="kw">val_label</span>(ipeds_df<span class="op">$</span>FIPS, fips_values[<span class="dv">1</span>, <span class="st">&#39;codevalue&#39;</span>]) &lt;-<span class="st"> </span>fips_values[<span class="dv">1</span>, <span class="st">&#39;valuelabel&#39;</span>]</span></code></pre></div>
+<p><br> To resolve this, we can use <code>as.integer()</code> to convert the <code>codevalue</code> from <code>character</code> type to <code>integer</code> before trying to label the value:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1"></a><span class="co"># This now works</span></span>
+<span id="cb89-2"><a href="#cb89-2"></a><span class="kw">val_label</span>(ipeds_df<span class="op">$</span>FIPS, <span class="kw">as.integer</span>(fips_values[<span class="dv">1</span>, <span class="st">&#39;codevalue&#39;</span>])) &lt;-<span class="st"> </span>fips_values[<span class="dv">1</span>, <span class="st">&#39;valuelabel&#39;</span>]</span>
+<span id="cb89-3"><a href="#cb89-3"></a></span>
+<span id="cb89-4"><a href="#cb89-4"></a><span class="co"># Check value labels</span></span>
+<span id="cb89-5"><a href="#cb89-5"></a><span class="kw">val_labels</span>(ipeds_df<span class="op">$</span>FIPS)</span></code></pre></div>
+<pre><code>## Alabama 
+##       1</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1"></a><span class="co"># We can use as.integer() to convert the entire vector (ie. codevalue column) to integer</span></span>
+<span id="cb91-2"><a href="#cb91-2"></a>fips_values<span class="op">$</span>codevalue &lt;-<span class="st"> </span><span class="kw">as.integer</span>(fips_values<span class="op">$</span>codevalue)</span>
+<span id="cb91-3"><a href="#cb91-3"></a></span>
+<span id="cb91-4"><a href="#cb91-4"></a><span class="co"># Type of `codevalue` column</span></span>
+<span id="cb91-5"><a href="#cb91-5"></a><span class="kw">str</span>(fips_values<span class="op">$</span>codevalue)</span></code></pre></div>
+<pre><code>##  int [1:59] 1 2 4 5 6 8 9 10 11 12 ...</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a><span class="co"># Use loop to label the rest of the values</span></span>
+<span id="cb93-2"><a href="#cb93-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(fips_values)) {</span>
+<span id="cb93-3"><a href="#cb93-3"></a>  <span class="kw">val_label</span>(ipeds_df<span class="op">$</span>FIPS, fips_values[i, <span class="st">&#39;codevalue&#39;</span>]) &lt;-<span class="st"> </span>fips_values[i, <span class="st">&#39;valuelabel&#39;</span>]</span>
+<span id="cb93-4"><a href="#cb93-4"></a>}</span>
+<span id="cb93-5"><a href="#cb93-5"></a></span>
+<span id="cb93-6"><a href="#cb93-6"></a><span class="co"># Check value labels</span></span>
+<span id="cb93-7"><a href="#cb93-7"></a><span class="kw">val_labels</span>(ipeds_df<span class="op">$</span>FIPS)</span></code></pre></div>
+<pre><code>##                        Alabama                         Alaska 
+##                              1                              2 
+##                        Arizona                       Arkansas 
+##                              4                              5 
+##                     California                       Colorado 
+##                              6                              8 
+##                    Connecticut                       Delaware 
+##                              9                             10 
+##           District of Columbia                        Florida 
+##                             11                             12 
+##                        Georgia                         Hawaii 
+##                             13                             15 
+##                          Idaho                       Illinois 
+##                             16                             17 
+##                        Indiana                           Iowa 
+##                             18                             19 
+##                         Kansas                       Kentucky 
+##                             20                             21 
+##                      Louisiana                          Maine 
+##                             22                             23 
+##                       Maryland                  Massachusetts 
+##                             24                             25 
+##                       Michigan                      Minnesota 
+##                             26                             27 
+##                    Mississippi                       Missouri 
+##                             28                             29 
+##                        Montana                       Nebraska 
+##                             30                             31 
+##                         Nevada                  New Hampshire 
+##                             32                             33 
+##                     New Jersey                     New Mexico 
+##                             34                             35 
+##                       New York                 North Carolina 
+##                             36                             37 
+##                   North Dakota                           Ohio 
+##                             38                             39 
+##                       Oklahoma                         Oregon 
+##                             40                             41 
+##                   Pennsylvania                   Rhode Island 
+##                             42                             44 
+##                 South Carolina                   South Dakota 
+##                             45                             46 
+##                      Tennessee                          Texas 
+##                             47                             48 
+##                           Utah                        Vermont 
+##                             49                             50 
+##                       Virginia                     Washington 
+##                             51                             53 
+##                  West Virginia                      Wisconsin 
+##                             54                             55 
+##                        Wyoming                 American Samoa 
+##                             56                             60 
+## Federated States of Micronesia                           Guam 
+##                             64                             66 
+##               Marshall Islands              Northern Marianas 
+##                             68                             69 
+##                          Palau                    Puerto Rico 
+##                             70                             72 
+##                 Virgin Islands 
+##                             78</code></pre>
+</details>
 </div>
 </div>
 <div id="string-basics" class="section level1">
@@ -2027,30 +2154,30 @@ div.tocify {
 </ul>
 <p><br> <strong>Example</strong>: Creating string using single quotes</p>
 <p>Notice how R stores strings using double quotes internally:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a>my_string &lt;-<span class="st"> &#39;This is a string&#39;</span></span>
-<span id="cb80-2"><a href="#cb80-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1"></a>my_string &lt;-<span class="st"> &#39;This is a string&#39;</span></span>
+<span id="cb95-2"><a href="#cb95-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;This is a string&quot;</code></pre>
 <p><br> <strong>Example</strong>: Creating string using double quotes</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>my_string &lt;-<span class="st"> &quot;Strings can also contain numbers: 123&quot;</span></span>
-<span id="cb82-2"><a href="#cb82-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a>my_string &lt;-<span class="st"> &quot;Strings can also contain numbers: 123&quot;</span></span>
+<span id="cb97-2"><a href="#cb97-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;Strings can also contain numbers: 123&quot;</code></pre>
 <p><br> <strong>Example</strong>: Checking class and type of strings</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="kw">class</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1"></a><span class="kw">class</span>(my_string)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="kw">typeof</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1"></a><span class="kw">typeof</span>(my_string)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <p><br> <strong>Note</strong>: To include quotes as part of the string, we can either use the other type of quotes to surround the string (i.e., <code>&#39;</code> or <code>&quot;</code>) or escape the quote using a backslash (<code>\</code>). <em>We won’t be going in-depth into escaping characters for this class, but see appendix for more details if you are interested.</em></p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="co"># Include quote by using the other type of quotes to surround the string </span></span>
-<span id="cb88-2"><a href="#cb88-2"></a>my_string &lt;-<span class="st"> &quot;There&#39;s no issues with this string.&quot;</span></span>
-<span id="cb88-3"><a href="#cb88-3"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1"></a><span class="co"># Include quote by using the other type of quotes to surround the string </span></span>
+<span id="cb103-2"><a href="#cb103-2"></a>my_string &lt;-<span class="st"> &quot;There&#39;s no issues with this string.&quot;</span></span>
+<span id="cb103-3"><a href="#cb103-3"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;There&#39;s no issues with this string.&quot;</code></pre>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a><span class="co"># Include quote of the same type by escaping it with a backslash</span></span>
-<span id="cb90-2"><a href="#cb90-2"></a>my_string &lt;-<span class="st"> &#39;There</span><span class="ch">\&#39;</span><span class="st">s no issues with this string.&#39;</span></span>
-<span id="cb90-3"><a href="#cb90-3"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1"></a><span class="co"># Include quote of the same type by escaping it with a backslash</span></span>
+<span id="cb105-2"><a href="#cb105-2"></a>my_string &lt;-<span class="st"> &#39;There</span><span class="ch">\&#39;</span><span class="st">s no issues with this string.&#39;</span></span>
+<span id="cb105-3"><a href="#cb105-3"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;There&#39;s no issues with this string.&quot;</code></pre>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="co"># This would not work</span></span>
-<span id="cb92-2"><a href="#cb92-2"></a>my_string &lt;-<span class="st"> &#39;There&#39;</span>s an issue with this string.<span class="st">&#39;</span></span>
-<span id="cb92-3"><a href="#cb92-3"></a><span class="st">my_string</span></span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1"></a><span class="co"># This would not work</span></span>
+<span id="cb107-2"><a href="#cb107-2"></a>my_string &lt;-<span class="st"> &#39;There&#39;</span>s an issue with this string.<span class="st">&#39;</span></span>
+<span id="cb107-3"><a href="#cb107-3"></a><span class="st">my_string</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="stringr-package" class="section level1">
@@ -2070,10 +2197,10 @@ div.tocify {
 <div id="str_length" class="section level2">
 <h2><span class="header-section-number">4.1</span> <code>str_length()</code></h2>
 <p><br> <strong>The <code>str_length()</code> function</strong>:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a>?str_length</span>
-<span id="cb93-2"><a href="#cb93-2"></a></span>
-<span id="cb93-3"><a href="#cb93-3"></a><span class="co"># SYNTAX</span></span>
-<span id="cb93-4"><a href="#cb93-4"></a><span class="kw">str_length</span>(string)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1"></a>?str_length</span>
+<span id="cb108-2"><a href="#cb108-2"></a></span>
+<span id="cb108-3"><a href="#cb108-3"></a><span class="co"># SYNTAX</span></span>
+<span id="cb108-4"><a href="#cb108-4"></a><span class="kw">str_length</span>(string)</span></code></pre></div>
 <ul>
 <li>Function: Find string length</li>
 <li>Arguments:
@@ -2085,61 +2212,61 @@ div.tocify {
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_length()</code> on string</summary></p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="kw">str_length</span>(<span class="st">&quot;cats&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1"></a><span class="kw">str_length</span>(<span class="st">&quot;cats&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 4</code></pre>
 <p>Compare to <code>length()</code>, which treats the string as a single object:</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a><span class="kw">length</span>(<span class="st">&quot;cats&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1"></a><span class="kw">length</span>(<span class="st">&quot;cats&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_length()</code> on character vector</summary></p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="st">&quot;cats&quot;</span>, <span class="st">&quot;in&quot;</span>, <span class="st">&quot;hat&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="st">&quot;cats&quot;</span>, <span class="st">&quot;in&quot;</span>, <span class="st">&quot;hat&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] 4 2 3</code></pre>
 <p>Compare to <code>length()</code>, which finds the number of elements in the vector:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a><span class="kw">length</span>(<span class="kw">c</span>(<span class="st">&quot;cats&quot;</span>, <span class="st">&quot;in&quot;</span>, <span class="st">&quot;hat&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1"></a><span class="kw">length</span>(<span class="kw">c</span>(<span class="st">&quot;cats&quot;</span>, <span class="st">&quot;in&quot;</span>, <span class="st">&quot;hat&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_length()</code> on other vectors coercible to character</summary></p>
 <p>Logical vectors can be coerced to character vectors:</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
 <pre><code>## [1] 4 5</code></pre>
 <p>Numeric vectors can be coerced to character vectors:</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">2.5</span>, <span class="dv">3000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">2.5</span>, <span class="dv">3000</span>))</span></code></pre></div>
 <pre><code>## [1] 1 3 4</code></pre>
 <p>Integer vectors can be coerced to character vectors:</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(2L, 100L))</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1"></a><span class="kw">str_length</span>(<span class="kw">c</span>(2L, 100L))</span></code></pre></div>
 <pre><code>## [1] 1 3</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_length()</code> on dataframe column</summary></p>
 <p>Recall that the columns in a dataframe are just vectors, so we can use <code>str_length()</code> as long as the vector is coercible to character type. Let’s look at the <code>screen_name</code> column from the <code>p12_df</code>:</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1"></a><span class="co"># `p12_df` is a dataframe object</span></span>
-<span id="cb108-2"><a href="#cb108-2"></a><span class="kw">str</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1"></a><span class="co"># `p12_df` is a dataframe object</span></span>
+<span id="cb123-2"><a href="#cb123-2"></a><span class="kw">str</span>(p12_df)</span></code></pre></div>
 <pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    328 obs. of  5 variables:
 ##  $ user_id    : chr  &quot;22080148&quot; &quot;22080148&quot; &quot;22080148&quot; &quot;22080148&quot; ...
 ##  $ created_at : POSIXct, format: &quot;2020-04-25 22:37:18&quot; &quot;2020-04-23 21:11:49&quot; ...
 ##  $ screen_name: chr  &quot;WSUPullman&quot; &quot;WSUPullman&quot; &quot;WSUPullman&quot; &quot;WSUPullman&quot; ...
 ##  $ text       : chr  &quot;Big Dez is headed to Indy!\n\n#GoCougs | #NFLDraft2020 | @dadpat7 | @Colts | #NFLCougs https://t.co/NdGsvXnij7&quot; &quot;Cougar Cheese. That&#39;s it. That&#39;s the tweet. \U0001f9c0#WSU #GoCougs https://t.co/0OWGvQlRZs&quot; &quot;Darien McLaughlin &#39;19, and her dog, Yuki, went on a #Pullman distance walk this weekend. We will let you judge &quot;| __truncated__ &quot;6 houses, one pick. Cougs, which one you got? Reply \u2b07️  #WSU #CougsContain #GoCougs https://t.co/lNDx7r71b2&quot; ...
 ##  $ location   : chr  &quot;Pullman, Washington USA&quot; &quot;Pullman, Washington USA&quot; &quot;Pullman, Washington USA&quot; &quot;Pullman, Washington USA&quot; ...</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1"></a><span class="co"># `screen_name` column is a character vector</span></span>
-<span id="cb110-2"><a href="#cb110-2"></a><span class="kw">str</span>(p12_df<span class="op">$</span>screen_name)</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1"></a><span class="co"># `screen_name` column is a character vector</span></span>
+<span id="cb125-2"><a href="#cb125-2"></a><span class="kw">str</span>(p12_df<span class="op">$</span>screen_name)</span></code></pre></div>
 <pre><code>##  chr [1:328] &quot;WSUPullman&quot; &quot;WSUPullman&quot; &quot;WSUPullman&quot; &quot;WSUPullman&quot; ...</code></pre>
 <p><br> <strong>[Base R method]</strong> Use <code>str_length()</code> to calculate the length of each <code>screen_name</code>:</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1"></a><span class="co"># Let&#39;s focus on just the unique screen names</span></span>
-<span id="cb112-2"><a href="#cb112-2"></a><span class="kw">unique</span>(p12_df<span class="op">$</span>screen_name)</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1"></a><span class="co"># Let&#39;s focus on just the unique screen names</span></span>
+<span id="cb127-2"><a href="#cb127-2"></a><span class="kw">unique</span>(p12_df<span class="op">$</span>screen_name)</span></code></pre></div>
 <pre><code>##  [1] &quot;WSUPullman&quot;      &quot;CalAdmissions&quot;   &quot;UW&quot;             
 ##  [4] &quot;USCAdmission&quot;    &quot;uoregon&quot;         &quot;FutureSunDevils&quot;
 ##  [7] &quot;UCLAAdmission&quot;   &quot;UtahAdmissions&quot;  &quot;futurebuffs&quot;    
 ## [10] &quot;uaadmissions&quot;    &quot;BeaverVIP&quot;</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1"></a><span class="kw">str_length</span>(<span class="kw">unique</span>(p12_df<span class="op">$</span>screen_name))</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1"></a><span class="kw">str_length</span>(<span class="kw">unique</span>(p12_df<span class="op">$</span>screen_name))</span></code></pre></div>
 <pre><code>##  [1] 10 13  2 12  7 15 13 14 11 12  9</code></pre>
 <p><br> <strong>[Tidyverse method]</strong> Use <code>str_length()</code> to calculate the length of each <code>screen_name</code>:</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1"></a><span class="co"># Let&#39;s focus on just the unique screen names</span></span>
-<span id="cb116-2"><a href="#cb116-2"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1"></a><span class="co"># Let&#39;s focus on just the unique screen names</span></span>
+<span id="cb131-2"><a href="#cb131-2"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 11 x 1
 ##    screen_name    
 ##    &lt;chr&gt;          
@@ -2154,15 +2281,15 @@ div.tocify {
 ##  9 futurebuffs    
 ## 10 uaadmissions   
 ## 11 BeaverVIP</code></pre>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_length</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_length</span>()</span></code></pre></div>
 <pre><code>## Warning in stri_length(string): argument is not an atomic vector; coercing</code></pre>
 <pre><code>## [1] 163</code></pre>
 <p>Notice that the above line does not work as expected because we passed in a dataframe to <code>str_length()</code> and it is trying to coerce that to character:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1"></a><span class="kw">class</span>(p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1"></a><span class="kw">class</span>(p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <p>An alternative way is to add a column to the dataframe that contains the result of applying <code>str_length()</code> to the <code>screen_name</code> vector:</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb123-2"><a href="#cb123-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">screen_name_len =</span> <span class="kw">str_length</span>(screen_name))</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1"></a>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb138-2"><a href="#cb138-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">screen_name_len =</span> <span class="kw">str_length</span>(screen_name))</span></code></pre></div>
 <pre><code>## # A tibble: 11 x 2
 ##    screen_name     screen_name_len
 ##    &lt;chr&gt;                     &lt;int&gt;
@@ -2182,10 +2309,10 @@ div.tocify {
 <div id="str_c" class="section level2">
 <h2><span class="header-section-number">4.2</span> <code>str_c()</code></h2>
 <p><br> <strong>The <code>str_c()</code> function</strong>:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1"></a>?str_c</span>
-<span id="cb125-2"><a href="#cb125-2"></a></span>
-<span id="cb125-3"><a href="#cb125-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
-<span id="cb125-4"><a href="#cb125-4"></a><span class="kw">str_c</span>(..., <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">collapse =</span> <span class="ot">NULL</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1"></a>?str_c</span>
+<span id="cb140-2"><a href="#cb140-2"></a></span>
+<span id="cb140-3"><a href="#cb140-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb140-4"><a href="#cb140-4"></a><span class="kw">str_c</span>(..., <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">collapse =</span> <span class="ot">NULL</span>)</span></code></pre></div>
 <ul>
 <li>Function: Concatenate strings between vectors (element-wise)</li>
 <li>Arguments:
@@ -2378,66 +2505,84 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 -->
 <p><br> <strong>Example</strong>: Using <code>str_c()</code> on one vector</p>
 <p>Since we only provided one input vector, it has nothing to concatenate with, so <code>str_c()</code> will just return the same vector:</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</code></pre>
 <p>Note that specifying the <code>sep</code> argument will also not have any effect because we only have one input vector, and <code>sep</code> is the separator between multiple vectors:</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</code></pre>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1"></a><span class="co"># Check length: Output is the original vector of 3 elements</span></span>
+<span id="cb145-2"><a href="#cb145-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
 <p>As seen above, <code>str_c()</code> returns a vector by default (because the default value for the <code>collapse</code> argument is <code>NULL</code>). But we can specify a string for <code>collapse</code> in order to collapse the elements of the output vector into a single string:</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a|b|c&quot;</code></pre>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1"></a><span class="co"># Check length: Output vector of length 3 is collapsed into a single string</span></span>
+<span id="cb149-2"><a href="#cb149-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1"></a><span class="co"># Check str_length: This gives the length of the collapsed string, which is 5 characters long</span></span>
+<span id="cb151-2"><a href="#cb151-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_length</span>()</span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
 <p><br> <strong>Example</strong>: Using <code>str_c()</code> on more than one vector</p>
-<p>When we provide multiple input vectors, we can see that the vectors get concatenated element-wise:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>))</span></code></pre></div>
+<p>When we provide multiple input vectors, we can see that the vectors get concatenated element-wise (i.e., 1st element from each vector are concatenated, 2nd element from each vector are concatenated, etc):</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;ax!&quot; &quot;by?&quot; &quot;cz;&quot;</code></pre>
 <p>The default separator for each element-wise concatenation is an empty string (<code>&quot;&quot;</code>), but we can customize that by specifying the <code>sep</code> argument:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a~x~!&quot; &quot;b~y~?&quot; &quot;c~z~;&quot;</code></pre>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1"></a><span class="co"># Check length: Output vector is same length as input vectors</span></span>
+<span id="cb157-2"><a href="#cb157-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
 <p>Again, we can specify the <code>collapse</code> argument in order to collapse the elements of the output vector into a single string:</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;ax!|by?|cz;&quot;</code></pre>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
-<span id="cb138-2"><a href="#cb138-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1"></a><span class="co"># Check length: Output vector of length 3 is collapsed into a single string</span></span>
+<span id="cb161-2"><a href="#cb161-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
+<span id="cb163-2"><a href="#cb163-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;z&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;!&quot;</span>, <span class="st">&quot;?&quot;</span>, <span class="st">&quot;;&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a~x~!|b~y~?|c~z~;&quot;</code></pre>
 <p><br> <strong>Example</strong>: Using <code>str_c()</code> on strings</p>
 <p>We can think of a string as being a character vector of size 1. For example, passing 3 strings into <code>str_c()</code> is like passing in 3 vectors of size 1 each. Remember that vectors are concatenated element-wise, so these strings will be joined:</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;abc&quot;</code></pre>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1"></a><span class="co"># Again, we can think of strings as being character vectors of size 1</span></span>
+<span id="cb167-2"><a href="#cb167-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;b&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;c&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;abc&quot;</code></pre>
 <p>We can use <code>sep</code> to specify how the elements are separated:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a~b~c&quot;</code></pre>
 <p>Since we only have 1 element in each vector, the output from <code>str_c()</code> is a vector of length 1. Thus, <code>collapse</code> will not be useful here since it works to collapse multiple elements in the output vector into a single string:</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1"></a><span class="kw">str_c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;abc&quot;</code></pre>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_c()</code> on types other than character</summary></p>
 <p>When we provide a non-character vector (such as a numeric or logical vector), it will get coerced into a character vector:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;a1TRUE&quot;  &quot;b2FALSE&quot; &quot;c3FALSE&quot;</code></pre>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
-<span id="cb148-2"><a href="#cb148-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
+<span id="cb175-2"><a href="#cb175-2"></a><span class="kw">str_c</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;a~1~TRUE|b~2~FALSE|c~3~FALSE&quot;</code></pre>
 <p>Note that we can also use any other single element input (other than string) that can be coerced to character:</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1"></a><span class="kw">str_c</span>(<span class="ot">TRUE</span>, <span class="fl">1.5</span>, 2L, <span class="st">&quot;X&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1"></a><span class="kw">str_c</span>(<span class="ot">TRUE</span>, <span class="fl">1.5</span>, 2L, <span class="st">&quot;X&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;TRUE1.52X&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_c()</code> on vectors of different lengths</summary></p>
 <p>When multiple vectors are provided, they are joined together element-wise, recycling the elements of the shorter vectors:</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1"></a><span class="kw">str_c</span>(<span class="st">&quot;#&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1"></a><span class="kw">str_c</span>(<span class="st">&quot;#&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;#a1TRUE&quot;  &quot;#b2FALSE&quot; &quot;#c3TRUE&quot;  &quot;#d1FALSE&quot;</code></pre>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
-<span id="cb154-2"><a href="#cb154-2"></a><span class="kw">str_c</span>(<span class="st">&quot;#&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1"></a><span class="co"># Specifying both `sep` and `collapse`</span></span>
+<span id="cb181-2"><a href="#cb181-2"></a><span class="kw">str_c</span>(<span class="st">&quot;#&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), <span class="dt">sep =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;#~a~1~TRUE|#~b~2~FALSE|#~c~3~TRUE|#~d~1~FALSE&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_c()</code> on dataframe columns</summary></p>
 <p>Let’s combine the <code>user_id</code> and <code>screen_name</code> columns from <code>p12_df</code>. We’ll focus on unique Twitter handles:</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1"></a>p12_unique_df &lt;-<span class="st"> </span>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(user_id, screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>()</span>
-<span id="cb156-2"><a href="#cb156-2"></a>p12_unique_df</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="#cb183-1"></a>p12_unique_df &lt;-<span class="st"> </span>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(user_id, screen_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>()</span>
+<span id="cb183-2"><a href="#cb183-2"></a>p12_unique_df</span></code></pre></div>
 <pre><code>## # A tibble: 11 x 2
 ##    user_id    screen_name    
 ##    &lt;chr&gt;      &lt;chr&gt;          
@@ -2453,10 +2598,10 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 ## 10 44733626   uaadmissions   
 ## 11 403743606  BeaverVIP</code></pre>
 <p><br> <strong>[Base R method]</strong> Use <code>str_c()</code> to combine <code>user_id</code> and <code>screen_name</code>:</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1"></a><span class="kw">str_c</span>(p12_unique_df<span class="op">$</span>user_id, <span class="st">&quot;=&quot;</span>, p12_unique_df<span class="op">$</span>screen_name, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="#cb185-1"></a><span class="kw">str_c</span>(p12_unique_df<span class="op">$</span>user_id, <span class="st">&quot;=&quot;</span>, p12_unique_df<span class="op">$</span>screen_name, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;22080148 = WSUPullman, 15988549 = CalAdmissions, 27103822 = UW, 198643896 = USCAdmission, 40940457 = uoregon, 325014504 = FutureSunDevils, 2938776590 = UCLAAdmission, 4922145709 = UtahAdmissions, 45879674 = futurebuffs, 44733626 = uaadmissions, 403743606 = BeaverVIP&quot;</code></pre>
 <p><br> <strong>[Tidyverse method]</strong> Use <code>str_c()</code> to combine <code>user_id</code> and <code>screen_name</code>:</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1"></a>p12_unique_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">twitter_handle =</span> <span class="kw">str_c</span>(<span class="st">&quot;User #&quot;</span>, user_id, <span class="st">&quot; is @&quot;</span>, screen_name))</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="#cb187-1"></a>p12_unique_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">twitter_handle =</span> <span class="kw">str_c</span>(<span class="st">&quot;User #&quot;</span>, user_id, <span class="st">&quot; is @&quot;</span>, screen_name))</span></code></pre></div>
 <pre><code>## # A tibble: 11 x 3
 ##    user_id    screen_name     twitter_handle                     
 ##    &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;                              
@@ -2476,11 +2621,11 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <div id="str_sub" class="section level2">
 <h2><span class="header-section-number">4.3</span> <code>str_sub()</code></h2>
 <p><br> <strong>The <code>str_sub()</code> function</strong>:</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1"></a>?str_sub</span>
-<span id="cb162-2"><a href="#cb162-2"></a></span>
-<span id="cb162-3"><a href="#cb162-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
-<span id="cb162-4"><a href="#cb162-4"></a><span class="kw">str_sub</span>(string, <span class="dt">start =</span> 1L, <span class="dt">end =</span> <span class="op">-</span>1L)</span>
-<span id="cb162-5"><a href="#cb162-5"></a><span class="kw">str_sub</span>(string, <span class="dt">start =</span> 1L, <span class="dt">end =</span> <span class="op">-</span>1L, <span class="dt">omit_na =</span> <span class="ot">FALSE</span>) &lt;-<span class="st"> </span>value</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="#cb189-1"></a>?str_sub</span>
+<span id="cb189-2"><a href="#cb189-2"></a></span>
+<span id="cb189-3"><a href="#cb189-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb189-4"><a href="#cb189-4"></a><span class="kw">str_sub</span>(string, <span class="dt">start =</span> 1L, <span class="dt">end =</span> <span class="op">-</span>1L)</span>
+<span id="cb189-5"><a href="#cb189-5"></a><span class="kw">str_sub</span>(string, <span class="dt">start =</span> 1L, <span class="dt">end =</span> <span class="op">-</span>1L, <span class="dt">omit_na =</span> <span class="ot">FALSE</span>) &lt;-<span class="st"> </span>value</span></code></pre></div>
 <ul>
 <li>Function: Subset strings</li>
 <li>Arguments:
@@ -2504,48 +2649,48 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_sub()</code> to subset strings</summary></p>
 <p>If no <code>start</code> and <code>end</code> positions are specified, <code>str_sub()</code> will by default return the entire (original) string:</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="#cb190-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;abcdefg&quot; &quot;123&quot;     &quot;TRUE&quot;</code></pre>
 <p>Note that if an element is shorter than the specified <code>end</code> (i.e., <code>123</code> in the example below), it will just include all the available characters that it does have:</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>), <span class="dt">start =</span> <span class="dv">2</span>, <span class="dt">end =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="#cb192-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>), <span class="dt">start =</span> <span class="dv">2</span>, <span class="dt">end =</span> <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;bcd&quot; &quot;23&quot;  &quot;RUE&quot;</code></pre>
 <p>Remember we can also use negative index to count the position starting from the back:</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>), <span class="dt">start =</span> <span class="dv">2</span>, <span class="dt">end =</span> <span class="dv">-2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;abcdefg&quot;</span>, <span class="dv">123</span>, <span class="ot">TRUE</span>), <span class="dt">start =</span> <span class="dv">2</span>, <span class="dt">end =</span> <span class="dv">-2</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;bcdef&quot; &quot;2&quot;     &quot;RU&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_sub()</code> to replace strings</summary></p>
 <p>If no <code>start</code> and <code>end</code> positions are specified, <code>str_sub()</code> will by default return the original string, so the entire string would be replaced:</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1"></a>v &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)</span>
-<span id="cb169-2"><a href="#cb169-2"></a><span class="kw">str_sub</span>(v) &lt;-<span class="st"> &quot;*&quot;</span></span>
-<span id="cb169-3"><a href="#cb169-3"></a>v</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="#cb196-1"></a>v &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)</span>
+<span id="cb196-2"><a href="#cb196-2"></a><span class="kw">str_sub</span>(v) &lt;-<span class="st"> &quot;*&quot;</span></span>
+<span id="cb196-3"><a href="#cb196-3"></a>v</span></code></pre></div>
 <pre><code>## [1] &quot;*&quot; &quot;*&quot; &quot;*&quot; &quot;*&quot; &quot;*&quot;</code></pre>
 <p>If an element in the vector is too short to meet the subset specification, the replacement <code>value</code> will be concatenated to the end of that element:</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1"></a>v &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)</span>
-<span id="cb171-2"><a href="#cb171-2"></a><span class="kw">str_sub</span>(v, <span class="dv">2</span>, <span class="dv">3</span>) &lt;-<span class="st"> &quot;*&quot;</span></span>
-<span id="cb171-3"><a href="#cb171-3"></a>v</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="#cb198-1"></a>v &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)</span>
+<span id="cb198-2"><a href="#cb198-2"></a><span class="kw">str_sub</span>(v, <span class="dv">2</span>, <span class="dv">3</span>) &lt;-<span class="st"> &quot;*&quot;</span></span>
+<span id="cb198-3"><a href="#cb198-3"></a>v</span></code></pre></div>
 <pre><code>## [1] &quot;A*&quot;   &quot;A*&quot;   &quot;A*&quot;   &quot;A*D&quot;  &quot;A*DE&quot;</code></pre>
 <p>Note that because the replacement form of <code>str_sub()</code> modifies the input vector directly, we need to save it in a variable first. Directly passing in the vector to <code>str_sub()</code> would give us an error:</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1"></a><span class="co"># Does not work</span></span>
-<span id="cb173-2"><a href="#cb173-2"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)) &lt;-<span class="st"> &quot;*&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="#cb200-1"></a><span class="co"># Does not work</span></span>
+<span id="cb200-2"><a href="#cb200-2"></a><span class="kw">str_sub</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AB&quot;</span>, <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;ABCD&quot;</span>, <span class="st">&quot;ABCDE&quot;</span>)) &lt;-<span class="st"> &quot;*&quot;</span></span></code></pre></div>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_sub()</code> on dataframe column</summary></p>
 <p>We can use <code>as.character()</code> to turn the <code>created_at</code> value to a string, then use <code>str_sub()</code> to extract out various date/time components from the string:</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1"></a>p12_datetime_df &lt;-<span class="st"> </span>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at) <span class="op">%&gt;%</span></span>
-<span id="cb174-2"><a href="#cb174-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb174-3"><a href="#cb174-3"></a>      <span class="dt">dt_chr =</span> <span class="kw">as.character</span>(created_at),</span>
-<span id="cb174-4"><a href="#cb174-4"></a>      <span class="dt">date_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">1</span>, <span class="dv">10</span>),</span>
-<span id="cb174-5"><a href="#cb174-5"></a>      <span class="dt">yr_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">1</span>, <span class="dv">4</span>),</span>
-<span id="cb174-6"><a href="#cb174-6"></a>      <span class="dt">mth_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">6</span>, <span class="dv">7</span>),</span>
-<span id="cb174-7"><a href="#cb174-7"></a>      <span class="dt">day_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">9</span>, <span class="dv">10</span>),</span>
-<span id="cb174-8"><a href="#cb174-8"></a>      <span class="dt">hr_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-8</span>, <span class="dv">-7</span>),</span>
-<span id="cb174-9"><a href="#cb174-9"></a>      <span class="dt">min_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-5</span>, <span class="dv">-4</span>),</span>
-<span id="cb174-10"><a href="#cb174-10"></a>      <span class="dt">sec_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-2</span>, <span class="dv">-1</span>)</span>
-<span id="cb174-11"><a href="#cb174-11"></a>    )</span>
-<span id="cb174-12"><a href="#cb174-12"></a>p12_datetime_df</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1"></a>p12_datetime_df &lt;-<span class="st"> </span>p12_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at) <span class="op">%&gt;%</span></span>
+<span id="cb201-2"><a href="#cb201-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb201-3"><a href="#cb201-3"></a>      <span class="dt">dt_chr =</span> <span class="kw">as.character</span>(created_at),</span>
+<span id="cb201-4"><a href="#cb201-4"></a>      <span class="dt">date_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb201-5"><a href="#cb201-5"></a>      <span class="dt">yr_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">1</span>, <span class="dv">4</span>),</span>
+<span id="cb201-6"><a href="#cb201-6"></a>      <span class="dt">mth_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">6</span>, <span class="dv">7</span>),</span>
+<span id="cb201-7"><a href="#cb201-7"></a>      <span class="dt">day_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">9</span>, <span class="dv">10</span>),</span>
+<span id="cb201-8"><a href="#cb201-8"></a>      <span class="dt">hr_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-8</span>, <span class="dv">-7</span>),</span>
+<span id="cb201-9"><a href="#cb201-9"></a>      <span class="dt">min_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-5</span>, <span class="dv">-4</span>),</span>
+<span id="cb201-10"><a href="#cb201-10"></a>      <span class="dt">sec_chr =</span> <span class="kw">str_sub</span>(dt_chr, <span class="dv">-2</span>, <span class="dv">-1</span>)</span>
+<span id="cb201-11"><a href="#cb201-11"></a>    )</span>
+<span id="cb201-12"><a href="#cb201-12"></a>p12_datetime_df</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 9
 ##    created_at          dt_chr date_chr yr_chr mth_chr day_chr hr_chr
 ##    &lt;dttm&gt;              &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; 
@@ -2576,59 +2721,59 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_to_upper()</code> to turn strings to uppercase</summary></p>
 <p>Turn column names of <code>p12_df</code> to uppercase:</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="#cb176-1"></a><span class="co"># Column names are originally lowercase</span></span>
-<span id="cb176-2"><a href="#cb176-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1"></a><span class="co"># Column names are originally lowercase</span></span>
+<span id="cb203-2"><a href="#cb203-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
 <pre><code>## [1] &quot;user_id&quot;     &quot;created_at&quot;  &quot;screen_name&quot; &quot;text&quot;        &quot;location&quot;</code></pre>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1"></a><span class="co"># Turn column names to uppercase</span></span>
-<span id="cb178-2"><a href="#cb178-2"></a><span class="kw">names</span>(p12_df) &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(<span class="kw">names</span>(p12_df))</span>
-<span id="cb178-3"><a href="#cb178-3"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="#cb205-1"></a><span class="co"># Turn column names to uppercase</span></span>
+<span id="cb205-2"><a href="#cb205-2"></a><span class="kw">names</span>(p12_df) &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(<span class="kw">names</span>(p12_df))</span>
+<span id="cb205-3"><a href="#cb205-3"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
 <pre><code>## [1] &quot;USER_ID&quot;     &quot;CREATED_AT&quot;  &quot;SCREEN_NAME&quot; &quot;TEXT&quot;        &quot;LOCATION&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_to_lower()</code> to turn strings to lowercase</summary></p>
 <p>Turn column names of <code>p12_df</code> to lowercase:</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="#cb180-1"></a><span class="co"># Column names are originally uppercase</span></span>
-<span id="cb180-2"><a href="#cb180-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="#cb207-1"></a><span class="co"># Column names are originally uppercase</span></span>
+<span id="cb207-2"><a href="#cb207-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
 <pre><code>## [1] &quot;USER_ID&quot;     &quot;CREATED_AT&quot;  &quot;SCREEN_NAME&quot; &quot;TEXT&quot;        &quot;LOCATION&quot;</code></pre>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="#cb182-1"></a><span class="co"># Turn column names to lowercase</span></span>
-<span id="cb182-2"><a href="#cb182-2"></a><span class="kw">names</span>(p12_df) &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(<span class="kw">names</span>(p12_df))</span>
-<span id="cb182-3"><a href="#cb182-3"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1"></a><span class="co"># Turn column names to lowercase</span></span>
+<span id="cb209-2"><a href="#cb209-2"></a><span class="kw">names</span>(p12_df) &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(<span class="kw">names</span>(p12_df))</span>
+<span id="cb209-3"><a href="#cb209-3"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
 <pre><code>## [1] &quot;user_id&quot;     &quot;created_at&quot;  &quot;screen_name&quot; &quot;text&quot;        &quot;location&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_sort()</code> to sort character vector</summary></p>
 <p>Sort the vector of <code>p12_df</code> column names:</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="#cb184-1"></a><span class="co"># Before sort</span></span>
-<span id="cb184-2"><a href="#cb184-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="#cb211-1"></a><span class="co"># Before sort</span></span>
+<span id="cb211-2"><a href="#cb211-2"></a><span class="kw">names</span>(p12_df)</span></code></pre></div>
 <pre><code>## [1] &quot;user_id&quot;     &quot;created_at&quot;  &quot;screen_name&quot; &quot;text&quot;        &quot;location&quot;</code></pre>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="#cb186-1"></a><span class="co"># Sort alphabetically (default)</span></span>
-<span id="cb186-2"><a href="#cb186-2"></a><span class="kw">str_sort</span>(<span class="kw">names</span>(p12_df))</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1"></a><span class="co"># Sort alphabetically (default)</span></span>
+<span id="cb213-2"><a href="#cb213-2"></a><span class="kw">str_sort</span>(<span class="kw">names</span>(p12_df))</span></code></pre></div>
 <pre><code>## [1] &quot;created_at&quot;  &quot;location&quot;    &quot;screen_name&quot; &quot;text&quot;        &quot;user_id&quot;</code></pre>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="#cb188-1"></a><span class="co"># Sort reverse alphabetically</span></span>
-<span id="cb188-2"><a href="#cb188-2"></a><span class="kw">str_sort</span>(<span class="kw">names</span>(p12_df), <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="#cb215-1"></a><span class="co"># Sort reverse alphabetically</span></span>
+<span id="cb215-2"><a href="#cb215-2"></a><span class="kw">str_sort</span>(<span class="kw">names</span>(p12_df), <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;user_id&quot;     &quot;text&quot;        &quot;screen_name&quot; &quot;location&quot;    &quot;created_at&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_trim()</code> to trim whitespace from string</summary></p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="#cb190-1"></a><span class="co"># Trim whitespace from both left and right sides (default)</span></span>
-<span id="cb190-2"><a href="#cb190-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="#cb217-1"></a><span class="co"># Trim whitespace from both left and right sides (default)</span></span>
+<span id="cb217-2"><a href="#cb217-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;ABC&quot; &quot;XYZ&quot;</code></pre>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="#cb192-1"></a><span class="co"># Trim whitespace from left side</span></span>
-<span id="cb192-2"><a href="#cb192-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>), <span class="dt">side =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="#cb219-1"></a><span class="co"># Trim whitespace from left side</span></span>
+<span id="cb219-2"><a href="#cb219-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>), <span class="dt">side =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;ABC &quot;  &quot;XYZ\t&quot;</code></pre>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1"></a><span class="co"># Trim whitespace from right side</span></span>
-<span id="cb194-2"><a href="#cb194-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>), <span class="dt">side =</span> <span class="st">&quot;right&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="#cb221-1"></a><span class="co"># Trim whitespace from right side</span></span>
+<span id="cb221-2"><a href="#cb221-2"></a><span class="kw">str_trim</span>(<span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">ABC &quot;</span>, <span class="st">&quot; XYZ</span><span class="ch">\t</span><span class="st">&quot;</span>), <span class="dt">side =</span> <span class="st">&quot;right&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;\nABC&quot; &quot; XYZ&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Using <code>str_pad()</code> to pad string with character</summary></p>
 <p>Let’s say we have a vector of zip codes that has lost all leading 0’s. We can use <code>str_pad()</code> to add that back in:</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="#cb196-1"></a><span class="co"># Pad the left side of strings with &quot;0&quot; until width of 5 is reached</span></span>
-<span id="cb196-2"><a href="#cb196-2"></a><span class="kw">str_pad</span>(<span class="kw">c</span>(<span class="dv">95035</span>, <span class="dv">90024</span>, <span class="dv">5009</span>, <span class="dv">5030</span>), <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">side =</span> <span class="st">&quot;left&quot;</span>, <span class="dt">pad =</span> <span class="st">&quot;0&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="#cb223-1"></a><span class="co"># Pad the left side of strings with &quot;0&quot; until width of 5 is reached</span></span>
+<span id="cb223-2"><a href="#cb223-2"></a><span class="kw">str_pad</span>(<span class="kw">c</span>(<span class="dv">95035</span>, <span class="dv">90024</span>, <span class="dv">5009</span>, <span class="dv">5030</span>), <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">side =</span> <span class="st">&quot;left&quot;</span>, <span class="dt">pad =</span> <span class="st">&quot;0&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;95035&quot; &quot;90024&quot; &quot;05009&quot; &quot;05030&quot;</code></pre>
 </details>
 </div>
@@ -2683,66 +2828,66 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Creating <code>Date</code> object from character or numeric input</summary></p>
 <p>The <code>lubridate</code> functions are flexible and can parse dates in various formats:</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="#cb198-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1/1/2020&quot;</span>)</span>
-<span id="cb198-2"><a href="#cb198-2"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="#cb225-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1/1/2020&quot;</span>)</span>
+<span id="cb225-2"><a href="#cb225-2"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="#cb200-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1-1-2020&quot;</span>)</span>
-<span id="cb200-2"><a href="#cb200-2"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="#cb227-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1-1-2020&quot;</span>)</span>
+<span id="cb227-2"><a href="#cb227-2"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;Jan. 1, 2020&quot;</span>)</span>
-<span id="cb202-2"><a href="#cb202-2"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="#cb229-1"></a>d &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;Jan. 1, 2020&quot;</span>)</span>
+<span id="cb229-2"><a href="#cb229-2"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="#cb204-1"></a>d &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20200101</span>)</span>
-<span id="cb204-2"><a href="#cb204-2"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="#cb231-1"></a>d &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20200101</span>)</span>
+<span id="cb231-2"><a href="#cb231-2"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
 <p><br> Investigate the <code>Date</code> object:</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="#cb206-1"></a><span class="kw">class</span>(d)</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="#cb233-1"></a><span class="kw">class</span>(d)</span></code></pre></div>
 <pre><code>## [1] &quot;Date&quot;</code></pre>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="#cb208-1"></a><span class="kw">typeof</span>(d)</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="#cb235-1"></a><span class="kw">typeof</span>(d)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="#cb210-1"></a><span class="co"># Number of days since January 1, 1970</span></span>
-<span id="cb210-2"><a href="#cb210-2"></a><span class="kw">as.numeric</span>(d)</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="#cb237-1"></a><span class="co"># Number of days since January 1, 1970</span></span>
+<span id="cb237-2"><a href="#cb237-2"></a><span class="kw">as.numeric</span>(d)</span></code></pre></div>
 <pre><code>## [1] 18262</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Creating <code>POSIXct</code> object from character or numeric input</summary></p>
 <p>The <code>lubridate</code> functions are flexible and can parse AM/PM in various formats:</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="#cb212-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_h</span>(<span class="st">&quot;12/31/2019 11pm&quot;</span>)</span>
-<span id="cb212-2"><a href="#cb212-2"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="#cb239-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_h</span>(<span class="st">&quot;12/31/2019 11pm&quot;</span>)</span>
+<span id="cb239-2"><a href="#cb239-2"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:00:00 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="#cb214-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_hm</span>(<span class="st">&quot;12/31/2019 11:59 pm&quot;</span>)</span>
-<span id="cb214-2"><a href="#cb214-2"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="#cb241-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_hm</span>(<span class="st">&quot;12/31/2019 11:59 pm&quot;</span>)</span>
+<span id="cb241-2"><a href="#cb241-2"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:00 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="#cb216-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_hms</span>(<span class="st">&quot;12/31/2019 11:59:59 PM&quot;</span>)</span>
-<span id="cb216-2"><a href="#cb216-2"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="#cb243-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy_hms</span>(<span class="st">&quot;12/31/2019 11:59:59 PM&quot;</span>)</span>
+<span id="cb243-2"><a href="#cb243-2"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:59 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="#cb218-1"></a>dt &lt;-<span class="st"> </span><span class="kw">ymd_hms</span>(<span class="dv">20191231235959</span>)</span>
-<span id="cb218-2"><a href="#cb218-2"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="#cb245-1"></a>dt &lt;-<span class="st"> </span><span class="kw">ymd_hms</span>(<span class="dv">20191231235959</span>)</span>
+<span id="cb245-2"><a href="#cb245-2"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:59 UTC&quot;</code></pre>
 <p><br> Investigate the <code>POSIXct</code> object:</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="#cb220-1"></a><span class="kw">class</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="#cb247-1"></a><span class="kw">class</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="#cb222-1"></a><span class="kw">typeof</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="#cb249-1"></a><span class="kw">typeof</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="#cb224-1"></a><span class="co"># Number of seconds since January 1, 1970</span></span>
-<span id="cb224-2"><a href="#cb224-2"></a><span class="kw">as.numeric</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="#cb251-1"></a><span class="co"># Number of seconds since January 1, 1970</span></span>
+<span id="cb251-2"><a href="#cb251-2"></a><span class="kw">as.numeric</span>(dt)</span></code></pre></div>
 <pre><code>## [1] 1577836799</code></pre>
 <p><br> We can also create a <code>POSIXct</code> object from a date function by providing a timezone. The time would default to midnight:</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="#cb226-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1/1/2020&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)</span>
-<span id="cb226-2"><a href="#cb226-2"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="#cb253-1"></a>dt &lt;-<span class="st"> </span><span class="kw">mdy</span>(<span class="st">&quot;1/1/2020&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)</span>
+<span id="cb253-2"><a href="#cb253-2"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="#cb228-1"></a><span class="co"># Number of seconds since January 1, 1970</span></span>
-<span id="cb228-2"><a href="#cb228-2"></a><span class="kw">as.numeric</span>(dt)  <span class="co"># Note that this is indeed 1 sec after the previous example</span></span></code></pre></div>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="#cb255-1"></a><span class="co"># Number of seconds since January 1, 1970</span></span>
+<span id="cb255-2"><a href="#cb255-2"></a><span class="kw">as.numeric</span>(dt)  <span class="co"># Note that this is indeed 1 sec after the previous example</span></span></code></pre></div>
 <pre><code>## [1] 1577836800</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Creating <code>Date</code> objects from dataframe column</summary></p>
 <p>Using the <code>p12_datetime_df</code> we created earlier, we can create <code>Date</code> objects from the <code>date_chr</code> column:</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="#cb230-1"></a><span class="co"># Use `ymd()` to parse the string stored in the `date_chr` column</span></span>
-<span id="cb230-2"><a href="#cb230-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr, date_chr) <span class="op">%&gt;%</span></span>
-<span id="cb230-3"><a href="#cb230-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date_ymd =</span> <span class="kw">ymd</span>(date_chr))</span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="#cb257-1"></a><span class="co"># Use `ymd()` to parse the string stored in the `date_chr` column</span></span>
+<span id="cb257-2"><a href="#cb257-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr, date_chr) <span class="op">%&gt;%</span></span>
+<span id="cb257-3"><a href="#cb257-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date_ymd =</span> <span class="kw">ymd</span>(date_chr))</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 4
 ##    created_at          dt_chr              date_chr   date_ymd  
 ##    &lt;dttm&gt;              &lt;chr&gt;               &lt;chr&gt;      &lt;date&gt;    
@@ -2762,9 +2907,9 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Creating <code>POSIXct</code> objects from dataframe column</summary></p>
 <p>Using the <code>p12_datetime_df</code> we created earlier, we can recreate the <code>created_at</code> column (class <code>POSIXct</code>) from the <code>dt_chr</code> column (class <code>character</code>):</p>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="#cb232-1"></a><span class="co"># Use `ymd_hms()` to parse the string stored in the `dt_chr` column</span></span>
-<span id="cb232-2"><a href="#cb232-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr) <span class="op">%&gt;%</span></span>
-<span id="cb232-3"><a href="#cb232-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">datetime_ymd_hms =</span> <span class="kw">ymd_hms</span>(dt_chr))</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="#cb259-1"></a><span class="co"># Use `ymd_hms()` to parse the string stored in the `dt_chr` column</span></span>
+<span id="cb259-2"><a href="#cb259-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr) <span class="op">%&gt;%</span></span>
+<span id="cb259-3"><a href="#cb259-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">datetime_ymd_hms =</span> <span class="kw">ymd_hms</span>(dt_chr))</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 3
 ##    created_at          dt_chr              datetime_ymd_hms   
 ##    &lt;dttm&gt;              &lt;chr&gt;               &lt;dttm&gt;             
@@ -2799,33 +2944,33 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Creating <code>Date</code> object from individual components</summary></p>
 <p>There are various ways to pass in the inputs to create the same <code>Date</code> object:</p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="#cb234-1"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb234-2"><a href="#cb234-2"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="#cb261-1"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="dv">2020</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb261-2"><a href="#cb261-2"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="#cb236-1"></a><span class="co"># Characters can be coerced to integers</span></span>
-<span id="cb236-2"><a href="#cb236-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="st">&quot;2020&quot;</span>, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;01&quot;</span>)</span>
-<span id="cb236-3"><a href="#cb236-3"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="#cb263-1"></a><span class="co"># Characters can be coerced to integers</span></span>
+<span id="cb263-2"><a href="#cb263-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="st">&quot;2020&quot;</span>, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;01&quot;</span>)</span>
+<span id="cb263-3"><a href="#cb263-3"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="#cb238-1"></a><span class="co"># Remember that the default values for month and day would be 1L</span></span>
-<span id="cb238-2"><a href="#cb238-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="dv">2020</span>)</span>
-<span id="cb238-3"><a href="#cb238-3"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="#cb265-1"></a><span class="co"># Remember that the default values for month and day would be 1L</span></span>
+<span id="cb265-2"><a href="#cb265-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_date</span>(<span class="dv">2020</span>)</span>
+<span id="cb265-3"><a href="#cb265-3"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2020-01-01&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Creating <code>POSIXct</code> object from individual components</summary></p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="#cb240-1"></a><span class="co"># Inputs should be numeric</span></span>
-<span id="cb240-2"><a href="#cb240-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
-<span id="cb240-3"><a href="#cb240-3"></a>d</span></code></pre></div>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="#cb267-1"></a><span class="co"># Inputs should be numeric</span></span>
+<span id="cb267-2"><a href="#cb267-2"></a>d &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
+<span id="cb267-3"><a href="#cb267-3"></a>d</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:59 UTC&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Creating <code>Date</code> objects from dataframe columns</summary></p>
 <p>Using the <code>p12_datetime_df</code> we created earlier, we can create <code>Date</code> objects from the various date component columns:</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="#cb242-1"></a><span class="co"># Use `make_date()` to create a `Date` object from the `yr_chr`, `mth_chr`, `day_chr` fields</span></span>
-<span id="cb242-2"><a href="#cb242-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr, yr_chr, mth_chr, day_chr) <span class="op">%&gt;%</span></span>
-<span id="cb242-3"><a href="#cb242-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date_make_date =</span> <span class="kw">make_date</span>(yr_chr, mth_chr, day_chr))</span></code></pre></div>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="#cb269-1"></a><span class="co"># Use `make_date()` to create a `Date` object from the `yr_chr`, `mth_chr`, `day_chr` fields</span></span>
+<span id="cb269-2"><a href="#cb269-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at, dt_chr, yr_chr, mth_chr, day_chr) <span class="op">%&gt;%</span></span>
+<span id="cb269-3"><a href="#cb269-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date_make_date =</span> <span class="kw">make_date</span>(yr_chr, mth_chr, day_chr))</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 6
 ##    created_at          dt_chr         yr_chr mth_chr day_chr date_make_date
 ##    &lt;dttm&gt;              &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;date&gt;        
@@ -2845,14 +2990,14 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Creating <code>POSIXct</code> objects from dataframe columns</summary></p>
 <p>Using the <code>p12_datetime_df</code> we created earlier, we can recreate the <code>created_at</code> column (class <code>POSIXct</code>) from the various date and time component columns (class <code>character</code>):</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="#cb244-1"></a><span class="co"># Use `make_datetime()` to create a `POSIXct` object from the `yr_chr`, `mth_chr`, `day_chr`, `hr_chr`, `min_chr`, `sec_chr` fields</span></span>
-<span id="cb244-2"><a href="#cb244-2"></a><span class="co"># Convert inputs to integers first</span></span>
-<span id="cb244-3"><a href="#cb244-3"></a>p12_datetime_df <span class="op">%&gt;%</span></span>
-<span id="cb244-4"><a href="#cb244-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">datetime_make_datetime =</span> <span class="kw">make_datetime</span>(</span>
-<span id="cb244-5"><a href="#cb244-5"></a>    <span class="kw">as.integer</span>(yr_chr), <span class="kw">as.integer</span>(mth_chr), <span class="kw">as.integer</span>(day_chr), </span>
-<span id="cb244-6"><a href="#cb244-6"></a>    <span class="kw">as.integer</span>(hr_chr), <span class="kw">as.integer</span>(min_chr), <span class="kw">as.integer</span>(sec_chr)</span>
-<span id="cb244-7"><a href="#cb244-7"></a>  )) <span class="op">%&gt;%</span></span>
-<span id="cb244-8"><a href="#cb244-8"></a><span class="st">  </span><span class="kw">select</span>(datetime_make_datetime, yr_chr, mth_chr, day_chr, hr_chr, min_chr, sec_chr)</span></code></pre></div>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="#cb271-1"></a><span class="co"># Use `make_datetime()` to create a `POSIXct` object from the `yr_chr`, `mth_chr`, `day_chr`, `hr_chr`, `min_chr`, `sec_chr` fields</span></span>
+<span id="cb271-2"><a href="#cb271-2"></a><span class="co"># Convert inputs to integers first</span></span>
+<span id="cb271-3"><a href="#cb271-3"></a>p12_datetime_df <span class="op">%&gt;%</span></span>
+<span id="cb271-4"><a href="#cb271-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">datetime_make_datetime =</span> <span class="kw">make_datetime</span>(</span>
+<span id="cb271-5"><a href="#cb271-5"></a>    <span class="kw">as.integer</span>(yr_chr), <span class="kw">as.integer</span>(mth_chr), <span class="kw">as.integer</span>(day_chr), </span>
+<span id="cb271-6"><a href="#cb271-6"></a>    <span class="kw">as.integer</span>(hr_chr), <span class="kw">as.integer</span>(min_chr), <span class="kw">as.integer</span>(sec_chr)</span>
+<span id="cb271-7"><a href="#cb271-7"></a>  )) <span class="op">%&gt;%</span></span>
+<span id="cb271-8"><a href="#cb271-8"></a><span class="st">  </span><span class="kw">select</span>(datetime_make_datetime, yr_chr, mth_chr, day_chr, hr_chr, min_chr, sec_chr)</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 7
 ##    datetime_make_datetime yr_chr mth_chr day_chr hr_chr min_chr sec_chr
 ##    &lt;dttm&gt;                 &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  
@@ -2901,61 +3046,61 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <br>
 <details>
 <p><summary><strong>Example</strong>: Getting date/time components</summary></p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="#cb246-1"></a><span class="co"># Create datetime for New Year&#39;s Eve</span></span>
-<span id="cb246-2"><a href="#cb246-2"></a>dt &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
-<span id="cb246-3"><a href="#cb246-3"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="#cb273-1"></a><span class="co"># Create datetime for New Year&#39;s Eve</span></span>
+<span id="cb273-2"><a href="#cb273-2"></a>dt &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
+<span id="cb273-3"><a href="#cb273-3"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:59 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="#cb248-1"></a><span class="co"># Get date</span></span>
-<span id="cb248-2"><a href="#cb248-2"></a><span class="kw">date</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="#cb275-1"></a><span class="co"># Get date</span></span>
+<span id="cb275-2"><a href="#cb275-2"></a><span class="kw">date</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31&quot;</code></pre>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="#cb250-1"></a><span class="co"># Get hour</span></span>
-<span id="cb250-2"><a href="#cb250-2"></a><span class="kw">hour</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="#cb277-1"></a><span class="co"># Get hour</span></span>
+<span id="cb277-2"><a href="#cb277-2"></a><span class="kw">hour</span>(dt)</span></code></pre></div>
 <pre><code>## [1] 23</code></pre>
-<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="#cb252-1"></a><span class="co"># Is it pm?</span></span>
-<span id="cb252-2"><a href="#cb252-2"></a><span class="kw">pm</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="#cb279-1"></a><span class="co"># Is it pm?</span></span>
+<span id="cb279-2"><a href="#cb279-2"></a><span class="kw">pm</span>(dt)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="#cb254-1"></a><span class="co"># Day of the week (3 = Tuesday)</span></span>
-<span id="cb254-2"><a href="#cb254-2"></a><span class="kw">wday</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="#cb281-1"></a><span class="co"># Day of the week (3 = Tuesday)</span></span>
+<span id="cb281-2"><a href="#cb281-2"></a><span class="kw">wday</span>(dt)</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Setting date/time components</summary></p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="#cb256-1"></a><span class="co"># Create datetime for New Year&#39;s Eve</span></span>
-<span id="cb256-2"><a href="#cb256-2"></a>dt &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
-<span id="cb256-3"><a href="#cb256-3"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="#cb283-1"></a><span class="co"># Create datetime for New Year&#39;s Eve</span></span>
+<span id="cb283-2"><a href="#cb283-2"></a>dt &lt;-<span class="st"> </span><span class="kw">make_datetime</span>(<span class="dv">2019</span>, <span class="dv">12</span>, <span class="dv">31</span>, <span class="dv">23</span>, <span class="dv">59</span>, <span class="dv">59</span>)</span>
+<span id="cb283-3"><a href="#cb283-3"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-31 23:59:59 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="#cb258-1"></a><span class="co"># Get week of year</span></span>
-<span id="cb258-2"><a href="#cb258-2"></a><span class="kw">week</span>(dt)</span></code></pre></div>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="#cb285-1"></a><span class="co"># Get week of year</span></span>
+<span id="cb285-2"><a href="#cb285-2"></a><span class="kw">week</span>(dt)</span></code></pre></div>
 <pre><code>## [1] 53</code></pre>
-<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="#cb260-1"></a><span class="co"># Set week of year (move back 1 week)</span></span>
-<span id="cb260-2"><a href="#cb260-2"></a><span class="kw">week</span>(dt) &lt;-<span class="st"> </span><span class="kw">week</span>(dt) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb260-3"><a href="#cb260-3"></a></span>
-<span id="cb260-4"><a href="#cb260-4"></a><span class="co"># Date now moved from New Year&#39;s Eve to Christmas Eve</span></span>
-<span id="cb260-5"><a href="#cb260-5"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="#cb287-1"></a><span class="co"># Set week of year (move back 1 week)</span></span>
+<span id="cb287-2"><a href="#cb287-2"></a><span class="kw">week</span>(dt) &lt;-<span class="st"> </span><span class="kw">week</span>(dt) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb287-3"><a href="#cb287-3"></a></span>
+<span id="cb287-4"><a href="#cb287-4"></a><span class="co"># Date now moved from New Year&#39;s Eve to Christmas Eve</span></span>
+<span id="cb287-5"><a href="#cb287-5"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-24 23:59:59 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="#cb262-1"></a><span class="co"># Set day to Christmas Day</span></span>
-<span id="cb262-2"><a href="#cb262-2"></a><span class="kw">day</span>(dt) &lt;-<span class="st"> </span><span class="dv">25</span></span>
-<span id="cb262-3"><a href="#cb262-3"></a></span>
-<span id="cb262-4"><a href="#cb262-4"></a><span class="co"># Date now moved from Christmas Eve to Christmas Day</span></span>
-<span id="cb262-5"><a href="#cb262-5"></a>dt</span></code></pre></div>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="#cb289-1"></a><span class="co"># Set day to Christmas Day</span></span>
+<span id="cb289-2"><a href="#cb289-2"></a><span class="kw">day</span>(dt) &lt;-<span class="st"> </span><span class="dv">25</span></span>
+<span id="cb289-3"><a href="#cb289-3"></a></span>
+<span id="cb289-4"><a href="#cb289-4"></a><span class="co"># Date now moved from Christmas Eve to Christmas Day</span></span>
+<span id="cb289-5"><a href="#cb289-5"></a>dt</span></code></pre></div>
 <pre><code>## [1] &quot;2019-12-25 23:59:59 UTC&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Getting date/time components from dataframe column</summary></p>
 <p>Using the <code>p12_datetime_df</code> we created earlier, we can isolate the various date/time components from the <code>POSIXct</code> object in the <code>created_at</code> column:</p>
-<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="#cb264-1"></a><span class="co"># The extracted date/time components will be of numeric type</span></span>
-<span id="cb264-2"><a href="#cb264-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at) <span class="op">%&gt;%</span></span>
-<span id="cb264-3"><a href="#cb264-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb264-4"><a href="#cb264-4"></a>    <span class="dt">yr_num =</span> <span class="kw">year</span>(created_at),</span>
-<span id="cb264-5"><a href="#cb264-5"></a>    <span class="dt">mth_num =</span> <span class="kw">month</span>(created_at),</span>
-<span id="cb264-6"><a href="#cb264-6"></a>    <span class="dt">day_num =</span> <span class="kw">day</span>(created_at),</span>
-<span id="cb264-7"><a href="#cb264-7"></a>    <span class="dt">hr_num =</span> <span class="kw">hour</span>(created_at),</span>
-<span id="cb264-8"><a href="#cb264-8"></a>    <span class="dt">min_num =</span> <span class="kw">minute</span>(created_at),</span>
-<span id="cb264-9"><a href="#cb264-9"></a>    <span class="dt">sec_num =</span> <span class="kw">second</span>(created_at),</span>
-<span id="cb264-10"><a href="#cb264-10"></a>    <span class="dt">ampm =</span> <span class="kw">ifelse</span>(<span class="kw">am</span>(created_at), <span class="st">&#39;AM&#39;</span>, <span class="st">&#39;PM&#39;</span>)  <span class="co"># am()/pm() returns TRUE/FALSE</span></span>
-<span id="cb264-11"><a href="#cb264-11"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="#cb291-1"></a><span class="co"># The extracted date/time components will be of numeric type</span></span>
+<span id="cb291-2"><a href="#cb291-2"></a>p12_datetime_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(created_at) <span class="op">%&gt;%</span></span>
+<span id="cb291-3"><a href="#cb291-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb291-4"><a href="#cb291-4"></a>    <span class="dt">yr_num =</span> <span class="kw">year</span>(created_at),</span>
+<span id="cb291-5"><a href="#cb291-5"></a>    <span class="dt">mth_num =</span> <span class="kw">month</span>(created_at),</span>
+<span id="cb291-6"><a href="#cb291-6"></a>    <span class="dt">day_num =</span> <span class="kw">day</span>(created_at),</span>
+<span id="cb291-7"><a href="#cb291-7"></a>    <span class="dt">hr_num =</span> <span class="kw">hour</span>(created_at),</span>
+<span id="cb291-8"><a href="#cb291-8"></a>    <span class="dt">min_num =</span> <span class="kw">minute</span>(created_at),</span>
+<span id="cb291-9"><a href="#cb291-9"></a>    <span class="dt">sec_num =</span> <span class="kw">second</span>(created_at),</span>
+<span id="cb291-10"><a href="#cb291-10"></a>    <span class="dt">ampm =</span> <span class="kw">ifelse</span>(<span class="kw">am</span>(created_at), <span class="st">&#39;AM&#39;</span>, <span class="st">&#39;PM&#39;</span>)  <span class="co"># am()/pm() returns TRUE/FALSE</span></span>
+<span id="cb291-11"><a href="#cb291-11"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 328 x 8
 ##    created_at          yr_num mth_num day_num hr_num min_num sec_num ampm 
 ##    &lt;dttm&gt;               &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;  &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;
@@ -3007,7 +3152,7 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <li>Create periods using functions whose name is the time unit pluralized (e.g., <code>years()</code>, <code>months()</code>, <code>weeks()</code>, <code>days()</code>, <code>hours()</code>, <code>minutes()</code>, <code>seconds()</code>)
 <ul>
 <li><p>Example: <code>days(1)</code> creates a period of 1 day - it does not matter if this day happened to have an extra hour due to daylight savings ending, since periods do not have a physical length</p>
-<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="#cb266-1"></a><span class="kw">days</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="#cb293-1"></a><span class="kw">days</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;1d 0H 0M 0S&quot;</code></pre></li>
 </ul></li>
 <li>You can add and subtract periods</li>
@@ -3019,10 +3164,10 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <li>Create durations using functions whose name is the time unit prefixed with a <code>d</code> (e.g., <code>dyears()</code>, <code>dweeks()</code>, <code>ddays()</code>, <code>dhours()</code>, <code>dminutes()</code>, <code>dseconds()</code>)
 <ul>
 <li><p>Example: <code>ddays(1)</code> creates a duration of <code>86400s</code>, using the standard conversion of <code>60</code> seconds in an minute, <code>60</code> minutes in an hour, and <code>24</code> hours in a day:</p>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="#cb268-1"></a><span class="kw">ddays</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="#cb295-1"></a><span class="kw">ddays</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;86400s (~1 days)&quot;</code></pre>
 <p>Notice that the output says this is equivalent to <em>approximately</em> <code>1</code> day, since it acknowledges that not all days have <code>24</code> hours. In the case of daylight savings, one particular day may have <code>25</code> hours, so the duration of that day should be represented as:</p>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="#cb270-1"></a><span class="kw">ddays</span>(<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="#cb297-1"></a><span class="kw">ddays</span>(<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;90000s (~1.04 days)&quot;</code></pre></li>
 </ul></li>
 <li>You can add and subract durations</li>
@@ -3032,19 +3177,19 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <br>
 <details>
 <p><summary><strong>Example</strong>: Working with interval</summary></p>
-<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="#cb272-1"></a><span class="co"># Use `Sys.timezone()` to get timezone for your location (time is midnight by default)</span></span>
-<span id="cb272-2"><a href="#cb272-2"></a>scorpio_start &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2019-10-23&quot;</span>, <span class="dt">tz =</span> <span class="kw">Sys.timezone</span>())</span>
-<span id="cb272-3"><a href="#cb272-3"></a>scorpio_end &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2019-11-22&quot;</span>, <span class="dt">tz =</span> <span class="kw">Sys.timezone</span>())</span>
-<span id="cb272-4"><a href="#cb272-4"></a></span>
-<span id="cb272-5"><a href="#cb272-5"></a><span class="co"># These datetime objects have class `POSIXct`</span></span>
-<span id="cb272-6"><a href="#cb272-6"></a><span class="kw">class</span>(scorpio_start)</span></code></pre></div>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="#cb299-1"></a><span class="co"># Use `Sys.timezone()` to get timezone for your location (time is midnight by default)</span></span>
+<span id="cb299-2"><a href="#cb299-2"></a>scorpio_start &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2019-10-23&quot;</span>, <span class="dt">tz =</span> <span class="kw">Sys.timezone</span>())</span>
+<span id="cb299-3"><a href="#cb299-3"></a>scorpio_end &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2019-11-22&quot;</span>, <span class="dt">tz =</span> <span class="kw">Sys.timezone</span>())</span>
+<span id="cb299-4"><a href="#cb299-4"></a></span>
+<span id="cb299-5"><a href="#cb299-5"></a><span class="co"># These datetime objects have class `POSIXct`</span></span>
+<span id="cb299-6"><a href="#cb299-6"></a><span class="kw">class</span>(scorpio_start)</span></code></pre></div>
 <pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
-<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="#cb274-1"></a><span class="co"># Create interval for the datetimes</span></span>
-<span id="cb274-2"><a href="#cb274-2"></a>scorpio_interval &lt;-<span class="st"> </span>scorpio_start <span class="op">%--%</span><span class="st"> </span>scorpio_end  <span class="co"># or `interval(scorpio_start, scorpio_end)`</span></span>
-<span id="cb274-3"><a href="#cb274-3"></a>scorpio_interval</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="#cb301-1"></a><span class="co"># Create interval for the datetimes</span></span>
+<span id="cb301-2"><a href="#cb301-2"></a>scorpio_interval &lt;-<span class="st"> </span>scorpio_start <span class="op">%--%</span><span class="st"> </span>scorpio_end  <span class="co"># or `interval(scorpio_start, scorpio_end)`</span></span>
+<span id="cb301-3"><a href="#cb301-3"></a>scorpio_interval</span></code></pre></div>
 <pre><code>## [1] 2019-10-23 PDT--2019-11-22 PST</code></pre>
-<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="#cb276-1"></a><span class="co"># The object has class `Interval`</span></span>
-<span id="cb276-2"><a href="#cb276-2"></a><span class="kw">class</span>(scorpio_interval)</span></code></pre></div>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="#cb303-1"></a><span class="co"># The object has class `Interval`</span></span>
+<span id="cb303-2"><a href="#cb303-2"></a><span class="kw">class</span>(scorpio_interval)</span></code></pre></div>
 <pre><code>## [1] &quot;Interval&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;lubridate&quot;</code></pre>
@@ -3053,53 +3198,53 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <details>
 <p><summary><strong>Example</strong>: Working with period</summary></p>
 <p>If we use <code>as.period()</code> to get the period of <code>scorpio_interval</code>, we see that it is a period of <code>30</code> days. We do not worry about the extra <code>1</code> hour gained due to daylight savings ending:</p>
-<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="#cb278-1"></a><span class="co"># Period is 30 days</span></span>
-<span id="cb278-2"><a href="#cb278-2"></a>scorpio_period &lt;-<span class="st"> </span><span class="kw">as.period</span>(scorpio_interval)</span>
-<span id="cb278-3"><a href="#cb278-3"></a>scorpio_period</span></code></pre></div>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="#cb305-1"></a><span class="co"># Period is 30 days</span></span>
+<span id="cb305-2"><a href="#cb305-2"></a>scorpio_period &lt;-<span class="st"> </span><span class="kw">as.period</span>(scorpio_interval)</span>
+<span id="cb305-3"><a href="#cb305-3"></a>scorpio_period</span></code></pre></div>
 <pre><code>## [1] &quot;30d 0H 0M 0S&quot;</code></pre>
-<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="#cb280-1"></a><span class="co"># The object has class `Period`</span></span>
-<span id="cb280-2"><a href="#cb280-2"></a><span class="kw">class</span>(scorpio_period)</span></code></pre></div>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="#cb307-1"></a><span class="co"># The object has class `Period`</span></span>
+<span id="cb307-2"><a href="#cb307-2"></a><span class="kw">class</span>(scorpio_period)</span></code></pre></div>
 <pre><code>## [1] &quot;Period&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;lubridate&quot;</code></pre>
 <p><br> Because periods work with “human” times like days, it is more intuitive. For example, if we add a period of <code>30</code> days to the <code>scorpio_start</code> datetime object, we get the expected end datetime that is <code>30</code> days later:</p>
-<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="#cb282-1"></a><span class="co"># Start datetime for Scorpio birthdays (time is midnight)</span></span>
-<span id="cb282-2"><a href="#cb282-2"></a>scorpio_start</span></code></pre></div>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="#cb309-1"></a><span class="co"># Start datetime for Scorpio birthdays (time is midnight)</span></span>
+<span id="cb309-2"><a href="#cb309-2"></a>scorpio_start</span></code></pre></div>
 <pre><code>## [1] &quot;2019-10-23 PDT&quot;</code></pre>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="#cb284-1"></a><span class="co"># After adding 30 day period, we get the expected end datetime (time is midnight)</span></span>
-<span id="cb284-2"><a href="#cb284-2"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">days</span>(<span class="dv">30</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="#cb311-1"></a><span class="co"># After adding 30 day period, we get the expected end datetime (time is midnight)</span></span>
+<span id="cb311-2"><a href="#cb311-2"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">days</span>(<span class="dv">30</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;2019-11-22 PST&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Working with duration</summary></p>
 <p>If we use <code>as.duration()</code> to get the duration of <code>scorpio_interval</code>, we see that it is a duration of <code>2595600</code> seconds. It takes into account the extra <code>1</code> hour gained due to daylight savings ending:</p>
-<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="#cb286-1"></a><span class="co"># Duration is 2595600 seconds, which is equivalent to 30 24-hr days + 1 additional hour</span></span>
-<span id="cb286-2"><a href="#cb286-2"></a>scorpio_duration &lt;-<span class="st"> </span><span class="kw">as.duration</span>(scorpio_interval)</span>
-<span id="cb286-3"><a href="#cb286-3"></a>scorpio_duration</span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="#cb313-1"></a><span class="co"># Duration is 2595600 seconds, which is equivalent to 30 24-hr days + 1 additional hour</span></span>
+<span id="cb313-2"><a href="#cb313-2"></a>scorpio_duration &lt;-<span class="st"> </span><span class="kw">as.duration</span>(scorpio_interval)</span>
+<span id="cb313-3"><a href="#cb313-3"></a>scorpio_duration</span></code></pre></div>
 <pre><code>## [1] &quot;2595600s (~4.29 weeks)&quot;</code></pre>
-<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="#cb288-1"></a><span class="co"># The object has class `Duration`</span></span>
-<span id="cb288-2"><a href="#cb288-2"></a><span class="kw">class</span>(scorpio_duration)</span></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="#cb315-1"></a><span class="co"># The object has class `Duration`</span></span>
+<span id="cb315-2"><a href="#cb315-2"></a><span class="kw">class</span>(scorpio_duration)</span></code></pre></div>
 <pre><code>## [1] &quot;Duration&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;lubridate&quot;</code></pre>
-<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="#cb290-1"></a><span class="co"># Using the standard 60s/min, 60min/hr, 24hr/day conversion,</span></span>
-<span id="cb290-2"><a href="#cb290-2"></a><span class="co"># confirm duration is slightly more than 30 &quot;standard&quot; (ie. 24-hr) days</span></span>
-<span id="cb290-3"><a href="#cb290-3"></a><span class="dv">2595600</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">60</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span> <span class="op">*</span><span class="st"> </span><span class="dv">24</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="#cb317-1"></a><span class="co"># Using the standard 60s/min, 60min/hr, 24hr/day conversion,</span></span>
+<span id="cb317-2"><a href="#cb317-2"></a><span class="co"># confirm duration is slightly more than 30 &quot;standard&quot; (ie. 24-hr) days</span></span>
+<span id="cb317-3"><a href="#cb317-3"></a><span class="dv">2595600</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">60</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span> <span class="op">*</span><span class="st"> </span><span class="dv">24</span>)</span></code></pre></div>
 <pre><code>## [1] 30.04167</code></pre>
-<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="#cb292-1"></a><span class="co"># Specifically, it is 30 days + 1 hour, if we define a day to have 24 hours</span></span>
-<span id="cb292-2"><a href="#cb292-2"></a><span class="kw">seconds_to_period</span>(scorpio_duration)</span></code></pre></div>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="#cb319-1"></a><span class="co"># Specifically, it is 30 days + 1 hour, if we define a day to have 24 hours</span></span>
+<span id="cb319-2"><a href="#cb319-2"></a><span class="kw">seconds_to_period</span>(scorpio_duration)</span></code></pre></div>
 <pre><code>## [1] &quot;30d 1H 0M 0S&quot;</code></pre>
 <p><br> Because durations work with physical time, when we add a duration of <code>30</code> days to the <code>scorpio_start</code> datetime object, we do not get the end datetime we’d expect:</p>
-<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="#cb294-1"></a><span class="co"># Start datetime for Scorpio birthdays (time is midnight)</span></span>
-<span id="cb294-2"><a href="#cb294-2"></a>scorpio_start</span></code></pre></div>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="#cb321-1"></a><span class="co"># Start datetime for Scorpio birthdays (time is midnight)</span></span>
+<span id="cb321-2"><a href="#cb321-2"></a>scorpio_start</span></code></pre></div>
 <pre><code>## [1] &quot;2019-10-23 PDT&quot;</code></pre>
-<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="#cb296-1"></a><span class="co"># After adding 30 day duration, we do not get the expected end datetime</span></span>
-<span id="cb296-2"><a href="#cb296-2"></a><span class="co"># `ddays(30)` adds the number of seconds in 30 standard 24-hr days, but one of the days has 25 hours</span></span>
-<span id="cb296-3"><a href="#cb296-3"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">ddays</span>(<span class="dv">30</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="#cb323-1"></a><span class="co"># After adding 30 day duration, we do not get the expected end datetime</span></span>
+<span id="cb323-2"><a href="#cb323-2"></a><span class="co"># `ddays(30)` adds the number of seconds in 30 standard 24-hr days, but one of the days has 25 hours</span></span>
+<span id="cb323-3"><a href="#cb323-3"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">ddays</span>(<span class="dv">30</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;2019-11-21 23:00:00 PST&quot;</code></pre>
-<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="#cb298-1"></a><span class="co"># We need to add the additional 1 hour of physical time that elapsed during this time span</span></span>
-<span id="cb298-2"><a href="#cb298-2"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">ddays</span>(<span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="#cb325-1"></a><span class="co"># We need to add the additional 1 hour of physical time that elapsed during this time span</span></span>
+<span id="cb325-2"><a href="#cb325-2"></a>scorpio_start <span class="op">+</span><span class="st"> </span><span class="kw">ddays</span>(<span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;2019-11-22 PST&quot;</code></pre>
 </details>
 <p><br></p>
@@ -3114,20 +3259,24 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <p>“A sequence in a string that starts with a <code>\</code> is called an <strong>escape sequence</strong> and allows us to include special characters in our strings.”</p>
 </blockquote>
 <p><em>Credit: <a href="https://campus.datacamp.com/courses/string-manipulation-with-stringr-in-r/string-basics?ex=4">Escape sequences</a> from DataCamp</em></p>
+<p><br> <strong>Special characters</strong> are characters that will not be interpreted literally.</p>
 <p>Common <strong>special characters</strong>:</p>
+<ul>
+<li><code>\n</code>: newline</li>
+<li><code>\t</code>: tab</li>
+<li><code>\</code>: used for escaping purposes
 <ul>
 <li><code>\&#39;</code>: literal single quote</li>
 <li><code>\&quot;</code>: literal double quote</li>
 <li><code>\\</code>: literal backslash</li>
-<li><code>\n</code>: newline</li>
-<li><code>\t</code>: tab</li>
+</ul></li>
 </ul>
 <p>These characters followed by a backslash <code>\</code> take on a new meaning. The <code>n</code> by itself is just an <code>n</code>. When you add a backslash to the <code>\n</code> you are escaping it and making it a special character where <code>\n</code> now represents a newline.</p>
 <p><br> <strong>The <code>writeLines()</code> function</strong>:</p>
-<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="#cb300-1"></a>?writeLines</span>
-<span id="cb300-2"><a href="#cb300-2"></a></span>
-<span id="cb300-3"><a href="#cb300-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
-<span id="cb300-4"><a href="#cb300-4"></a><span class="kw">writeLines</span>(text, <span class="dt">con =</span> <span class="kw">stdout</span>(), <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="dt">useBytes =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="#cb327-1"></a>?writeLines</span>
+<span id="cb327-2"><a href="#cb327-2"></a></span>
+<span id="cb327-3"><a href="#cb327-3"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb327-4"><a href="#cb327-4"></a><span class="kw">writeLines</span>(text, <span class="dt">con =</span> <span class="kw">stdout</span>(), <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="dt">useBytes =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <ul>
 <li>“<code>writeLines()</code> displays quotes and backslashes as they would be read, rather than as R stores them.” (From <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/writeLines">writeLines</a> documentation)</li>
 <li>When we include <strong>escape sequences</strong> in the string, it is helpful to use <code>writeLines()</code> to see how the escaped string looks</li>
@@ -3136,60 +3285,60 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <br>
 <details>
 <p><summary><strong>Example</strong>: Escaping single quotes</summary></p>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="#cb301-1"></a>my_string &lt;-<span class="st"> &#39;Escaping single quote </span><span class="ch">\&#39;</span><span class="st"> within single quotes&#39;</span></span>
-<span id="cb301-2"><a href="#cb301-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="#cb328-1"></a>my_string &lt;-<span class="st"> &#39;Escaping single quote </span><span class="ch">\&#39;</span><span class="st"> within single quotes&#39;</span></span>
+<span id="cb328-2"><a href="#cb328-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;Escaping single quote &#39; within single quotes&quot;</code></pre>
 <p>Alternatively, we could’ve just created the string using double quotes:</p>
-<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="#cb303-1"></a>my_string &lt;-<span class="st"> &quot;Single quote &#39; within double quotes does not need escaping&quot;</span></span>
-<span id="cb303-2"><a href="#cb303-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="#cb330-1"></a>my_string &lt;-<span class="st"> &quot;Single quote &#39; within double quotes does not need escaping&quot;</span></span>
+<span id="cb330-2"><a href="#cb330-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;Single quote &#39; within double quotes does not need escaping&quot;</code></pre>
 <p>Using <code>writeLines()</code> shows us only the content of the string without the outer pair of double quotes that R uses to store strings:</p>
-<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="#cb305-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="#cb332-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
 <pre><code>## Single quote &#39; within double quotes does not need escaping</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Escaping double quotes</summary></p>
-<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="#cb307-1"></a>my_string &lt;-<span class="st"> &quot;Escaping double quote </span><span class="ch">\&quot;</span><span class="st"> within double quotes&quot;</span></span>
-<span id="cb307-2"><a href="#cb307-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="#cb334-1"></a>my_string &lt;-<span class="st"> &quot;Escaping double quote </span><span class="ch">\&quot;</span><span class="st"> within double quotes&quot;</span></span>
+<span id="cb334-2"><a href="#cb334-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;Escaping double quote \&quot; within double quotes&quot;</code></pre>
 <p>Alternatively, we could’ve just created the string using single quotes:</p>
-<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="#cb309-1"></a>my_string &lt;-<span class="st"> &#39;Double quote &quot; within single quotes does not need escaping&#39;</span></span>
-<span id="cb309-2"><a href="#cb309-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="#cb336-1"></a>my_string &lt;-<span class="st"> &#39;Double quote &quot; within single quotes does not need escaping&#39;</span></span>
+<span id="cb336-2"><a href="#cb336-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;Double quote \&quot; within single quotes does not need escaping&quot;</code></pre>
 <p>Notice how the backslash still showed up in the above output to escape our double quote from the outer pair of double quotes that R uses to store the string. This is no longer an issue if we use <code>writeLines()</code> to only show the string content:</p>
-<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="#cb311-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="#cb338-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
 <pre><code>## Double quote &quot; within single quotes does not need escaping</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Escaping double quotes within double quotes </summary></p>
-<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="#cb313-1"></a>my_string &lt;-<span class="st"> &quot;I called my mom and she said </span><span class="ch">\&quot;</span><span class="st">Echale ganas!</span><span class="ch">\&quot;</span><span class="st">&quot;</span></span>
-<span id="cb313-2"><a href="#cb313-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1"></a>my_string &lt;-<span class="st"> &quot;I called my mom and she said </span><span class="ch">\&quot;</span><span class="st">Echale ganas!</span><span class="ch">\&quot;</span><span class="st">&quot;</span></span>
+<span id="cb340-2"><a href="#cb340-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;I called my mom and she said \&quot;Echale ganas!\&quot;&quot;</code></pre>
 <p>Using <code>writeLines()</code> shows us only the content of the string without the backslashes:</p>
-<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="#cb315-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="#cb342-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
 <pre><code>## I called my mom and she said &quot;Echale ganas!&quot;</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Escaping backslashes</summary></p>
 <p>To include a literal backslash in the string, we need to escape the backslash with another backslash:</p>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="#cb317-1"></a>my_string &lt;-<span class="st"> &quot;The executable is located in C:</span><span class="ch">\\</span><span class="st">Program Files</span><span class="ch">\\</span><span class="st">Git</span><span class="ch">\\</span><span class="st">bin&quot;</span></span>
-<span id="cb317-2"><a href="#cb317-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="#cb344-1"></a>my_string &lt;-<span class="st"> &quot;The executable is located in C:</span><span class="ch">\\</span><span class="st">Program Files</span><span class="ch">\\</span><span class="st">Git</span><span class="ch">\\</span><span class="st">bin&quot;</span></span>
+<span id="cb344-2"><a href="#cb344-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;The executable is located in C:\\Program Files\\Git\\bin&quot;</code></pre>
 <p>Use <code>writeLines()</code> to see the escaped string:</p>
-<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="#cb319-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="#cb346-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
 <pre><code>## The executable is located in C:\Program Files\Git\bin</code></pre>
 </details>
 <br>
 <details>
 <p><summary><strong>Example</strong>: Other special characters</summary></p>
-<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="#cb321-1"></a>my_string &lt;-<span class="st"> &quot;A</span><span class="ch">\t</span><span class="st">B</span><span class="ch">\n</span><span class="st">C</span><span class="ch">\t</span><span class="st">D&quot;</span></span>
-<span id="cb321-2"><a href="#cb321-2"></a>my_string</span></code></pre></div>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="#cb348-1"></a>my_string &lt;-<span class="st"> &quot;A</span><span class="ch">\t</span><span class="st">B</span><span class="ch">\n</span><span class="st">C</span><span class="ch">\t</span><span class="st">D&quot;</span></span>
+<span id="cb348-2"><a href="#cb348-2"></a>my_string</span></code></pre></div>
 <pre><code>## [1] &quot;A\tB\nC\tD&quot;</code></pre>
 <p>Use <code>writeLines()</code> to see the escaped string:</p>
-<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="#cb323-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="#cb350-1"></a><span class="kw">writeLines</span>(my_string)</span></code></pre></div>
 <pre><code>## A    B
 ## C    D</code></pre>
 </details>
@@ -3200,15 +3349,15 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <ul>
 <li>Let’s start by grabbing observations 1-3 from the <code>text</code> column.</li>
 </ul>
-<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="#cb325-1"></a><span class="co">#Twitter example of \n newline special characters</span></span>
-<span id="cb325-2"><a href="#cb325-2"></a>p12_df<span class="op">$</span>text[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="#cb352-1"></a><span class="co">#Twitter example of \n newline special characters</span></span>
+<span id="cb352-2"><a href="#cb352-2"></a>p12_df<span class="op">$</span>text[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] &quot;Big Dez is headed to Indy!\n\n#GoCougs | #NFLDraft2020 | @dadpat7 | @Colts | #NFLCougs https://t.co/NdGsvXnij7&quot;                                                                                                                                                                                  
 ## [2] &quot;Cougar Cheese. That&#39;s it. That&#39;s the tweet. \U0001f9c0#WSU #GoCougs https://t.co/0OWGvQlRZs&quot;                                                                                                                                                                                                     
 ## [3] &quot;Darien McLaughlin &#39;19, and her dog, Yuki, went on a #Pullman distance walk this weekend. We will let you judge who was leading the way.\U0001f6b6‍♀️\U0001f415\n\nTweet a pic of how you are social distancing w/ the hashtag #CougsContain &amp;amp; tag @WSUPullman #GoCougs https://t.co/EltXDy1tPt&quot;</code></pre>
 <ul>
 <li>Using <code>writeLines()</code> we can see the contents of the strings as they would be read, rather than as R stores them.</li>
 </ul>
-<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="#cb327-1"></a><span class="kw">writeLines</span>(p12_df<span class="op">$</span>text[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="#cb354-1"></a><span class="kw">writeLines</span>(p12_df<span class="op">$</span>text[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>])</span></code></pre></div>
 <pre><code>## Big Dez is headed to Indy!
 ## 
 ## #GoCougs | #NFLDraft2020 | @dadpat7 | @Colts | #NFLCougs https://t.co/NdGsvXnij7
@@ -3225,8 +3374,8 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <li>In the example below, our string includes special characters <code>\&quot;</code> and <code>\n</code> to escape the double quotes and the newline character.</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="#cb329-1"></a><span class="co">#Twitter example of \&quot; double quotes special characters</span></span>
-<span id="cb329-2"><a href="#cb329-2"></a>p12_df<span class="op">$</span>text[<span class="dv">24</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="#cb356-1"></a><span class="co">#Twitter example of \&quot; double quotes special characters</span></span>
+<span id="cb356-2"><a href="#cb356-2"></a>p12_df<span class="op">$</span>text[<span class="dv">24</span>]</span></code></pre></div>
 <pre><code>## [1] &quot;\&quot;I really am glad that inside Engineering Student Services, I’ve been able to connect with my ESS advisor and professional development advisors there.\&quot;\n-Alexandro Garcia, Civil &amp;amp; Environmental Engineering, 3rd year\n#imaberkeleyengineer #iamberkeley #voicesofberkeleyengineering https://t.co/ToVEynIUWH&quot;</code></pre>
 <ul>
 <li><p>Using <code>writeLines()</code> we can see the contents of the strings as they would be read, rather than as R stores them.</p>
@@ -3234,7 +3383,7 @@ str_c(s1,s2, sep = "~", collapse = NULL)
 <li>We no longer see the escaped characters <code>\&quot;</code> or <code>\n</code></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="#cb331-1"></a><span class="kw">writeLines</span>(p12_df<span class="op">$</span>text[<span class="dv">24</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="#cb358-1"></a><span class="kw">writeLines</span>(p12_df<span class="op">$</span>text[<span class="dv">24</span>])</span></code></pre></div>
 <pre><code>## &quot;I really am glad that inside Engineering Student Services, I’ve been able to connect with my ESS advisor and professional development advisors there.&quot;
 ## -Alexandro Garcia, Civil &amp;amp; Environmental Engineering, 3rd year
 ## #imaberkeleyengineer #iamberkeley #voicesofberkeleyengineering https://t.co/ToVEynIUWH</code></pre>

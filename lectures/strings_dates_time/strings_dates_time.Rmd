@@ -349,6 +349,75 @@ str(df)
 
 </details>
 
+<br>
+<details><summary>**Example**: Practical example of converting type</summary>
+
+When working with data, it may be helpful to label values for certain variables. Data files often come with a codebook that defines how values are coded. Let's look at an example of labeling values and how converting data type may come into play.
+
+We'll look at the `FIPS` variable from the [Integrated Postsecondary Education Data System (IPEDS)](https://nces.ed.gov/ipeds/use-the-data) data. The [state FIPS code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code#FIPS_state_codes) is a numeric code that identifies a state. For example, `1` is the FIPS code for `Alabama`, `2` is the FIPS code for `Alaska`, etc. We'll want to label each numeric value in the `FIPS` column with the corresponding state name.
+
+```{r}
+# Library for labeling variables and values in a dataframe
+library(labelled)
+
+# Read in IPEDS data and codebook
+ipeds_df <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+ipeds_values <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+
+# The codebook defines how variables are coded, such as STABBR, FIPS, and other variables
+head(ipeds_values)
+
+# Filter codebook for just the values for the FIPS variable
+fips_values <- ipeds_values %>% filter(varname == 'FIPS') %>% select(varname, codevalue, valuelabel)
+head(fips_values)
+```
+
+<br>
+When we read in the data from the CSV files, R automatically tries to determine the data type of each variable. As seen below, the `FIPS` column from the `ipeds_df` that we want to label is of type `integer`, while the `codevalue` column from the codebook is of type `character` (since not all values are numeric):
+
+```{r}
+# Type of `FIPS` column
+str(ipeds_df$FIPS)
+
+# Type of `codevalue` column
+str(fips_values$codevalue)
+```
+
+<br>
+This discrepancy becomes a problem when we try to label the value using the `labelled` library:
+
+```{r, eval=F}
+# Error: `x` and `labels` must be same type
+val_label(ipeds_df$FIPS, fips_values[1, 'codevalue']) <- fips_values[1, 'valuelabel']
+```
+
+<br>
+To resolve this, we can use `as.integer()` to convert the `codevalue` from `character` type to `integer` before trying to label the value:
+
+```{r}
+# This now works
+val_label(ipeds_df$FIPS, as.integer(fips_values[1, 'codevalue'])) <- fips_values[1, 'valuelabel']
+
+# Check value labels
+val_labels(ipeds_df$FIPS)
+
+# We can use as.integer() to convert the entire vector (ie. codevalue column) to integer
+fips_values$codevalue <- as.integer(fips_values$codevalue)
+
+# Type of `codevalue` column
+str(fips_values$codevalue)
+
+# Use loop to label the rest of the values
+for (i in 1:nrow(fips_values)) {
+  val_label(ipeds_df$FIPS, fips_values[i, 'codevalue']) <- fips_values[i, 'valuelabel']
+}
+
+# Check value labels
+val_labels(ipeds_df$FIPS)
+```
+
+</details>
+
 # String basics
 
 What are **strings**?
@@ -624,18 +693,27 @@ Note that specifying the `sep` argument will also not have any effect because we
 
 ```{r}
 str_c(c("a", "b", "c"), sep = "~")
+
+# Check length: Output is the original vector of 3 elements
+str_c(c("a", "b", "c")) %>% length()
 ```
 
 As seen above, `str_c()` returns a vector by default (because the default value for the `collapse` argument is `NULL`). But we can specify a string for `collapse` in order to collapse the elements of the output vector into a single string:
 
 ```{r}
 str_c(c("a", "b", "c"), collapse = "|")
+
+# Check length: Output vector of length 3 is collapsed into a single string
+str_c(c("a", "b", "c"), collapse = "|") %>% length()
+
+# Check str_length: This gives the length of the collapsed string, which is 5 characters long
+str_c(c("a", "b", "c"), collapse = "|") %>% str_length()
 ```
 
 <br>
 **Example**: Using `str_c()` on more than one vector
 
-When we provide multiple input vectors, we can see that the vectors get concatenated element-wise:
+When we provide multiple input vectors, we can see that the vectors get concatenated element-wise (i.e., 1st element from each vector are concatenated, 2nd element from each vector are concatenated, etc):
 
 ```{r}
 str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"))
@@ -645,12 +723,18 @@ The default separator for each element-wise concatenation is an empty string (`"
 
 ```{r}
 str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~")
+
+# Check length: Output vector is same length as input vectors
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~") %>% length()
 ```
 
 Again, we can specify the `collapse` argument in order to collapse the elements of the output vector into a single string:
 
 ```{r}
 str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), collapse = "|")
+
+# Check length: Output vector of length 3 is collapsed into a single string
+str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), collapse = "|") %>% length()
 
 # Specifying both `sep` and `collapse`
 str_c(c("a", "b", "c"), c("x", "y", "z"), c("!", "?", ";"), sep = "~", collapse = "|")
@@ -663,6 +747,9 @@ We can think of a string as being a character vector of size 1. For example, pas
 
 ```{r}
 str_c("a", "b", "c")
+
+# Again, we can think of strings as being character vectors of size 1
+str_c(c("a"), c("b"), c("c"))
 ```
 
 We can use `sep` to specify how the elements are separated:
@@ -1377,13 +1464,17 @@ scorpio_start + ddays(30) + dhours(1)
 
 *Credit: [Escape sequences](https://campus.datacamp.com/courses/string-manipulation-with-stringr-in-r/string-basics?ex=4) from DataCamp*
 
+<br>
+**Special characters** are characters that will not be interpreted literally.
+
 Common **special characters**:
 
-- `\'`: literal single quote
-- `\"`: literal double quote
-- `\\`: literal backslash
 - `\n`: newline
 - `\t`: tab
+- `\`: used for escaping purposes
+  - `\'`: literal single quote
+  - `\"`: literal double quote
+  - `\\`: literal backslash
 
 These characters followed by a backslash `\` take on a new meaning. The `n` by itself is just an `n`. When you add a backslash to the `\n` you are escaping it and making it a special character where `\n` now represents a newline.
 
