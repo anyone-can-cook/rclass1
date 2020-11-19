@@ -296,7 +296,7 @@ attributes(wwlist$firstgen)
 __Accessing variable using `[]` subset operator__
 
 - `object_name["element_name"]` creates object of same type as `object_name`
-- If object is a data frame, `df_name[["var_name"]]` returns a data frame containing just the `var_name` column
+- If object is a data frame, `df_name["var_name"]` returns a data frame containing just the `var_name` column
 
 ```{r, results="hide"}
 str(wwlist["firstgen"])
@@ -642,7 +642,7 @@ Many different object classes exist in R
 
 ### Recoding variable `ethn_code` from data frame `wwlist`
 
-Let's first recode the `ethn_code` variable so that it has fewer categories:
+Let's first recode the `ethn_code` variable:
 
 ```{r, results= "hide"}
 wwlist <- wwlist %>%  
@@ -657,7 +657,7 @@ wwlist <- wwlist %>%
       "other-2 or more" = "multirace",
       "other spanish/hispanic" = "latinx",
       "puerto rican" = "latinx",
-      "white" = "white",           
+      "white" = "white"          
     )
   )
 
@@ -741,7 +741,7 @@ class(as.integer(wwlist$ethn_code_fac))
 ```
 
 
-Display underling integer values of variable `ethn_code_fac`:
+Display underlying integer values of variable `ethn_code_fac`:
 ```{r}
 wwlist %>% count(as.integer(ethn_code_fac))
 ```
@@ -1239,7 +1239,7 @@ hsls %>%
 
 ```{r}
 # variable labels
-wwlist %>% select(pop_asian_zip, pop_asian_state) %>% var_label
+wwlist %>% select(pop_asian_zip, pop_asian_state) %>% var_label()
 
 # set variable labels
 wwlist <- wwlist %>% 
@@ -1262,7 +1262,7 @@ wwlist %>% count(ethn_code)
 # value labels
 wwlist %>% select(ethn_code) %>% val_labels
 
-# set value labels to ethn_code varaible
+# set value labels to ethn_code variable
 wwlist <- wwlist %>% 
   set_value_labels(
     ethn_code = c("asian or native hawaiian or other pacific islander" = "api",
