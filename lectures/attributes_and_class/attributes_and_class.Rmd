@@ -47,30 +47,6 @@ for (i in imgs) {
 }
 ```
 
-```{r, echo=FALSE, include=FALSE, eval=FALSE}
-<!--
-
-### Logistics
-
-__Reading to do before next class:__
-
-- GW 15.1 - 15.2 (factors) [this is like 2-3 pages]
-- GW 20.6 - 20.7 (attributes and augmented vectors)
-- GW 10 (tibbles) [this is like 3-4 pages]
-- [OPTIONAL] GW 15.3 - 15.5 (remainder of "factors" chapter)
-
-__Explanation about `beamer_header.tex` in YAML header:__
-
-- We are calling the beamer_header.tex file in the background to customize our slides. Without this LaTeX file, our slides would compile according to the default beamer presentation (PDF).  
-    - Why would we want to do this?  
-    - We can customize our slides with the beamer_header.tex LaTeX file to include page numbers, change heading options, or change slide colors (in addition to other things). 
-- `includes` option in the YAML header customizes the beamer presentation slides  
-    - Here is a [link](https://bookdown.org/yihui/rmarkdown/pdf-document.html#latex-options) to a short description of the includes option in the YAML header.  
--->
-
-```
-
-
 \tableofcontents
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -314,6 +290,15 @@ list2 <- list(col_a = c(1,2,3), col_b = c(4,5,6))
 str(list2)
 attributes(list2)
 ```
+Note that the `names` attribute is an attribute of the list, not an attribute of the elements within the list (which are atomic vectors)
+```{r}
+list2[['col_a']] # the element named 'col_a'
+str(list2[['col_a']]) # structure of the element named 'col_a'
+attributes(list2[['col_a']]) # attributes of element named 'col_a'
+```
+
+
+### attributes() function, attributes of lists and data frames
 
 Attributes of a __data frame__:
 
@@ -322,7 +307,13 @@ list3 <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6))
 str(list3)
 attributes(list3)
 ```
+Note: attributes `names`, `class` and `row.names` are attributes of the data frame
 
+- they are not attributes of the elements (variables) within the data frame, which are atomic vectors (i.e., just the data)
+```{r}
+str(list3[['col_a']]) # structure of the element named 'col_a'
+attributes(list3[['col_a']]) # attributes of element named 'col_a'
+```
 ### attr() function: get or set specific attributes of an object
 
 ```{r, eval=FALSE, include=FALSE}
@@ -345,7 +336,7 @@ Arguments
 
 __Using `attr()` to get specific attribute of an object__
 ```{r}
-(vector1 <- c(a = 1, b= 2, c= 3, d = 4))
+vector1 <- c(a = 1, b= 2, c= 3, d = 4)
 attributes(vector1)
 attr(x=vector1, which = "names", exact = FALSE)
 attr(vector1, "names")
@@ -776,7 +767,7 @@ __Example__: Count the number of prospects in `wwlist` who identify as "white"
 - To refer to underlying integer values, apply `as.integer()` function to factor variable
 ```{r}
 attributes(wwlist$ethn_code_fac)
-wwlist %>% filter(as.integer(ethn_code_fac)==7) %>% count 
+wwlist %>% filter(as.integer(ethn_code_fac)==7) %>% count
 ```
 
 ### How to identify the variable values associated with factor levels
