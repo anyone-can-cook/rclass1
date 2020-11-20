@@ -30,7 +30,6 @@ df_event %>%
     event_date > dmy("1/9/2017"),
     event_inst == "In-State"
   ) %>%
-  arrange(instnm, event_date) %>% 
   ggplot(aes(event_date)) + geom_histogram() +
   facet_wrap(~ instnm) +
   ggtitle(label = "In-state recruiting visits by date, 9/1/2017 through 12/31/2017")
