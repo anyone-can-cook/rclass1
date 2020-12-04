@@ -41,17 +41,17 @@ kable(info,col.names = c("Resource","Link"), escape = T) %>%
 
 # Course description
 
-The primary goals of this course are (1) to teach fundamental skills of “data management,” which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one the most popular languages for "data science."  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups. Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom.
+The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science."  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups. Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom.
 
 ## Extended description
 
-Data management consists of acquiring, investigating, cleaning, combining, and manipulating data. Most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, cleaning the data and creating analysis datasets is often more time consuming than conducting analyses.  This course teaches the fundamental data management and data manipulation skills necessary for creating analysis datasets.
+Data management consists of acquiring, investigating, cleaning, combining, and manipulating data. Most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, cleaning the data and creating analysis datasets is often more time consuming than conducting analyses. This course teaches the fundamental data management and data manipulation skills necessary for creating analysis datasets.
 
 The course will be taught using R, a free, open-source programming language. R has become the most popular language for statistical analysis, surpassing SPSS, Stata, and SAS. What differentiates R from these other languages is the thousands of open-source "libraries" created by R users. R is one of the most popular languages for "data science" because R libraries have been created for web-scraping, mapping, network analysis, etc.  By learning R you can be confident that you know a programming language that can run any modeling technique you might need and has amazing capabilities for data collection and data visualization. By learning fundamentals of R in this course, you will be "one step away" from web-scraping, network analysis, interactive maps, quantitative text analysis, or whatever other data science application you are interested in.
 
-The data management and programming skills you learn in this course will transfer to other object oriented programming languages (e.g., Python).
+The data management and programming skills you learn in this course will transfer to other object-oriented programming languages (e.g., Python).
 
-The course primarily use data and examples from education research. However, the course is designed to skills that are important for social science research more broadly and also for computational research within the humanities. __We welcome students from across the university__.
+The course primarily use data and examples from education research. However, the course is designed to teach skills that are important for social science research more broadly and also for computational research within the humanities. __We welcome students from across the university__.
 
 ## Prerequisite Requirements 
 
@@ -95,7 +95,7 @@ The course primarily use data and examples from education research. However, the
 
 # Course learning goals
 
-1. Understand fundamental concepts of object oriented programming
+1. Understand fundamental concepts of object-oriented programming
     - What are the basic object types and how do they apply to statistical analysis?
     - What are object attributes and how do they apply to statistical analysis?
 1. Become familiar with Base R approach to data manipulation and Tidyverse approach to data manipulation
@@ -113,16 +113,16 @@ The course primarily use data and examples from education research. However, the
     - Summarize and collapse observations by group
     - Reshape and "tidy" untidy data
 1. Learn guidelines and practical strategies for ensuring data quality when cleaning data and creating analysis variables
-1. Become proficient at using Github -- the industry standard platform used by programmers to collaborate on projects -- to ask questions about course material and to collaborate with your classmates
+1. Become proficient at using GitHub -- the industry standard platform used by programmers to collaborate on projects -- to ask questions about course material and to collaborate with your classmates
 
 
-Another broad goal of the course is for students to begin develping practical proficiency in "computational thinking." The [California Computer Science Standards](https://www.cde.ca.gov/be/st/ss/documents/compsciintroduction.docx) define computational thinking as "the human ability to formulate problems so that their solutions can be represented as computational steps or algorithms to be executed by a computer." This course will encourage students to work on the following elements of computational thinking:
+Another broad goal of the course is for students to begin developing practical proficiency in "computational thinking." The [California Computer Science Standards](https://www.cde.ca.gov/be/st/ss/documents/compsciintroduction.docx) define computational thinking as "the human ability to formulate problems so that their solutions can be represented as computational steps or algorithms to be executed by a computer." This course will encourage students to work on the following elements of computational thinking:
 
 - Before you start writing code to accomplish some task, write out the individual steps that must be completed to accomplish the task
 - When a particular piece of code is not working, develop a problem-solving approach where you change one element of the code at a time in order to systematically isolate and fix the problem
 - For when you conceptually understand what you need to do but you don't know the code to accomplish the task, develop a set of "go to" practices to help you figure it out, for example:
     - Ask Google
-    - Post a question on the course github "issues" page
+    - Post a question on the course GitHub "issues" page
     - Become proficient at searching the course lecture slides and course textbook for answers
     - When you know the right function, but not how to use it, become proficient at reading function documentation
 
@@ -141,11 +141,11 @@ In just a few words, the keys to success in this class are: __start early, ask f
 Here are some substantive tips to help you succeed:
 
 - Work through weekly asynchronous lecture materials as soon as you can
-  - The weekly asynchronous lecture materials (lecture PDF, lecture .Rmd file with code, short video lecture) are the core of this course. Lecture materials are designed for you to run the code on your computer as you work through the lecture. Therefore, treat each lecture as an active learning experience rather than passively reading slides.
+  - The weekly asynchronous lecture materials (lecture PDF/HTML, lecture .Rmd file with code, short video lecture) are the core of this course. Lecture materials are designed for you to run the code on your computer as you work through the lecture. Therefore, treat each lecture as an active learning experience rather than passively reading slides.
 - Start the weekly problem set early so that have time to seek help on questions you are struggling with
 - If you can't figure something out, ask for help!
   - Discuss with your problem set group
-  - Ask a question on github
+  - Ask a question on GitHub
   - Come to office hours
 - Be supportive of your classmates and together we will create a classroom environment where we all help each other succeed!  
 
