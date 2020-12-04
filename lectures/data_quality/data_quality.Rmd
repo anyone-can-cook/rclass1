@@ -1,6 +1,6 @@
 ---
-title: "Lecture 7: Guidelines for Investigating, cleaning, and creating variables" # potentially push to header
-subtitle:  "Managing and Manipulating Data Using R"
+title: "Guidelines for Investigating, cleaning, and creating variables" # potentially push to header
+subtitle:  "EDUC 263: Introduction to Programming and Data Management Using R"
 author: 
 date: 
 classoption: dvipsnames  # for colors
@@ -87,8 +87,9 @@ Download the HSLS Codebook: https://nces.ed.gov/pubs2014/2014361_AppendixI.pdf
 
 ### What is exploratory data analysis (EDA)?
 
-The [Towards Data Science](https://towardsdatascience.com/exploratory-data-analysis-8fc1cb20fd15) website has a nice definition of EDA:
-
+The [Towards Data Science](https://towardsdatascience.com/exploratory-data-analysis-8fc1cb20fd15) website has a nice definition of EDA:  
+  
+  
 > "Exploratory Data Analysis refers to the critical process of performing initial investigations on data so as to discover patterns,to spot anomalies,to test hypothesis and to check assumptions with the help of summary statistics" 
 
 __This course focuses on "data management":__
@@ -671,7 +672,7 @@ Key to working with skip patterns
     - Rather, trace why these "missing" and "skips" appear and decide how they should be coded in your analysis variable
 
 
-# Problem Set 7 
+# Problem Set 8 
 
 ### Overview of problem set due next week
 
@@ -692,7 +693,7 @@ __Why use such an old survey for this assignment?__
 
 __What we do to make assignment more manageable__
 
-- last week's problem set created the input var: numgrade
+- last week's problem set created the input var: numgrade_v2
 - we give you some hints/guidelines
 - but you are responsible for developing plan to create GPA vars and for executing plan (rather than us giving you step-by-step quations)
 
