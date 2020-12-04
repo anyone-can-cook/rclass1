@@ -114,6 +114,42 @@ Will teach exploratory data analysis (EDA) in two sub-sections:
 1. Provide "Guidelines for EDA"
     - Less about coding, more about practices you should follow and mentality necessary to ensure high data quality
 
+### Rule #1 for data quality: __DATA BETTER BE RIGHT__
+
+\bigskip
+
+- [Cabrera, N. L., Milem, J. F., Jaquette, O., & Marx, R. (2014). Missing the (student achievement) forest for all the (political) trees: Empiricism and the Mexican American Studies controversy in Tucson. _American Educational Research Journal_, 51(6), 1084-1118.](https://journals.sagepub.com/doi/abs/10.3102/0002831214553705)
+  \medskip
+  - Very politically charged issue; would've been bad if we didn't get the data right
+  
+  \bigskip
+- [Jaquette, O., & Parra, E. (2016). The Problem with the Delta Cost Project Database. _Research in Higher Education_, 57(5), 630-651](https://link.springer.com/article/10.1007/s11162-015-9399-2)
+  \medskip
+  - They didn't get the data right; I took them to task
+  
+  \bigskip
+- [Jaquette, O. (2017). _State university no more: Out-of-state enrollment and the growing exclusion of high-achieving, low-income students at flagship public universities_. Lansdowne, VA: Jack Kent Cooke Foundation.](https://www.jkcf.org/research/state-university-no-more-out-of-state-enrollment-and-the-growing-exclusion-of-high-achieving-low-income-students-at-public-flagship-universities/)
+  \medskip
+  - I didn't get the data right; I got taken to task
+  
+  \bigskip
+- Salazar, K., Jaquette, O., & Han, C. (Conditionally accepted). Coming soon to a neighborhood near you? Off-campus recruiting by public research universities. _American Educational Research Journal_. 
+  \medskip
+  - Also [reports](https://emraresearch.org/sites/default/files/2019-03/joyce_report.pdf) and [op-eds](https://www.nytimes.com/interactive/2018/04/13/opinion/college-recruitment-rich-white.html)
+  - Karina/Crystal/Patricia spent thousands of hours getting the data right
+
+### Rule #1 for data quality: __DATA BETTER BE RIGHT__
+
+Researchers who develop a reputation for always geting the data right are the ones who always get research funding
+
+- Grad students working on research projects are usually the front-line of getting the data right
+
+\bigskip
+  
+The virtuous circle of getting the data right and delivering on deliverables
+
+- pay it forward grad students; even if no one paid it forward for you
+
 ## Tools for EDA
 
 
@@ -586,6 +622,7 @@ While this is not a linear process, these are the broad steps I follow
 
 1. Understand how input data sources were created
     - e.g., when working with survey data, have survey questionnaire and codebooks on hand
+    - watch out for skip patterns!!!
 1. For each input data source, identify the "unit of analysis" and which combination of variables uniquely identify observations
 1. Investigate patterns in input variables
 1. Create analysis variable from input variable(s)
