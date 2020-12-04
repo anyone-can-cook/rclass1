@@ -138,7 +138,7 @@ Will teach exploratory data analysis (EDA) in two sub-sections:
   - Also [reports](https://emraresearch.org/sites/default/files/2019-03/joyce_report.pdf) and [op-eds](https://www.nytimes.com/interactive/2018/04/13/opinion/college-recruitment-rich-white.html)
   - Karina/Crystal/Patricia spent thousands of hours getting the data right
 
-### Rule #1 for data quality: __DATA BETTER BE RIGHT__
+### Rule #1: __DATA BETTER BE RIGHT__ (for grad students)
 
 Researchers who develop a reputation for always geting the data right are the ones who always get research funding
 
@@ -146,9 +146,17 @@ Researchers who develop a reputation for always geting the data right are the on
 
 \bigskip
   
-The virtuous circle of getting the data right and delivering on deliverables
+The virtuous circle of getting the data right, delivering on deliverables, and inter-generational grad student opportunity
 
-- pay it forward grad students; even if no one paid it forward for you
+- you don't pay it forward later, you pay it forward now with the quality of work you do now
+- sometimes you pay it forward even when you didn't get the opportunities you deserve
+
+\bigskip
+
+Challenges that arise
+
+- Principal investigators who don't have respect for getting the data right
+- Not enough time, resources to get the data right-
 
 ## Tools for EDA
 
