@@ -2350,7 +2350,7 @@ input, select, textarea {
 
 	ul {
 		list-style: disc;
-		margin: 0 0 0 0;
+		margin: 0 0 2.25em 0;
 		padding-left: 1em;
 	}
 
@@ -2504,6 +2504,7 @@ input, select, textarea {
 	ul.feature-icons {
 		list-style: none;
 		padding-left: 0;
+		margin: 0;
 	}
 
 		ul.feature-icons li {
