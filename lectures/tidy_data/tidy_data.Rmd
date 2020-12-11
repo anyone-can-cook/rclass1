@@ -575,60 +575,8 @@ nces_table2 %>%
 
 </details>
 
-<!--
-
-### Student exercise: Real-world example of wide to long
-
-[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
-
-The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics. 
-
-- The table shows  change over time in the number and percentage of K-12 students on free/reduced lunch for selected years.
-- [LINK to website with data](http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp)
-```{r}
-#Let's take a look at the data (we read in the data in the wide vs long section)
-glimpse(nces_table)
-
-#Create smaller version of data frame for purpose of student exercise
-total<- nces_table %>% 
-  select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
-head(total)
-```
-
-__Task (using the data frame `total`)__: 
-
-1. Diagnose the problem with the data frame `total`
-2. Sketch out what the tidy data should look like    
-3. Transform untidy to tidy. hint: use `names_prefix`
-
-__Solution to student exercise__
-
-1. Diagnose the problem with the data frame `total`
-    - Column names `p_frl_2000`, `p_frl_2010`, etc. are not variables; rather they refer to values of the variable `year`
-    - Currently each observation represents a state with separate number of students on FRL variables for each year. 
-    - Each observation _should_ be a state-year, with only one variable for FRL
-2. Sketch out what the tidy data should look like    
-3. Transform untidy to tidy
-    - __names__ of the set of columns that represent values, not variables in your untidy data 
-        - `p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012`
-    - __names_to__ : variable name you will assign to columns you are gathering from the untidy data
-        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
-        - In this example, it's year 
-    - __values_to__: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
-        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
-        - in this example, the value variable is frl_students
-    
-```{r}
-total %>%
-  pivot_longer(
-    cols = starts_with("p_frl_"),
-    names_to = "year",
-    names_prefix = ("p_frl_"),
-    values_to = "pct_frl"
-  )
-```
-
--->
+<br>
+**Practical example** of using the `pivot_longer()` function [in the Appendix](#6_Appendix)
 
 
 ## Reshaping long to wide: `pivot_wider()`
@@ -729,7 +677,190 @@ ipeds_table1 %>%
 
 </details><br>
 
-<!--
+<br>
+**Practical example** of using the `pivot_wider()` function [in the Appendix](#6_Appendix)
+
+# Missing values
+
+## Explicit vs. Implicit missing values
+
+There are two types of missing values:
+
+- __Explicit missing values__: variable has the value `NA` for a particular row
+- __Implicit missing values__: the row is simply not present in the data
+
+<br>
+**Example**: Identifying explicit and implicit missing values
+
+Consider the following dataset, which shows stock `return` for each year and quarter for some hypothetical company:
+
+```{r, echo=FALSE}
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+
+kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+
+The variable `return` has:
+
+- __1 explicit missing value__: There is an `NA` in the 4th quarter of 2015
+- __1 implicit missing value__: Data for the 1st quarter of 2016 simply does not exist
+
+<br>
+**Practical example** of identifying explicit and implicit missing values [in the Appendix](#6_Appendix)
+
+
+## Making implicit missing values explicit
+
+An implicit missing value is the result of a row not existing. In order to make an implicit missing value explicit, we need to make the non-existent row exist. This can be done using the `complete()` function within `tidyr`.
+
+<br>
+__The `complete()` function__:
+
+```{r, eval = FALSE}
+?complete
+
+# SYNTAX AND DEFAULT VALUES
+complete(data, ..., fill = list())
+```
+
+- Function: Turns implicit missing values into explicit missing values
+- Arguments:
+  - `data`: A dataframe
+  - `...`: Variables to expand on
+- Returns: A dataframe object that has all unique combinations of the specified variables, including those not found in the original dataframe
+
+<br>
+**Example**: Making implicit missing values explicit
+
+Recall the stocks dataset from the previous example. There was 1 __implicit missing value__ for the 1st quarter of 2016 - that row simply did not exist. 
+
+If we want to turn that into an __explicit missing value__, then we need the row for the 1st quarter of 2016 to exist. The result would look like this:
+
+```{r, echo=FALSE}
+kable(stocks %>% complete(year, qtr)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+We can achieve this by using the `complete()` function:
+
+```{r}
+stocks
+
+stocks %>%
+  complete(year, qtr)
+```
+
+<br>
+Should you make __implicit__ missing values __explicit__?
+
+- No clear-cut answer - it depends on many context-specific things about your project
+- The important thing is to be aware of the presence of implicit missing values (both in the "input" datasets you read in and the datasets you create from the inputs) and be purposeful about how you deal with implicit missing values
+- Recommendation for the stage of creating analysis datasets from input data:
+    - If you feel unsure about making implicit values explicit, then make them explicit
+    - This forces you to be more fully aware of patterns of missing data and helps you avoid careless mistakes down the road
+    - After making implicit missing values explicit, you can drop these rows once you are sure you don't need them
+
+<br>
+**Practical example** of using the `complete()` function [in the Appendix](#6_Appendix)
+
+## Reshaping long to wide: missing values
+
+Let's take a look at what happens with missing values when we reshape from long to wide. Recall the `stocks` dataset from the earlier example, where we have 1 explicit missing value (2015 4th quarter) and 1 implicit missing value (2016 1st quarter):
+
+```{r, echo=FALSE}
+kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+When we reshape it from long to wide using `pivot_wider()`, notice that both implicit and explicit missing values appear as `NA`. In other words, implicit missing values are automatically turned into explicit missing values. Therefore, there is no need to use `complete()` prior to pivoting.
+
+```{r, eval=FALSE}
+stocks %>% pivot_wider(
+  names_from = qtr,
+  values_from = return
+)
+```
+
+```{r, echo=FALSE}
+kable(pivot_wider(stocks, names_from = qtr, values_from = return)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+Note that we can no longer tell whether the `NA`s used to be implicit or explicit missing values, as they are now all explicit. One way to be able to distinguish between them is by specifying the `values_fill` argument when calling `pivot_wider()`. This will fill in the previously implicit values with any value of your choice, meaning any `NA` you see after reshaping must be from the previously explicit missing values. In other words, explicit missing values stay explicit while implicit missing values are filled.
+
+```{r, eval=FALSE}
+stocks %>% pivot_wider(
+  names_from = qtr,
+  values_from = return,
+  values_fill = list(return = -99)
+)
+```
+
+```{r, echo=FALSE}
+kable(pivot_wider(stocks, names_from = qtr, values_from = return, values_fill = list(return = -99))) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+## Appendix
+
+### Student exercise: Real-world example of wide to long
+
+[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
+
+The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics. 
+
+- The table shows  change over time in the number and percentage of K-12 students on free/reduced lunch for selected years.
+- [LINK to website with data](http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp)
+```{r}
+#Let's take a look at the data (we read in the data in the wide vs long section)
+glimpse(nces_table)
+
+#Create smaller version of data frame for purpose of student exercise
+total<- nces_table %>% 
+  select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
+head(total)
+```
+
+__Task (using the data frame `total`)__: 
+
+1. Diagnose the problem with the data frame `total`
+2. Sketch out what the tidy data should look like    
+3. Transform untidy to tidy. hint: use `names_prefix`
+
+<br>
+<details><summary>**Solution to student exercise:**</summary>
+<br>
+
+1. Diagnose the problem with the data frame `total`
+    - Column names `p_frl_2000`, `p_frl_2010`, etc. are not variables; rather they refer to values of the variable `year`
+    - Currently each observation represents a state with separate number of students on FRL variables for each year. 
+    - Each observation _should_ be a state-year, with only one variable for FRL
+2. Sketch out what the tidy data should look like    
+3. Transform untidy to tidy
+    - __names__ of the set of columns that represent values, not variables in your untidy data 
+        - `p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012`
+    - __names_to__ : variable name you will assign to columns you are gathering from the untidy data
+        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+        - In this example, it's year 
+    - __values_to__: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
+        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+        - in this example, the value variable is frl_students
+    
+```{r}
+total %>%
+  pivot_longer(
+    cols = starts_with("p_frl_"),
+    names_to = "year",
+    names_prefix = ("p_frl_"),
+    values_to = "pct_frl"
+  )
+```
+</details>
+
 ### Student exercise: real-world example of reshaping long to wide
 
 [In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
@@ -763,8 +894,6 @@ ipeds_hc %>% var_label()
 ipeds_hc %>% select(lstudy) %>% val_labels()
 ```
 
-
-
 __Student Task__: 
 
 1. Diagnose the problem with the data frame `ipeds_hc` (why is it untidy?)
@@ -772,7 +901,8 @@ __Student Task__:
 3. Transform untidy to tidy
 
 <br>
-__Solution to student task__:
+<details><summary>**Solution to student task:**</summary>
+<br>
 
 __1. Diagnose the problem with the data frame__
     - First, let's investigate the data
@@ -788,6 +918,7 @@ ipeds_hc %>% group_by(unitid,lstudy) %>% # group_by our candidate
   count(n_per_id==1) # count "true that only one obs per group"
 
 ```
+
 Summary of problems with the data frame:
 
 - In the untidy data frame, each row represents college-level_of_study
@@ -819,7 +950,11 @@ ipeds_hc %>%
     pivot_wider(names_from = lstudy, values_from = efytotlt) #notice it uses the underlying data not labels
 ```
 
-__Alternative solution__
+</details>
+
+<br>
+<details><summary>**Alternative solution:**</summary>
+<br>
 
 Helpful to create a character version of variable lstudy prior to spreading
 ```{r}
@@ -838,41 +973,11 @@ head(ipeds_hcv2)
 ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
     pivot_wider(names_from = level, values_from = efytotlt) #nicer!
 ```
--->
 
-# Missing values
+</details>
 
-## Explicit vs. Implicit missing values
+### Missing variables example using IPEDS
 
-There are two types of missing values:
-
-- __Explicit missing values__: variable has the value `NA` for a particular row
-- __Implicit missing values__: the row is simply not present in the data
-
-<br>
-**Example**: Identifying explicit and implicit missing values
-
-Consider the following dataset, which shows stock `return` for each year and quarter for some hypothetical company:
-
-```{r, echo=FALSE}
-stocks <- tibble(
-  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
-  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
-  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
-)
-
-kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
-
-
-The variable `return` has:
-
-- __1 explicit missing value__: There is an `NA` in the 4th quarter of 2015
-- __1 implicit missing value__: Data for the 1st quarter of 2016 simply does not exist
-
-
-
-<!--
 This section deals with missing variables and tidying data.
 
 But first, it is helpful to create a new version of the IPEDS enrollment dataset as follows:
@@ -936,62 +1041,9 @@ ipeds_hc_nav2 %>% head( n=5)
 
 - variable `efytotltv2` has `0` explicit missing values and `1` implicit missing values (no row for grad students)
 - variable `efybkaamv2` has `2` explicit missing values and `1` implicit missing values (no row for grad students)
--->
 
+### Applying complete() to IPEDS dataset
 
-
-## Making implicit missing values explicit
-
-An implicit missing value is the result of a row not existing. In order to make an implicit missing value explicit, we need to make the non-existent row exist. This can be done using the `complete()` function within `tidyr`.
-
-<br>
-__The `complete()` function__:
-
-```{r, eval = FALSE}
-?complete
-
-# SYNTAX AND DEFAULT VALUES
-complete(data, ..., fill = list())
-```
-
-- Function: Turns implicit missing values into explicit missing values
-- Arguments:
-  - `data`: A dataframe
-  - `...`: Variables to expand on
-- Returns: A dataframe object that has all unique combinations of the specified variables, including those not found in the original dataframe
-
-<br>
-**Example**: Making implicit missing values explicit
-
-Recall the stocks dataset from the previous example. There was 1 __implicit missing value__ for the 1st quarter of 2016 - that row simply did not exist. 
-
-If we want to turn that into an __explicit missing value__, then we need the row for the 1st quarter of 2016 to exist. The result would look like this:
-
-```{r, echo=FALSE}
-kable(stocks %>% complete(year, qtr)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
-
-<br>
-We can achieve this by using the `complete()` function:
-
-```{r}
-stocks
-
-stocks %>%
-  complete(year, qtr)
-```
-
-<br>
-Should you make __implicit__ missing values __explicit__?
-
-- No clear-cut answer - it depends on many context-specific things about your project
-- The important thing is to be aware of the presence of implicit missing values (both in the "input" datasets you read in and the datasets you create from the inputs) and be purposeful about how you deal with implicit missing values
-- Recommendation for the stage of creating analysis datasets from input data:
-    - If you feel unsure about making implicit values explicit, then make them explicit
-    - This forces you to be more fully aware of patterns of missing data and helps you avoid careless mistakes down the road
-    - After making implicit missing values explicit, you can drop these rows once you are sure you don't need them
-
-<!--
 Let's apply `complete()` to our IPEDS dataset
 
 ```{r}
@@ -1009,212 +1061,8 @@ ipeds_complete %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
 ipeds_hc_nav2 %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
 ```
 
--->
-
-## Reshaping long to wide: missing values
-
-Let's take a look at what happens with missing values when we reshape from long to wide. Recall the `stocks` dataset from the earlier example, where we have 1 explicit missing value (2015 4th quarter) and 1 implicit missing value (2016 1st quarter):
-
-```{r, echo=FALSE}
-kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
-
-<br>
-When we reshape it from long to wide using `pivot_wider()`, notice that both implicit and explicit missing values appear as `NA`. In other words, implicit missing values are automatically turned into explicit missing values. Therefore, there is no need to use `complete()` prior to pivoting.
-
-```{r, eval=FALSE}
-stocks %>% pivot_wider(
-  names_from = qtr,
-  values_from = return
-)
-```
-
-```{r, echo=FALSE}
-kable(pivot_wider(stocks, names_from = qtr, values_from = return)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
-
-<br>
-Note that we can no longer tell whether the `NA`s used to be implicit or explicit missing values, as they are now all explicit. One way to be able to distinguish between them is by specifying the `values_fill` argument when calling `pivot_wider()`. This will fill in the previously implicit values with any value of your choice, meaning any `NA` you see after reshaping must be from the previously explicit missing values. In other words, explicit missing values stay explicit while implicit missing values are filled.
-
-```{r, eval=FALSE}
-stocks %>% pivot_wider(
-  names_from = qtr,
-  values_from = return,
-  values_fill = list(return = -99)
-)
-```
-
-```{r, echo=FALSE}
-kable(pivot_wider(stocks, names_from = qtr, values_from = return, values_fill = list(return = -99))) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
-
-
-
 
 <!--
-We use `spread()` to transform rows into columns; outside the tidyverse, referred to as reshaping from "long" to "wide"
-
-Let's look at two datasets that have similar structure. Which one of these is in need of tidying?
-```{r}
-stocks
-
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efytotltv2) %>% head(n=5)
-```
-
-Let's use `spread()` to tidy the IPEDS dataset, focusing on the total enrollment variable which has implicit missing values but no explicit missing values
-```{r}
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efytotltv2) %>%
-  spread(key = level, value = efytotltv2) %>% 
-  arrange(unitid) %>% head(n=5)
-```
-
-The resulting dataset has explicint missing values (i.e,. `NAs`) for rows that had implicit missing values in the input data.
-
-Let's use `spread()` the IPEDS dataset again, this time focusing on the Black enrollment variable which has both explicit and implicit missing values
-```{r}
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>% head(n=5)
-
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>%
-  spread(key = level, value = efybkaamv2) %>% 
-  arrange(unitid) %>% head(n=5)
-```
-
-The resulting dataset has explicit missing values (i.e,. `NAs`) for rows that had implicit missing values in the input data and for rows that has explicit missing values in the data.
-
-What if we spread a dataset that has explicit missing values and no implicit missing values?
-
-- Resulting dataset has explicit missing values (i.e,. `NAs`) for rows that were explicit missing values in the input data.
-    
-```{r}
-ipeds_complete %>% select(unitid,level,efybkaamv2) %>%
-  spread(key = level, value = efybkaamv2) %>% 
-  arrange(unitid) %>% head(n=5)
-```
-
-__Takeways about `spread()` and missing values__
-
-- Explicit missing values in the input data become explicit missing values in the resulting dataset
-- Implicit missing values in the input data become explicit missing values in the resulting dataset
-
-Therefore, no need to make implicit missing values explicit (using `complete()`) prior to spreading
-
-## Gathering and explicit/implicit missing values [SKIP]
-
-We use `gather()` to transform columns into rows; outside the tidyverse, referred to as reshaping from "wide" to "long"
-
-Let's create a dataset in need of gathering
-
-- start w/ IPEDS dataset that has enrollment for Black students
-- create a fictitious 2017 enrollment variable equal to 2016 enrollment + 20
-- rename the enrollment vars `2016` and `2017`
-
-```{r}
-ipeds_gather <- ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) 
-
-
-ipeds_gather <- ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>%
-  mutate(
-    efybkaamv2_2017= ifelse(!is.na(efybkaamv2),efybkaamv2+20,20)
-  ) %>%
-  rename("2016"=efybkaamv2,"2017"=efybkaamv2_2017)
-
-ipeds_gather %>% head(n=10)
-
-```
-- The variable `2016` has both implicit and explicit missing values
-- The variable `2017` has implicit but no explicit missing values
-
-Let's use `gather()` to transform the columns `2016` and `2017` into rows
-```{r}
-ipeds_gatherv2 <- ipeds_gather %>% 
-  gather(`2016`,`2017`,key = year, value = efybkaam) %>%
-  arrange(unitid,desc(level),year) 
-
-ipeds_gatherv2 %>% head(n=10)
-```
-
-Before looking at missing values, let's investigate data structure
-```{r}
-#number of rows after gathering is exactly 2X number of rows in input dataset
-nrow(ipeds_gather)
-nrow(ipeds_gatherv2)
-nrow(ipeds_gatherv2)==nrow(ipeds_gather)*2
-
-#How many observations for each combination of unitid and level? 
-  #always 2: one for 2016 and one for 2017
-ipeds_gatherv2 %>% group_by(unitid,level) %>% 
-  summarise(n_per_unitid_level=n()) %>% ungroup %>% count(n_per_unitid_level)
-
-#How many observations for each unitid? 
-  # 4 observations for colleges that had two rows in the input dataset
-  # 6 observations for colleges that had three rows in the input dataset
-ipeds_gatherv2 %>% group_by(unitid) %>% 
-  summarise(n_per_unitid=n()) %>% ungroup %>% count(n_per_unitid)
-
-```
-
-Let's compare the data before and after gathering for one college
-```{r}
-#before gathering
-ipeds_gather %>% filter(unitid==101277)
-#after gathering
-ipeds_gatherv2 %>% filter(unitid==101277)
-```
-__Takeaways about gathering and explicit/implicit missing values__
-
-- Explicit missing values from the input dataset become explicit missing values in the resulting dataset after gathering
-- Implicit missing values from the input dataset are implicit missing values the resulting dataset after gathering. Why:
-    - In the input dataset, no row existed for these implicit missing values
-    - For each existing row in the input dataset, `gather()` creates new rows
-    - `gather()` does nothing to rows that do not exist in the input dataset
-
-Therefore, if you want to make implicit values explicit after gathering, then prior to gathering you should use `complete()` to make missing values explicit
-
-# Tidying data: separating and uniting [SKIP]
-
-```{r}
-table5
-```
-- "Separating" is for dealing with the problem in the `rate` column
-- "Uniting" is for dealing with the problem in the `century` and `year` columns
-
-Read about this in section 12.4 of Wickham text, but no homework questions on separating and uniting
-
-
-
-
-
-<!--
-```{r}
-#help(package="tidyr")
-table1
-```
-
-Question: 
-
-- What is does each observation (data concept) represent in the above dataset?
-- What is does each row (data structure) represent in the above dataset?
-
-
-Example of a dataset that satisfies Wickham definitions
-```{r, echo=FALSE}
-#Ignore this code; we'll explain it later in lecture
-ipeds_hc_temp %>% 
-  mutate(level = recode(as.integer(lstudy),
-    `1` = "ug_enroll",
-    `3` = "grad_enroll",
-    `999` = "all_enroll")
-  ) %>% select(-lstudy) %>% # drop variable lstudy
-  spread(key = level, value = efytotlt) %>%
-  select(unitid,ug_enroll,grad_enroll,all_enroll) %>%
-  head(n=10)
-```
-<br>
-Remove object
-```{r}
-rm(ipeds_hc_temp)
-```
-
 ### Tables and observational unit
 
 A particular project or data collection (e.g., longitudinal survey tracking student achievement from high school through college), may require several data sources:
@@ -1356,10 +1204,6 @@ __Takeways from this discussion of formal data concepts and tidy vs. untidy data
 In real world, we encounter many untidy datasets. We can still equate variables with columns and rows with observations. 
 
 - Just be mindful that you are using the "everyday" definitions of variables and observations rather than the Wickham definitions.
-
-
-
-
 
 
 ## Why tidy data 

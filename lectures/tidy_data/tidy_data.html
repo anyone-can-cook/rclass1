@@ -3341,100 +3341,7 @@ table4b %&gt;%
 #&gt; 10 California frl     2820611 3335885 3353964. 3478407
 #&gt; # … with 92 more rows</code></pre>
 </details>
-<!--
-
-### Student exercise: Real-world example of wide to long
-
-[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
-
-The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics. 
-
-- The table shows  change over time in the number and percentage of K-12 students on free/reduced lunch for selected years.
-- [LINK to website with data](http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp)
-
-```r
-#Let's take a look at the data (we read in the data in the wide vs long section)
-glimpse(nces_table)
-#> Rows: 51
-#> Columns: 13
-#> $ state      <chr> "Alabama", "Alaska", "Arizona", "Arkansas", "California", …
-#> $ tot_2000   <dbl> 728351, 105333, 877696, 449959, 6050753, 724349, 562179, 1…
-#> $ tot_2010   <dbl> 730427, 132104, 1067210, 482114, 6169427, 842864, 552919, …
-#> $ tot_2011   <dbl> 731556, 131166, 1024454, 483114, 6202862, 853610, 543883, …
-#> $ tot_2012   <dbl> 740475, 131483, 990378, 486157, 6178788, 863121, 549295, 1…
-#> $ frl_2000   <dbl> 335143, 32468, 274277, 205058, 2820611, 195148, 143030, 37…
-#> $ frl_2010   <dbl> 402386, 50701, 482044, 291608, 3335885, 336426, 190554, 61…
-#> $ frl_2011   <dbl> 420447.00, 53238.00, 511885.00, 294324.00, 3353963.72, 348…
-#> $ frl_2012   <dbl> 429604, 53082, 514193, 298573, 3478407, 358876, 201085, 66…
-#> $ p_frl_2000 <dbl> 46.01394, 30.82415, 31.24966, 45.57260, 46.61587, 26.94116…
-#> $ p_frl_2010 <dbl> 55.08915, 38.37961, 45.16862, 60.48528, 54.07123, 39.91462…
-#> $ p_frl_2011 <dbl> 57.47298, 40.58826, 49.96662, 60.92227, 54.07123, 40.87300…
-#> $ p_frl_2012 <dbl> 58.01735, 40.37176, 51.91886, 61.41493, 56.29594, 41.57887…
-
-#Create smaller version of data frame for purpose of student exercise
-total<- nces_table %>% 
-  select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
-head(total)
-#> # A tibble: 6 x 5
-#>   state      p_frl_2000 p_frl_2010 p_frl_2011 p_frl_2012
-#>   <chr>           <dbl>      <dbl>      <dbl>      <dbl>
-#> 1 Alabama          46.0       55.1       57.5       58.0
-#> 2 Alaska           30.8       38.4       40.6       40.4
-#> 3 Arizona          31.2       45.2       50.0       51.9
-#> 4 Arkansas         45.6       60.5       60.9       61.4
-#> 5 California       46.6       54.1       54.1       56.3
-#> 6 Colorado         26.9       39.9       40.9       41.6
-```
-
-__Task (using the data frame `total`)__: 
-
-1. Diagnose the problem with the data frame `total`
-2. Sketch out what the tidy data should look like    
-3. Transform untidy to tidy. hint: use `names_prefix`
-
-__Solution to student exercise__
-
-1. Diagnose the problem with the data frame `total`
-    - Column names `p_frl_2000`, `p_frl_2010`, etc. are not variables; rather they refer to values of the variable `year`
-    - Currently each observation represents a state with separate number of students on FRL variables for each year. 
-    - Each observation _should_ be a state-year, with only one variable for FRL
-2. Sketch out what the tidy data should look like    
-3. Transform untidy to tidy
-    - __names__ of the set of columns that represent values, not variables in your untidy data 
-        - `p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012`
-    - __names_to__ : variable name you will assign to columns you are gathering from the untidy data
-        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
-        - In this example, it's year 
-    - __values_to__: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
-        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
-        - in this example, the value variable is frl_students
-    
-
-```r
-total %>%
-  pivot_longer(
-    cols = starts_with("p_frl_"),
-    names_to = "year",
-    names_prefix = ("p_frl_"),
-    values_to = "pct_frl"
-  )
-#> # A tibble: 204 x 3
-#>    state   year  pct_frl
-#>    <chr>   <chr>   <dbl>
-#>  1 Alabama 2000     46.0
-#>  2 Alabama 2010     55.1
-#>  3 Alabama 2011     57.5
-#>  4 Alabama 2012     58.0
-#>  5 Alaska  2000     30.8
-#>  6 Alaska  2010     38.4
-#>  7 Alaska  2011     40.6
-#>  8 Alaska  2012     40.4
-#>  9 Arizona 2000     31.2
-#> 10 Arizona 2010     45.2
-#> # … with 194 more rows
-```
-
--->
+<p><br> <strong>Practical example</strong> of using the <code>pivot_longer()</code> function <a href="#6_Appendix">in the Appendix</a></p>
 </div>
 <div id="reshaping-long-to-wide-pivot_wider" class="section level2" number="4.3">
 <h2 number="4.3"><span class="header-section-number">4.3</span> Reshaping long to wide: <code>pivot_wider()</code></h2>
@@ -3840,232 +3747,7 @@ table2 %&gt;%
 #&gt; #   efytotlw_all &lt;dbl&gt;, efytotlw_ug &lt;dbl&gt;, efytotlw_grad &lt;dbl&gt;</code></pre>
 </details>
 <p><br></p>
-<!--
-### Student exercise: real-world example of reshaping long to wide
-
-[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
-
-<br>
-The Integrated Postsecondary Education Data System (IPEDS) collects data on colleges and universities
-
-- Below we load IPEDS data on 12-month enrollment headcount for 2015-16 academic year
-
-```r
-#load these libraries if you haven't already
-#library(haven)
-#library(labelled)
-# ipeds_table <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL)
-```
-
-Create smaller version of dataset
-
-```r
-#ipeds_hc <- ipeds_table %>% select(instnm,unitid,lstudy,efytotlt,efytotlm,efytotlw)
-ipeds_hc <- ipeds_table %>% select(instnm,unitid,lstudy,efytotlt)
-```
-
-Get to know data
-
-```r
-head(ipeds_hc)
-#> # A tibble: 6 x 4
-#>   instnm                              unitid                lstudy efytotlt
-#>   <chr>                                <dbl>             <dbl+lbl>    <dbl>
-#> 1 Alabama A & M University            100654 999 [Generated total]     6157
-#> 2 Alabama A & M University            100654   1 [Undergraduate]       4865
-#> 3 Alabama A & M University            100654   3 [Graduate]            1292
-#> 4 University of Alabama at Birmingham 100663 999 [Generated total]    21554
-#> 5 University of Alabama at Birmingham 100663   1 [Undergraduate]      13440
-#> 6 University of Alabama at Birmingham 100663   3 [Graduate]            8114
-str(ipeds_hc)
-#> tibble [15,726 × 4] (S3: tbl_df/tbl/data.frame)
-#>  $ instnm  : chr [1:15726] "Alabama A & M University" "Alabama A & M University" "Alabama A & M University" "University of Alabama at Birmingham" ...
-#>   ..- attr(*, "label")= chr "Institution (entity) name"
-#>   ..- attr(*, "format.stata")= chr "%91s"
-#>  $ unitid  : num [1:15726] 100654 100654 100654 100663 100663 ...
-#>   ..- attr(*, "label")= chr "Unique identification number of the institution"
-#>   ..- attr(*, "format.stata")= chr "%12.0g"
-#>  $ lstudy  : dbl+lbl [1:15726] 999,   1,   3, 999,   1,   3, 999,   1,   3, 999,   ...
-#>    ..@ label       : chr "Original level of study on survey form"
-#>    ..@ format.stata: chr "%15.0g"
-#>    ..@ labels      : Named num [1:3] 1 3 999
-#>    .. ..- attr(*, "names")= chr [1:3] "Undergraduate" "Graduate" "Generated total"
-#>  $ efytotlt: num [1:15726] 6157 4865 1292 21554 13440 ...
-#>   ..- attr(*, "label")= chr "Grand total"
-#>   ..- attr(*, "format.stata")= chr "%12.0g"
-#>  - attr(*, "label")= chr "dct_s2015_is"
-
-#Variable labels
-ipeds_hc %>% var_label()
-#> $instnm
-#> [1] "Institution (entity) name"
-#> 
-#> $unitid
-#> [1] "Unique identification number of the institution"
-#> 
-#> $lstudy
-#> [1] "Original level of study on survey form"
-#> 
-#> $efytotlt
-#> [1] "Grand total"
-
-#Only the variable lstudy has value labels
-ipeds_hc %>% select(lstudy) %>% val_labels()
-#> $lstudy
-#>   Undergraduate        Graduate Generated total 
-#>               1               3             999
-```
-
-
-
-__Student Task__: 
-
-1. Diagnose the problem with the data frame `ipeds_hc` (why is it untidy?)
-2. Sketch out what the tidy data should look like    
-3. Transform untidy to tidy
-
-<br>
-__Solution to student task__:
-
-__1. Diagnose the problem with the data frame__
-    - First, let's investigate the data
-
-```r
-ipeds_hc <- ipeds_hc %>% arrange(unitid, lstudy)
-head(ipeds_hc, n=20)
-#> # A tibble: 20 x 4
-#>    instnm                              unitid                lstudy efytotlt
-#>    <chr>                                <dbl>             <dbl+lbl>    <dbl>
-#>  1 Alabama A & M University            100654   1 [Undergraduate]       4865
-#>  2 Alabama A & M University            100654   3 [Graduate]            1292
-#>  3 Alabama A & M University            100654 999 [Generated total]     6157
-#>  4 University of Alabama at Birmingham 100663   1 [Undergraduate]      13440
-#>  5 University of Alabama at Birmingham 100663   3 [Graduate]            8114
-#>  6 University of Alabama at Birmingham 100663 999 [Generated total]    21554
-#>  7 Amridge University                  100690   1 [Undergraduate]        415
-#>  8 Amridge University                  100690   3 [Graduate]             415
-#>  9 Amridge University                  100690 999 [Generated total]      830
-#> 10 University of Alabama in Huntsville 100706   1 [Undergraduate]       6994
-#> 11 University of Alabama in Huntsville 100706   3 [Graduate]            2212
-#> 12 University of Alabama in Huntsville 100706 999 [Generated total]     9206
-#> 13 Alabama State University            100724   1 [Undergraduate]       5373
-#> 14 Alabama State University            100724   3 [Graduate]             728
-#> 15 Alabama State University            100724 999 [Generated total]     6101
-#> 16 The University of Alabama           100751   1 [Undergraduate]      35199
-#> 17 The University of Alabama           100751   3 [Graduate]            6308
-#> 18 The University of Alabama           100751 999 [Generated total]    41507
-#> 19 Central Alabama Community College   100760   1 [Undergraduate]       2379
-#> 20 Central Alabama Community College   100760 999 [Generated total]     2379
-
-#code to investigate what each observation represents
-  #I'll break this code down next week when we talk about joining data frames
-ipeds_hc %>% group_by(unitid,lstudy) %>% # group_by our candidate
-  mutate(n_per_id=n()) %>% # calculate number of obs per group
-  ungroup() %>% # ungroup the data
-  count(n_per_id==1) # count "true that only one obs per group"
-#> # A tibble: 1 x 2
-#>   `n_per_id == 1`     n
-#>   <lgl>           <int>
-#> 1 TRUE            15726
-```
-Summary of problems with the data frame:
-
-- In the untidy data frame, each row represents college-level_of_study
-    - there are separate rows for each value of level of study (`undergraduate`, `graduate`, `generated total`)
-    - so three rows for each college
-- the values of the column `lstudy` represent different attributes (`undergraduate`, `graduate`, `generated total`)
-    - each of these attributes should be its own variable
-
-    
-__2. Sketch out what the tidy data should look like__ (sketch out on your own)
-
-- What tidy data should look like:
-    - Each observation (row) should be a college
-    - There should be separate variables for each level of study, with each variable containing enrollment for that level of study
-
-__3. Transform untidy to tidy__
-
-- __names_from__. Column name in the untidy data whose values will become variable names in the tidy data
-that contains variable names
-    - this variable name exists in the untidy data
-    - in `ipeds_hc` the key column is `lstudy`; the values of `lstudy`, will become variable names in the tidy data 
-
-- __values_from__. Column name in untidy data that contains values for the new variables that will be created in the tidy data
-    - this is a varname that exists in the untidy data
-    - in `ipeds_hc` the value column is `efytotlt`; the values of `efytotlt` will become the values of the new variables in the tidy data
-    
-
-```r
-ipeds_hc %>% 
-    pivot_wider(names_from = lstudy, values_from = efytotlt) #notice it uses the underlying data not labels
-#> # A tibble: 6,951 x 5
-#>    instnm                              unitid   `1`   `3` `999`
-#>    <chr>                                <dbl> <dbl> <dbl> <dbl>
-#>  1 Alabama A & M University            100654  4865  1292  6157
-#>  2 University of Alabama at Birmingham 100663 13440  8114 21554
-#>  3 Amridge University                  100690   415   415   830
-#>  4 University of Alabama in Huntsville 100706  6994  2212  9206
-#>  5 Alabama State University            100724  5373   728  6101
-#>  6 The University of Alabama           100751 35199  6308 41507
-#>  7 Central Alabama Community College   100760  2379    NA  2379
-#>  8 Athens State University             100812  4124    NA  4124
-#>  9 Auburn University at Montgomery     100830  5072   924  5996
-#> 10 Auburn University                   100858 22953  6284 29237
-#> # … with 6,941 more rows
-```
-
-__Alternative solution__
-
-Helpful to create a character version of variable lstudy prior to spreading
-
-```r
-ipeds_hc %>% select(lstudy) %>% val_labels()
-#> $lstudy
-#>   Undergraduate        Graduate Generated total 
-#>               1               3             999
-str(ipeds_hc$lstudy)
-#>  dbl+lbl [1:15726]   1,   3, 999,   1,   3, 999,   1,   3, 999,   1,   3, 9...
-#>  @ label       : chr "Original level of study on survey form"
-#>  @ format.stata: chr "%15.0g"
-#>  @ labels      : Named num [1:3] 1 3 999
-#>   ..- attr(*, "names")= chr [1:3] "Undergraduate" "Graduate" "Generated total"
-
-ipeds_hcv2 <- ipeds_hc %>% 
-  mutate(level = recode(as.integer(lstudy),
-    `1` = "ug",
-    `3` = "grad",
-    `999` = "all")
-  ) %>% select(-lstudy) # drop variable lstudy
-
-head(ipeds_hcv2)
-#> # A tibble: 6 x 4
-#>   instnm                              unitid efytotlt level
-#>   <chr>                                <dbl>    <dbl> <chr>
-#> 1 Alabama A & M University            100654     4865 ug   
-#> 2 Alabama A & M University            100654     1292 grad 
-#> 3 Alabama A & M University            100654     6157 all  
-#> 4 University of Alabama at Birmingham 100663    13440 ug   
-#> 5 University of Alabama at Birmingham 100663     8114 grad 
-#> 6 University of Alabama at Birmingham 100663    21554 all
-
-ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
-    pivot_wider(names_from = level, values_from = efytotlt) #nicer!
-#> # A tibble: 6,951 x 5
-#>    instnm                              unitid    ug  grad   all
-#>    <chr>                                <dbl> <dbl> <dbl> <dbl>
-#>  1 Alabama A & M University            100654  4865  1292  6157
-#>  2 University of Alabama at Birmingham 100663 13440  8114 21554
-#>  3 Amridge University                  100690   415   415   830
-#>  4 University of Alabama in Huntsville 100706  6994  2212  9206
-#>  5 Alabama State University            100724  5373   728  6101
-#>  6 The University of Alabama           100751 35199  6308 41507
-#>  7 Central Alabama Community College   100760  2379    NA  2379
-#>  8 Athens State University             100812  4124    NA  4124
-#>  9 Auburn University at Montgomery     100830  5072   924  5996
-#> 10 Auburn University                   100858 22953  6284 29237
-#> # … with 6,941 more rows
-```
--->
+<p><br> <strong>Practical example</strong> of using the <code>pivot_wider()</code> function <a href="#6_Appendix">in the Appendix</a></p>
 </div>
 </div>
 <div id="missing-values" class="section level1" number="5">
@@ -4178,112 +3860,7 @@ NA
 <li><strong>1 explicit missing value</strong>: There is an <code>NA</code> in the 4th quarter of 2015</li>
 <li><strong>1 implicit missing value</strong>: Data for the 1st quarter of 2016 simply does not exist</li>
 </ul>
-<!--
-This section deals with missing variables and tidying data.
-
-But first, it is helpful to create a new version of the IPEDS enrollment dataset as follows:
-
-- keeps observations for for-profit colleges
-- keeps the following enrollment variables: 
-    - total enrollment
-    - enrollment of students who identify as "Black or African American"
-
-```r
-ipeds_hc_na <- ipeds_table %>% filter(sector %in% c(3,6,9)) %>% #keep only for-profit colleges
-  select(instnm,unitid,lstudy,efytotlt,efybkaam) %>% 
-  mutate(level = recode(as.integer(lstudy), # create recoded version of lstudy
-    `1` = "ug",
-    `3` = "grad",
-    `999` = "all")
-  ) %>% select(instnm,unitid,level,efytotlt,efybkaam) %>% 
-  arrange(unitid,desc(level))
-```
-
-Now, let's print some rows
-
-- There is one row for each college-level_of_study
-- Some colleges have three rows of data (ug, grad, all)
-- Colleges that don't have any undergraduates or don't have any graduate students only have two rows of data
-
-```r
-ipeds_hc_na
-#> # A tibble: 6,265 x 5
-#>    instnm                               unitid level efytotlt efybkaam
-#>    <chr>                                 <dbl> <chr>    <dbl>    <dbl>
-#>  1 South University-Montgomery          101116 ug         777      122
-#>  2 South University-Montgomery          101116 grad       218       40
-#>  3 South University-Montgomery          101116 all        995      162
-#>  4 New Beginning College of Cosmetology 101277 ug         132        0
-#>  5 New Beginning College of Cosmetology 101277 all        132        0
-#>  6 Herzing University-Birmingham        101365 ug         675       73
-#>  7 Herzing University-Birmingham        101365 grad        15        5
-#>  8 Herzing University-Birmingham        101365 all        690       78
-#>  9 Prince Institute-Southeast           101958 ug          34        0
-#> 10 Prince Institute-Southeast           101958 all         34        0
-#> # … with 6,255 more rows
-```
-
-Now let's create new versions of the enrollment variables, that replace `0` with `NA`
-
-```r
-ipeds_hc_na <- ipeds_hc_na %>% 
-  mutate(
-    efytotltv2 = ifelse(efytotlt == 0, NA, efytotlt),
-    efybkaamv2 = ifelse(efybkaam == 0, NA, efybkaam)
-  ) %>% select(instnm,unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
-
-ipeds_hc_na %>% select(unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
-#> # A tibble: 6,265 x 6
-#>    unitid level efytotlt efytotltv2 efybkaam efybkaamv2
-#>     <dbl> <chr>    <dbl>      <dbl>    <dbl>      <dbl>
-#>  1 101116 ug         777        777      122        122
-#>  2 101116 grad       218        218       40         40
-#>  3 101116 all        995        995      162        162
-#>  4 101277 ug         132        132        0         NA
-#>  5 101277 all        132        132        0         NA
-#>  6 101365 ug         675        675       73         73
-#>  7 101365 grad        15         15        5          5
-#>  8 101365 all        690        690       78         78
-#>  9 101958 ug          34         34        0         NA
-#> 10 101958 all         34         34        0         NA
-#> # … with 6,255 more rows
-```
-
-Create dataset that drops the original enrollment variables, keeps enrollment vars that replace `0` with `NA`
-
-```r
-ipeds_hc_nav2 <- ipeds_hc_na %>% select(-efytotlt,-efybkaam)
-```
-Now we can introduce the concepts of _explicit_ and _implicit_ missing values
-
-There are two types of missing values:
-
-- __Explicit missing values__: variable has the value `NA` for a parcitular row
-- __Implicit missing values__: the row is simply not present in the data
-
-Let's print data for the first two colleges
-
-```r
-ipeds_hc_nav2 %>% head( n=5)
-#> # A tibble: 5 x 5
-#>   instnm                               unitid level efytotltv2 efybkaamv2
-#>   <chr>                                 <dbl> <chr>      <dbl>      <dbl>
-#> 1 South University-Montgomery          101116 ug           777        122
-#> 2 South University-Montgomery          101116 grad         218         40
-#> 3 South University-Montgomery          101116 all          995        162
-#> 4 New Beginning College of Cosmetology 101277 ug           132         NA
-#> 5 New Beginning College of Cosmetology 101277 all          132         NA
-```
-`South University-Montgomery` has three rows:
-
-- variable `efytotltv2` has `0` explicit missing values and `0` implicit missing values
-- variable `efybkaamv2` has `0` explicit missing values and `0` implicit missing values
-
-`New Beginning College of Cosmetology` has two rows (because they have no graduate students):
-
-- variable `efytotltv2` has `0` explicit missing values and `1` implicit missing values (no row for grad students)
-- variable `efybkaamv2` has `2` explicit missing values and `1` implicit missing values (no row for grad students)
--->
+<p><br> <strong>Practical example</strong> of identifying explicit and implicit missing values <a href="#6_Appendix">in the Appendix</a></p>
 </div>
 <div id="making-implicit-missing-values-explicit" class="section level2" number="5.2">
 <h2 number="5.2"><span class="header-section-number">5.2</span> Making implicit missing values explicit</h2>
@@ -4447,69 +4024,7 @@ stocks %&gt;%
 <li>After making implicit missing values explicit, you can drop these rows once you are sure you don’t need them</li>
 </ul></li>
 </ul>
-<!--
-Let's apply `complete()` to our IPEDS dataset
-
-
-```r
-ipeds_hc_nav2
-#> # A tibble: 6,265 x 5
-#>    instnm                               unitid level efytotltv2 efybkaamv2
-#>    <chr>                                 <dbl> <chr>      <dbl>      <dbl>
-#>  1 South University-Montgomery          101116 ug           777        122
-#>  2 South University-Montgomery          101116 grad         218         40
-#>  3 South University-Montgomery          101116 all          995        162
-#>  4 New Beginning College of Cosmetology 101277 ug           132         NA
-#>  5 New Beginning College of Cosmetology 101277 all          132         NA
-#>  6 Herzing University-Birmingham        101365 ug           675         73
-#>  7 Herzing University-Birmingham        101365 grad          15          5
-#>  8 Herzing University-Birmingham        101365 all          690         78
-#>  9 Prince Institute-Southeast           101958 ug            34         NA
-#> 10 Prince Institute-Southeast           101958 all           34         NA
-#> # … with 6,255 more rows
-
-ipeds_complete <- ipeds_hc_nav2 %>% select(unitid,level,efytotltv2,efybkaamv2) %>%
-  complete(unitid, level)
-
-ipeds_complete
-#> # A tibble: 9,063 x 4
-#>    unitid level efytotltv2 efybkaamv2
-#>     <dbl> <chr>      <dbl>      <dbl>
-#>  1 101116 all          995        162
-#>  2 101116 grad         218         40
-#>  3 101116 ug           777        122
-#>  4 101277 all          132         NA
-#>  5 101277 grad          NA         NA
-#>  6 101277 ug           132         NA
-#>  7 101365 all          690         78
-#>  8 101365 grad          15          5
-#>  9 101365 ug           675         73
-#> 10 101958 all           34         NA
-#> # … with 9,053 more rows
-
-#Confirm that the "complete" dataset always has three observations per unitid
-ipeds_complete %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
-#> `summarise()` ungrouping output (override with `.groups` argument)
-#> Storing counts in `nn`, as `n` already present in input
-#> ℹ Use `name = "new_name"` to pick a new name.
-#> # A tibble: 1 x 2
-#>       n    nn
-#>   <int> <int>
-#> 1     3  3021
-
-#Note that previous dataset did not
-ipeds_hc_nav2 %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
-#> `summarise()` ungrouping output (override with `.groups` argument)
-#> Storing counts in `nn`, as `n` already present in input
-#> ℹ Use `name = "new_name"` to pick a new name.
-#> # A tibble: 2 x 2
-#>       n    nn
-#>   <int> <int>
-#> 1     2  2798
-#> 2     3   223
-```
-
--->
+<p><br> <strong>Practical example</strong> of using the <code>complete()</code> function <a href="#6_Appendix">in the Appendix</a></p>
 </div>
 <div id="reshaping-long-to-wide-missing-values" class="section level2" number="5.3">
 <h2 number="5.3"><span class="header-section-number">5.3</span> Reshaping long to wide: missing values</h2>
@@ -4733,303 +4248,478 @@ NA
 </tr>
 </tbody>
 </table>
-<!--
-We use `spread()` to transform rows into columns; outside the tidyverse, referred to as reshaping from "long" to "wide"
+</div>
+<div id="appendix" class="section level2" number="5.4">
+<h2 number="5.4"><span class="header-section-number">5.4</span> Appendix</h2>
+<div id="student-exercise-real-world-example-of-wide-to-long" class="section level3" number="5.4.1">
+<h3 number="5.4.1"><span class="header-section-number">5.4.1</span> Student exercise: Real-world example of wide to long</h3>
+<p>[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]</p>
+<p>The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics.</p>
+<ul>
+<li>The table shows change over time in the number and percentage of K-12 students on free/reduced lunch for selected years.</li>
+<li><a href="http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp">LINK to website with data</a></li>
+</ul>
+<pre class="r"><code>#Let&#39;s take a look at the data (we read in the data in the wide vs long section)
+glimpse(nces_table)
+#&gt; Rows: 51
+#&gt; Columns: 13
+#&gt; $ state      &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;California&quot;, …
+#&gt; $ tot_2000   &lt;dbl&gt; 728351, 105333, 877696, 449959, 6050753, 724349, 562179, 1…
+#&gt; $ tot_2010   &lt;dbl&gt; 730427, 132104, 1067210, 482114, 6169427, 842864, 552919, …
+#&gt; $ tot_2011   &lt;dbl&gt; 731556, 131166, 1024454, 483114, 6202862, 853610, 543883, …
+#&gt; $ tot_2012   &lt;dbl&gt; 740475, 131483, 990378, 486157, 6178788, 863121, 549295, 1…
+#&gt; $ frl_2000   &lt;dbl&gt; 335143, 32468, 274277, 205058, 2820611, 195148, 143030, 37…
+#&gt; $ frl_2010   &lt;dbl&gt; 402386, 50701, 482044, 291608, 3335885, 336426, 190554, 61…
+#&gt; $ frl_2011   &lt;dbl&gt; 420447.00, 53238.00, 511885.00, 294324.00, 3353963.72, 348…
+#&gt; $ frl_2012   &lt;dbl&gt; 429604, 53082, 514193, 298573, 3478407, 358876, 201085, 66…
+#&gt; $ p_frl_2000 &lt;dbl&gt; 46.01394, 30.82415, 31.24966, 45.57260, 46.61587, 26.94116…
+#&gt; $ p_frl_2010 &lt;dbl&gt; 55.08915, 38.37961, 45.16862, 60.48528, 54.07123, 39.91462…
+#&gt; $ p_frl_2011 &lt;dbl&gt; 57.47298, 40.58826, 49.96662, 60.92227, 54.07123, 40.87300…
+#&gt; $ p_frl_2012 &lt;dbl&gt; 58.01735, 40.37176, 51.91886, 61.41493, 56.29594, 41.57887…
 
-Let's look at two datasets that have similar structure. Which one of these is in need of tidying?
-
-```r
-stocks
-#> # A tibble: 7 x 3
-#>    year   qtr return
-#>   <dbl> <dbl>  <dbl>
-#> 1  2015     1   1.88
-#> 2  2015     2   0.59
-#> 3  2015     3   0.35
-#> 4  2015     4  NA   
-#> 5  2016     2   0.92
-#> 6  2016     3   0.17
-#> 7  2016     4   2.66
-
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efytotltv2) %>% head(n=5)
-#> # A tibble: 5 x 4
-#>   instnm                               unitid level efytotltv2
-#>   <chr>                                 <dbl> <chr>      <dbl>
-#> 1 South University-Montgomery          101116 ug           777
-#> 2 South University-Montgomery          101116 grad         218
-#> 3 South University-Montgomery          101116 all          995
-#> 4 New Beginning College of Cosmetology 101277 ug           132
-#> 5 New Beginning College of Cosmetology 101277 all          132
-```
-
-Let's use `spread()` to tidy the IPEDS dataset, focusing on the total enrollment variable which has implicit missing values but no explicit missing values
-
-```r
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efytotltv2) %>%
-  spread(key = level, value = efytotltv2) %>% 
-  arrange(unitid) %>% head(n=5)
-#> # A tibble: 5 x 5
-#>   instnm                               unitid   all  grad    ug
-#>   <chr>                                 <dbl> <dbl> <dbl> <dbl>
-#> 1 South University-Montgomery          101116   995   218   777
-#> 2 New Beginning College of Cosmetology 101277   132    NA   132
-#> 3 Herzing University-Birmingham        101365   690    15   675
-#> 4 Prince Institute-Southeast           101958    34    NA    34
-#> 5 Charter College                      102845  3996    20  3976
-```
-
-The resulting dataset has explicint missing values (i.e,. `NAs`) for rows that had implicit missing values in the input data.
-
-Let's use `spread()` the IPEDS dataset again, this time focusing on the Black enrollment variable which has both explicit and implicit missing values
-
-```r
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>% head(n=5)
-#> # A tibble: 5 x 4
-#>   instnm                               unitid level efybkaamv2
-#>   <chr>                                 <dbl> <chr>      <dbl>
-#> 1 South University-Montgomery          101116 ug           122
-#> 2 South University-Montgomery          101116 grad          40
-#> 3 South University-Montgomery          101116 all          162
-#> 4 New Beginning College of Cosmetology 101277 ug            NA
-#> 5 New Beginning College of Cosmetology 101277 all           NA
-
-ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>%
-  spread(key = level, value = efybkaamv2) %>% 
-  arrange(unitid) %>% head(n=5)
-#> # A tibble: 5 x 5
-#>   instnm                               unitid   all  grad    ug
-#>   <chr>                                 <dbl> <dbl> <dbl> <dbl>
-#> 1 South University-Montgomery          101116   162    40   122
-#> 2 New Beginning College of Cosmetology 101277    NA    NA    NA
-#> 3 Herzing University-Birmingham        101365    78     5    73
-#> 4 Prince Institute-Southeast           101958    NA    NA    NA
-#> 5 Charter College                      102845   102     1   101
-```
-
-The resulting dataset has explicit missing values (i.e,. `NAs`) for rows that had implicit missing values in the input data and for rows that has explicit missing values in the data.
-
-What if we spread a dataset that has explicit missing values and no implicit missing values?
-
-- Resulting dataset has explicit missing values (i.e,. `NAs`) for rows that were explicit missing values in the input data.
-    
-
-```r
-ipeds_complete %>% select(unitid,level,efybkaamv2) %>%
-  spread(key = level, value = efybkaamv2) %>% 
-  arrange(unitid) %>% head(n=5)
-#> # A tibble: 5 x 4
-#>   unitid   all  grad    ug
-#>    <dbl> <dbl> <dbl> <dbl>
-#> 1 101116   162    40   122
-#> 2 101277    NA    NA    NA
-#> 3 101365    78     5    73
-#> 4 101958    NA    NA    NA
-#> 5 102845   102     1   101
-```
-
-__Takeways about `spread()` and missing values__
-
-- Explicit missing values in the input data become explicit missing values in the resulting dataset
-- Implicit missing values in the input data become explicit missing values in the resulting dataset
-
-Therefore, no need to make implicit missing values explicit (using `complete()`) prior to spreading
-
-## Gathering and explicit/implicit missing values [SKIP]
-
-We use `gather()` to transform columns into rows; outside the tidyverse, referred to as reshaping from "wide" to "long"
-
-Let's create a dataset in need of gathering
-
-- start w/ IPEDS dataset that has enrollment for Black students
-- create a fictitious 2017 enrollment variable equal to 2016 enrollment + 20
-- rename the enrollment vars `2016` and `2017`
-
-
-```r
-ipeds_gather <- ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) 
-
-
-ipeds_gather <- ipeds_hc_nav2 %>% select (instnm,unitid,level,efybkaamv2) %>%
-  mutate(
-    efybkaamv2_2017= ifelse(!is.na(efybkaamv2),efybkaamv2+20,20)
-  ) %>%
-  rename("2016"=efybkaamv2,"2017"=efybkaamv2_2017)
-
-ipeds_gather %>% head(n=10)
-#> # A tibble: 10 x 5
-#>    instnm                               unitid level `2016` `2017`
-#>    <chr>                                 <dbl> <chr>  <dbl>  <dbl>
-#>  1 South University-Montgomery          101116 ug       122    142
-#>  2 South University-Montgomery          101116 grad      40     60
-#>  3 South University-Montgomery          101116 all      162    182
-#>  4 New Beginning College of Cosmetology 101277 ug        NA     20
-#>  5 New Beginning College of Cosmetology 101277 all       NA     20
-#>  6 Herzing University-Birmingham        101365 ug        73     93
-#>  7 Herzing University-Birmingham        101365 grad       5     25
-#>  8 Herzing University-Birmingham        101365 all       78     98
-#>  9 Prince Institute-Southeast           101958 ug        NA     20
-#> 10 Prince Institute-Southeast           101958 all       NA     20
-```
-- The variable `2016` has both implicit and explicit missing values
-- The variable `2017` has implicit but no explicit missing values
-
-Let's use `gather()` to transform the columns `2016` and `2017` into rows
-
-```r
-ipeds_gatherv2 <- ipeds_gather %>% 
-  gather(`2016`,`2017`,key = year, value = efybkaam) %>%
-  arrange(unitid,desc(level),year) 
-
-ipeds_gatherv2 %>% head(n=10)
-#> # A tibble: 10 x 5
-#>    instnm                               unitid level year  efybkaam
-#>    <chr>                                 <dbl> <chr> <chr>    <dbl>
-#>  1 South University-Montgomery          101116 ug    2016       122
-#>  2 South University-Montgomery          101116 ug    2017       142
-#>  3 South University-Montgomery          101116 grad  2016        40
-#>  4 South University-Montgomery          101116 grad  2017        60
-#>  5 South University-Montgomery          101116 all   2016       162
-#>  6 South University-Montgomery          101116 all   2017       182
-#>  7 New Beginning College of Cosmetology 101277 ug    2016        NA
-#>  8 New Beginning College of Cosmetology 101277 ug    2017        20
-#>  9 New Beginning College of Cosmetology 101277 all   2016        NA
-#> 10 New Beginning College of Cosmetology 101277 all   2017        20
-```
-
-Before looking at missing values, let's investigate data structure
-
-```r
-#number of rows after gathering is exactly 2X number of rows in input dataset
-nrow(ipeds_gather)
-#> [1] 6265
-nrow(ipeds_gatherv2)
-#> [1] 12530
-nrow(ipeds_gatherv2)==nrow(ipeds_gather)*2
-#> [1] TRUE
-
-#How many observations for each combination of unitid and level? 
-  #always 2: one for 2016 and one for 2017
-ipeds_gatherv2 %>% group_by(unitid,level) %>% 
-  summarise(n_per_unitid_level=n()) %>% ungroup %>% count(n_per_unitid_level)
-#> `summarise()` regrouping output by 'unitid' (override with `.groups` argument)
-#> # A tibble: 1 x 2
-#>   n_per_unitid_level     n
-#>                <int> <int>
-#> 1                  2  6265
-
-#How many observations for each unitid? 
-  # 4 observations for colleges that had two rows in the input dataset
-  # 6 observations for colleges that had three rows in the input dataset
-ipeds_gatherv2 %>% group_by(unitid) %>% 
-  summarise(n_per_unitid=n()) %>% ungroup %>% count(n_per_unitid)
-#> `summarise()` ungrouping output (override with `.groups` argument)
-#> # A tibble: 2 x 2
-#>   n_per_unitid     n
-#>          <int> <int>
-#> 1            4  2798
-#> 2            6   223
-```
-
-Let's compare the data before and after gathering for one college
-
-```r
-#before gathering
-ipeds_gather %>% filter(unitid==101277)
-#> # A tibble: 2 x 5
-#>   instnm                               unitid level `2016` `2017`
-#>   <chr>                                 <dbl> <chr>  <dbl>  <dbl>
-#> 1 New Beginning College of Cosmetology 101277 ug        NA     20
-#> 2 New Beginning College of Cosmetology 101277 all       NA     20
-#after gathering
-ipeds_gatherv2 %>% filter(unitid==101277)
-#> # A tibble: 4 x 5
-#>   instnm                               unitid level year  efybkaam
-#>   <chr>                                 <dbl> <chr> <chr>    <dbl>
-#> 1 New Beginning College of Cosmetology 101277 ug    2016        NA
-#> 2 New Beginning College of Cosmetology 101277 ug    2017        20
-#> 3 New Beginning College of Cosmetology 101277 all   2016        NA
-#> 4 New Beginning College of Cosmetology 101277 all   2017        20
-```
-__Takeaways about gathering and explicit/implicit missing values__
-
-- Explicit missing values from the input dataset become explicit missing values in the resulting dataset after gathering
-- Implicit missing values from the input dataset are implicit missing values the resulting dataset after gathering. Why:
-    - In the input dataset, no row existed for these implicit missing values
-    - For each existing row in the input dataset, `gather()` creates new rows
-    - `gather()` does nothing to rows that do not exist in the input dataset
-
-Therefore, if you want to make implicit values explicit after gathering, then prior to gathering you should use `complete()` to make missing values explicit
-
-# Tidying data: separating and uniting [SKIP]
-
-
-```r
-table5
-#> # A tibble: 6 x 4
-#>   country     century year  rate             
-#>   <chr>       <chr>   <chr> <chr>            
-#> 1 Afghanistan 19      99    745/19987071     
-#> 2 Afghanistan 20      00    2666/20595360    
-#> 3 Brazil      19      99    37737/172006362  
-#> 4 Brazil      20      00    80488/174504898  
-#> 5 China       19      99    212258/1272915272
-#> 6 China       20      00    213766/1280428583
-```
-- "Separating" is for dealing with the problem in the `rate` column
-- "Uniting" is for dealing with the problem in the `century` and `year` columns
-
-Read about this in section 12.4 of Wickham text, but no homework questions on separating and uniting
-
-
-
-
-
-<!--
-
-```r
-#help(package="tidyr")
-table1
-#> # A tibble: 6 x 4
-#>   country      year  cases population
-#>   <chr>       <int>  <int>      <int>
-#> 1 Afghanistan  1999    745   19987071
-#> 2 Afghanistan  2000   2666   20595360
-#> 3 Brazil       1999  37737  172006362
-#> 4 Brazil       2000  80488  174504898
-#> 5 China        1999 212258 1272915272
-#> 6 China        2000 213766 1280428583
-```
-
-Question: 
-
-- What is does each observation (data concept) represent in the above dataset?
-- What is does each row (data structure) represent in the above dataset?
-
-
-Example of a dataset that satisfies Wickham definitions
-
-```
-#> # A tibble: 10 x 4
-#>    unitid ug_enroll grad_enroll all_enroll
-#>     <dbl>     <dbl>       <dbl>      <dbl>
-#>  1 100654      4865        1292       6157
-#>  2 100663     13440        8114      21554
-#>  3 100690       415         415        830
-#>  4 100706      6994        2212       9206
-#>  5 100724      5373         728       6101
-#>  6 100751     35199        6308      41507
-#>  7 100760      2379          NA       2379
-#>  8 100812      4124          NA       4124
-#>  9 100830      5072         924       5996
-#> 10 100858     22953        6284      29237
-```
+#Create smaller version of data frame for purpose of student exercise
+total&lt;- nces_table %&gt;% 
+  select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
+head(total)
+#&gt; # A tibble: 6 x 5
+#&gt;   state      p_frl_2000 p_frl_2010 p_frl_2011 p_frl_2012
+#&gt;   &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+#&gt; 1 Alabama          46.0       55.1       57.5       58.0
+#&gt; 2 Alaska           30.8       38.4       40.6       40.4
+#&gt; 3 Arizona          31.2       45.2       50.0       51.9
+#&gt; 4 Arkansas         45.6       60.5       60.9       61.4
+#&gt; 5 California       46.6       54.1       54.1       56.3
+#&gt; 6 Colorado         26.9       39.9       40.9       41.6</code></pre>
+<p><strong>Task (using the data frame <code>total</code>)</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>Diagnose the problem with the data frame <code>total</code></li>
+<li>Sketch out what the tidy data should look like<br />
+</li>
+<li>Transform untidy to tidy. hint: use <code>names_prefix</code></li>
+</ol>
 <br>
-Remove object
+<details>
+<summary>
+<strong>Solution to student exercise:</strong>
+</summary>
+<p><br></p>
+<ol style="list-style-type: decimal">
+<li>Diagnose the problem with the data frame <code>total</code>
+<ul>
+<li>Column names <code>p_frl_2000</code>, <code>p_frl_2010</code>, etc. are not variables; rather they refer to values of the variable <code>year</code></li>
+<li>Currently each observation represents a state with separate number of students on FRL variables for each year.</li>
+<li>Each observation <em>should</em> be a state-year, with only one variable for FRL</li>
+</ul></li>
+<li>Sketch out what the tidy data should look like<br />
+</li>
+<li>Transform untidy to tidy
+<ul>
+<li><strong>names</strong> of the set of columns that represent values, not variables in your untidy data
+<ul>
+<li><code>p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012</code></li>
+</ul></li>
+<li><strong>names_to</strong> : variable name you will assign to columns you are gathering from the untidy data
+<ul>
+<li>This var doesn’t yet exist in untidy data, but will be a variable name in the tidy data</li>
+<li>In this example, it’s year</li>
+</ul></li>
+<li><strong>values_to</strong>: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
+<ul>
+<li>This var doesn’t yet exist in untidy data, but will be a variable name in the tidy data</li>
+<li>in this example, the value variable is frl_students</li>
+</ul></li>
+</ul></li>
+</ol>
+<pre class="r"><code>total %&gt;%
+  pivot_longer(
+    cols = starts_with(&quot;p_frl_&quot;),
+    names_to = &quot;year&quot;,
+    names_prefix = (&quot;p_frl_&quot;),
+    values_to = &quot;pct_frl&quot;
+  )
+#&gt; # A tibble: 204 x 3
+#&gt;    state   year  pct_frl
+#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+#&gt;  1 Alabama 2000     46.0
+#&gt;  2 Alabama 2010     55.1
+#&gt;  3 Alabama 2011     57.5
+#&gt;  4 Alabama 2012     58.0
+#&gt;  5 Alaska  2000     30.8
+#&gt;  6 Alaska  2010     38.4
+#&gt;  7 Alaska  2011     40.6
+#&gt;  8 Alaska  2012     40.4
+#&gt;  9 Arizona 2000     31.2
+#&gt; 10 Arizona 2010     45.2
+#&gt; # … with 194 more rows</code></pre>
+</details>
+</div>
+<div id="student-exercise-real-world-example-of-reshaping-long-to-wide" class="section level3" number="5.4.2">
+<h3 number="5.4.2"><span class="header-section-number">5.4.2</span> Student exercise: real-world example of reshaping long to wide</h3>
+<p>[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]</p>
+<p><br> The Integrated Postsecondary Education Data System (IPEDS) collects data on colleges and universities</p>
+<ul>
+<li>Below we load IPEDS data on 12-month enrollment headcount for 2015-16 academic year</li>
+</ul>
+<pre class="r"><code>#load these libraries if you haven&#39;t already
+#library(haven)
+#library(labelled)
+# ipeds_table &lt;- read_dta(file=&quot;https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta&quot;, encoding=NULL)</code></pre>
+<p>Create smaller version of dataset</p>
+<pre class="r"><code>#ipeds_hc &lt;- ipeds_table %&gt;% select(instnm,unitid,lstudy,efytotlt,efytotlm,efytotlw)
+ipeds_hc &lt;- ipeds_table %&gt;% select(instnm,unitid,lstudy,efytotlt)</code></pre>
+<p>Get to know data</p>
+<pre class="r"><code>head(ipeds_hc)
+#&gt; # A tibble: 6 x 4
+#&gt;   instnm                              unitid                lstudy efytotlt
+#&gt;   &lt;chr&gt;                                &lt;dbl&gt;             &lt;dbl+lbl&gt;    &lt;dbl&gt;
+#&gt; 1 Alabama A &amp; M University            100654 999 [Generated total]     6157
+#&gt; 2 Alabama A &amp; M University            100654   1 [Undergraduate]       4865
+#&gt; 3 Alabama A &amp; M University            100654   3 [Graduate]            1292
+#&gt; 4 University of Alabama at Birmingham 100663 999 [Generated total]    21554
+#&gt; 5 University of Alabama at Birmingham 100663   1 [Undergraduate]      13440
+#&gt; 6 University of Alabama at Birmingham 100663   3 [Graduate]            8114
+str(ipeds_hc)
+#&gt; tibble [15,726 × 4] (S3: tbl_df/tbl/data.frame)
+#&gt;  $ instnm  : chr [1:15726] &quot;Alabama A &amp; M University&quot; &quot;Alabama A &amp; M University&quot; &quot;Alabama A &amp; M University&quot; &quot;University of Alabama at Birmingham&quot; ...
+#&gt;   ..- attr(*, &quot;label&quot;)= chr &quot;Institution (entity) name&quot;
+#&gt;   ..- attr(*, &quot;format.stata&quot;)= chr &quot;%91s&quot;
+#&gt;  $ unitid  : num [1:15726] 100654 100654 100654 100663 100663 ...
+#&gt;   ..- attr(*, &quot;label&quot;)= chr &quot;Unique identification number of the institution&quot;
+#&gt;   ..- attr(*, &quot;format.stata&quot;)= chr &quot;%12.0g&quot;
+#&gt;  $ lstudy  : dbl+lbl [1:15726] 999,   1,   3, 999,   1,   3, 999,   1,   3, 999,   ...
+#&gt;    ..@ label       : chr &quot;Original level of study on survey form&quot;
+#&gt;    ..@ format.stata: chr &quot;%15.0g&quot;
+#&gt;    ..@ labels      : Named num [1:3] 1 3 999
+#&gt;    .. ..- attr(*, &quot;names&quot;)= chr [1:3] &quot;Undergraduate&quot; &quot;Graduate&quot; &quot;Generated total&quot;
+#&gt;  $ efytotlt: num [1:15726] 6157 4865 1292 21554 13440 ...
+#&gt;   ..- attr(*, &quot;label&quot;)= chr &quot;Grand total&quot;
+#&gt;   ..- attr(*, &quot;format.stata&quot;)= chr &quot;%12.0g&quot;
+#&gt;  - attr(*, &quot;label&quot;)= chr &quot;dct_s2015_is&quot;
 
-```r
-rm(ipeds_hc_temp)
-```
+#Variable labels
+ipeds_hc %&gt;% var_label()
+#&gt; $instnm
+#&gt; [1] &quot;Institution (entity) name&quot;
+#&gt; 
+#&gt; $unitid
+#&gt; [1] &quot;Unique identification number of the institution&quot;
+#&gt; 
+#&gt; $lstudy
+#&gt; [1] &quot;Original level of study on survey form&quot;
+#&gt; 
+#&gt; $efytotlt
+#&gt; [1] &quot;Grand total&quot;
 
+#Only the variable lstudy has value labels
+ipeds_hc %&gt;% select(lstudy) %&gt;% val_labels()
+#&gt; $lstudy
+#&gt;   Undergraduate        Graduate Generated total 
+#&gt;               1               3             999</code></pre>
+<p><strong>Student Task</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>Diagnose the problem with the data frame <code>ipeds_hc</code> (why is it untidy?)</li>
+<li>Sketch out what the tidy data should look like<br />
+</li>
+<li>Transform untidy to tidy</li>
+</ol>
+<br>
+<details>
+<summary>
+<strong>Solution to student task:</strong>
+</summary>
+<p><br></p>
+<p><strong>1. Diagnose the problem with the data frame</strong> - First, let’s investigate the data</p>
+<pre class="r"><code>ipeds_hc &lt;- ipeds_hc %&gt;% arrange(unitid, lstudy)
+head(ipeds_hc, n=20)
+#&gt; # A tibble: 20 x 4
+#&gt;    instnm                              unitid                lstudy efytotlt
+#&gt;    &lt;chr&gt;                                &lt;dbl&gt;             &lt;dbl+lbl&gt;    &lt;dbl&gt;
+#&gt;  1 Alabama A &amp; M University            100654   1 [Undergraduate]       4865
+#&gt;  2 Alabama A &amp; M University            100654   3 [Graduate]            1292
+#&gt;  3 Alabama A &amp; M University            100654 999 [Generated total]     6157
+#&gt;  4 University of Alabama at Birmingham 100663   1 [Undergraduate]      13440
+#&gt;  5 University of Alabama at Birmingham 100663   3 [Graduate]            8114
+#&gt;  6 University of Alabama at Birmingham 100663 999 [Generated total]    21554
+#&gt;  7 Amridge University                  100690   1 [Undergraduate]        415
+#&gt;  8 Amridge University                  100690   3 [Graduate]             415
+#&gt;  9 Amridge University                  100690 999 [Generated total]      830
+#&gt; 10 University of Alabama in Huntsville 100706   1 [Undergraduate]       6994
+#&gt; 11 University of Alabama in Huntsville 100706   3 [Graduate]            2212
+#&gt; 12 University of Alabama in Huntsville 100706 999 [Generated total]     9206
+#&gt; 13 Alabama State University            100724   1 [Undergraduate]       5373
+#&gt; 14 Alabama State University            100724   3 [Graduate]             728
+#&gt; 15 Alabama State University            100724 999 [Generated total]     6101
+#&gt; 16 The University of Alabama           100751   1 [Undergraduate]      35199
+#&gt; 17 The University of Alabama           100751   3 [Graduate]            6308
+#&gt; 18 The University of Alabama           100751 999 [Generated total]    41507
+#&gt; 19 Central Alabama Community College   100760   1 [Undergraduate]       2379
+#&gt; 20 Central Alabama Community College   100760 999 [Generated total]     2379
+
+#code to investigate what each observation represents
+  #I&#39;ll break this code down next week when we talk about joining data frames
+ipeds_hc %&gt;% group_by(unitid,lstudy) %&gt;% # group_by our candidate
+  mutate(n_per_id=n()) %&gt;% # calculate number of obs per group
+  ungroup() %&gt;% # ungroup the data
+  count(n_per_id==1) # count &quot;true that only one obs per group&quot;
+#&gt; # A tibble: 1 x 2
+#&gt;   `n_per_id == 1`     n
+#&gt;   &lt;lgl&gt;           &lt;int&gt;
+#&gt; 1 TRUE            15726</code></pre>
+<p>Summary of problems with the data frame:</p>
+<ul>
+<li>In the untidy data frame, each row represents college-level_of_study
+<ul>
+<li>there are separate rows for each value of level of study (<code>undergraduate</code>, <code>graduate</code>, <code>generated total</code>)</li>
+<li>so three rows for each college</li>
+</ul></li>
+<li>the values of the column <code>lstudy</code> represent different attributes (<code>undergraduate</code>, <code>graduate</code>, <code>generated total</code>)
+<ul>
+<li>each of these attributes should be its own variable</li>
+</ul></li>
+</ul>
+<p><strong>2. Sketch out what the tidy data should look like</strong> (sketch out on your own)</p>
+<ul>
+<li>What tidy data should look like:
+<ul>
+<li>Each observation (row) should be a college</li>
+<li>There should be separate variables for each level of study, with each variable containing enrollment for that level of study</li>
+</ul></li>
+</ul>
+<p><strong>3. Transform untidy to tidy</strong></p>
+<ul>
+<li><strong>names_from</strong>. Column name in the untidy data whose values will become variable names in the tidy data that contains variable names
+<ul>
+<li>this variable name exists in the untidy data</li>
+<li>in <code>ipeds_hc</code> the key column is <code>lstudy</code>; the values of <code>lstudy</code>, will become variable names in the tidy data</li>
+</ul></li>
+<li><strong>values_from</strong>. Column name in untidy data that contains values for the new variables that will be created in the tidy data
+<ul>
+<li>this is a varname that exists in the untidy data</li>
+<li>in <code>ipeds_hc</code> the value column is <code>efytotlt</code>; the values of <code>efytotlt</code> will become the values of the new variables in the tidy data</li>
+</ul></li>
+</ul>
+<pre class="r"><code>ipeds_hc %&gt;% 
+    pivot_wider(names_from = lstudy, values_from = efytotlt) #notice it uses the underlying data not labels
+#&gt; # A tibble: 6,951 x 5
+#&gt;    instnm                              unitid   `1`   `3` `999`
+#&gt;    &lt;chr&gt;                                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1 Alabama A &amp; M University            100654  4865  1292  6157
+#&gt;  2 University of Alabama at Birmingham 100663 13440  8114 21554
+#&gt;  3 Amridge University                  100690   415   415   830
+#&gt;  4 University of Alabama in Huntsville 100706  6994  2212  9206
+#&gt;  5 Alabama State University            100724  5373   728  6101
+#&gt;  6 The University of Alabama           100751 35199  6308 41507
+#&gt;  7 Central Alabama Community College   100760  2379    NA  2379
+#&gt;  8 Athens State University             100812  4124    NA  4124
+#&gt;  9 Auburn University at Montgomery     100830  5072   924  5996
+#&gt; 10 Auburn University                   100858 22953  6284 29237
+#&gt; # … with 6,941 more rows</code></pre>
+</details>
+<br>
+<details>
+<summary>
+<strong>Alternative solution:</strong>
+</summary>
+<p><br></p>
+<p>Helpful to create a character version of variable lstudy prior to spreading</p>
+<pre class="r"><code>ipeds_hc %&gt;% select(lstudy) %&gt;% val_labels()
+#&gt; $lstudy
+#&gt;   Undergraduate        Graduate Generated total 
+#&gt;               1               3             999
+str(ipeds_hc$lstudy)
+#&gt;  dbl+lbl [1:15726]   1,   3, 999,   1,   3, 999,   1,   3, 999,   1,   3, 9...
+#&gt;  @ label       : chr &quot;Original level of study on survey form&quot;
+#&gt;  @ format.stata: chr &quot;%15.0g&quot;
+#&gt;  @ labels      : Named num [1:3] 1 3 999
+#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:3] &quot;Undergraduate&quot; &quot;Graduate&quot; &quot;Generated total&quot;
+
+ipeds_hcv2 &lt;- ipeds_hc %&gt;% 
+  mutate(level = recode(as.integer(lstudy),
+    `1` = &quot;ug&quot;,
+    `3` = &quot;grad&quot;,
+    `999` = &quot;all&quot;)
+  ) %&gt;% select(-lstudy) # drop variable lstudy
+
+head(ipeds_hcv2)
+#&gt; # A tibble: 6 x 4
+#&gt;   instnm                              unitid efytotlt level
+#&gt;   &lt;chr&gt;                                &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;
+#&gt; 1 Alabama A &amp; M University            100654     4865 ug   
+#&gt; 2 Alabama A &amp; M University            100654     1292 grad 
+#&gt; 3 Alabama A &amp; M University            100654     6157 all  
+#&gt; 4 University of Alabama at Birmingham 100663    13440 ug   
+#&gt; 5 University of Alabama at Birmingham 100663     8114 grad 
+#&gt; 6 University of Alabama at Birmingham 100663    21554 all
+
+ipeds_hcv2 %&gt;% select(instnm,unitid,level,efytotlt) %&gt;%
+    pivot_wider(names_from = level, values_from = efytotlt) #nicer!
+#&gt; # A tibble: 6,951 x 5
+#&gt;    instnm                              unitid    ug  grad   all
+#&gt;    &lt;chr&gt;                                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1 Alabama A &amp; M University            100654  4865  1292  6157
+#&gt;  2 University of Alabama at Birmingham 100663 13440  8114 21554
+#&gt;  3 Amridge University                  100690   415   415   830
+#&gt;  4 University of Alabama in Huntsville 100706  6994  2212  9206
+#&gt;  5 Alabama State University            100724  5373   728  6101
+#&gt;  6 The University of Alabama           100751 35199  6308 41507
+#&gt;  7 Central Alabama Community College   100760  2379    NA  2379
+#&gt;  8 Athens State University             100812  4124    NA  4124
+#&gt;  9 Auburn University at Montgomery     100830  5072   924  5996
+#&gt; 10 Auburn University                   100858 22953  6284 29237
+#&gt; # … with 6,941 more rows</code></pre>
+</details>
+</div>
+<div id="missing-variables-example-using-ipeds" class="section level3" number="5.4.3">
+<h3 number="5.4.3"><span class="header-section-number">5.4.3</span> Missing variables example using IPEDS</h3>
+<p>This section deals with missing variables and tidying data.</p>
+<p>But first, it is helpful to create a new version of the IPEDS enrollment dataset as follows:</p>
+<ul>
+<li>keeps observations for for-profit colleges</li>
+<li>keeps the following enrollment variables:
+<ul>
+<li>total enrollment</li>
+<li>enrollment of students who identify as “Black or African American”</li>
+</ul></li>
+</ul>
+<pre class="r"><code>ipeds_hc_na &lt;- ipeds_table %&gt;% filter(sector %in% c(3,6,9)) %&gt;% #keep only for-profit colleges
+  select(instnm,unitid,lstudy,efytotlt,efybkaam) %&gt;% 
+  mutate(level = recode(as.integer(lstudy), # create recoded version of lstudy
+    `1` = &quot;ug&quot;,
+    `3` = &quot;grad&quot;,
+    `999` = &quot;all&quot;)
+  ) %&gt;% select(instnm,unitid,level,efytotlt,efybkaam) %&gt;% 
+  arrange(unitid,desc(level))</code></pre>
+<p>Now, let’s print some rows</p>
+<ul>
+<li>There is one row for each college-level_of_study</li>
+<li>Some colleges have three rows of data (ug, grad, all)</li>
+<li>Colleges that don’t have any undergraduates or don’t have any graduate students only have two rows of data</li>
+</ul>
+<pre class="r"><code>ipeds_hc_na
+#&gt; # A tibble: 6,265 x 5
+#&gt;    instnm                               unitid level efytotlt efybkaam
+#&gt;    &lt;chr&gt;                                 &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+#&gt;  1 South University-Montgomery          101116 ug         777      122
+#&gt;  2 South University-Montgomery          101116 grad       218       40
+#&gt;  3 South University-Montgomery          101116 all        995      162
+#&gt;  4 New Beginning College of Cosmetology 101277 ug         132        0
+#&gt;  5 New Beginning College of Cosmetology 101277 all        132        0
+#&gt;  6 Herzing University-Birmingham        101365 ug         675       73
+#&gt;  7 Herzing University-Birmingham        101365 grad        15        5
+#&gt;  8 Herzing University-Birmingham        101365 all        690       78
+#&gt;  9 Prince Institute-Southeast           101958 ug          34        0
+#&gt; 10 Prince Institute-Southeast           101958 all         34        0
+#&gt; # … with 6,255 more rows</code></pre>
+<p>Now let’s create new versions of the enrollment variables, that replace <code>0</code> with <code>NA</code></p>
+<pre class="r"><code>ipeds_hc_na &lt;- ipeds_hc_na %&gt;% 
+  mutate(
+    efytotltv2 = ifelse(efytotlt == 0, NA, efytotlt),
+    efybkaamv2 = ifelse(efybkaam == 0, NA, efybkaam)
+  ) %&gt;% select(instnm,unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
+
+ipeds_hc_na %&gt;% select(unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
+#&gt; # A tibble: 6,265 x 6
+#&gt;    unitid level efytotlt efytotltv2 efybkaam efybkaamv2
+#&gt;     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+#&gt;  1 101116 ug         777        777      122        122
+#&gt;  2 101116 grad       218        218       40         40
+#&gt;  3 101116 all        995        995      162        162
+#&gt;  4 101277 ug         132        132        0         NA
+#&gt;  5 101277 all        132        132        0         NA
+#&gt;  6 101365 ug         675        675       73         73
+#&gt;  7 101365 grad        15         15        5          5
+#&gt;  8 101365 all        690        690       78         78
+#&gt;  9 101958 ug          34         34        0         NA
+#&gt; 10 101958 all         34         34        0         NA
+#&gt; # … with 6,255 more rows</code></pre>
+<p>Create dataset that drops the original enrollment variables, keeps enrollment vars that replace <code>0</code> with <code>NA</code></p>
+<pre class="r"><code>ipeds_hc_nav2 &lt;- ipeds_hc_na %&gt;% select(-efytotlt,-efybkaam)</code></pre>
+<p>Now we can introduce the concepts of <em>explicit</em> and <em>implicit</em> missing values</p>
+<p>There are two types of missing values:</p>
+<ul>
+<li><strong>Explicit missing values</strong>: variable has the value <code>NA</code> for a parcitular row</li>
+<li><strong>Implicit missing values</strong>: the row is simply not present in the data</li>
+</ul>
+<p>Let’s print data for the first two colleges</p>
+<pre class="r"><code>ipeds_hc_nav2 %&gt;% head( n=5)
+#&gt; # A tibble: 5 x 5
+#&gt;   instnm                               unitid level efytotltv2 efybkaamv2
+#&gt;   &lt;chr&gt;                                 &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+#&gt; 1 South University-Montgomery          101116 ug           777        122
+#&gt; 2 South University-Montgomery          101116 grad         218         40
+#&gt; 3 South University-Montgomery          101116 all          995        162
+#&gt; 4 New Beginning College of Cosmetology 101277 ug           132         NA
+#&gt; 5 New Beginning College of Cosmetology 101277 all          132         NA</code></pre>
+<p><code>South University-Montgomery</code> has three rows:</p>
+<ul>
+<li>variable <code>efytotltv2</code> has <code>0</code> explicit missing values and <code>0</code> implicit missing values</li>
+<li>variable <code>efybkaamv2</code> has <code>0</code> explicit missing values and <code>0</code> implicit missing values</li>
+</ul>
+<p><code>New Beginning College of Cosmetology</code> has two rows (because they have no graduate students):</p>
+<ul>
+<li>variable <code>efytotltv2</code> has <code>0</code> explicit missing values and <code>1</code> implicit missing values (no row for grad students)</li>
+<li>variable <code>efybkaamv2</code> has <code>2</code> explicit missing values and <code>1</code> implicit missing values (no row for grad students)</li>
+</ul>
+</div>
+<div id="applying-complete-to-ipeds-dataset" class="section level3" number="5.4.4">
+<h3 number="5.4.4"><span class="header-section-number">5.4.4</span> Applying complete() to IPEDS dataset</h3>
+<p>Let’s apply <code>complete()</code> to our IPEDS dataset</p>
+<pre class="r"><code>ipeds_hc_nav2
+#&gt; # A tibble: 6,265 x 5
+#&gt;    instnm                               unitid level efytotltv2 efybkaamv2
+#&gt;    &lt;chr&gt;                                 &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+#&gt;  1 South University-Montgomery          101116 ug           777        122
+#&gt;  2 South University-Montgomery          101116 grad         218         40
+#&gt;  3 South University-Montgomery          101116 all          995        162
+#&gt;  4 New Beginning College of Cosmetology 101277 ug           132         NA
+#&gt;  5 New Beginning College of Cosmetology 101277 all          132         NA
+#&gt;  6 Herzing University-Birmingham        101365 ug           675         73
+#&gt;  7 Herzing University-Birmingham        101365 grad          15          5
+#&gt;  8 Herzing University-Birmingham        101365 all          690         78
+#&gt;  9 Prince Institute-Southeast           101958 ug            34         NA
+#&gt; 10 Prince Institute-Southeast           101958 all           34         NA
+#&gt; # … with 6,255 more rows
+
+ipeds_complete &lt;- ipeds_hc_nav2 %&gt;% select(unitid,level,efytotltv2,efybkaamv2) %&gt;%
+  complete(unitid, level)
+
+ipeds_complete
+#&gt; # A tibble: 9,063 x 4
+#&gt;    unitid level efytotltv2 efybkaamv2
+#&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+#&gt;  1 101116 all          995        162
+#&gt;  2 101116 grad         218         40
+#&gt;  3 101116 ug           777        122
+#&gt;  4 101277 all          132         NA
+#&gt;  5 101277 grad          NA         NA
+#&gt;  6 101277 ug           132         NA
+#&gt;  7 101365 all          690         78
+#&gt;  8 101365 grad          15          5
+#&gt;  9 101365 ug           675         73
+#&gt; 10 101958 all           34         NA
+#&gt; # … with 9,053 more rows
+
+#Confirm that the &quot;complete&quot; dataset always has three observations per unitid
+ipeds_complete %&gt;% group_by(unitid) %&gt;% summarise(n=n()) %&gt;% count(n)
+#&gt; `summarise()` ungrouping output (override with `.groups` argument)
+#&gt; Storing counts in `nn`, as `n` already present in input
+#&gt; ℹ Use `name = &quot;new_name&quot;` to pick a new name.
+#&gt; # A tibble: 1 x 2
+#&gt;       n    nn
+#&gt;   &lt;int&gt; &lt;int&gt;
+#&gt; 1     3  3021
+
+#Note that previous dataset did not
+ipeds_hc_nav2 %&gt;% group_by(unitid) %&gt;% summarise(n=n()) %&gt;% count(n)
+#&gt; `summarise()` ungrouping output (override with `.groups` argument)
+#&gt; Storing counts in `nn`, as `n` already present in input
+#&gt; ℹ Use `name = &quot;new_name&quot;` to pick a new name.
+#&gt; # A tibble: 2 x 2
+#&gt;       n    nn
+#&gt;   &lt;int&gt; &lt;int&gt;
+#&gt; 1     2  2798
+#&gt; 2     3   223</code></pre>
+<!--
 ### Tables and observational unit
 
 A particular project or data collection (e.g., longitudinal survey tracking student achievement from high school through college), may require several data sources:
@@ -5215,10 +4905,6 @@ __Takeways from this discussion of formal data concepts and tidy vs. untidy data
 In real world, we encounter many untidy datasets. We can still equate variables with columns and rows with observations. 
 
 - Just be mindful that you are using the "everyday" definitions of variables and observations rather than the Wickham definitions.
-
-
-
-
 
 
 ## Why tidy data 
@@ -5446,6 +5132,7 @@ table2
 
 
 -->
+</div>
 </div>
 </div>
 
