@@ -293,23 +293,17 @@ _Source: Wickham (2014, p. 4)_
 
 **Example**: Representing data in tidy form
 
-```{r, echo=FALSE, results='hide', message=FALSE}
-tidy_example <- tibble(
-  person = rep(c("John Smith", "Jane Doe", "Mary Johnson"), 2),
-  treatment = c(rep("treatment_a", 3), rep("treatment_b", 3)),
-  result = c(NA, 16, 3, 2, 11, 1)
-)
+
+```{r echo=FALSE}
+kable(table1, caption = 'Tidy data: `table1` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
 
-```{r, echo=FALSE}
-kable(structure_a) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
-```
 
 This table shows the same data from earlier, but now the data is in **tidy** form because it satisfies the 3 rules:
 
-1. All 3 __variables__ (`person`, `treatment`, `result`) have its own column
-1. All 6 __observations__ (combination of `person`-`treatment`) have its own row
-1. All 18 __values__ have its own cell in the table
+1. All 4 __variables__ (`country`, `year`, `cases`, `population`) have its own column
+1. All 6 __observations__ (combination of `country`-`year`) have its own row
+1. All 24 __values__ have its own cell in the table
 
 ## Diagnosing untidy data
 
