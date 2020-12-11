@@ -127,7 +127,51 @@ kable(structure_a, caption = 'Structure A: treatment as columns, names as rows',
 kable(structure_b, caption = 'Structure B: treatment as rows, names as columns') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
 ```
 
-### Unit of analysis
+
+## Dataset semantics
+
+__Data semantics__ refer to the underlying meaning of the data being displayed, or how we think of the data conceptually.
+
+The difference between __data structure__ and __data semantics__:
+
+- __Data structure__ refers to the physical layout of the data (e.g., what are the rows and columns)
+- __Data semantics__ -- which were introduced by Wickham (2014) -- refer to the meaning of the data itself
+
+<br>
+**Example**: Describing a dataset
+
+Looking back at the previous example, we can see that although the data structure is different, the tables represent the same underlying data: _Each person can partake in any of multiple treatments and can have a result from each treatment._
+
+In the next section, we'll define some terms to make it easier to describe the semantics (meaning) of the data displayed in the tables.
+
+
+### Values, variables, and observations
+
+> "A dataset is a collection of _values_, usually either numbers (if quantitative) or strings (if qualitative). Values are organized in two ways. Every value belongs to a _variable_ and an _observation_."
+
+_Source: Wickham (2014, p. 3)_
+
+<br>
+**Terminology**:
+
+- __Value__: A single element within some data structure (e.g., vector, list)
+- __Variables__: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
+- __Observations__: "An observation contains all values measured on the same unit (like a person or a day) across attributes"
+    
+<br>
+**Example**: Describing data semantics [revisited]
+
+- The experimental design data has 3 **variables**:
+  - `person`, with 3 possible _values_ (John Smith, Mary Johnson, Jane Doe)
+  - `treatment`, with 2 possible _values_ (treatment_a, treatment_b)
+  - `result`, with 6 possible _values_ (one of which is a missing value)
+- Since measurements were taken for each `person` for each `experiment`, there are 6 **observations**:
+  - 3 people x 2 treatments = 6 _observations_
+  - For each observation, the same attribute (result) was measured
+- There is a total of 18 **values**:
+  - 3 _variables_ x 6 _observations_ = 18 _values_
+
+## Unit of analysis
 
 __unit of analysis__ [my term, not Wickham's]: 
 
@@ -165,6 +209,7 @@ ipeds_hc_temp
 #print a few obs, with value labels rather than variable values
 ipeds_hc_temp %>% head(n=10) %>% as_factor()
 ```
+
 ### Which variable(s) uniquely identify rows in a data frame
 
 Identifying which combination of variables uniquely identifies rows in a data frame helps you identify the "unit of analysis" and understand the "structure" of your dataset
@@ -221,56 +266,13 @@ What does above output tell us?
 
 <!--
 What happens if we didn't ungroup?
-```{r}
+```{r eval=FALSE}
 ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
   group_by(unitid,lstudy) %>% # group by unitid and lstudy
   summarise(n_per_group=n()) %>% # create measure of number of obs per group
   count(n_per_group) # frequency of number of observations per group
 ```
 -->
-
-## Dataset semantics
-
-__Data semantics__ refer to the underlying meaning of the data being displayed, or how we think of the data conceptually.
-
-The difference between __data structure__ and __data semantics__:
-
-- __Data structure__ refers to the physical layout of the data (e.g., what are the rows and columns)
-- __Data semantics__ -- which were introduced by Wickham (2014) -- refer to the meaning of the data itself
-
-<br>
-**Example**: Describing a dataset
-
-Looking back at the previous example, we can see that although the data structure is different, the tables represent the same underlying data: _Each person can partake in any of multiple treatments and can have a result from each treatment._
-
-In the next section, we'll define some terms to make it easier to describe the semantics (meaning) of the data displayed in the tables.
-
-
-### Values, variables, and observations
-
-> "A dataset is a collection of _values_, usually either numbers (if quantitative) or strings (if qualitative). Values are organized in two ways. Every value belongs to a _variable_ and an _observation_."
-
-_Source: Wickham (2014, p. 3)_
-
-<br>
-**Terminology**:
-
-- __Value__: A single element within some data structure (e.g., vector, list)
-- __Variables__: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
-- __Observations__: "An observation contains all values measured on the same unit (like a person or a day) across attributes"
-    
-<br>
-**Example**: Describing data semantics [revisited]
-
-- The experimental design data has 3 **variables**:
-  - `person`, with 3 possible _values_ (John Smith, Mary Johnson, Jane Doe)
-  - `treatment`, with 2 possible _values_ (treatment_a, treatment_b)
-  - `result`, with 6 possible _values_ (one of which is a missing value)
-- Since measurements were taken for each `person` for each `experiment`, there are 6 **observations**:
-  - 3 people x 2 treatments = 6 _observations_
-  - For each observation, the same attribute (result) was measured
-- There is a total of 18 **values**:
-  - 3 _variables_ x 6 _observations_ = 18 _values_
 
 # Tidy vs. untidy data
 
