@@ -4249,10 +4249,11 @@ NA
 </tbody>
 </table>
 </div>
-<div id="appendix" class="section level2" number="5.4">
-<h2 number="5.4"><span class="header-section-number">5.4</span> Appendix</h2>
-<div id="student-exercise-real-world-example-of-wide-to-long" class="section level3" number="5.4.1">
-<h3 number="5.4.1"><span class="header-section-number">5.4.1</span> Student exercise: Real-world example of wide to long</h3>
+</div>
+<div id="appendix" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Appendix</h1>
+<div id="student-exercise-real-world-example-of-wide-to-long" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Student exercise: Real-world example of wide to long</h2>
 <p>[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]</p>
 <p>The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics.</p>
 <ul>
@@ -4353,8 +4354,8 @@ head(total)
 #&gt; # … with 194 more rows</code></pre>
 </details>
 </div>
-<div id="student-exercise-real-world-example-of-reshaping-long-to-wide" class="section level3" number="5.4.2">
-<h3 number="5.4.2"><span class="header-section-number">5.4.2</span> Student exercise: real-world example of reshaping long to wide</h3>
+<div id="student-exercise-real-world-example-of-reshaping-long-to-wide" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> Student exercise: real-world example of reshaping long to wide</h2>
 <p>[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]</p>
 <p><br> The Integrated Postsecondary Education Data System (IPEDS) collects data on colleges and universities</p>
 <ul>
@@ -4569,8 +4570,8 @@ ipeds_hcv2 %&gt;% select(instnm,unitid,level,efytotlt) %&gt;%
 #&gt; # … with 6,941 more rows</code></pre>
 </details>
 </div>
-<div id="missing-variables-example-using-ipeds" class="section level3" number="5.4.3">
-<h3 number="5.4.3"><span class="header-section-number">5.4.3</span> Missing variables example using IPEDS</h3>
+<div id="missing-variables-example-using-ipeds" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> Missing variables example using IPEDS</h2>
 <p>This section deals with missing variables and tidying data.</p>
 <p>But first, it is helpful to create a new version of the IPEDS enrollment dataset as follows:</p>
 <ul>
@@ -4661,8 +4662,8 @@ ipeds_hc_na %&gt;% select(unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
 <li>variable <code>efybkaamv2</code> has <code>2</code> explicit missing values and <code>1</code> implicit missing values (no row for grad students)</li>
 </ul>
 </div>
-<div id="applying-complete-to-ipeds-dataset" class="section level3" number="5.4.4">
-<h3 number="5.4.4"><span class="header-section-number">5.4.4</span> Applying complete() to IPEDS dataset</h3>
+<div id="applying-complete-to-ipeds-dataset" class="section level2" number="6.4">
+<h2 number="6.4"><span class="header-section-number">6.4</span> Applying complete() to IPEDS dataset</h2>
 <p>Let’s apply <code>complete()</code> to our IPEDS dataset</p>
 <pre class="r"><code>ipeds_hc_nav2
 #&gt; # A tibble: 6,265 x 5
@@ -5132,7 +5133,6 @@ table2
 
 
 -->
-</div>
 </div>
 </div>
 

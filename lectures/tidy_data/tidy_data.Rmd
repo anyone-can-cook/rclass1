@@ -805,9 +805,9 @@ stocks %>% pivot_wider(
 kable(pivot_wider(stocks, names_from = qtr, values_from = return, values_fill = list(return = -99))) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
 
-## Appendix
+# Appendix
 
-### Student exercise: Real-world example of wide to long
+## Student exercise: Real-world example of wide to long
 
 [In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
 
@@ -861,7 +861,7 @@ total %>%
 ```
 </details>
 
-### Student exercise: real-world example of reshaping long to wide
+## Student exercise: real-world example of reshaping long to wide
 
 [In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
 
@@ -976,7 +976,7 @@ ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
 
 </details>
 
-### Missing variables example using IPEDS
+## Missing variables example using IPEDS
 
 This section deals with missing variables and tidying data.
 
@@ -1042,7 +1042,7 @@ ipeds_hc_nav2 %>% head( n=5)
 - variable `efytotltv2` has `0` explicit missing values and `1` implicit missing values (no row for grad students)
 - variable `efybkaamv2` has `2` explicit missing values and `1` implicit missing values (no row for grad students)
 
-### Applying complete() to IPEDS dataset
+## Applying complete() to IPEDS dataset
 
 Let's apply `complete()` to our IPEDS dataset
 
