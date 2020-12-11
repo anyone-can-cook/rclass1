@@ -576,7 +576,7 @@ nces_table2 %>%
 </details>
 
 <br>
-**Practical example** of using the `pivot_longer()` function [in the Appendix](#6_Appendix)
+**Practical example** of using the `pivot_longer()` function [in the Appendix](#appendix)
 
 
 ## Reshaping long to wide: `pivot_wider()`
@@ -678,7 +678,7 @@ ipeds_table1 %>%
 </details><br>
 
 <br>
-**Practical example** of using the `pivot_wider()` function [in the Appendix](#6_Appendix)
+**Practical example** of using the `pivot_wider()` function [in the Appendix](#appendix)
 
 # Missing values
 
@@ -711,7 +711,7 @@ The variable `return` has:
 - __1 implicit missing value__: Data for the 1st quarter of 2016 simply does not exist
 
 <br>
-**Practical example** of identifying explicit and implicit missing values [in the Appendix](#6_Appendix)
+**Practical example** of identifying explicit and implicit missing values [in the Appendix](#appendix)
 
 
 ## Making implicit missing values explicit
@@ -766,7 +766,7 @@ Should you make __implicit__ missing values __explicit__?
     - After making implicit missing values explicit, you can drop these rows once you are sure you don't need them
 
 <br>
-**Practical example** of using the `complete()` function [in the Appendix](#6_Appendix)
+**Practical example** of using the `complete()` function [in the Appendix](#appendix)
 
 ## Reshaping long to wide: missing values
 
