@@ -127,8 +127,6 @@ kable(structure_a, caption = 'Structure A: treatment as columns, names as rows',
 kable(structure_b, caption = 'Structure B: treatment as rows, names as columns') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
 ```
 
-<!--
-
 ### Unit of analysis
 
 __unit of analysis__ [my term, not Wickham's]: 
@@ -161,11 +159,8 @@ ipeds_hc_temp <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/
 
 ipeds_hc_temp
 #show variable labels and value labels
-ipeds_hc_temp %>% var_label()
-ipeds_hc_temp %>% val_labels()
-
-#print a few obs
-ipeds_hc_temp %>% head(n=10)
+#ipeds_hc_temp %>% var_label()
+#ipeds_hc_temp %>% val_labels()
 
 #print a few obs, with value labels rather than variable values
 ipeds_hc_temp %>% head(n=10) %>% as_factor()
@@ -177,7 +172,7 @@ Identifying which combination of variables uniquely identifies rows in a data fr
 - Said differently: for each value of this variable (or combination of variables), there is only one row
 - Very important for reshaping/tidying data (this week) and very important for joining/merging data frames (next week)
 - Sometimes a codebook will explicitly tell you which vars uniquely identify rows
-- sometimes you have to figure this out through investigation
+- Sometimes you have to figure this out through investigation
     - focus on ID variables and categorical variables that identify what each row represents; not continuous numeric variables like `total_enrollment` or `family_income`
 
 __Task__: Let's try to identify the variable(s) that uniquely identify rows in `ipeds_hc_temp`
@@ -224,6 +219,7 @@ What does above output tell us?
 - There is `1` row each unique combination of `unitid` and `lstudy` 
 - __Conclusion__: the variables `unitid` and `lstudy` uniquely identify rows in the data frame `ipeds_hc_temp`
 
+<!--
 What happens if we didn't ungroup?
 ```{r}
 ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
@@ -231,7 +227,6 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
   summarise(n_per_group=n()) %>% # create measure of number of obs per group
   count(n_per_group) # frequency of number of observations per group
 ```
-
 -->
 
 ## Dataset semantics
@@ -405,6 +400,8 @@ The values in `century` and `year` should be combined to form a 4-digit `year` v
 ## Reshaping wide to long: `pivot_longer()`
 
 <br>
+Now that we have a better understanding of the differences between tidy and untidy data, let's practice reshaping our data. In the next two sections we are introducing the `pivot_longer()` and `pivot_wider()` functions to reshape our data.  
+
 __The `pivot_longer()` function__:
 
 ```{r, eval = FALSE}
@@ -471,6 +468,7 @@ table4b %>%
 
 <br>
 <details><summary>**Example**: Choosing which column not to pivot</summary>
+<br>
 
 Looking at the previous example, we could have also equivalently pivoted the table by specifying which column we want to keep unchanged:
 
@@ -487,6 +485,7 @@ table4b %>%
 
 <br>
 <details><summary>**Example**: Renaming pivoted columns</summary>
+<br>
 
 ```{r, echo=FALSE}
 nces_table1 <- nces_table %>% select(state, tot_2000, tot_2010, tot_2011, tot_2012)
@@ -527,6 +526,7 @@ nces_table1 %>%
 
 <br>
 <details><summary>**Example**: Pivoting columns by name pattern</summary>
+<br>
 
 ```{r, echo=FALSE}
 nces_table2 <- nces_table %>%
@@ -695,6 +695,7 @@ table2 %>%
 
 <br>
 <details><summary>**Example**: Pivoting with multiple value variables</summary>
+<br>
 
 ```{r, echo=FALSE}
 ipeds_table1 <- ipeds_table %>%
@@ -839,7 +840,7 @@ ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
 
 # Missing values
 
-## Explicit vs. implicit missing values
+## Explicit vs. Implicit missing values
 
 There are two types of missing values:
 
@@ -922,7 +923,7 @@ There are two types of missing values:
 
 Let's print data for the first two colleges
 ```{r}
-ipeds_hc_nav2 %>% head(, n=5)
+ipeds_hc_nav2 %>% head( n=5)
 ```
 `South University-Montgomery` has three rows:
 
