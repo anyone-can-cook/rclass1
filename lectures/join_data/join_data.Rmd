@@ -214,7 +214,7 @@ __Should you think of combining dataframes in R as "merging" flat files or "join
 
 What are **keys**?
 
-- **Keys** are "the variables used to connect each pair of tables" [[x](https://r4ds.had.co.nz/relational-data.html#keys)]
+- **Keys** are "the variables used to connect each pair of tables" [[see here](https://r4ds.had.co.nz/relational-data.html#keys)]
 - Even though relational databases often consist of many tables, __relations__ are always defined between a __pair__ of tables
 - When joining tables, focus on joining __one__ table to __another__; you make this "join" using the __key variable(s)__ that define the relationship between these two tables
 - Even when your analysis requires variables from more than two tables, you proceed by joining one pair of tables at a time
@@ -222,7 +222,7 @@ What are **keys**?
 <br>
 There are two types of keys: **primary keys** and **foreign keys**
 
-- "The main reason for primary and foreign keys is to enforce data consistency" [[x](https://stackoverflow.com/a/5771337/6373540)]
+- "The main reason for primary and foreign keys is to enforce data consistency" [[see here](https://stackoverflow.com/a/5771337/6373540)]
 - Although primary and foreign keys do not technically need to be defined in order to perform a join, they are important for maintaining database integrity
 
 ## Primary keys
