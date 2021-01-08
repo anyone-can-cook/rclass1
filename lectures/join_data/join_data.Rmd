@@ -141,7 +141,7 @@ nls_stu_pets %>% var_label()
 <details><summary>**Investigating student-transcript level `nls_tran` dataframe**</summary>
 
 ```{r, echo=FALSE}
-kable(head(nls_tran, 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+kable(head(arrange(nls_tran,id, transnum), 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
 
 ```{r}
@@ -159,7 +159,8 @@ nls_tran %>% val_labels()
 <details><summary>**Investigating student-transcript-term level `nls_term` dataframe**</summary>
 
 ```{r, echo=FALSE}
-kable(head(nls_term, 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+kable(head(arrange(nls_term,id, transnum,termnum), 5)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
 
 ```{r}
@@ -321,14 +322,31 @@ nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_p
 nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
 ```
 
+</details>
+
 In practice, you join two tables without explicit thinking about "primary key" vs. "foreign key" and "focal table" vs. "other table"
 
 - Doesn't matter which data frame you "start with" (e.g., as the "focal table")
-- The only requirements for joining are:
-    1. One of the two data frames have a __primary key__ (variable or combination of variables that uniquely identify observations) __AND__
-    1. That variable or combination of variables is available in the other of the two data frames
+
+The only requirements for joining are:
+
+1. One of the two data frames have a __primary key__ (variable or combination of variables that uniquely identify observations) __AND__
+1. That variable or combination of variables is available in the other of the two data frames
+
+With this in mind, let's examine the dataframes `nls_stu` and `nls_tran`
+
+```{r}
+# requirement 1: at least one of the two data frames must have a primary key
+  # let's check if id is the primary key in nls_stu
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+
+# requirement 2: that primary key (id) is available in the other of the two data frames
+names(nls_tran)
+
+nls_tran %>% arrange(id, transnum) %>% select(id,transnum,findisp,itype) %>% head(20)
+#nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+```
     
-</details>
 
 
 ### Student exercise
@@ -463,7 +481,9 @@ This is an example of a **one-to-one** relationship because `key` uniquely ident
 <br>
 <details><summary>**Example**: One-to-one inner join between `nls_stu` and `nls_stu_pets`</summary>
 
-Recall that `nls_stu` and `nls_stu_pets` are both student level data - `nls_stu` contains info on student demographics and `nls_stu_pets` contains info on student postsecondary education transcripts (PETS). It makes sense that we'll want to join the tables by student, namely using the student `id` variable. This will be a one-to-one join because `id` uniquely identifies the observations in both `nls_stu` and `nls_stu_pets`:
+Recall that `nls_stu` and `nls_stu_pets` are both student level data 
+
+- `nls_stu` contains info on student demographics and `nls_stu_pets` contains info on student postsecondary education transcripts (PETS). It makes sense that we'll want to join the tables by student, namely using the student `id` variable. This will be a one-to-one join because `id` uniquely identifies the observations in both `nls_stu` and `nls_stu_pets`:
 
 ```{r}
 nls_stu %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>% count(n_per_id) 
