@@ -83,8 +83,6 @@ The course primarily use data and examples from education research. However, the
   - Zoom office hours: Wednesdays 10-11am, zoom [link](https://ucla.zoom.us/j/97724535140)
   - And by appointment
 
-\med
-
 **Crystal Han**  
 
 - Pronouns: she/her/hers
@@ -279,13 +277,32 @@ kable(grade,col.names = c("Letter Grade", "Percentage"), escape = T) %>%
 Below is an overview of course topics and schedule. Topics and schedule are subject to change at the discretion of the instructor. Topics may be cut if we need to devote more time to learning the most central topics. It is unlikely that additional topics will be added. The official course schedule, including weekly required reading and optional reading, will be posted on the [course website](https://anyone-can-cook.github.io/rclass1).
 
 1. Introduction to R
+    - Introduction to R and R data structures
+    - Execute R commands, understand R objects and data structures, use R functions
 1. Investigating data patterns in Base R
-1. Pipes and dplyr functions
+    - Data investigation and manipulation using Base R
+    - Investigate R object type and structure, isolate elements using Base R subset operators and the `subset()` function, create new variables in Base R
+1. Enter the tidyverse: pipes and dplyr
+    - Data investigation and manipulation using tidyverse
+    - Select, filter, and sort data using `tidyverse` functions, chain functions together using pipes (`%>%`), create new variables conditionally using `if_else()`, `recode()`, and `case_when()`
+1. Enter the tidyverse: processing across rows
+    - Calculate aggregate statistics from multiple rows of data
+    - Group rows of data using `group_by()`, create aggregate statistics using `summarize()`
 1. Strings and dates
+    - Work with strings and date/datetime objects
+    - Understand string basics, manipulate strings using `stringr` functions, work with dates and times using the `lubridate` package
 1. Attributes and class
+    - Understand the class and attributes of R objects
+    - Investigate R object class and attributes, work with factor variables, label variables and values of a dataframe using the `labelled` package
 1. Data quality
+    - Tools and guidelines for exploratory data analysis (EDA)
+    - Learn common approaches for exploring and analyzing data, understand skip patterns in survey data
 1. Tidy data
+    - Understand tidy data structure and reshaping data
+    - Define tidy data and how to reshape untidy data into tidy form, reshape data from wide to long using `pivot_longer()`, reshape data from long to wide using `pivot_wider()`, handle missing values during reshaping
 1. Joining data
+    - Combine data from multiple datasets using joins
+    - Merge datasets using mutating joins, check quality of merge using filtering joins, append datasets by stacking rows
 
 # Course policies
 
