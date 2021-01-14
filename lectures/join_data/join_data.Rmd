@@ -979,3 +979,39 @@ kable(admit_append %>% arrange(unitid, endyear) %>% head(n = 9)) %>% kable_styli
     - Identifying causes for non-matches usually involves consulting data documentation for both tables and performing basic descriptive statistics (e.g., frequency tables) on specific variables that documentation suggests may be relevant for whether observations match or not  
 
 </details>
+
+## How to think about different types of joins and perform one
+
+We noticed that many students were having trouble with understanding the difference between the different types of joins and how to use them. We hope that this section can help clarify some of the frequently asked questions.
+
+### Types of joins
+
+Oftentimes, we have a primary table that we are interested in - for example, a table of recruiting events where each observation is an event held at a specific location. In order to understand more about each event, we can join in other data sources to it, such as zip code level data obtained from the Census. 
+
+![](http://r4ds.had.co.nz/diagrams/join-venn.png)
+
+_Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html#mutating-joins) by Wickham_
+
+The main difference between the types of joins is which rows they keep from each of the 2 tables you are joining (i.e., what rows you see in the end result of the join). For example, if our recruiting events data is the `x` (left) table and zip code data is the `y` (right) table:
+
+- **Inner join**: The result only includes events at a zip code that has Census data available **and** Census zip codes where at least 1 event occurred
+  - Any event at a zip code that does not have Census data **and** any Census zip code where no events occurred will be dropped
+- **Left join**: The result includes _all_ recruiting events in our original table, whether or not Census data for the event's zip code is available or not
+  - Any Census zip code where no events occurred will be dropped
+- **Right join**: The result includes _all_ zip codes in the Census data, whether or not any events occurred there 
+  - Any event at a zip code that does not have Census data will be dropped
+- **Full join**: The result includes _all_ recruiting events in our original table **and** _all_ zip codes in the Census data
+  - No observations in either of the original tables will be dropped
+  
+When deciding which type of join to use, we need to consider what our focus is. Here, we want to analyze the recruiting events, so we would want the end result of our join to include all events in our original events table, where each event has zip code data attached when available. According to the bulleted list above, that would be a **left join** using the recruiting events data as the `x` (left) table and zip code data as the `y` (right) table.
+
+What about an **inner join**? You may wonder, if we have an event at a zip code that does not have any zip code level data, what is the point of keeping that observation when we can't conduct any analysis on zip code characteristics? The answer may depend on your goal for the join. But oftentimes, we are joining more than 2 tables. For example, we may want to join zip code level data, HS level data, and university level data to each event. Not all events will have a match in each of the 3 data sources, but left joins will allow us to keep all events in the end result regardless. This is useful because the recruiting events are our main focus, and we can then choose whichever type of analysis we want to perform (zip code, HS, or univ-level).
+
+### Deciding on `x` and `y` table in a join
+
+As seen in the Venn diagram above, each join function takes in 2 arguments - we refer to the 1st arg `x` as the **left table** and the 2nd arg `y` as the **right table**. Which table we choose to be the `x` and which to be the `y` only matters when we are performing a left or right join, since inner and full joins are symmetrical.
+
+In our previous example, if we use the recruiting events table for `x` and zip code table for `y`, then a **left join** will keep all observations in the recruiting events table and drop all Census zip codes where no events occurred. But if we were to use the zip code table for `x` and recruiting events table for `y`, then it would be a **right join** that keeps all recruiting events and drop any Census zip code where no events occurred.
+
+Given the above 2 options to get the same results, performing a **left join** is more conventional and can be easier to visualize. For example, imagine performing a series of left joins to the recruiting events table (e.g., left join zip code level data to each event, left join HS level data to each event that occurred at a HS, left join university level data to each event that occurred at a university), we can think of it as continually chaining the tables from left to right.
+
