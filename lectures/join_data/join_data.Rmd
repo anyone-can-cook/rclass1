@@ -703,8 +703,8 @@ What are **filtering joins**?
 <br>
 There are two types of filtering joins:
 
-- `anti_join(x, y)`: return all rows from `x` with a match in `y`
-- `semi_join(x, y)`: return all rows from `x` without a match in `y`
+- `anti_join(x, y)`: return all rows from `x` without a match in `y`
+- `semi_join(x, y)`: return all rows from `x` with a match in `y`
 
 <br>
 **Example**: Using `anti_join()` and `semi_join()`
