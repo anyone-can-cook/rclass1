@@ -1,5 +1,5 @@
 ---
-title: "EDUC 263: Introduction to Programming and Data Management"
+title: "EDUC 260A: Introduction to Programming and Data Management"
 subtitle: "Fall 2020"
 author: 
 date: 
@@ -235,7 +235,7 @@ Required software we will be using:
 
 - **_[R](https://cloud.r-project.org/)_**, statistical programming language [**FREE!**]
 - **[RStudio](https://rstudio.com/products/rstudio/download/)**, integrated development environment for R  [**FREE!**]
-- Link to tips for software installation [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/todo/educ263_todo.pdf).
+- Link to tips for software installation [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/todo/setup_todo.pdf).
 
 
 # Assignments and grading
