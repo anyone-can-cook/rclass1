@@ -55,7 +55,10 @@ output:
 
 # Course description
 
-The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science."  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups. Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom.
+The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
+
+<!-- Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom. -->
+
 
 ## Extended description
 
