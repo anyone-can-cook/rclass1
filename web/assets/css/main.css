@@ -115,10 +115,10 @@ input, select, textarea {
 	}
 
 	a {
-		-moz-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+		-moz-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 		border-bottom: solid 1px #e4e4e4;
 		color: inherit;
 		text-decoration: none;
@@ -3475,4 +3475,19 @@ input, select, textarea {
 	#readings .container > div ul ul {
 	  margin-left: 1em;
 	  list-style-type: disc;
+	}
+	
+	.btn {
+	  background: var(--color-secondary);
+	  opacity: 0.6;
+	  display: inline-block;
+	  border-bottom: none;
+	  margin-bottom: 2em;
+	  color: white !important;
+	}
+	
+	.btn:hover {
+	  opacity: 0.9;
+	  text-decoration: none;
+	  color: white !important;
 	}
