@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
   * Follow these instructions to set up an account. 
   
      * Go to https://github.com/ and sign up for GitHub. Make sure to include your first and last name in your username so that we can easily identify your work/comments.
+     \
      * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.  
      * Email your username to briannawright135@gmail.com. Please write "Git Username-[your name]" in the subject line. For example, I would write "Git Username-Brianna Wright". 
   
@@ -49,6 +50,8 @@ knitr::opts_chunk$set(echo = TRUE)
     * Now select the “Knit” tab (icon with blue yarn ball) or scroll down and “Knit to HTML”  
     * Give your file a name and save (can delete later) in place that is easy to locate (Desktop, Downloads, etc.)  
     * You should have a saved HTML file (extension .HTML) and an R markdown file (extension .Rmd)  
+
+*Note: HTML stands for Hyper Text Markup Language and is the standard markup language for creating web pages*
     
 ## 5. Complete the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r)  
 
