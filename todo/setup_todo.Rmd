@@ -13,15 +13,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## 1. Create a GitHub account  
-  * We will be conducting all class-related discussion on this version control system instead of using CCLE. We will also use GitHub to collaborate on projects, send announcement, and ask questions. 
+  * We will be conducting all class-related discussion on this version control system instead of using CCLE/Canvas. We will also use GitHub to collaborate on weekly problem sets, send announcements, and ask questions. 
   * Follow these instructions to set up an account. 
   
-     * Go to https://github.com/ and sign up for GitHub. Make sure to include your first and last name in your username so that we can easily identify your work/comments.
+     * Go to https://github.com/ and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily idenitify your work, questions, and comments.
      \
      * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.  
      * Email your username to briannawright135@gmail.com. Please write "Git Username-[your name]" in the subject line. For example, I would write "Git Username-Brianna Wright". 
   
 ## 2. Install R 
+
+*Note: if you have already installed R and R studio you don't need to re-install, but if compatability issues arise later in the quarter, you may have to re-install*
+
   * Go to https://cran.r-project.org/  
   * Select "Download R for Windows"  
   
@@ -29,19 +32,21 @@ knitr::opts_chunk$set(echo = TRUE)
       * Click "Download R 4.1.1 for Windows"  
   * Select "Download R for (Mac) OS  X"   
   
-      * Click "R-4.1.1.pkg"   
+      * Click "R-4.1.1.pkg" 
         
 ## 3. Install RStudio  
   * Go to https://www.rstudio.com/products/rstudio/download/  
   * Scroll to the bottom of the page  
   * Select "RStudio-1.4.1717.exe - Windows 10" for Windows users  
-  * Select "RStudio-1.4.1717.dmg - macOS 10.14+" for Mac users  
+  * Select "RStudio-1.4.1717.dmg - macOS 10.14+" for Mac users 
     
 ## 4. Create R Markdown file that “knits” HTML document in RStudio  
   * What do we mean by this?  
   
     * We will use R Markdown for lectures and turning in problem sets (homeworks).  
     * R Markdown allows us to create documents in a variety of formats (HTML, pdf, word, etc.). For example, this document was created using R markdown (pdf).  
+    * An R Markdown file is a file with a ".Rmd" extension
+    \
     * [Here](https://rmarkdown.rstudio.com/formats.html) is a link to more information on R Markdown outputs.  
   * Steps to follow to create R Markdown file that knits HTML document  
     * Load RStudio  
@@ -53,7 +58,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *Note: HTML stands for Hyper Text Markup Language and is the standard markup language for creating web pages*
     
-## 5. Complete the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r)  
+## 5. Work through the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r)  
 
   * _Note: All first chapters of DataCamp's standard courses are free._   
   
@@ -61,12 +66,7 @@ knitr::opts_chunk$set(echo = TRUE)
       * The tutorial may take about 1-2 hours  
       * We encourage you all to complete this tutorial and run code on your own RStudio to get some practice.  
   
-## 6. Watch videos on relative and absolute filepaths  
-
-  * Absolute versus relative file paths [Youtube link](https://www.youtube.com/watch?v=ephId3mYu9o)  
-  * Relative paths and working directory in R [Youtube link](https://www.youtube.com/watch?v=fe6GA200dks)  
-  
-## 7. Install tinytex  
+## 6. Install tinytex  
 
   * Why are we asking you to do this?  
     * You will need to install LaTeX (lah-tech or lay-tech) on your computer to create pdf documents in R Markdown.  
@@ -84,7 +84,7 @@ knitr::opts_chunk$set(echo = TRUE)
       + _Do not worry about the code right now. We will review how to install packages in the following weeks._ 
     3. Once the package is installed, paste the following code in the "console" and hit return(enter): __tinytex::install_tinytex()__  
  
-## 8. Create R Markdown file that “knits” PDF document in RStudio  
+## 7. Create R Markdown file that “knits” PDF document in RStudio  
 
   * Why are we asking you to do this?  
   
@@ -100,7 +100,7 @@ knitr::opts_chunk$set(echo = TRUE)
     
     *If you receive an error shoot us an email and we can troubleshoot together*
 
-## 9. Create R Markdown file that “knits” (PDF) beamer presentation in RStudio  
+## 8. Create R Markdown file that “knits” (PDF) beamer presentation in RStudio  
 
   * Why are we asking you to do this?  
   
@@ -116,7 +116,12 @@ knitr::opts_chunk$set(echo = TRUE)
     * Give your file a name and save (can delete later) in place that is easy to locate  
     * You should have a saved pdf file (extension .pdf) and an R markdown file (extension .Rmd)  
     
-    *If you were unable to knit to pdf in the step above, this may not work for you. If you receive an error shoot us an email and we can troubleshoot together*   
+    *If you were unable to knit to pdf in the step above, this may not work for you. If you receive an error shoot us an email and we can troubleshoot together* 
+
+## 9. Watch videos on relative and absolute filepaths (OPTIONAL) 
+
+  * Absolute versus relative file paths [Youtube link](https://www.youtube.com/watch?v=ephId3mYu9o)  
+  * Relative paths and working directory in R [Youtube link](https://www.youtube.com/watch?v=fe6GA200dks)  
     
 \  
 \  
