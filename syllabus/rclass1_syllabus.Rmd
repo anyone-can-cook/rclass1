@@ -16,6 +16,9 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2021
 ---
@@ -27,7 +30,7 @@ library(kableExtra)
 library(tidyverse)
 
 t <- c("Class website (public)", "Questions & Discussion (private)", "Announcements (private)", "Class Zoom link (Meeting ID: 940 4537 6896)")
-l <- c("https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f21", "https://github.com/anyone-can-cook/rclass1_student_announcements_f21", "https://ucla.zoom.us/j/94045376896")
+l <- c("https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f21", "https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements", "https://ucla.zoom.us/j/94045376896")
 
 info <- tibble(t, l)
 
@@ -202,7 +205,7 @@ All course related material can be found on the [course website](https://anyone-
 
 ## Course discussion
 
-We will be using GitHub teams for class announcements [HERE](https://github.com/anyone-can-cook/rclass1_student_announcements_f21).
+We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements).
 
   - __GitHub teams__: The teaching team will post all class announcements using GitHub teams. The GitHub team discussions feature allows for quick and seamless communication to all members of an organization or team -- in this case, to all students with a GitHub account enrolled in the course. Some features include:  
   
