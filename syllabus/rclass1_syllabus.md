@@ -16,9 +16,6 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2021
 ---
@@ -272,27 +269,36 @@ Course grade will be based on the following components:
 
 ## Problem sets (90 percent of total grade)
 
-Students will complete 10 problem sets (the last one due during finals week). Problem sets are due by 9am each Friday, right before we start class. 
+Students will complete 10 problem sets (the last one due during finals week). Problem sets are due by 9am each Friday, right before we start class. In general, each problem set will give you practice using the skills and concepts introduced in course materials for thate week.  For example, after the lecture on joining (merging) datasets, the problem set for that week will require that students complete several different tasks involving merging data.  Additionally, the weekly problem sets will require you to use data manipulation skills you learned in previous weeks. Link to problem set expectations and helpful resources [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/lectures/problemset_resources/problemset_resources.pdf).
 
-OJ - EDIT THIS SECTION
+**Problem set groups**
 
-Late submissions will lose 20% (i.e., max grade becomes 80%). Problem sets not submitted by 12pm the following Monday will not receive points because at that point we will post solutions on the course website. The lowest problem-set grade will be dropped from the calculation of your final grade. 
-
-Your will not lose points for late submission if you cannot submit a problem set due to an unexpected emergency. But please contact the instructor by email as soon as you can so we can work out a plan.
-
-In general, each problem set will give you practice using the skills and concepts introduced during the previous lecture.  For example, after the lecture on joining (merging) datasets, the problem set for that week will require that students complete several different tasks involving merging data.  Additionally, the weekly problem sets will require you to use data manipulation skills you learned in previous weeks.  
-
-With the exception of the first problem set, students will complete problem sets in groups of 3. We will form groups during class in week 2 and you will keep the same group throughout the quarter. However, each student will submit their own assignment. You are encouraged to work together and get help from your group. However, it is important that you understand how to do the problem set on your own, rather than copying the solution developed by group members.  
-
-Since you will be working together, it is understandable that answers for many questions will be the same as your group members. However, if I find compelling evidence that a student merely copied solutions from a classmate, I will consider this a violation of academic integrity and that student will receive a zero for the homework assignment.
+- With the exception of the first problem set, students will complete problem sets in groups of 3. 
+- We will form groups during the second synchronous class and you will keep the same group throughout the quarter. However, each student will submit their own assignment. You are encouraged to work together and get help from your group. However, it is important that you understand how to do the problem set on your own, rather than copying the solution developed by group members.
+- Since you will be working together, it is understandable that answers for many questions will be the same as your group members. However, if I find compelling evidence that a student merely copied solutions from a classmate, I will consider this a violation of academic integrity and that student will receive a zero for the homework assignment.
 
 A general strategy I recommend for completing the problem sets is as follows: (1) after lecture, do the reading associated with that lecture; (2) try doing the problem set on your own; (3) communicate with your group to work through the problem set, with a particular focus on areas group members find challenging.
 
-Link to problem set expectations and helpful resources [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/lectures/problemset_resources/problemset_resources.pdf).
+**Grading policies**
+
+- The lowest problem-set grade will be dropped from the calculation of your final grade. 
+- Grading and problem set groups
+  - Because we do not have the person-power to grade weekly problem sets for each individual student enrolled (e.g., 80 students), one submission from each problem set group will be chosen at random. The grade on that problem set submission will be the grade for all members of the group.
+  - For up to two questions, you may ask TAs to regrade an answer that you feel you answered currectly that the graded submission did not answer correctly
+  - If a member of a problem set group has not submitted the problem set by the time the TAs conduct grading, that submission will be grades separately once it is submitted
+Because we do not have resources to grade weekly problof the very large number of students enrolled, 
+- Policy on late assignments
+  - Problem sets submitted after 11:59PM on Friday will lose one percentage point (e.g., max grade becomes 99% instead of 100%)
+  - Starting at 12AM Monday morning, problem sets will lose an additional percentage point for each week-day it is not submitted
+    - e.g., for a problem set submitted at 10AM on Monday, the max grade becomes 98%
+    - e.g., for a problem set submitted at 10AM on Tuesday, the max grade becomes 97%
+  - For late submissions due to an unexpected emergency, you will not lose points. Please contact the instructor and/or TAs and we will work it out together.  
+
 
 ## Participation (10 percent of total grade)
 
 OJ - EDIT THIS SECTION
+
 Students are expected to participate in the weekly class meetings by being attentive, supportive, by asking questions, or by answering questions posed by others on Zoom. Additionally, students can receive strong participation grades by asking questions and answering questions on GitHub issues. 
 
 Students are required to attend the weekly class meetings (unless you have talked to the instructors about this beforehand). Each unexcused absence results in a loss of 20% from your attendance/participation grade. Three or more unexcused absences will result in a failing grade for the course. 
