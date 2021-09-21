@@ -3,6 +3,9 @@ title: 'EDUC 260A: Introduction to Programming and Data Management'
 author: "null"
 date: "null"
 output:
+  #pdf_document:
+  #  toc: yes
+  #  toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
@@ -51,9 +54,9 @@ subtitle: Fall 2021
 
 # Course description
 
-The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
+The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than coginducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
 
-<!-- Course format consists of weekly asynchronous lectures and weekly synchronous workshop-style class sessions on Zoom. -->
+
 
 
 ## Extended description
@@ -66,12 +69,20 @@ The data management and programming skills you learn in this course will transfe
 
 The course primarily use data and examples from education research. However, the course is designed to teach skills that are important for social science research more broadly and also for computational research within the humanities. __We welcome students from across the university__.
 
+Recommended prerequisites (not absolutely required)
+
+- One prior introductory statistics course (e.g., as an undergraduate)
+- Proficiency in general computer skills is helpful, e.g., downloading files from internet, renaming files, saving them to a folder of your choosing, finding this folder on your computer, etc.
+
+<!-- 
 ## Prerequisite Requirements 
 
 - Students must have taken at least a one-semester introductory statistics course
 - Students should have some very basic experience using statistical programming software (e.g., SPSS, Stata, R, SAS) 
 - [General computer skills] Students should be able to download files from the internet, rename these files, save them to a folder of your choosing, and open this folder
     - During this course we will often be downloading datasets, opening .Rmd files and .R scripts, changing directories to the folder where we stored the data, and then opening the dataset we just downloaded
+
+-->
 
 # Instructor and teaching assistants
 
@@ -83,8 +94,8 @@ The course primarily use data and examples from education research. However, the
 - Office: Moore Hall, Room 3038
 - Email: [ozanj@ucla.edu](ozanj@ucla.edu)
 - Office hours:
-  - Zoom office hours: TBD, zoom [link](https://ucla.zoom.us/j/2545750562)
-  - And by appointment
+  - Zoom office hours: Wednesdays 3-4PM, zoom [link](https://ucla.zoom.us/j/2545750562)
+  - And by appointment (afternoons)
 
 ## Teaching assistants
 
@@ -140,10 +151,26 @@ Another broad goal of the course is for students to begin developing practical p
 
 ## Course structure
 
-For the first two or three weeks of the course, we will have synchronous lectures and class time will be on Fridays from 9:00am to 11:50am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 9:00am to 10:00am. Weekly homework will consist of students working through the lectures on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
+__Overview__. For the first two or three weeks of the course, we will have synchronous lectures and class time that will take all or most of the allotted Friday 9:00am to 11:50am time. In the subsequent weeks, students will only be required to attend the Friday synchronous zoom class from 9AM-10AM. However, the instructor will continue lecturing until all material for the week has been covered. All lectures will be recorded. Weekly work students are expected to do outside of class time will consist of students working through lecture material on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
 
-1. __Asynchronous (pre-class) lectures__. Weekly asynchronous lectures will be posted on the course website with the expectation that students work through the lecture in advance of our weekly synchronous class meeting. Lecture materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, short videos (e.g., 15 to 30 total minutes per week) that provide a high-level discussion of important and/or challenging concepts from the lecture slides, but not a line-by-line recitation of the lecture; and, third, the .Rmd file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will be able to "learn by doing" in that they can run R code on their own computer while they work through lecture materials on their own.
-1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The bulk of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
+__Asynchronous course materials__.  Asynchronous course materials for each week will focus on the topic for that week (e.g., "creating variables"). Course materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, video lecture of the instructor working through these slides (recorded on the pevious Friday); and, third, the ".Rmd" file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will  "learn by doing" in that they will run R code on their own computer while they work through lecture materials on their own.
+
+**Example of weekly work flow**:
+
+- Friday 10/15/21 9AM-11:50AM synchronous class
+  - Ozan lectures about "Pipes, dplyr, and variable creation"
+  - students only required to attend zoom from 9AM-10AM
+- Prior to Friday 10/22/21 9AM-11:50AM synchronous class
+  - students work through "Pipes, dplyr, and variable creation" course materials
+    - **important**: run code on your own in the ".Rmd" file
+  - do any additional required reading (very modest)
+  - complete problem set about "Pipes, dplyr, and variable creation" with your problem set group
+- Friday 10/22/21 9AM-11:50AM synchronous class
+  - Ozan lectures about "processing across rows"
+  - students only required to attend zoom from 9AM-10AM
+
+  
+
 
 ## How to succeed in this class
 
@@ -152,26 +179,25 @@ In just a few words, the keys to success in this class are: __start early, ask f
 Here are some substantive tips to help you succeed:
 
 - Work through weekly asynchronous lecture materials as soon as you can
-  - The weekly asynchronous lecture materials (lecture PDF/HTML, lecture .Rmd file with code, short video lecture) are the core of this course. Lecture materials are designed for you to run the code on your computer as you work through the lecture. Therefore, treat each lecture as an active learning experience rather than passively reading slides.
+  - The weekly asynchronous lecture materials (lecture PDF/HTML, lecture .Rmd file with code, video lecture) are the core of this course. Lecture materials are designed for you to run the code on your computer as you work through the lecture. Therefore, treat each lecture as an active learning experience rather than passively reading slides.
 - Start the weekly problem set early so that have time to seek help on questions you are struggling with
 - If you can't figure something out, ask for help!
   - Discuss with your problem set group
   - Ask a question on GitHub
   - Come to office hours
-- Be supportive of your classmates and together we will create a classroom environment where we all help each other succeed!  
+- Be supportive of your classmates; together, we will create a classroom environment where we all help each other succeed!  
 
 # Classroom environment
 
-We all have a responsibility to ensure that every member of the class feels valued and safe. 
-Be mindful that our words and body language affects others in ways we might not fully understand. We have a responsibility to express our ideas in a way that doesn't make disparaging generalizations and doesn't make people feel excluded. As an instructor, I am responsible for setting an example through my own conduct.
+We all have a responsibility to ensure that every member of the class feels valued, respected, and comfortable feeling uncomfortable. Be mindful that our words affects others in ways we might not fully understand. We have a responsibility to express our ideas in a way that doesn't make disparaging generalizations and doesn't make people feel excluded. As an instructor, I am responsible for setting an example through my own conduct.
 
 Learning data management, while trying to get a handle on R and unfamiliar data, can feel overwhelming! We must create an environment where students feel comfortable asking questions and talking about what they did not understand. Discomfort is part of the learning process. Unburden yourself from the weight of being an "expert." Focus your energy on improving and helping your classmates improve.
 
 ##  Towards an anti-racist, anti-heteronormative learning experience
 
-This course teaches data management and R programming, tools that are often perceived as objective, independent of context and content. We must acknowledge that racism, white supremacy, and heteronormative ideas of gender identity and sexual orientation are rooted in every aspect of data. These seemingly objective rules (e.g., "the right way to handle data") affect the way data are gathered, how variables are created, the questions asked (or not asked), etc. 
+This course teaches data management and R programming, tools that are often perceived as objective, independent of context and content. But this is certainly not true! Racism, white supremacy, and heteronormative ideas of gender identity and sexual orientation are rooted in every aspect of data. Seemingly objective rules (e.g., "the right way to handle data") affect the way data are gathered, how variables are created, the questions asked (or not asked), etc. 
 
-In this course we will utilize data that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. It is critical to acknowledge that the processes used to create these data (e.g., how data collected, the categories chosen to represent identity) are often based on notions of white supremacy and heteronormativity. When you encounter a data management strategy that may cause harm, we encourage you to raise concerns. It may be that your instructor/TAs may need to think more critically about strategies they have been using for a long time! It is also critical that we acknowledge that the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy and heteronormativity. We should all be reflecting about our own role in upholding these systems.
+At times, this course will utilize data that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. It is critical that we acknowledge that: the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy and heteronormativity; and that the processes used to create these data (e.g., how data collected, the categories chosen to represent identity) are often based on notions of white supremacy and heteronormativity. We should all be reflecting about our own role in upholding these systems. When you encounter a data management strategy that may cause harm, we encourage you to raise concerns. It may be that your instructor/TAs may need to think more critically about strategies they have been using for a long time! 
 
 # Course website and communication
 
@@ -219,7 +245,7 @@ We will be using GitHub issues for questions and class discussion [HERE](https:/
 
 ## Communication with instructor and TA
 
-If you have a personal question or issue, you can email the instructor or TA directly. Additionally, we are available for office hours or by appointment if there is anything you would like to discuss with us in private. 
+For questions about course content, please post question on Github issues, and '@' the instructor and TAs to bring it to our attention (we will provide guidance about how to do this). If you have a personal question or issue, you can email the instructor or TA directly. Additionally, we are available for office hours or by appointment if there is anything you would like to discuss with us in private. 
 
 
 # Course materials
@@ -242,11 +268,13 @@ Required software we will be using:
 Course grade will be based on the following components:
 
 -	Weekly problem sets (90 percent of total grade)
--	Attendance and participation (10 percent of total grade)
+-	Participation (10 percent of total grade)
 
 ## Problem sets (90 percent of total grade)
 
-Students will complete 10 problem sets (the last one due during finals week). Problem sets are due by 10am each Friday, right before we start class. 
+Students will complete 10 problem sets (the last one due during finals week). Problem sets are due by 9am each Friday, right before we start class. 
+
+OJ - EDIT THIS SECTION
 
 Late submissions will lose 20% (i.e., max grade becomes 80%). Problem sets not submitted by 12pm the following Monday will not receive points because at that point we will post solutions on the course website. The lowest problem-set grade will be dropped from the calculation of your final grade. 
 
@@ -262,8 +290,9 @@ A general strategy I recommend for completing the problem sets is as follows: (1
 
 Link to problem set expectations and helpful resources [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/lectures/problemset_resources/problemset_resources.pdf).
 
-## Attendance and participation (10 percent of total grade)
+## Participation (10 percent of total grade)
 
+OJ - EDIT THIS SECTION
 Students are expected to participate in the weekly class meetings by being attentive, supportive, by asking questions, or by answering questions posed by others on Zoom. Additionally, students can receive strong participation grades by asking questions and answering questions on GitHub issues. 
 
 Students are required to attend the weekly class meetings (unless you have talked to the instructors about this beforehand). Each unexcused absence results in a loss of 20% from your attendance/participation grade. Three or more unexcused absences will result in a failing grade for the course. 
@@ -327,17 +356,17 @@ An excused absence is a professional opportunity that you discuss with me before
 </tbody>
 </table>
 
-# Course topics and schedule
+# Course topics
 
-Below is an overview of course topics and schedule. Topics and schedule are subject to change at the discretion of the instructor. Topics may be cut if we need to devote more time to learning the most central topics. It is unlikely that additional topics will be added. The official course schedule, including weekly required reading and optional reading, will be posted on the [course website](https://anyone-can-cook.github.io/rclass1).
+Below is an overview of course topics. Topics and schedule are subject to change at the discretion of the instructor. Topics may be cut if we need to devote more time to learning the most central topics. It is unlikely that additional topics will be added. The official course schedule, including weekly required reading and optional reading, will be posted on the [course website](https://anyone-can-cook.github.io/rclass1).
 
 1. Introduction to R
     - Introduction to R and R data structures
     - Execute R commands, understand R objects and data structures, use R functions
-1. Investigating data patterns in Base R
+1. Investigating data patterns in Base R [two weeks]
     - Data investigation and manipulation using Base R
     - Investigate R object type and structure, isolate elements using Base R subset operators and the `subset()` function, create new variables in Base R
-1. Enter the tidyverse: pipes and dplyr
+1. Enter the tidyverse: pipes, dplyr, and variable creation
     - Data investigation and manipulation using tidyverse
     - Select, filter, and sort data using `tidyverse` functions, chain functions together using pipes (`%>%`), create new variables conditionally using `if_else()`, `recode()`, and `case_when()`
 1. Enter the tidyverse: processing across rows
