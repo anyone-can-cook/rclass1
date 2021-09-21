@@ -1,26 +1,23 @@
 ---
-title: "EDUC 260A: Introduction to Programming and Data Management"
-subtitle: "Fall 2021"
-author: 
-date: 
-urlcolor: blue
-output: 
-  # pdf_document
+title: 'EDUC 260A: Introduction to Programming and Data Management'
+author: "null"
+date: "null"
+output:
   html_document:
-    toc: true
+    toc: yes
     toc_depth: 3
-    toc_float: true # toc_float option to float the table of contents to the left of the main document content. floating table of contents will always be visible even when the document is scrolled
-      #collapsed: false # collapsed (defaults to TRUE) controls whether the TOC appears with only the top-level (e.g., H2) headers. If collapsed initially, the TOC is automatically expanded inline when necessary
-      #smooth_scroll: true # smooth_scroll (defaults to TRUE) controls whether page scrolls are animated when TOC items are navigated to via mouse clicks
-    number_sections: true
-    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk
-    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax
-    theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
-    df_print: tibble #options: default, tibble, paged
-    keep_md: true # may be helpful for storing on github
-  #   toc: no
-  #   toc_depth: '3'
-  # word_document
+    toc_float: yes
+    number_sections: yes
+    fig_caption: yes
+    highlight: tango
+    theme: default
+    df_print: tibble
+    keep_md: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+urlcolor: blue
+subtitle: Fall 2021
 ---
 
 # Course information
@@ -43,7 +40,7 @@ output:
   </tr>
   <tr>
    <td style="text-align:left;"> Announcements (private) </td>
-   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_announcements_f21 </td>
+   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Class Zoom link (Meeting ID: 940 4537 6896) </td>
@@ -196,7 +193,7 @@ All course related material can be found on the [course website](https://anyone-
 
 ## Course discussion
 
-We will be using GitHub teams for class announcements [HERE](https://github.com/anyone-can-cook/rclass1_student_announcements_f21).
+We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements).
 
   - __GitHub teams__: The teaching team will post all class announcements using GitHub teams. The GitHub team discussions feature allows for quick and seamless communication to all members of an organization or team -- in this case, to all students with a GitHub account enrolled in the course. Some features include:  
   
