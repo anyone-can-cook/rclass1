@@ -1,14 +1,11 @@
 ---
 title: "EDUC 260A: Introduction to Programming and Data Management"
-subtitle: "Fall 2020"
+subtitle: "Fall 2021"
 author: 
 date: 
 urlcolor: blue
 output: 
   # pdf_document
-  # word_document:
-  #   toc: no
-  #   toc_depth: '3'
   html_document:
     toc: true
     toc_depth: 3
@@ -21,7 +18,9 @@ output:
     theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
     df_print: tibble #options: default, tibble, paged
     keep_md: true # may be helpful for storing on github
-
+  #   toc: no
+  #   toc_depth: '3'
+  # word_document
 ---
 
 # Course information
@@ -40,15 +39,15 @@ output:
   </tr>
   <tr>
    <td style="text-align:left;"> Questions &amp; Discussion (private) </td>
-   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues </td>
+   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues_f21 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Announcements (private) </td>
-   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements </td>
+   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_announcements_f21 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Class Zoom link </td>
-   <td style="text-align:left;"> https://ucla.zoom.us/j/94774035711 </td>
+   <td style="text-align:left;"> Class Zoom link (Meeting ID: 940 4537 6896) </td>
+   <td style="text-align:left;"> https://ucla.zoom.us/j/94045376896 </td>
   </tr>
 </tbody>
 </table>
@@ -87,25 +86,25 @@ The course primarily use data and examples from education research. However, the
 - Office: Moore Hall, Room 3038
 - Email: [ozanj@ucla.edu](ozanj@ucla.edu)
 - Office hours:
-  - Zoom office hours: Thursdays 3-4pm, zoom [link](https://ucla.zoom.us/j/2545750562)
+  - Zoom office hours: TBD, zoom [link](https://ucla.zoom.us/j/2545750562)
   - And by appointment
 
 ## Teaching assistants
 
-**Patricia Martín**  
+**Brianna Wright**  
 
 - Pronouns: she/her/hers
-- Email: [pmarti@g.ucla.edu](pmarti@g.ucla.edu)
+- Email: [briannawright135@gmail.com](briannawright135@gmail.com)
 - Office hours:
-  - Zoom office hours: Wednesdays 10-11am, zoom [link](https://ucla.zoom.us/j/97724535140)
+  - Zoom office hours: Thursdays 10-11am, zoom [link](https://ucla.zoom.us/j/96112454375)
   - And by appointment
 
-**Crystal Han**  
+**Liza Chavac**  
 
 - Pronouns: she/her/hers
-- Email: [cyouh95@ucla.edu](cyouh95@ucla.edu)
+- Email: [lizachavac@gmail.com](lizachavac@gmail.com)
 - Office hours:
-  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/97212264332)
+  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/98924452961)
   - And by appointment
 
 # Course learning goals
@@ -144,7 +143,7 @@ Another broad goal of the course is for students to begin developing practical p
 
 ## Course structure
 
-For the first two or three weeks of the course, we will have synchronous lectures and class time will be on Fridays from 8:30am to 11:20am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 10am to 11:20am. Weekly homework will consist of students working through the lectures on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
+For the first two or three weeks of the course, we will have synchronous lectures and class time will be on Fridays from 9:00am to 11:50am. In the subsequent weeks, we will have asynchronous (pre-class) lectures and a synchronous workshop-style class that meets on Fridays from 9:00am to 10:00am. Weekly homework will consist of students working through the lectures on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
 
 1. __Asynchronous (pre-class) lectures__. Weekly asynchronous lectures will be posted on the course website with the expectation that students work through the lecture in advance of our weekly synchronous class meeting. Lecture materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, short videos (e.g., 15 to 30 total minutes per week) that provide a high-level discussion of important and/or challenging concepts from the lecture slides, but not a line-by-line recitation of the lecture; and, third, the .Rmd file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will be able to "learn by doing" in that they can run R code on their own computer while they work through lecture materials on their own.
 1. __Synchronous workshop-style class meetings.__ We will have one synchronous class meeting per week. Typically, these meetings will begin with a discussion of concepts students found difficult or confusing from the lecture materials. The bulk of class time will be devoted to students working in groups on a substantive activity posed by the instructor. While students work in groups, the instructor and teaching assistants will visit each group to answer questions and talk through ideas. We will not be recording these synchronous sessions to respect student privacy.
@@ -181,14 +180,14 @@ In this course we will utilize data that reflect systemic gaps based on race, et
 
 ## Course Zoom link  
 
-Time: Fridays 08:30 AM Pacific Time (US and Canada) (*Only for the first two weeks)  
+Time: Fridays 09:00 AM Pacific Time (US and Canada)   
 
-- All subsequent weeks, class will start at 10am
+- After the first two weeks, class will start at 9:00am and end at 10:00am
 
 Join Zoom Meeting  
 
-- https://ucla.zoom.us/j/94774035711  
-- Passcode: 058301  
+- https://ucla.zoom.us/j/94045376896  
+ 
 
 ## Course website
 
@@ -197,7 +196,7 @@ All course related material can be found on the [course website](https://anyone-
 
 ## Course discussion
 
-We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_announcements).
+We will be using GitHub teams for class announcements [HERE](https://github.com/anyone-can-cook/rclass1_student_announcements_f21).
 
   - __GitHub teams__: The teaching team will post all class announcements using GitHub teams. The GitHub team discussions feature allows for quick and seamless communication to all members of an organization or team -- in this case, to all students with a GitHub account enrolled in the course. Some features include:  
   
@@ -208,7 +207,7 @@ We will be using GitHub teams for class announcements [HERE](https://github.com/
 
 *Credit: [Introducing team discussions](https://github.blog/2017-11-20-introducing-team-discussions/)*  
 
-We will be using GitHub issues for questions and class discussion [HERE](https://github.com/anyone-can-cook/rclass1_student_issues).
+We will be using GitHub issues for questions and class discussion [HERE](https://github.com/anyone-can-cook/rclass1_student_issues_f21).
 
   - __GitHub issues__: GitHub issues are traditionally used by collaborators of a repository for managing tasks for a project. Our rational for using issues is twofold: 1) help track and organize questions related to course material and problem sets and 2) promote classroom participation. Students are encouraged to contribute to issues by posting questions, sharing helpful resources, and/or taking a stab at answering questions posted on issues. Some features include: 
     
