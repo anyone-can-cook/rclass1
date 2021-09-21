@@ -1,7 +1,9 @@
 ---
 title: "Problem Set Resources and Guideline"
 date: "9/30/2020"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 urlcolor: blue
 ---
 
@@ -63,7 +65,7 @@ setwd("../intro_to_r")
 
   - Clear title describing your issue (e.g. PS1: file directory question)  
   - Provide enough background information about your issue including a description, your code, any relevant links, etc.  
-  - Assign and/or mention `@` the instructors (@ozanj, @mpatricia01, @cyouh95) in your issue.  
+  - Assign and/or mention `@` the instructors (@ozanj, @lizachavac, @briannawright135) in your issue.  
   - Assign and/or mention members of your group, if applicable.
 
     
