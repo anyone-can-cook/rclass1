@@ -7,7 +7,9 @@ library(labelled)
 library(haven)
 library(sjlabelled)
 #################################
-
+remove.packages("htmltools")
+install.packages("htmltools")
+install.packages("rlang")
 #second followup survey instrument:
   #https://nces.ed.gov/surveys/hsls09/pdf/HSLS09_Second_Follow-up_Student_Instrument.pdf [2016]
   #https://nces.ed.gov/surveys/hsls09/pdf/2013_Student_Parent_Questionnaire.pdf [2013]
