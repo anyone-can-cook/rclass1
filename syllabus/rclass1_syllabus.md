@@ -1,7 +1,5 @@
 ---
 title: 'EDUC 260A: Introduction to Programming and Data Management'
-author: "null"
-date: "null"
 output:
   #pdf_document:
   #  toc: yes
