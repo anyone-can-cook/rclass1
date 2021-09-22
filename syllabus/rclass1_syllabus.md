@@ -51,9 +51,6 @@ subtitle: Fall 2021
 
 The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than coginducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
 
-
-
-
 ## Extended description
 
 Data management consists of acquiring, investigating, cleaning, combining, and manipulating data. Most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, cleaning the data and creating analysis datasets is often more time consuming than conducting analyses. This course teaches the fundamental data management and data manipulation skills necessary for creating analysis datasets.
@@ -163,8 +160,6 @@ __Asynchronous course materials__.  Asynchronous course materials for each week 
 - Friday 10/22/21 9AM-11:50AM synchronous class
   - Ozan lectures about "processing across rows"
   - students only required to attend zoom from 9AM-10AM
-
-  
 
 
 ## How to succeed in this class
@@ -295,13 +290,11 @@ Because we do not have resources to grade weekly problof the very large number o
 
 ## Participation (10 percent of total grade)
 
-OJ - EDIT THIS SECTION
+Broadly, we expect students to participate by being attentive, supportive of classmates, by asking questions, and by answering questions posed by classmates.
 
-Students are expected to participate in the weekly class meetings by being attentive, supportive, by asking questions, or by answering questions posed by others on Zoom. Additionally, students can receive strong participation grades by asking questions and answering questions on GitHub issues. 
+Practically speaking, the vast majority of your participation grade will depend on weekly participation on Github. Each week, students are required to post one communication on Github. This could be asking a question about the problem set, answering a question posed by a classmate, or a post describing something you learned while working through the week's material/problem set. If you post at least one communication on Github each week, you will earn an "A" for participation for the quarter.
 
-Students are required to attend the weekly class meetings (unless you have talked to the instructors about this beforehand). Each unexcused absence results in a loss of 20% from your attendance/participation grade. Three or more unexcused absences will result in a failing grade for the course. 
-
-An excused absence is a professional opportunity that you discuss with me beforehand or a medical, or family emergency.  Excused absences will not result in a loss of attendance points.  However, you will be responsible for all material covered in that class and you will be expected to turn in homework assignments on time.
+In addition, students can work towards an "A+" participation grade for the quarter by asking/answering questions during synchronous lecture (e.g., zoom chat) or by consistently being helpful/supportive to your classmates on Github.
 
 ## Grading scale
 

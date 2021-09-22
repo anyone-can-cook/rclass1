@@ -1,6 +1,6 @@
 ---
 title: "Introduction to R and R data structures"
-subtitle:  "EDUC 263: Introduction to Programming and Data Management Using R"
+subtitle:  "EDUC 260A: Introduction to Programming and Data Management"
 author: Ozan Jaquette
 date: 
 classoption: dvipsnames  # for colors
@@ -54,15 +54,28 @@ for (i in imgs) {
 
 ### What is R?
 
-According to the Inter-University Consortium for Political and Social Research [(ICPSR)](https://www.icpsr.umich.edu/icpsrweb/content/shared/ICPSR/faqs/what-is-r.html):
+For detailed info visit [R-project.org](https://www.r-project.org/about.html)
+
+\medskip
+
+The Inter-University Consortium for Political and Social Research [(ICPSR)](https://www.icpsr.umich.edu/icpsrweb/content/shared/ICPSR/faqs/what-is-r.html) says:
 
 \medskip
 
 > R is "an alternative to traditional statistical packages such as SPSS, SAS, and Stata such that it is an extensible, open-source language and computing environment for Windows, Macintosh, UNIX, and Linux platforms. Such software allows for the user to freely distribute, study, change, and improve the software under the [Free Software Foundation's GNU General Public License](https://www.gnu.org/home.en.html)."
 
 \medskip
+I don't find this definition particularly helpful. I think of *R* as:
 
-For more info visit [R-project.org](https://www.r-project.org/about.html)
+- An "open source" programming language and software that provide collections of interrelated "functions"
+- "open source" means that *R* is free and created by the user community. The user community can modify basic things about *R* and add new capabilities to what R can do the user community can modify R and 
+- a "function" is usually something that takes in some "input," processes this input in some way, and creates some "output"
+  - e.g., the `max()` function takes as input a collection of numbers (e.g., 3,5,6) and returns as output the number with the maximum value
+  - e.g., the `lm()` function takes in as inputs a dataset and a statistical model you specify within the function, and returns as output the results of the regression model
+
+\medskip
+
+
 
 ### Base R vs. R packages
 
@@ -85,7 +98,8 @@ R packages
   - `leaflet` package for mapping
   - `rvest` package for webscraping
   - `rtweet` package for streaming and downloading data from Twitter
-- **All** R packages are free! More about R packages in later weeks...
+- **All** R packages are free! 
+- Often a package we install may be a collection of packages (e.g., `tidyverse`) and/or may depend on other packages, which will be automatically installed for you
 
 ### Installing and Loading R packages
 
