@@ -1,9 +1,6 @@
 ---
 title: 'EDUC 260A: Introduction to Programming and Data Management'
 output:
-  #pdf_document:
-  #  toc: yes
-  #  toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
@@ -14,6 +11,9 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
+  #  toc: yes
+  #  toc_depth: '3'
+  #pdf_document:
 urlcolor: blue
 subtitle: Fall 2021
 ---
@@ -266,7 +266,7 @@ Students will complete 10 problem sets (the last one due during finals week). Pr
 
 **Problem set groups**
 
-- With the exception of the first problem set, students will complete problem sets in groups of 3. 
+- With the exception of the first problem set, students will complete problem sets in groups of 3. We highly encourage students who are abroad to form their own group to set a time to work on the problem sets together.  
 - We will form groups during the second synchronous class and you will keep the same group throughout the quarter. However, each student will submit their own assignment. You are encouraged to work together and get help from your group. However, it is important that you understand how to do the problem set on your own, rather than copying the solution developed by group members.
 - Since you will be working together, it is understandable that answers for many questions will be the same as your group members. However, if I find compelling evidence that a student merely copied solutions from a classmate, I will consider this a violation of academic integrity and that student will receive a zero for the homework assignment.
 
@@ -277,9 +277,9 @@ A general strategy I recommend for completing the problem sets is as follows: (1
 - The lowest problem-set grade will be dropped from the calculation of your final grade. 
 - Grading and problem set groups
   - Because we do not have the person-power to grade weekly problem sets for each individual student enrolled (e.g., 80 students), one submission from each problem set group will be chosen at random. The grade on that problem set submission will be the grade for all members of the group.
-  - For up to two questions, you may ask TAs to regrade an answer that you feel you answered currectly that the graded submission did not answer correctly
+  - For up to two questions, you may ask TAs to regrade an answer that you feel you answered correctly that the graded submission did not answer correctly
   - If a member of a problem set group has not submitted the problem set by the time the TAs conduct grading, that submission will be grades separately once it is submitted
-Because we do not have resources to grade weekly problof the very large number of students enrolled, 
+because we do not have resources to grade weekly due to the very large number of students enrolled. 
 - Policy on late assignments
   - Problem sets submitted after 11:59PM on Friday will lose one percentage point (e.g., max grade becomes 99% instead of 100%)
   - Starting at 12AM Monday morning, problem sets will lose an additional percentage point for each week-day it is not submitted
