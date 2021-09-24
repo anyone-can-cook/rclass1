@@ -156,7 +156,9 @@ How we have used R+RStudio+RMarkdown in our research team
     - Static presentations
         - All lectures for this class written in RMarkdown
     - [Interactive presentations](https://ozanj.github.io/joyce_report/#/title)
-    - [Interactive maps](https://ozanj.github.io/joyce_report/#/4)
+    - Interactive map
+      - [Third Way map](https://ozanj.github.io/joyce_report/#/4)
+      - [Karina's recruitment redlining map](https://ksalazar3.github.io/defense/#/24/4)
     - [Interactive dashboards](https://jkcf.shinyapps.io/dashboard/)
     - Interactive graphs
 
@@ -781,6 +783,7 @@ df <- select(mtcars,mpg,cyl,hp) # ignore for now
 ```
 
 ```{r}
+
 names(df)
 head(df, n=4) # print first few rows
 ```
@@ -1241,6 +1244,19 @@ getwd()
 | ../../    | moves up two level   |
 
 
+```{r, eval=FALSE, include=FALSE}
+getwd()
+setwd('~')
+getwd()
+```
+Use relative path to move working directory up one level
+```{r}
+getwd()
+setwd('../')
+getwd()
+```
+
+
 ### Exercise  
 1. Let's create a folder on our desktop and name it red  
 2. Inside the red folder, create two subfolders named orange and yellow  
@@ -1265,6 +1281,7 @@ Let's say we want to get to the green folder using the absolute file path.
 
 ### Solution
 
+[Solution for Mac users]
 ```{r, eval=FALSE}
 getwd()
 setwd("~/Desktop/red/yellow/green")
