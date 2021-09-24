@@ -53,7 +53,7 @@ setwd("../intro_to_r")
 
 - Select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF"  
 - Go to class website https://anyone-can-cook.github.io/rclass1/ in the "Readings & Assignments" section and under each week, there will be a link titled "Problem set submission link"  
-- Click on the link and submit both .Rmd and pdf/html files  
+- Click on the link and submit both .Rmd and pdf files  
 - Make sure to use this naming convention "lastname_firstname_ps#"
 
 
