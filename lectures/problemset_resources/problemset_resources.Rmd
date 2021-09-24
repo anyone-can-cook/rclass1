@@ -1,6 +1,6 @@
 ---
 title: "Problem Set Resources and Guideline"
-date: "9/30/2020"
+date: "9/24/21"
 output:
   pdf_document: default
   word_document: default
@@ -49,7 +49,7 @@ getwd()
 setwd("../intro_to_r")
 ```
 
-## **5.** Once problem sets are complete, knit to pdf or html (depending on instructions)  
+## **5.** Once problem sets are complete, knit to pdf 
 
 - Select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF" or "Knit to HTML"  
 - Go to class website https://anyone-can-cook.github.io/rclass1/ in the "Readings & Assignments" section and under each week, there will be a link titled "Problem set submission link"  
@@ -59,7 +59,7 @@ setwd("../intro_to_r")
 
 ## **6.** Questions & Class discussion  
 
-- We encourage you to post any questions related to the problem sets and/or lectures as a GitHub issue. You can post issues here https://github.com/anyone-can-cook/rclass1_student_issues.  
+- We encourage you to post any questions related to the problem sets and/or lectures as a GitHub issue. You can post issues here https://github.com/anyone-can-cook/rclass1_student_issues_f21.  
 
 - **Issue guidelines**  
 
