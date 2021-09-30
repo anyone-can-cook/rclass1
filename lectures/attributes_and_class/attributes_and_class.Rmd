@@ -29,7 +29,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
 
 ```{r, echo=FALSE, include=FALSE}
 #THIS CODE DOWNLOADS THE MOST RECENT VERSION OF THE FILE beamder_header.tex AND SAVES IT TO THE DIRECTORY ONE LEVEL UP FROM THIS .RMD LECTURE FILE
-download.file(url = 'https://raw.githubusercontent.com/ozanj/rclass/master/lectures/beamer_header.tex', 
+download.file(url = 'https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/beamer_header.tex', 
               destfile = '../beamer_header.tex',
               mode = 'wb')
 ```

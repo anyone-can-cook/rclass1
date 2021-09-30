@@ -15,7 +15,7 @@ output:
     #colortheme: "dolphin" # push to header?
     #fonttheme: "structurebold"
     highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
-    df_print: tibble #default # tibble # push to header?    
+    df_print: default #default # tibble # push to header?    
     latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
     includes:
       in_header: ../beamer_header.tex
