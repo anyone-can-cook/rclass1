@@ -12,6 +12,7 @@ output:
     toc: false
     slide_level: 3
     theme: default # AnnArbor # push to header?
+    number_sections: true
     #colortheme: "dolphin" # push to header?
     #fonttheme: "structurebold"
     highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
@@ -780,6 +781,7 @@ Return all elements of object `x` where element is greater than 3:
 ```{r}
 x # print object X
 x>3 # for each element of X, print T/F whether element value > 3
+str(x>3)
 x[x>3] # prints only the values that had TRUE at that position
 ```
 
