@@ -1274,16 +1274,15 @@ Decomposing syntax `df_school[df_school$visits_by_110635 >= 1, ]`
 - `df_school$visits_by_110635 >= 1`: returns a logical (`TRUE`/`FALSE`) atomic vector with length equal to number of obs in `df_school`
 
 ```{r results="hide"}
+typeof(df_school$visits_by_110635 >= 1)
+length(df_school$visits_by_110635 >= 1)
 str(df_school$visits_by_110635 >= 1)
 ```
 - `df_school[df_school$visits_by_110635 >= 1, ]`
   - uses "double index" `df_name[<rows>, <columns>]` syntax to extract rows, columns
   - rows: extract rows where `df_school$visits_by_110635 >= 1` is `TRUE`
   - columns: since `<columns>` is empty, extracts all columns
-
-__key point__
-
-- `df_name[df_name$var_name <condition>, ]` is an example of "subset a vector approach #3": "Using logicals to return elements where condition `TRUE`"
+- __key point__: `df_name[df_name$var_name <condition>, ]` is "subset a vector approach #3": "Using logicals to return elements where condition `TRUE`"
 - example using atomic vectors (output omitted)
 ```{r results="hide"}
 x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
@@ -1413,17 +1412,18 @@ When sub-setting via `[]` combined with `$`, result will include:
 
 __Task__ (using `df_event`, which has one obs per university, recruiting event)
 
-- How many events at public high schools with at least $50k median household income?
+- How many events at public HS with at least $50k median household income?
 
-Extracting observations via `[]` combined with `$`
 ```{r}
+sum(is.na(df_event$med_inc)) # number of observations (all events) with missing values for med_inc
+
 #num obs event_type=="public hs" and med_inc is missing
 nrow(df_event[df_event$event_type == "public hs" 
-  & is.na(df_event$med_inc)==1 , ])
+  & is.na(df_event$med_inc)==1 , ]) # note TRUE evaluates to 1
 
 #num obs event_type=="public hs" & med_inc is not NA & med_inc >= $50,000
 nrow(df_event[df_event$event_type == "public hs" 
-  & is.na(df_event$med_inc)==0 & df_event$med_inc>=50000 , ])
+  & is.na(df_event$med_inc)==0 & df_event$med_inc>=50000 , ])  # note FALSE evaluates to 0
 
 #num obs event_type=="public hs" and med_inc >= $50,000
 nrow(df_event[df_event$event_type == "public hs" 
@@ -1520,7 +1520,9 @@ Syntax [when object is data frame]: __subset(x, subset, select, drop = FALSE)__
 
 ### Subset function, examples 
 
-Recall the previous example where we count events at public HS with at least $50k median household income. Note that `subset()` automatically excludes rows where condition is `NA`:
+Recall the previous example where we count events at public HS with at least $50k median household income. 
+
+- _Note_. `subset()` automatically excludes rows where condition is `NA`:
 
 ```{r}
 #Base R, `[]` combined with `$`, without which(); includes `NA`
@@ -1534,6 +1536,10 @@ nrow(df_event[which(df_event$event_type == "public hs"
 #Base R, `subset()`; excludes `NA`
 nrow(subset(df_event, event_type == "public hs" 
             & med_inc>=50000))
+
+#Base R, `subset()`; excludes `NA`; explicitly name arguments of subset()
+nrow(subset(x = df_event, subset = event_type == "public hs" 
+            & med_inc>=50000))
 ```
 
 
@@ -1544,14 +1550,9 @@ Using `df_school`, show all public high schools that are at least 50% Latinx (va
 - Using base R, `subset()` [output omitted]
 ```{r, results="hide"}
 #public high schools with at least 50% Latinx student enrollment 
-subset(df_school, school_type == "public" & pct_hispanic >= 50 
+subset(x= df_school, subset = school_type == "public" & pct_hispanic >= 50 
      & state_code == "CA")
-
 ```
-
-### Subset function, examples
-
-Count all CA public high schools that are at least 50% Latinx
 
 - Can wrap `subset()` within `nrow()` to count number of observations that satisfy criteria
 ```{r}
@@ -1564,8 +1565,8 @@ nrow(subset(df_school, school_type == "public" & pct_hispanic >= 50
 Note that `subset()` identify the number of observations for which the condition is `TRUE`
 
 ```{r}
-nrow(subset(df_school, TRUE))
-nrow(subset(df_school, FALSE))
+nrow(subset(x = df_school, subset = TRUE))
+nrow(subset(x = df_school, subset = FALSE))
 ```
 
 ### Subset function, examples 
@@ -1597,7 +1598,7 @@ Use the `select` argument within `subset()` to keep selected variables
 Subset all CA public high schools that are at least 50% Latinx __AND__ only keep variables `name` and `address`
 
 ```{r}
-subset(df_school, school_type == "public" & pct_hispanic >= 50 
+subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
              & state_code == "CA", select = c(name, address))
 ```
 
