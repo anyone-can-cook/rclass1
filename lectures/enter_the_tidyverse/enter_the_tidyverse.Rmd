@@ -426,7 +426,7 @@ Operator symbol | Operator meaning
 `<=` | less than or equal to
 `&` | AND 
 `|` | OR
-`%in` | includes
+`%in%` | includes
 
 - Visualization of "Boolean" operators (e.g., AND, OR, AND NOT)
 
@@ -700,6 +700,7 @@ Syntax: `arrange(x,...)`
 - Subsequent arguments are a "comma separated list of unquoted variable names"
 
 ```{r, results="hide"}
+df_event
 arrange(df_event, event_date)
 ```
 Data frame goes back to previous order unless you __assign__ the new order
