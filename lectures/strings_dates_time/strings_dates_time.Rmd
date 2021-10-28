@@ -1,5 +1,6 @@
 ---
 title: "Introduction to strings, dates, and time"
+subtitle:  "EDUC 260A: Managing and Manipulating Data Using R"
 author: 
 date: 
 urlcolor: blue
@@ -57,7 +58,7 @@ We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will 
 
 # Load previously pulled Twitter data
 # p12_full_df <- readRDS("p12_dataset.RDS")
-p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass2/raw/master/data/p12_dataset.RDS", "rb"))
+p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass2/raw/main/data/p12_dataset.RDS", "rb"))
 glimpse(p12_full_df)
 
 p12_df <- p12_full_df %>% select("user_id", "created_at", "screen_name", "text", "location")
