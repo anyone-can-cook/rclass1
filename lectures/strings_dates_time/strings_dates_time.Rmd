@@ -46,6 +46,10 @@ Resources used to create this lecture:
 
 We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will use the university admissions Twitter handle if there is one, or the main Twitter handle for the university if there isn't one:
 
+- We wrote a short tutorial on using `rtweet` in the Fall 2020 version of this class:
+  - [LINK](https://anyone-can-cook.github.io/rclass1/in_class/rtweet/intro_to_rtweet.html) to html file
+  - [LINK](https://anyone-can-cook.github.io/rclass1/in_class/rtweet/intro_to_rtweet.Rmd) to .Rmd file
+
 ```{r}
 # library(rtweet)
 # 
@@ -58,7 +62,7 @@ We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will 
 
 # Load previously pulled Twitter data
 # p12_full_df <- readRDS("p12_dataset.RDS")
-p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass2/raw/main/data/p12_dataset.RDS", "rb"))
+p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/twitter/p12_dataset.RDS", "rb"))
 glimpse(p12_full_df)
 
 p12_df <- p12_full_df %>% select("user_id", "created_at", "screen_name", "text", "location")
