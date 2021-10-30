@@ -1,5 +1,6 @@
 ---
 title: "Introduction to strings, dates, and time"
+subtitle:  "EDUC 260A: Managing and Manipulating Data Using R"
 author: 
 date: 
 urlcolor: blue
@@ -30,7 +31,7 @@ Load packages:
 library(tidyverse)
 library(stringr)  # package for manipulating strings (part of tidyverse)
 library(lubridate)  # package for working with dates and times
-library(rvest)  # package for reading and manipulating HTML
+#library(rvest)  # package for reading and manipulating HTML
 ```
 
 Resources used to create this lecture:
@@ -45,6 +46,10 @@ Resources used to create this lecture:
 
 We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will use the university admissions Twitter handle if there is one, or the main Twitter handle for the university if there isn't one:
 
+- We wrote a short tutorial on using `rtweet` in the Fall 2020 version of this class:
+  - [LINK](https://anyone-can-cook.github.io/rclass1/in_class/rtweet/intro_to_rtweet.html) to html file
+  - [LINK](https://anyone-can-cook.github.io/rclass1/in_class/rtweet/intro_to_rtweet.Rmd) to .Rmd file
+
 ```{r}
 # library(rtweet)
 # 
@@ -57,7 +62,7 @@ We will use `rtweet` to pull Twitter data from the PAC-12 universities. We will 
 
 # Load previously pulled Twitter data
 # p12_full_df <- readRDS("p12_dataset.RDS")
-p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass2/raw/master/data/p12_dataset.RDS", "rb"))
+p12_full_df <- readRDS(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/twitter/p12_dataset.RDS", "rb"))
 glimpse(p12_full_df)
 
 p12_df <- p12_full_df %>% select("user_id", "created_at", "screen_name", "text", "location")
@@ -595,7 +600,7 @@ str_length(unique(p12_df$screen_name))
 # Let's focus on just the unique screen names
 p12_df %>% select(screen_name) %>% unique()
 
-p12_df %>% select(screen_name) %>% unique() %>% str_length()
+#p12_df %>% select(screen_name) %>% unique() %>% str_length()
 ```
 
 Notice that the above line does not work as expected because we passed in a dataframe to `str_length()` and it is trying to coerce that to character:
@@ -827,12 +832,15 @@ p12_unique_df
 
 ```{r}
 str_c(p12_unique_df$user_id, "=", p12_unique_df$screen_name, sep = " ", collapse = ", ")
+str_c(p12_unique_df$user_id, "=", p12_unique_df$screen_name, sep = " ") # without collapsing to one element
 ```
 
 <br>
 **[Tidyverse method]** Use `str_c()` to combine `user_id` and `screen_name`:
 
 ```{r}
+p12_unique_df %>% mutate(twitter_handle = str_c(user_id,screen_name))
+
 p12_unique_df %>% mutate(twitter_handle = str_c("User #", user_id, " is @", screen_name))
 ```
 
@@ -870,13 +878,13 @@ str_sub(string, start = 1L, end = -1L, omit_na = FALSE) <- value
 If no `start` and `end` positions are specified, `str_sub()` will by default return the entire (original) string:
 
 ```{r}
-str_sub(c("abcdefg", 123, TRUE))
+str_sub(string = c("abcdefg", 123, TRUE))
 ```
 
 Note that if an element is shorter than the specified `end` (i.e., `123` in the example below), it will just include all the available characters that it does have:
 
 ```{r}
-str_sub(c("abcdefg", 123, TRUE), start = 2, end = 4)
+str_sub(string = c("abcdefg", 123, TRUE), start = 2, end = 4)
 ```
 
 Remember we can also use negative index to count the position starting from the back:
@@ -894,7 +902,9 @@ If no `start` and `end` positions are specified, `str_sub()` will by default ret
 
 ```{r}
 v <- c("A", "AB", "ABC", "ABCD", "ABCDE")
-str_sub(v) <- "*"
+str_sub(v, start = 1,end =-1)
+
+str_sub(v, start = 1,end =-1) <- "*"
 v
 ```
 
@@ -902,7 +912,10 @@ If an element in the vector is too short to meet the subset specification, the r
 
 ```{r}
 v <- c("A", "AB", "ABC", "ABCD", "ABCDE")
-str_sub(v, 2, 3) <- "*"
+v
+str_sub(v, start = 2, end = 3)
+
+str_sub(v, start = 2, end = 3) <- "*"
 v
 ```
 
@@ -1220,7 +1233,7 @@ Using the `p12_datetime_df` we created earlier, we can create `Date` objects fro
 ```{r}
 # Use `make_date()` to create a `Date` object from the `yr_chr`, `mth_chr`, `day_chr` fields
 p12_datetime_df %>% select(created_at, dt_chr, yr_chr, mth_chr, day_chr) %>%
-  mutate(date_make_date = make_date(yr_chr, mth_chr, day_chr))
+  mutate(date_make_date = make_date(year = yr_chr, month = mth_chr, day = day_chr))
 ```
 
 </details>
@@ -1272,6 +1285,7 @@ Storing data using date/time objects makes it easier to **get and set** the vari
 # Create datetime for New Year's Eve
 dt <- make_datetime(2019, 12, 31, 23, 59, 59)
 dt
+dt %>% class()
 
 # Get date
 date(dt)
@@ -1284,6 +1298,8 @@ pm(dt)
 
 # Day of the week (3 = Tuesday)
 wday(dt)
+
+year(dt)
 ```
 
 </details>
@@ -1389,15 +1405,18 @@ Using the `lubridate` package for time spans:
 scorpio_start <- ymd("2019-10-23", tz = Sys.timezone())
 scorpio_end <- ymd("2019-11-22", tz = Sys.timezone())
 
+scorpio_start
 # These datetime objects have class `POSIXct`
 class(scorpio_start)
 
 # Create interval for the datetimes
 scorpio_interval <- scorpio_start %--% scorpio_end  # or `interval(scorpio_start, scorpio_end)`
+scorpio_interval <- interval(scorpio_start, scorpio_end)
 scorpio_interval
 
 # The object has class `Interval`
 class(scorpio_interval)
+as.numeric(scorpio_interval)
 ```
 
 </details>
