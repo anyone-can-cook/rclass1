@@ -330,7 +330,7 @@ Whenever using any of these tools, __pay close attention to missing values and h
 - sometimes missing values coded as very high positive numbers
 - Therefore, important to investigate input vars prior to creating analysis vars
 
-### Tools of EDA
+### Tools of EDA, caveat (using graphs to investigate variables)
 
 Caveat on tools of EDA introduced in this lecture
 
@@ -341,6 +341,50 @@ Caveat on tools of EDA introduced in this lecture
 - Graphs can be a great way to investigate continuous variables 
   - also effective for investigating relationship between continuous variable and some other variable
   - but we do not introduce graphs until beginning of EDUC260B (Rclass2)
+
+### Caveat (using base R `ifelse()` rather than Tidyverse `if_else()`)
+
+The below slides use the base _R_ `ifelse()` function rather than Tidyverse `if_else()` function to create variables
+
+- For example, below code uses `ifelse()` to create a version of the variable `s3classes` that replaces values less than zero with `NA`
+  - Note that the new variable we create `s3classes_na` is a numeric class variable, rather than labelled class, so it won't have value labels
+```{r, results="hide"}
+hsls_small %>% mutate(s3classes_na=ifelse(s3classes<0,NA,s3classes)) %>% 
+  select(s3classes,s3classes_na) %>% glimpse()
+```
+
+Why not use Tidyverse `if_else()`?
+
+- below code won't work because `if_else(<condition>,<true>,<false>)` expects values assigned when condition is `TRUE` to have the same *class* as values assigned when condition is `FALSE`
+  - but there is no variation of `NA` that has the labelled class, so *R* throws an error
+```{r, eval=FALSE}
+hsls_small %>% mutate(s3classes_na=if_else(s3classes<0,NA,s3classes))
+hsls_small %>% mutate(s3classes_na=if_else(s3classes<0,NA_real_,s3classes))
+```
+### Caveat (using base R `ifelse()` rather than Tidyverse `if_else()`)
+
+This "stack overflow" ([LINK](https://stackoverflow.com/questions/61489740/if-else-with-haven-labelled-column-fails-because-of-wrong-class)) post explains some solutions to get around the problem
+
+- We don't implement any of these solutions because we want to keep the code as simple as possible
+
+The downside of using `ifelse` is that the new variable has numeric class rather than labelled class; we lose value labels (and variable labels)
+
+- One way around this, is to assign the `labelled()` function from "haven" package to assign "labels" attribute from the input variable
+```{r, results="hide"}
+hsls_small_temp <- hsls_small %>% mutate(s3classes_na=ifelse(s3classes<0,NA,s3classes))
+
+attributes(hsls_small_temp$s3classes_na) # null
+attributes(hsls_small_temp$s3classes) # labelled class
+
+hsls_small_temp$s3classes_na <- labelled(
+  hsls_small_temp$s3classes_na, 
+  labels = attr(x=hsls_small_temp$s3classes, which = "labels"),
+  label = attr(x=hsls_small_temp$s3classes, which = "label")
+  )
+hsls_small_temp %>% select(s3classes,s3classes_na) %>% glimpse()
+hsls_small_temp %>% count(s3classes_na)
+rm(hsls_small_temp)
+```
 
 
 
