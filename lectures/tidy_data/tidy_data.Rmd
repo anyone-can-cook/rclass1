@@ -1,6 +1,6 @@
 ---
 title: "Tidy and Reshaping Data"
-subtitle:
+subtitle: "EDUC 260A: Introduction to Programming and Data Management"
 author:
 date: 
 urlcolor: blue
@@ -156,7 +156,8 @@ _Source: Wickham (2014, p. 3)_
 
 - __Value__: A single element within some data structure (e.g., vector, list)
 - __Variables__: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
-- __Observations__: "An observation contains all values measured on the same unit (like a person or a day) across attributes"
+- __Observations__: "An observation contains all values measured on the same unit (e.g., corporation-year) across attributes (variables)"
+  - e.g., unit is corporation-year and one observation contains values of revenue and expense variables for Google for the 2021 fiscal year
     
 <br>
 **Example**: Describing data semantics [revisited]
@@ -344,9 +345,6 @@ The above tables show the same data, but `table1` is in **tidy** form while `tab
 
 </details><br>
 
-
-# Tidying untidy data
-
 ## Common types of untidy data
 
 **Tidy data** can only have one organizational structure, while **untidy data** can come in various different forms. It is important to identify the most common types of untidy data, so that we can develop solutions for each.
@@ -392,6 +390,21 @@ kable(table5, caption = '`table5` from the `tidyr` package') %>% kable_styling(b
 
 The values in `century` and `year` should be combined to form a 4-digit `year` variable.
 
+# Tidying untidy data
+
+Approach the task of "tidying" data -- or more generally, the task of "reshaping" data -- as a two-step process
+
+1. Conceptual task of understanding how the data are organized and how the data should be organized (in some order):
+    - Define these concepts for your dataset
+      - __variables__: what variables *should* the resulting dataset have
+      - __observations__: each observation should represent what in the resulting dataset
+    - How is the dataset currently structured (columns represent what, rows represent what)
+      - which rules of tidy data are violated; why?
+    - write out on a piece of scratch paper what the tidy dataset *should* look like
+1. Technical task of writing the code that reshapes/transforms the dataset from untidy to tidy    
+    - `pivot_longer()` function reshapes data from "wide to long"
+      - e.g., your dataset has separate variables for each year, but you should have one variable "year" that has rows for each value of year
+    - `pivot_wider()` function reshapes data from "long to wide"
 
 ## Reshaping wide to long: `pivot_longer()`
 
@@ -411,11 +424,12 @@ pivot_longer(data, cols, names_to = "name", names_prefix = NULL,
 ```
 
 - Function: "lengthens" data, increasing the number of rows and decreasing the number of columns
-- Arguments:
+- Arguments (selected):
   - `data`: Dataframe to pivot
   - `cols`: Columns to pivot into longer format
   - `names_to`: Name of the column to create from the data stored in the column names of `data`
   - `values_to`: Name of the column to create from the data stored in cell values
+  - `names_sep`: If `names_to` contains multiple values, these arguments control how the column name is broken up.
 
 <br>
 **Example**: Tidying `table4b` (reshaping wide to long)
@@ -534,23 +548,48 @@ Consider the following example where the columns we want to reshape belongs to m
 ```{r}
 nces_table2
 ```
-
-<br>
-The goal is to keep enrollment and lunch data in separate columns and only pivot the years part. To do this, we can provide a character vector (instead of the usual string) for `names_to` and additionally specify the `names_sep` argument. 
-
-`names_sep` specifies the separator to use to separate the column names to 2 parts (e.g., the `tot`/`frl` measure part and the years part). 
-
-Then, we can specify how we want to treat each part inside the `names_to` vector:
-
-  - Use `.value` to indicate the part that we want to retain as separate columns (this replaces the need for the `values_to` argument)
-  - Provide a string to indicate the part to pivot to rows, where the string you provide will become the name of that column (like how we'd normally specify `names_to`)
-
+Applying the same approach we used for `nces_table1` doesn't give us the structure we want
 ```{r}
 nces_table2 %>%
   pivot_longer(
+    cols = -state,                
+    names_to = 'year',            
+    names_prefix = 'tot_',        # rename pivoted values by striping the prefix 'tot_'
+    values_to = 'total_students'
+  )
+```
+
+<br><br>
+
+The goal is to keep enrollment and lunch data in separate columns and only pivot the years part. To do this, we can provide a character vector (instead of the usual string) for `names_to` and additionally specify the `names_sep` argument. 
+
+Here, we copy the full description of the `names_to` and `names_sep` arguments from the `pivot_longer()` helpfile
+
+- `names_sep`: If names_to contains multiple values, these arguments control how the column name is broken up.
+- `names_to` A string specifying the name of the column to create from the data stored in the column names of data.
+  - can be a character vector, creating multiple columns, if names_sep or names_pattern is provided. In this case, there are two special values you can take advantage of:
+    - `NA` will discard that component of the name.
+    - `.value` indicates that component of the name defines the name of the column containing the cell values, overriding values_to.
+
+
+<br><br>
+How we will use these arguments to reshape `nces_table2`:
+
+- `names_sep` specifies the separator to use to separate the column names to 2 parts (e.g., the `tot`/`frl` measure part and the years part). 
+- `names_to` Then, we can specify how we want to treat each part inside the `names_to` vector:
+  - Use `.value` to indicate the part that we want to retain as separate columns (this replaces the need for the `values_to` argument)
+  - Provide a string to indicate the part to pivot to rows, where the string you provide will become the name of that column (like how we'd normally specify `names_to`)
+
+
+
+```{r}
+nces_table2 %>% head(n=5)
+
+nces_table2 %>%
+  pivot_longer(
     -state,                          # pivot all columns except `state`
-    names_to = c('.value', 'year'),  # keep `tot` & `frl` as separate columns, pivot year values
-    names_sep = '_'                  # use '_' as column name separator
+    names_sep = '_',                  # use '_' as column name separator    
+    names_to = c('.value', 'year')  # keep `tot` & `frl` as separate columns, pivot year values
   )
 ```
 

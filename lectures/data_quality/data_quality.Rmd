@@ -1,6 +1,6 @@
 ---
 title: "Guidelines for Investigating, cleaning, and creating variables" # potentially push to header
-subtitle:  "EDUC 260A: Introduction to Programming and Data Management Using R"
+subtitle:  "EDUC 260A: Introduction to Programming and Data Management"
 author: 
 date: 
 classoption: dvipsnames  # for colors
