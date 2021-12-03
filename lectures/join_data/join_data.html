@@ -1604,6 +1604,12 @@ y3
 #&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
 #&gt; 1     1 x1    y1   
 #&gt; 2     2 x2    y2</code></pre>
+<pre class="r"><code>inner_join(x = x, y = y, by = &quot;key&quot;)</code></pre>
+<pre><code>#&gt; # A tibble: 2 x 3
+#&gt;     key val_x val_y
+#&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+#&gt; 1     1 x1    y1   
+#&gt; 2     2 x2    y2</code></pre>
 <p><br> This is an example of a <strong>one-to-one</strong> relationship because <code>key</code> uniquely identifies observations in both table <code>x</code> and <code>y</code>. In other words, <code>key</code> can be the <em>primary key</em> for both <code>x</code> and <code>y</code>, as well as <em>foreign key</em> when we think about the relationship between the tables. <!-- https://stackoverflow.com/a/30517805/6373540 --></p>
 <br>
 <details>
@@ -2329,8 +2335,28 @@ nls_tran %&gt;% group_by(id, transnum) %&gt;% summarise(n_per_key=n()) %&gt;% un
 <pre class="r"><code># There are 24253 unique student transcripts (rows) in nls_tran
 nls_tran %&gt;% nrow()</code></pre>
 <pre><code>#&gt; [1] 24253</code></pre>
-<pre class="r"><code># 18855 of the student transcripts (rows) in nls_tran match to term level data (rows) in nls_term
-nls_tran %&gt;% inner_join(nls_term, by = c(&quot;id&quot;, &quot;transnum&quot;)) %&gt;% count(id, transnum) %&gt;% nrow()</code></pre>
+<pre class="r"><code># inner_join
+nls_tran %&gt;% inner_join(nls_term, by = c(&quot;id&quot;, &quot;transnum&quot;))</code></pre>
+<pre><code>#&gt; # A tibble: 120,807 x 17
+#&gt;       id transnum  findisp  trnsflag terms  fice state   cofcon  instype   itype
+#&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl+lb&gt; &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl+lb&gt; &lt;dbl+lb&gt; &lt;dbl+l&gt;
+#&gt;  1    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  2    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  3    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  4    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  5    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  6    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  7    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  8    67        1 1 [1. T~ 1 [1. RE~     8  5694     1 2 [2. P~ 1 [1. p~ 5 [5. ~
+#&gt;  9   315        1 1 [1. T~ 1 [1. RE~    20  1009     1 6 [6. P~ 3 [3. P~ 1 [1. ~
+#&gt; 10   315        1 1 [1. T~ 1 [1. RE~    20  1009     1 6 [6. P~ 3 [3. P~ 1 [1. ~
+#&gt; # ... with 120,797 more rows, and 7 more variables: termnum &lt;dbl&gt;,
+#&gt; #   courses &lt;dbl&gt;, termtype &lt;dbl+lbl&gt;, season &lt;dbl+lbl&gt;, sortdate &lt;dbl&gt;,
+#&gt; #   gradcode &lt;dbl+lbl&gt;, transfer &lt;dbl+lbl&gt;</code></pre>
+<pre class="r"><code># figure out number of obs from nls_tran that merged w/ nls_term
+nls_tran %&gt;% inner_join(nls_term, by = c(&quot;id&quot;, &quot;transnum&quot;)) %&gt;% 
+  group_by(id,transnum) %&gt;% summarize() %&gt;% # keep one obs per each combination of id,transnum
+  nrow() # number of number of obs from nls_tran that had merged with nls_term by id,transnum</code></pre>
 <pre><code>#&gt; [1] 18855</code></pre>
 <p><br> As seen, <strong>18855</strong> of the <strong>24253</strong> student transcripts (rows) in <code>nls_tran</code> have a match in <code>nls_term</code>, leaving a remaining <strong>5398</strong> student transcripts that did not match to any term level info. We can use <code>anti_join()</code> to investigate these unmatched rows to see why these transcripts do not have any term level data.</p>
 <pre class="r"><code># Create object of observations that didn&#39;t merge

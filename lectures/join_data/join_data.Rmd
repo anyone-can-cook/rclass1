@@ -781,8 +781,13 @@ nls_tran %>% group_by(id, transnum) %>% summarise(n_per_key=n()) %>% ungroup() %
 # There are 24253 unique student transcripts (rows) in nls_tran
 nls_tran %>% nrow()
 
-# 18855 of the student transcripts (rows) in nls_tran match to term level data (rows) in nls_term
-nls_tran %>% inner_join(nls_term, by = c("id", "transnum")) %>% count(id, transnum) %>% nrow()
+# inner_join
+nls_tran %>% inner_join(nls_term, by = c("id", "transnum"))
+
+# figure out number of obs from nls_tran that merged w/ nls_term
+nls_tran %>% inner_join(nls_term, by = c("id", "transnum")) %>% 
+  group_by(id,transnum) %>% summarize() %>% # keep one obs per each combination of id,transnum
+  nrow() # number of number of obs from nls_tran that had merged with nls_term by id,transnum
 ```
 
 <br>
