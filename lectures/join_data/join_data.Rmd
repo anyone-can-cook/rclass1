@@ -296,9 +296,17 @@ What is a **foreign key**?
 - A foreign key creates a relationship between two tables
 
 <br>
-**Example**: With respect to `nls_stu`, `id` is the foreign key in the `nls_tran` table
+**Example**: With respect to datasets `nls_stu` and `nls_tran` 
 
-Recall that the student `id` is the _primary key_ in `nls_stu` because it uniquely identifies each observation in the table. In terms of the relationship between `nls_stu` and `nls_tran`, we can say the `id` variable is the _foreign key_ in `nls_tran` because it can be used to link the two tables.
+- Recall that the student `id` is the _primary key_ in `nls_stu` because it uniquely identifies each observation in the table. 
+- The variable `nls_tran$id` is the _foreign key_ for `nls_stu` because it uniquely identifies observations in `nls_stu`
+
+```{r}
+nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+```
+
 
 <br>
 <details><summary>**Ozan's way of thinking about foreign key**</summary>
@@ -316,13 +324,31 @@ __Example of foreign key__
 - With respect to the "focal table" `nls_tran` and the "other table" `nls_stu`, the variable `id` is the _foreign key_ because:
     - `id` exists in the "focal table" `nls_trans` (though it does not uniquely identifies observations in `nls_trans`)
     - `id` exists in the "other table" `nls_stu` and `id` uniquely identifies observations in `nls_stu`
-```{r}
-nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
 
-nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+</details>
+
+### Student exercise
+
+With respect to `nls_trans`, which variable(s) make up the foreign key in the `nls_term` table?
+
+<details><summary>**Solution**</summary>
+
+Since `id` and `transnum` make up the _primary key_ in the `nls_trans` table, these variables make up the _foreign key_ in `nls_term` because they can be used to link the two tables:
+
+```{r}
+# id and transnum make up the primary key in nls_trans because they uniquely identify each obs
+nls_tran %>% 
+  group_by(id, transnum) %>% 
+  summarise(n_per_key=n()) %>% 
+  ungroup() %>% 
+  count(n_per_key)
+
+# id and transnum also both exist in nls_term, so they form the foreign key that links the 2 tables
+names(nls_term)
 ```
 
 </details>
+## Requirements for joining two tables
 
 In practice, you join two tables without explicit thinking about "primary key" vs. "foreign key" and "focal table" vs. "other table"
 
@@ -346,30 +372,7 @@ names(nls_tran)
 nls_tran %>% arrange(id, transnum) %>% select(id,transnum,findisp,itype) %>% head(20)
 #nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
 ```
-    
 
-
-### Student exercise
-
-With respect to `nls_trans`, which variable(s) make up the foreign key in the `nls_term` table?
-
-<details><summary>**Solution**</summary>
-
-Since `id` and `transnum` make up the _primary key_ in the `nls_trans` table, these variables make up the _foreign key_ in `nls_term` because they can be used to link the two tables:
-
-```{r}
-# id and transnum make up the primary key in nls_trans because they uniquely identify each obs
-nls_tran %>% 
-  group_by(id, transnum) %>% 
-  summarise(n_per_key=n()) %>% 
-  ungroup() %>% 
-  count(n_per_key)
-
-# id and transnum also both exist in nls_term, so they form the foreign key that links the 2 tables
-names(nls_term)
-```
-
-</details>
 
 # Mutating joins
 
@@ -471,6 +474,8 @@ We want to join `x` and `y` by the common variable `key`:
 
 ```{r}
 inner_join(x, y, by = "key")  # Equivalent to: inner_join(x, y, by = c("key" = "key"))
+
+inner_join(x = x, y = y, by = "key")
 ```
 
 <br>
