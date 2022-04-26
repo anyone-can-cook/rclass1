@@ -129,6 +129,20 @@ Another broad goal of the course is for students to begin developing practical p
 
 ## Course structure
 
+__Overview__. Course structure consists of weekly __asynchronous course materials__ and weekly __synchronous workshop meetings__. Each week we will focus on a particular topic (e.g., creating variables; writing functions). For each weekly topic, students will complete a problem set. Problem sets will be completed in groups and focus on practical application of concepts/skills from the topic of the week.
+
+__Asynchronous course materials__.  Asynchronous course materials will focus on the topic for that week (e.g., processing across rows). Course materials will consist of three types of resources: 
+
+1. Detailed lecture slides (PDF or HTML) with sample code
+1. Pre-recorded video lecture of the instructor working through these slides
+1. The ".Rmd" file that created the PDF/HTML lecture slides.
+    - The .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will  "learn by doing" in that they will run _R_ code on their own computer while they work through lecture materials on their own.
+
+__Synchronous workshop meetings__. Synchronous class time will largely consist of workshop-style meetings in which students work in zoom breakout rooms in small groups. Typically, students will be in a breakout room with members of their problem set group, though working with other students is fine too. During these synchronous workshop meetings, students will work through course materials (e.g., lecture slides, video lectures) and/or the associated problem set as they see fit. The synchronous workshops are also a great time to ask questions about course material or practical applications. The instructor/TAs will be moving from one breakout room to the next, providing help. In some weeks, the instructor will devote a modest amount of time to class-wide lecture or discussion with the goal of framing practical applications and/or addressing difficulties that many students are encountering.
+
+Each group can develop their own approach to how they want to use the synchronous workshop time. Some groups may work relatively independently, while others may work collaboratively. Some groups may agree to work through all asynchronous lecture materials beforehand so they can devote all workshop time to making progress on the problem set. Other groups may use the workshop time to primarily to work through the course materials.
+
+<!-- 
 __Overview__. For the first two or three weeks of the course, we will have synchronous lectures and class time that will take all or most of the allotted Friday 9:00am to 11:50am time. In the subsequent weeks, students will only be required to attend the Friday synchronous zoom class from 9AM-10AM. However, the instructor will continue lecturing until all material for the week has been covered. All lectures will be recorded. Weekly work students are expected to do outside of class time will consist of students working through lecture material on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
 
 __Asynchronous course materials__.  Asynchronous course materials for each week will focus on the topic for that week (e.g., "creating variables"). Course materials will consist of three types of resources: first, detailed lecture slides (PDF or HTML) with sample code; second, video lecture of the instructor working through these slides (recorded on the pevious Friday); and, third, the ".Rmd" file that created the PDF/HTML lecture slides. This .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will  "learn by doing" in that they will run R code on their own computer while they work through lecture materials on their own.
@@ -147,6 +161,10 @@ __Asynchronous course materials__.  Asynchronous course materials for each week 
   - Ozan lectures about "processing across rows"
   - students only required to attend zoom from 9AM-10AM
 
+-->
+
+
+
 
 ## How to succeed in this class
 
@@ -161,7 +179,7 @@ Here are some substantive tips to help you succeed:
   - Discuss with your problem set group
   - Ask a question on GitHub
   - Come to office hours
-- Be supportive of your classmates; together, we will create a classroom environment where we all help each other succeed!  
+- Be supportive of your classmates; let's create a classroom environment where we all help each other succeed!
 
 # Classroom environment
 
