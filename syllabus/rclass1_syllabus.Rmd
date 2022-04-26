@@ -278,12 +278,17 @@ A general strategy I recommend for completing the problem sets is as follows: (1
 
 **Grading policies**
 
-- The lowest problem-set grade will be dropped from the calculation of your final grade. 
+<!-- 
 - Grading and problem set groups
   - Because we do not have the person-power to grade weekly problem sets for each individual student enrolled (e.g., 80 students), one submission from each problem set group will be chosen at random. The grade on that problem set submission will be the grade for all members of the group.
   - For up to two questions, you may ask TAs to regrade an answer that you feel you answered correctly that the graded submission did not answer correctly
   - If a member of a problem set group has not submitted the problem set by the time the TAs conduct grading, that submission will be grades separately once it is submitted
 because we do not have resources to grade weekly due to the very large number of students enrolled. 
+
+
+-->
+
+- The lowest problem-set grade will be dropped from the calculation of your final grade. 
 - Policy on late assignments
   - Problem sets submitted after 11:59PM on Friday will lose one percentage point (e.g., max grade becomes 99% instead of 100%)
   - Starting at 12AM Monday morning, problem sets will lose an additional percentage point for each week-day it is not submitted
