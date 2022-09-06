@@ -15,7 +15,7 @@ output:
   #  toc_depth: '3'
   #pdf_document:
 urlcolor: blue
-subtitle: Fall 2021
+subtitle: Fall 2022
 ---
 
 # Course information
