@@ -91,12 +91,12 @@ Recommended prerequisites (not absolutely required)
 
 ## Teaching assistants
 
-**Brianna Wright**  
+**Joyce Nguy**  
 
 - Pronouns: she/her/hers
-- Email: [briannawright135@gmail.com](briannawright135@gmail.com)
+- Email: [joycenguy@g.ucla.edu](joycenguy@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Thursdays 10-11am, zoom [link](https://ucla.zoom.us/j/96112454375)
+  - Zoom office hours: Mondays 10-11am, zoom [link](https://ucla.zoom.us/j/96112454375)
   - And by appointment
 
 **Liza Chavac**  
