@@ -11,9 +11,9 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
-  #  toc: yes
-  #  toc_depth: '3'
-  #pdf_document:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2022
 ---
@@ -91,21 +91,30 @@ Recommended prerequisites (not absolutely required)
 
 ## Teaching assistants
 
-**Joyce Nguy**  
+**Joyce H. Nguy**  
 
 - Pronouns: she/her/hers
 - Email: [joycenguy@g.ucla.edu](joycenguy@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Mondays 10-11am, zoom [link](https://ucla.zoom.us/j/96112454375)
+  - Zoom office hours: Mondays 10-11am, Zoom [link](https://ucla.zoom.us/j/8458209354)
   - And by appointment
 
-**Liza Chavac**  
+**Xochitl Lopez**  
 
 - Pronouns: she/her/hers
-- Email: [lizachavac@gmail.com](lizachavac@gmail.com)
+- Email: [lopezxochilth@ucla.edu](lopezxochilth@ucla.edu)
 - Office hours:
   - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/3465888342)
   - And by appointment
+  
+**Rachel Berwald**  
+
+- Pronouns: she/her/hers
+- Email: [rberwald@g.ucla.edu](rberwald@g.ucla.edu)
+- Office hours:
+  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/3465888342)
+  - And by appointment
+
 
 # Course learning goals
 
