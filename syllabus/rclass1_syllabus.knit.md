@@ -20,18 +20,32 @@ subtitle: Fall 2022
 
 # Course information
 
-```{r echo=FALSE, message=FALSE}
-library(kableExtra)
-library(tidyverse)
-
-t <- c("Class website (public)", "Questions & Discussion (private)", "Announcements (private)", "Class Zoom link (Meeting ID: 940 4537 6896)")
-l <- c("https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f21", "https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements", "https://ucla.zoom.us/j/94045376896")
-
-info <- tibble(t, l)
-
-kable(info,col.names = c("Resource","Link"), escape = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
-```
+<table class="table table-striped table-hover table-responsive" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Resource </th>
+   <th style="text-align:left;"> Link </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Class website (public) </td>
+   <td style="text-align:left;"> https://anyone-can-cook.github.io/rclass1/ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Questions &amp; Discussion (private) </td>
+   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues_f21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Announcements (private) </td>
+   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Class Zoom link (Meeting ID: 940 4537 6896) </td>
+   <td style="text-align:left;"> https://ucla.zoom.us/j/94045376896 </td>
+  </tr>
+</tbody>
+</table>
 
 # Course description
 
@@ -316,18 +330,60 @@ In addition, students can work towards an "A+" participation grade for the quart
 
 ## Grading scale
 
-```{r echo=FALSE, message=FALSE}
-library(kableExtra)
-library(tidyverse)
-
-lg <- c("A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F")
-nv <- c("99-100%", "93<99%", "90<93%", "87<90%", "83<87%", "80<83%", "77<80%", "73<77%", "70<73%", "60<70%", "0<60%")
-
-grade <- tibble(lg, nv)
-
-kable(grade,col.names = c("Letter Grade", "Percentage"), escape = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, position = "left")
-```
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Letter Grade </th>
+   <th style="text-align:left;"> Percentage </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> A+ </td>
+   <td style="text-align:left;"> 99-100% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> 93&lt;99% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> A- </td>
+   <td style="text-align:left;"> 90&lt;93% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> B+ </td>
+   <td style="text-align:left;"> 87&lt;90% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> 83&lt;87% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> B- </td>
+   <td style="text-align:left;"> 80&lt;83% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C+ </td>
+   <td style="text-align:left;"> 77&lt;80% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C </td>
+   <td style="text-align:left;"> 73&lt;77% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C- </td>
+   <td style="text-align:left;"> 70&lt;73% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> D </td>
+   <td style="text-align:left;"> 60&lt;70% </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:left;"> 0&lt;60% </td>
+  </tr>
+</tbody>
+</table>
 
 # Course topics
 
