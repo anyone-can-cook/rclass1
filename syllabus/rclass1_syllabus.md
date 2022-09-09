@@ -102,7 +102,7 @@ Recommended prerequisites (not absolutely required)
 **Xochitl Lopez**  
 
 - Pronouns: she/her/hers
-- Email: [lopezxochilth@ucla.edu](lopezxochilth@ucla.edu)
+- Email: [lopezxochilthh@gmail.com](lopezxochilth@gmail.com)
 - Office hours:
   - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/3465888342)
   - And by appointment
@@ -112,8 +112,7 @@ Recommended prerequisites (not absolutely required)
 - Pronouns: she/her/hers
 - Email: [rberwald@g.ucla.edu](rberwald@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/3465888342)
-  - And by appointment
+  - Zoom office hours: Thursdays 12pm-1pm, zoom [link](https://ucla.zoom.us/j/3465888342)
 
 
 # Course learning goals
