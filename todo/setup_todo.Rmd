@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
      * Go to https://github.com/ and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily idenitify your work, questions, and comments.
      \
      * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email. 
+     
      * Plug in your name and Github username in the [shared spreadsheet](https://docs.google.com/spreadsheets/d/178FUVT9k8SzAxmrmXnzii2mkL_3Sj78ealIVLQ70Bro/edit#gid=0)
   
 ## 2. Install R 
@@ -29,7 +30,8 @@ knitr::opts_chunk$set(echo = TRUE)
   * Select "Download R for Windows"  
   
       * Click "install R for the first time"
-      * Click "Download R 4.1.1 for Windows"  
+      * Click "Download R 4.2.1 for Windows" 
+      
   * Select "Download R for macOS"   
   
       * Click "R-4.2.1.pkg" 
@@ -37,7 +39,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## 3. Install RStudio  
   * Go to https://www.rstudio.com/products/rstudio/download/  
   * Scroll to the bottom of the page  
-  * Select "RStudio-1.4.1717.exe - Windows 10" for Windows users  
+  * Select "RStudio-2022.07.1-554.exe - Windows 10/11" for Windows users  
   * Select "RStudio-2022.07.1-554.dmg - macOS 10.15+" for Mac users 
     
 ## 4. Create R Markdown file that “knits” HTML document in RStudio  
