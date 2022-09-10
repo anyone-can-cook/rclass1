@@ -30,15 +30,15 @@ knitr::opts_chunk$set(echo = TRUE)
   
       * Click "install R for the first time"
       * Click "Download R 4.1.1 for Windows"  
-  * Select "Download R for (Mac) OS  X"   
+  * Select "Download R for macOS"   
   
-      * Click "R-4.1.1.pkg" 
+      * Click "R-4.2.1.pkg" 
         
 ## 3. Install RStudio  
   * Go to https://www.rstudio.com/products/rstudio/download/  
   * Scroll to the bottom of the page  
   * Select "RStudio-1.4.1717.exe - Windows 10" for Windows users  
-  * Select "RStudio-1.4.1717.dmg - macOS 10.14+" for Mac users 
+  * Select "RStudio-2022.07.1-554.dmg - macOS 10.15+" for Mac users 
     
 ## 4. Create R Markdown file that “knits” HTML document in RStudio  
   * What do we mean by this?  
