@@ -18,8 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
   
      * Go to https://github.com/ and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily idenitify your work, questions, and comments.
      \
-     * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.  
-     * Email your username to briannawright135@gmail.com. Please write "Git Username-[your name]" in the subject line. For example, I would write "Git Username-Brianna Wright". 
+     * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email. 
+     * Plug in your name and Github username in the [shared spreadsheet](https://docs.google.com/spreadsheets/d/178FUVT9k8SzAxmrmXnzii2mkL_3Sj78ealIVLQ70Bro/edit#gid=0)
   
 ## 2. Install R 
 
@@ -61,7 +61,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## 5. Work through the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r)  
 
   * _Note: All first chapters of DataCamp's standard courses are free._   
-  
+
       * Follow the link and create an account  
       * The tutorial may take about 1-2 hours  
       * We encourage you all to complete this tutorial and run code on your own RStudio to get some practice.  
@@ -118,11 +118,6 @@ knitr::opts_chunk$set(echo = TRUE)
     
     *If you were unable to knit to pdf in the step above, this may not work for you. If you receive an error shoot us an email and we can troubleshoot together* 
 
-## 9. Watch videos on relative and absolute filepaths (OPTIONAL) 
-
-  * Absolute versus relative file paths [Youtube link](https://www.youtube.com/watch?v=ephId3mYu9o)  
-  * Relative paths and working directory in R [Youtube link](https://www.youtube.com/watch?v=fe6GA200dks)  
-    
 \  
 \  
   
