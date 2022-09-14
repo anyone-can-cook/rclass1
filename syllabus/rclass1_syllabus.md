@@ -20,12 +20,6 @@ subtitle: Fall 2022
 
 # Course information
 
-
-```
-## Warning in !is.null(rmarkdown::metadata$output) && rmarkdown::metadata$output
-## %in% : 'length(x) = 2 > 1' in coercion to 'logical(1)'
-```
-
 <table class="table table-striped table-hover table-responsive" style="width: auto !important; ">
  <thead>
   <tr>
@@ -120,7 +114,13 @@ Recommended prerequisites (not absolutely required)
 - Office hours:
   - Zoom office hours: Thursdays 12pm-1pm, zoom [link](https://ucla.zoom.us/j/3465888342)
 
+**Fernando Mora**  
 
+- Pronouns: he/him/his
+- Email: [fjmora@ucla.edu](fjmora@ucla.edu)
+- Office hours:
+  - Zoom office hours: Mondays 2pm-3pm, zoom [link](https://ucla.zoom.us/j/4336432237)
+  
 # Course learning goals
 
 1. Understand fundamental concepts of object-oriented programming
