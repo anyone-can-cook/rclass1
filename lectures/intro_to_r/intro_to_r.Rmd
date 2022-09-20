@@ -285,7 +285,7 @@ R is an "object-oriented" programming language (like Python, JavaScript). So, wh
 
 - formal computer science definitions are confusing because they require knowledge of concepts we haven't introduced yet
 - More intuitively, I think objects as anything I assign values to
-    - For example, below, `a` and `b` are objects I assigned values to
+    - For example, below, `a` and `b` are the names of objects I assigned values to
 ```{r}
 a <- 5
 a
@@ -296,7 +296,7 @@ b
 
 - Ben Skinner (my R maven) says "Objects are like boxes in which we can put things: data, functions, and even other objects."
 
-Most commercial statistical software packages (e.g., SPSS, Stata) operate on datasets, which consist of rows of observations and columns of variables
+Many commercial statistical software packages (e.g., SPSS, Stata) operate on datasets, which consist of rows of observations and columns of variables
 
 - Usually, these packages can open only one dataset at a time
 - By contrast, in R everything is an object and there is no limit to the number of objects R can hold (except memory)
@@ -847,205 +847,7 @@ Takeaways, continued
 - These structures and data types are foundational for all "data science" applications
     - e.g., mapping, webscraping, network analysis, etc.
 
-## Matrices
 
-### Matrices
-
-A **matrix** is a collection of elements arranged in a two-dimensional rectangular layout
-
-- A matrix is another "data structure," in addition to vectors and lists
-- Create a matrix named `m` with 2 rows and 3 columns
-```{r}
-m <- matrix( 
-  c(2, 4, 3, 1, 5, 7), # the data elements 
-  nrow=2,              # number of rows 
-  ncol=3,              # number of columns 
-  byrow = TRUE         # fill matrix by rows 
-)
-
-m # print matrix m
-```
-
-Investigate matrix `m`
-```{r}
-typeof(m) # type = "double"
-str(m) # type = numeric; has two rows and three columns
-class(m) # class = matrix; more on class later
-```
-### Matrices
-
-Like atomic vectors, matrices are homogenous data structures
-```{r}
-m2 <- matrix( 
-  c(2, 4, 3, "a", "b", "c"), # the data elements 
-  nrow=2,              # number of rows 
-  ncol=3,              # number of columns 
-  byrow = TRUE         # fill matrix by rows 
-)
-
-m2
-```
-
-Investigate matrix `m`
-```{r}
-typeof(m2) # type = "character"
-str(m2) # type = character; has two rows and three columns
-```
-Why are data frames based on lists rather than matrices?
-
-- a matrix is a homogenous data structure, so you couldn't have both a numeric variable and a character variable
-- a list is a heterogeneous data structure, allowing for variables of different underlying data types
-
-### Matrices
-
-How are matrices used in R
-
-- the underlying code for statistical models uses matrices (e.g., covariance matrix, matrix of regression coefficients)
-- For most data manipulation tasks, matrices used much less frequently than vectors and lists
-  - In this course, we won't use matrices much at all
-- Particular applications (e.g., social network analysis) make frequent use of matrices
-
-### Matrices
-
-How are matrices used in R
-
-- Create an "adjacency matrix," which defines whether actors are connected to one another in a social network
-```{r}
-a <- matrix( 
-  c(NA,NA,NA,NA,
-    1,NA,NA,NA,
-    1,0,NA,NA,
-    0,1,0,NA), # the data elements 
-  nrow=4,              # number of rows 
-  ncol=4,              # number of columns 
-  byrow = TRUE         # fill matrix by rows 
-)
-a_names <- c("a","b","c","d") # create vector of actor names
-rownames(a) <- a_names # assign names to rows
-colnames(a) <- a_names # assign names to columns
-a
-```
-
-## Practical example
-
-### Network data of recruiting visits from colleges to high schools
-
-For this example, don't worry about understanding the code
-
-- We will explain this code over coming weeks
-
-Object `g_2mode_privu` contains:
-
-- off-campus recruiting visits from private colleges/universities to private high schools
-- load `g_2mode_privu`
-
-```{r, include = FALSE, results="hide"}
-#install.packages("igraph") # install igraph package
-library(igraph) # load igraph package
-```
-
-```{r, results = "hide"}
-# load igraph object of visits by private colleges/universities to private high schools
-load(url("https://github.com/cyouh95/recruiting-chapter/raw/master/data/g_2mode_privu.rda"))
-```
-
-Investigate object `g_2mode_privu`
-```{r}
-typeof(g_2mode_privu) # igraph package stores network data as type = list
-class(g_2mode_privu) # class = igraph
-```
-The "vertices" consist of colleges and high schools
-```{r}
-vcount(g_2mode_privu) # 1356 "nodes" or "vertices"
-table(V(g_2mode_privu)$type) # 1330 private high schools; 26 private colleges/universities
-```
-An "edge" occurs when two vertices are connected to one another
-
-- in `g_2mode_privu`, an edge occurs when a particular college visits a particular high school
-```{r}
-ecount(g_2mode_privu)
-```
-
-### Network data of recruiting visits from colleges to high schools
-
-An igraph object (type = list; class = igraph) can be decomposed into:
-
-- a dataframe that contains characteristics (referred to as "attributes" in network literature) of the vertices
-- a matrix that identifies whether two vertices are connected by an edge
-
-Create a data frame of vertex attributes
-```{r, results="hide"}
-df_attr <- as_data_frame(x = g_2mode_privu, what = "vertices")
-
-typeof(df_attr) # type = list
-length(df_attr) # length = number of variables
-class(df_attr) # data.frame
-str(df_attr)
-```
-
-### Network data of recruiting visits from colleges to high schools
-
-```{r, include = FALSE, results="hide"}
-#install.packages("tidyverse")
-library(tidyverse) # load tidyverse package
-```
-
-Examine data frame of vertex attributes
-```{r, results = "hide"}
-#df_attr %>% glimpse()
-# vertices = universities
-df_attr %>% filter(type == TRUE) %>% select(unitid,univ_name_ipeds,state_code_ipeds, classification_ipeds)
-
-# vertices = high schools
-df_attr %>% filter(type == FALSE) %>% select(ppin,name_pss,city_pss, state_code_pss)
-```
-
-Examine individual variables within data frame
-
-- takeaway: invidividual variables within data frame are vectors!
-```{r, results = "hide"}
-typeof(df_attr$name_pss) # vector of type = character
-str(df_attr$name_pss) # length of vector is number of obs
-
-typeof(df_attr$total_enrolled_pss) # vector of type = integer
-str(df_attr$total_enrolled_pss)
-```
-### Network data of recruiting visits from colleges to high schools
-
-Create adjacency matrix of which colleges visited which high schools
-```{r}
-adj_mat <- as_adjacency_matrix(graph = g_2mode_privu, type = "both", 
-                               sparse = FALSE)
-```
-
-Investigate adjacency matrix
-```{r}
-typeof(adj_mat) # a numeric "double" object
-class(adj_mat) # matrix class
-#str(adj_mat) # 1,356 rows by 1,356 columns
-```
-Print a few cells, visits by colleges (columns) to high schools (rows)
-
-- colleges: "`139658`" = Emory University; "`147767`" = Northwestern University; "`152080`" = University of Notre Dame
-```{r}
-#syntax: object_name[<rows to print>,<columns to print>]
-adj_mat[c("00000226","00000237","00000714"),c("139658","147767","152080")]
-```
-### Network data of recruiting visits from colleges to high schools
-
-Plot the 2-mode network
-```{r, echo = FALSE}
-plot(
-  x = g_2mode_privu, 
-  vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$univ_abbrev_ipeds, ""),
-  vertex.color = if_else(V(g_2mode_privu)$type, "lightblue", "salmon"),
-  vertex.shape = if_else(V(g_2mode_privu)$type, "circle", "circle"),
-  vertex.size = if_else(V(g_2mode_privu)$type, 7, 2),
-  edge.lty = 1,
-  layout = layout_with_kk,
-  margin = -.6
-)
-```
 
 # Using R functions
 
@@ -1184,13 +986,13 @@ sum(10,5,10,20,NA,na.rm=TRUE)
 
 # Appendix
 
-## Directories and filepaths 
+## Directories and filepaths (skim)
 
 ### Directories and filepaths
 
-- Give you a very brief overview of "directories" (i.e., folders) and "filepaths" (tells you where folder is located) in R
-- Why? After this overview we will ask you to create the directory structure you will use for all files related to this class
-- Your problem set due before class next Friday will give you more practice with filepaths and we have created a short document that may be helpful in working through this problem set [LINK](https://github.com/anyone-can-cook/rclass1/blob/master/lectures/problemset_resources/problemset_resources.pdf) 
+- Goal: Give you a very brief overview of "directories" (i.e., folders) and "filepaths" (tells you where folder is located) in R
+- For the most part, this course won't require extensive knowledge of working with filepaths. But the second course in this sequence will.
+
 
 ### Working directory
 
@@ -1291,35 +1093,33 @@ getwd()
 ```
 
 
-## Create "R project" and directory structure
+## Create "R project"
 
-### What is an R project? Why are you doing this?
+### What is an R project?
 
 What is an "R project"?
 
 - Helps you keep all files for a project in one place
 - When you open an R project, the file-path of your current working directory is automatically set to the file-path of your R-project
 
-Why are we asking you to create R project and download a specific directory structure?
 
-- We want you to be able to run the .Rmd files for each lecture on your own computer
-- Sometimes these .Rmd files point to certain sub-folders
-- If you create R project and create directory structure we recommend, you will be able to run .Rmd files from your own computer without making any changes to file-paths!
 
-### Follow these steps to create "R project" and directory structure
+### How to create an "R project"
 
-1. Download this zip folder: [LINK HERE](https://github.com/anyone-can-cook/rclass1/blob/master/rclass1.zip)
-    - This zip file contains the shell file directory you should use for this class
-    - Unzip the folder
-        - Contains folder named "rclass1"; this is the folder that will contain all materials for this course
-        - "rclass1" contains two folders: "data" and "lectures"
-    - Move "rclass1" folder to your preferred location (e.g, documents, desktop, dropbox, etc)
-2. In RStudio, click on "File" >> "New Project" >> "Existing Directory" >> "New Project"
-    - "Browse" to find "rclass1" folder you just saved
-    - Then click on Create Project
-3. Save the following files in "rclass1/lectures/intro_to_r"
-    - intro_to_r.Rmd
-    - intro_to_r.pdf
+1. In RStudio, click on "File" >> "New Project" >> "Existing Directory" >> "New Project"
+1. "Browse" to find folder where you want in which you want to save the ".Rproj" folder you just saved
+  - let's call this folder "my_rclass_folder", but it can be any folder we want
+  - the name of the ".Rproj" file will be my_rclass_folder.Rproj
+1. Then click on Create Project
+
+Using R Project
+
+- save files/folders associated with this project within the "my_rclass_folder"
+- When working you want to work on the project, click on the .Rproj folder "my_rclass_folder.Rproj"
+- whenever you run a command from your __R Console__ or an __R Script__, the "working directory" will be set to the filepath where "my_rclass_folder.Rproj" is saved
+- As you will see in the future (EDUC260B), this will make it easy to collaborate with colleagues
+  - you will be able to run the exact same scripts on different computers!
+
 
 ### Next, you follow these steps
 
@@ -1497,3 +1297,201 @@ What is beamer_header.tex?
 - Note: we may revise beamer_header.tex as we work out formatting bugs
 
 
+## Matrices [optional]
+
+### Matrices
+
+A **matrix** is a collection of elements arranged in a two-dimensional rectangular layout
+
+- A matrix is another "data structure," in addition to vectors and lists
+- Create a matrix named `m` with 2 rows and 3 columns
+```{r}
+m <- matrix( 
+  c(2, 4, 3, 1, 5, 7), # the data elements 
+  nrow=2,              # number of rows 
+  ncol=3,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+
+m # print matrix m
+```
+
+Investigate matrix `m`
+```{r}
+typeof(m) # type = "double"
+str(m) # type = numeric; has two rows and three columns
+class(m) # class = matrix; more on class later
+```
+### Matrices
+
+Like atomic vectors, matrices are homogenous data structures
+```{r}
+m2 <- matrix( 
+  c(2, 4, 3, "a", "b", "c"), # the data elements 
+  nrow=2,              # number of rows 
+  ncol=3,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+
+m2
+```
+
+Investigate matrix `m`
+```{r}
+typeof(m2) # type = "character"
+str(m2) # type = character; has two rows and three columns
+```
+Why are data frames based on lists rather than matrices?
+
+- a matrix is a homogenous data structure, so you couldn't have both a numeric variable and a character variable
+- a list is a heterogeneous data structure, allowing for variables of different underlying data types
+
+### Matrices
+
+How are matrices used in R
+
+- the underlying code for statistical models uses matrices (e.g., covariance matrix, matrix of regression coefficients)
+- For most data manipulation tasks, matrices used much less frequently than vectors and lists
+  - In this course, we won't use matrices much at all
+- Particular applications (e.g., social network analysis) make frequent use of matrices
+
+### Matrices
+
+How are matrices used in R
+
+- Create an "adjacency matrix," which defines whether actors are connected to one another in a social network
+```{r}
+a <- matrix( 
+  c(NA,NA,NA,NA,
+    1,NA,NA,NA,
+    1,0,NA,NA,
+    0,1,0,NA), # the data elements 
+  nrow=4,              # number of rows 
+  ncol=4,              # number of columns 
+  byrow = TRUE         # fill matrix by rows 
+)
+a_names <- c("a","b","c","d") # create vector of actor names
+rownames(a) <- a_names # assign names to rows
+colnames(a) <- a_names # assign names to columns
+a
+```
+
+
+### Practical example of matrices: Network data of recruiting visits from colleges to high schools
+
+For this example, don't worry about understanding the code
+
+- We will explain this code over coming weeks
+
+Object `g_2mode_privu` contains:
+
+- off-campus recruiting visits from private colleges/universities to private high schools
+- load `g_2mode_privu`
+
+```{r, include = FALSE, results="hide"}
+#install.packages("igraph") # install igraph package
+library(igraph) # load igraph package
+```
+
+```{r, results = "hide"}
+# load igraph object of visits by private colleges/universities to private high schools
+load(url("https://github.com/cyouh95/recruiting-chapter/raw/master/data/g_2mode_privu.rda"))
+```
+
+Investigate object `g_2mode_privu`
+```{r}
+typeof(g_2mode_privu) # igraph package stores network data as type = list
+class(g_2mode_privu) # class = igraph
+```
+The "vertices" consist of colleges and high schools
+```{r}
+vcount(g_2mode_privu) # 1356 "nodes" or "vertices"
+table(V(g_2mode_privu)$type) # 1330 private high schools; 26 private colleges/universities
+```
+An "edge" occurs when two vertices are connected to one another
+
+- in `g_2mode_privu`, an edge occurs when a particular college visits a particular high school
+```{r}
+ecount(g_2mode_privu)
+```
+
+### Practical example of matrices: Network data of recruiting visits from colleges to high schools
+
+An igraph object (type = list; class = igraph) can be decomposed into:
+
+- a dataframe that contains characteristics (referred to as "attributes" in network literature) of the vertices
+- a matrix that identifies whether two vertices are connected by an edge
+
+Create a data frame of vertex attributes
+```{r, results="hide"}
+df_attr <- as_data_frame(x = g_2mode_privu, what = "vertices")
+
+typeof(df_attr) # type = list
+length(df_attr) # length = number of variables
+class(df_attr) # data.frame
+str(df_attr)
+```
+
+### Practical example of matrices: Network data of recruiting visits from colleges to high schools
+
+```{r, include = FALSE, results="hide"}
+#install.packages("tidyverse")
+library(tidyverse) # load tidyverse package
+```
+
+Examine data frame of vertex attributes
+```{r, results = "hide"}
+#df_attr %>% glimpse()
+# vertices = universities
+df_attr %>% filter(type == TRUE) %>% select(unitid,univ_name_ipeds,state_code_ipeds, classification_ipeds)
+
+# vertices = high schools
+df_attr %>% filter(type == FALSE) %>% select(ppin,name_pss,city_pss, state_code_pss)
+```
+
+Examine individual variables within data frame
+
+- takeaway: invidividual variables within data frame are vectors!
+```{r, results = "hide"}
+typeof(df_attr$name_pss) # vector of type = character
+str(df_attr$name_pss) # length of vector is number of obs
+
+typeof(df_attr$total_enrolled_pss) # vector of type = integer
+str(df_attr$total_enrolled_pss)
+```
+### Practical example of matrices: Network data of recruiting visits from colleges to high schools
+
+Create adjacency matrix of which colleges visited which high schools
+```{r}
+adj_mat <- as_adjacency_matrix(graph = g_2mode_privu, type = "both", 
+                               sparse = FALSE)
+```
+
+Investigate adjacency matrix
+```{r}
+typeof(adj_mat) # a numeric "double" object
+class(adj_mat) # matrix class
+#str(adj_mat) # 1,356 rows by 1,356 columns
+```
+Print a few cells, visits by colleges (columns) to high schools (rows)
+
+- colleges: "`139658`" = Emory University; "`147767`" = Northwestern University; "`152080`" = University of Notre Dame
+```{r}
+#syntax: object_name[<rows to print>,<columns to print>]
+adj_mat[c("00000226","00000237","00000714"),c("139658","147767","152080")]
+```
+### Practical example of matrices: Network data of recruiting visits from colleges to high schools
+
+Plot the 2-mode network
+```{r, echo = FALSE}
+plot(
+  x = g_2mode_privu, 
+  vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$univ_abbrev_ipeds, ""),
+  vertex.color = if_else(V(g_2mode_privu)$type, "lightblue", "salmon"),
+  vertex.shape = if_else(V(g_2mode_privu)$type, "circle", "circle"),
+  vertex.size = if_else(V(g_2mode_privu)$type, 7, 2),
+  edge.lty = 1,
+  layout = layout_with_kk,
+  margin = -.6
+)
+```

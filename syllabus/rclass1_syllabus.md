@@ -20,6 +20,12 @@ subtitle: Fall 2022
 
 # Course information
 
+
+```
+## Warning in !is.null(rmarkdown::metadata$output) && rmarkdown::metadata$output
+## %in% : 'length(x) = 2 > 1' in coercion to 'logical(1)'
+```
+
 <table class="table table-striped table-hover table-responsive" style="width: auto !important; ">
  <thead>
   <tr>
