@@ -11,20 +11,14 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
+  #pdf_document:
+    #toc: yes
+    #toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2022
 ---
 
 # Course information
-
-
-```
-## Warning in !is.null(rmarkdown::metadata$output) && rmarkdown::metadata$output
-## %in% : 'length(x) = 2 > 1' in coercion to 'logical(1)'
-```
 
 <table class="table table-striped table-hover table-responsive" style="width: auto !important; ">
  <thead>
@@ -35,16 +29,20 @@ subtitle: Fall 2022
  </thead>
 <tbody>
   <tr>
+   <td style="text-align:left;"> Weekly meetings (online) </td>
+   <td style="text-align:left;"> Fridays 9-11AM Pacific </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> Class website (public) </td>
    <td style="text-align:left;"> https://anyone-can-cook.github.io/rclass1/ </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Questions &amp; Discussion (private) </td>
-   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues_f21 </td>
+   <td style="text-align:left;"> https://github.com/anyone-can-cook/rclass1_student_issues_f22 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Announcements (private) </td>
-   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements </td>
+   <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_f22_announcements </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Class Zoom link (Meeting ID: 940 4537 6896) </td>
@@ -223,7 +221,7 @@ Learning data management, while trying to get a handle on R and unfamiliar data,
 
 ##  Towards an anti-racist, anti-heteronormative learning experience
 
-This course teaches data management and R programming, tools that are often perceived as objective, independent of context and content. But this is certainly not true! Racism, white supremacy, and heteronormative ideas of gender identity and sexual orientation are rooted in every aspect of data. Seemingly objective rules (e.g., "the right way to handle data") affect the way data are gathered, how variables are created, the questions asked (or not asked), etc. 
+This course teaches data management and R programming, tools that are often perceived as objective, independent of context and content. This is not true. Structural racism, white supremacy, and heteronormative ideas of gender identity and sexual orientation are rooted in every aspect of data. Seemingly objective rules (e.g., "the right way to handle data") affect the way data are gathered, how variables are created, the questions asked (or not asked), etc. 
 
 At times, this course will utilize data that reflect systemic gaps based on race, ethnicity, immigration status, and gender identity, among other aspects of identity. It is critical that we acknowledge that: the social and economic marginalization reflected in data is rooted in systemic oppression that upholds white supremacy and heteronormativity; and that the processes used to create these data (e.g., how data collected, the categories chosen to represent identity) are often based on notions of white supremacy and heteronormativity. We should all be reflecting about our own role in upholding these systems. When you encounter a data management strategy that may cause harm, we encourage you to raise concerns. It may be that your instructor/TAs may need to think more critically about strategies they have been using for a long time! 
 
@@ -231,13 +229,11 @@ At times, this course will utilize data that reflect systemic gaps based on race
 
 ## Course Zoom link  
 
-Time: Fridays 09:00 AM Pacific Time (US and Canada)   
-
-- After the first two weeks, class will start at 9:00am and end at 10:00am
+Time: Fridays 09:00-11AM AM Pacific Time (US and Canada)   
 
 Join Zoom Meeting  
 
-- https://ucla.zoom.us/j/8458209354
+- https://ucla.zoom.us/j/8458209354 [IS THIS RIGHT LINK?]
  
 
 ## Course website
@@ -247,7 +243,7 @@ All course related material can be found on the [course website](https://anyone-
 
 ## Course discussion
 
-We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_f21_announcements).
+We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_f22_announcements).
 
   - __GitHub teams__: The teaching team will post all class announcements using GitHub teams. The GitHub team discussions feature allows for quick and seamless communication to all members of an organization or team -- in this case, to all students with a GitHub account enrolled in the course. Some features include:  
   
@@ -258,7 +254,7 @@ We will be using GitHub teams for class announcements [HERE](https://github.com/
 
 *Credit: [Introducing team discussions](https://github.blog/2017-11-20-introducing-team-discussions/)*  
 
-We will be using GitHub issues for questions and class discussion [HERE](https://github.com/anyone-can-cook/rclass1_student_issues_f21).
+We will be using GitHub issues for questions and class discussion [HERE](https://github.com/anyone-can-cook/rclass1_student_issues_f22).
 
   - __GitHub issues__: GitHub issues are traditionally used by collaborators of a repository for managing tasks for a project. Our rational for using issues is twofold: 1) help track and organize questions related to course material and problem sets and 2) promote classroom participation. Students are encouraged to contribute to issues by posting questions, sharing helpful resources, and/or taking a stab at answering questions posted on issues. Some features include: 
     
@@ -305,6 +301,7 @@ Students will complete 10 problem sets (the last one due during finals week). Pr
 **Problem set groups**
 
 - With the exception of the first problem set, students will complete problem sets in groups of 3. We highly encourage students who are abroad to form their own group to set a time to work on the problem sets together.  
+- Students have the option of not being part of a problem set group.
 - We will form groups during the second synchronous class and you will keep the same group throughout the quarter. However, each student will submit their own assignment. You are encouraged to work together and get help from your group. However, it is important that you understand how to do the problem set on your own, rather than copying the solution developed by group members.
 - Since you will be working together, it is understandable that answers for many questions will be the same as your group members. However, if I find compelling evidence that a student merely copied solutions from a classmate, I will consider this a violation of academic integrity and that student will receive a zero for the homework assignment.
 
@@ -322,6 +319,11 @@ because we do not have resources to grade weekly due to the very large number of
 
 -->
 
+- For students working in a problem set group, one submission from each problem set group will be chosen at random. The grade on that problem set submission will be the grade for all members of the group.
+    - For up to two questions, you may ask TAs to regrade an answer that you feel you answered correctly that the graded submission did not answer correctly
+    - If a member of a problem set group has not submitted the problem set by the time the TAs conduct grading, that submission will be grades separately once it is submitted
+- Students who are not part of a problem set group will have their problem sets graded individually.
+- Weekly required participation on github will be part of your problem set grade
 - The lowest problem-set grade will be dropped from the calculation of your final grade. 
 - Policy on late assignments
   - Problem sets submitted after 11:59PM on Friday will lose one percentage point (e.g., max grade becomes 99% instead of 100%)
@@ -331,13 +333,15 @@ because we do not have resources to grade weekly due to the very large number of
   - For late submissions due to an unexpected emergency, you will not lose points. Please contact the instructor and/or TAs and we will work it out together.  
 
 
-## Participation (10 percent of total grade)
+## Attendance and Participation (10 percent of total grade)
 
-Broadly, we expect students to participate by being attentive, supportive of classmates, by asking questions, and by answering questions posed by classmates.
+TAs will take attendance each week. Each unexcused absence will result in a 1% deduction from your final grade for the course. Absences due to emergencies or professional obligations will not not affect your grade as long as you communicate with your TA.
 
-Practically speaking, the vast majority of your participation grade will depend on weekly participation on Github. Each week, students are required to post one communication on Github. This could be asking a question about the problem set, answering a question posed by a classmate, or a post describing something you learned while working through the week's material/problem set. If you post at least one communication on Github each week, you will earn an "A" for participation for the quarter.
+Beyond attendance, we expect students to participate by being attentive, supportive of classmates, by asking questions, and by answering questions posed by classmates.
 
-In addition, students can work towards an "A+" participation grade for the quarter by asking/answering questions during synchronous lecture (e.g., zoom chat) or by consistently being helpful/supportive to your classmates on Github.
+Practically speaking, the much of your participation in this course occurs on Github. Each week, students are required to post one communication on Github. This could be asking a question about the problem set, answering a question posed by a classmate, or a post describing something you learned while working through the week's material/problem set. 
+
+If you have no unexcused absences and your communicate on Github each week, you will receive an "A" (95%) for your attendance and participation grade. If you are consistently helpful and supportive to your classmates on the Github community, you will earn a 100% for your attenance and participation grade.
 
 ## Grading scale
 
@@ -350,12 +354,8 @@ In addition, students can work towards an "A+" participation grade for the quart
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> A+ </td>
-   <td style="text-align:left;"> 99-100% </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> 93&lt;99% </td>
+   <td style="text-align:left;"> 93&lt;=100% </td>
   </tr>
   <tr>
    <td style="text-align:left;"> A- </td>
