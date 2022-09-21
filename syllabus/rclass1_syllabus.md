@@ -233,7 +233,7 @@ Time: Fridays 09:00-11AM AM Pacific Time (US and Canada)
 
 Join Zoom Meeting  
 
-- https://ucla.zoom.us/j/8458209354 [IS THIS RIGHT LINK?]
+- https://ucla.zoom.us/j/8458209354
  
 
 ## Course website
