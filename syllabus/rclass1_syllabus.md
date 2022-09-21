@@ -11,9 +11,9 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
-  #pdf_document:
-    #toc: yes
-    #toc_depth: '3'
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2022
 ---
@@ -45,8 +45,8 @@ subtitle: Fall 2022
    <td style="text-align:left;"> https://github.com/orgs/anyone-can-cook/teams/rclass1_f22_announcements </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Class Zoom link (Meeting ID: 940 4537 6896) </td>
-   <td style="text-align:left;"> https://ucla.zoom.us/j/94045376896 </td>
+   <td style="text-align:left;"> Class Zoom link (Meeting ID: 845 820 9354) </td>
+   <td style="text-align:left;"> https://ucla.zoom.us/j/8458209354 </td>
   </tr>
 </tbody>
 </table>
