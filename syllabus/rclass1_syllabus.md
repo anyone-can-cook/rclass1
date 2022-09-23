@@ -11,9 +11,9 @@ output:
     theme: default
     df_print: tibble
     keep_md: yes
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
+  #pdf_document:
+  #  toc: yes
+  #  toc_depth: '3'
 urlcolor: blue
 subtitle: Fall 2022
 ---
@@ -92,6 +92,10 @@ Recommended prerequisites (not absolutely required)
 - Office hours:
   - Zoom office hours: Wednesdays 3-4PM, zoom [link](https://ucla.zoom.us/j/2545750562)
   - And by appointment (afternoons)
+- Fridays Ozan is only in class from 9-10AM
+  - 10/14/2022
+  - 11/18/2022
+
 
 ## Teaching assistants
 
