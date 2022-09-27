@@ -16,4 +16,4 @@ TA Roles for the Fall 2022 quarter
 
 * Rclass1 documents/html: Fernando/Xochilth
 
-* The class website can be found at https://anyone-can-cook.github.io/rclass1/.  
+The class website can be found at https://anyone-can-cook.github.io/rclass1/
