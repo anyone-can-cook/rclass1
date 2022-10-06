@@ -1154,20 +1154,20 @@ list_x <- list(var1=1:3, var2="a", var3=4:6)
 Subset list `list_x` using `[[]]` element names vs. element position
 ```{r}
 list_x[["var1"]]
-  # list_x[[1]] # same as above
+  # note: list_x[[1]] # same as above
 list_x[["var3"]]
-  # list_x[[3]] # same as above
 ```
 
-We can do the same thing with data frames because data frames are lists
+Can do same thing with data frames because data frames are lists (output omitted)
 
 - e.g., `df_event[["zip"]]` returns contents of element named `"zip"`
 - object created by `df_event[["zip"]]` is character vector of length = 18,680
-```{r}
+```{r, results='hide'}
 # df_event[["zip"]] # this works but long output
-str(df_event[["zip"]])
+str(df_event[["zip"]]) # character vector of length 18,860
 typeof(df_event[["zip"]])
 length(df_event[["zip"]])
+str(df_event["zip"]) # by contrast, this is a dataframe w/ one variable
 ```
 
 
@@ -1498,6 +1498,8 @@ The `subset()` is a base R function to "filter" observations from some object `x
 - object `x` can be a matrix, data frame, list
 - `subset()` automatically excludes elements/rows with `NA` for condition
 - Can also use `subset()` to select variables
+- what `subset()` function returns:
+  - "An object similar to x contain just the selected \ldots rows and columns (for a matrix or data frame)"
 - `subset()` can be combined with:
     - assignment (`<-`) to create new objects
     - `nrow()` to count number of observations that satisfy criteria
@@ -1514,8 +1516,7 @@ Syntax [when object is data frame]: __subset(x, subset, select, drop = FALSE)__
 - `subset` is the logical expression(s) (evaluates to `TRUE/FALSE`) indicating elements (rows) to keep
 - `select` indicates columns to select from data frame (if argument is not used default will keep all columns)
 - `drop` to preserve original __dimensions__ [SKIP]
-    - can take values `TRUE` or `FALSE`; default is `FALSE`
-    - only need to worry about dataframes when subset output is single column
+
 
 
 ### Subset function, examples 
