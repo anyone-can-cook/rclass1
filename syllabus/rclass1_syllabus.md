@@ -127,7 +127,7 @@ Recommended prerequisites (not absolutely required)
 - Pronouns: he/him/his
 - Email: [fjmora@ucla.edu](fjmora@ucla.edu)
 - Office hours:
-  - Zoom office hours: Mondays 2pm-3pm, zoom [link](https://ucla.zoom.us/j/4336432237)
+  - Zoom office hours: Wednesdays 2pm-3pm, zoom [link](https://ucla.zoom.us/j/4336432237)
   
 # Course learning goals
 
