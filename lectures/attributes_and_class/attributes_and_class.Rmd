@@ -206,8 +206,8 @@ Example: Variables of a dataset
 - A data frame is a list
 - Each element in the list is a variable, which consists of:
     - Atomic vector ("just the data")
-    - Variable __name__, which is an attribute we attach to the element/variable
-    - Any other attributes we want to attach to each element/variable
+    - Any attributes we want to attach to each element/variable
+- Variable __name__, an attribute of the data frame object
     
 Other examples of attributes in R
 
@@ -243,6 +243,8 @@ Attributes of a __named atomic vector__:
 # create named atomic vector
 (vector1 <- c(a = 1, b = 2, c = 3, d = 4))
 attributes(vector1)
+
+attributes(vector1) %>% str() # a named list of vectors!
 
 # remove all attributes from the object
 attributes(vector1) <- NULL
@@ -391,6 +393,7 @@ __Using `wwlist`, create data frame with three variables__
 wwlist_small <- wwlist[1:25, ] %>% select(hs_state,firstgen,med_inc_zip)
 str(wwlist_small)
 attributes(wwlist_small)
+attributes(wwlist_small) %>% str()
 ```
 
 __Get/set attribute of a data frame__
@@ -399,7 +402,6 @@ __Get/set attribute of a data frame__
 #get/examine names attribute
 attr(x=wwlist_small, which = "names") 
 str(attr(x=wwlist_small, which = "names")) # names attribute is character atomic vector, length=3
-
 #add new attribute to data frame
 attr(x=wwlist_small, which = "new_attribute") <- "contents of new attribute"
 attributes(wwlist_small)
@@ -410,10 +412,8 @@ __Get/set attribute of a variable in data frame__
 ```{r, results = "hide"}
 str(wwlist_small$med_inc_zip)
 attributes(wwlist_small$med_inc_zip)
-
 #create attribute for variable med_inc_zip
 attr(wwlist_small$med_inc_zip, "inc attribute") <- "inc attribute contents"
-
 #investigate attribute for variable med_inc_zip
 attributes(wwlist_small$med_inc_zip)
 str(wwlist_small$med_inc_zip)
