@@ -47,7 +47,7 @@ knitr::opts_chunk$set(echo = TRUE)
 -   Select "RSTUDIO-2023.06.2-561.EXE" for Windows users\
 -   Select "RSTUDIO-2023.06.2-561.DMG" for Mac users
 
-*Note: The newest Rstudio works on macOS 11 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/)*
+*Note: The newest Rstudio works on macOS 11 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/).*
 
 ## 4. Create R Markdown file that "knits" HTML document in RStudio
 
