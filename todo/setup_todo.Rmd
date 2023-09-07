@@ -8,120 +8,136 @@ urlcolor: blue
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-***
-#### Please skim through all of the instructions before getting start.  
 
+------------------------------------------------------------------------
 
-## 1. Create a GitHub account  
-  * We will be conducting all class-related discussion on this version control system instead of using CCLE/Canvas. We will also use GitHub to collaborate on weekly problem sets, send announcements, and ask questions. 
-  * Follow these instructions to set up an account. 
-  
-     * Go to https://github.com/ and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily idenitify your work, questions, and comments.
-     \
-     * Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email. 
-     
-     * Plug in your name and Github username in the [shared spreadsheet](https://docs.google.com/spreadsheets/d/178FUVT9k8SzAxmrmXnzii2mkL_3Sj78ealIVLQ70Bro/edit#gid=0)
-  
-## 2. Install R 
+#### Please skim through all of the instructions before getting start.
+
+## 1. Create a GitHub account
+
+-   We will be conducting all class-related discussion on this version control system instead of using CCLE/Canvas. We will also use GitHub to collaborate on weekly problem sets, send announcements, and ask questions.
+
+-   Follow these instructions to set up an account.
+
+    -   Go to <https://github.com/> and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily idenitify your work, questions, and comments.\
+
+    -   Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.
+
+    -   Plug in your name and Github username in the [shared spreadsheet](https://docs.google.com/spreadsheets/d/178FUVT9k8SzAxmrmXnzii2mkL_3Sj78ealIVLQ70Bro/edit#gid=0)
+
+## 2. Install R
 
 *Note: if you have already installed R and R studio you don't need to re-install, but if compatability issues arise later in the quarter, you may have to re-install*
 
-  * Go to https://cran.r-project.org/  
-  * Select "Download R for Windows"  
-  
-      * Click "install R for the first time"
-      * Click "Download R 4.2.1 for Windows" 
-      
-  * Select "Download R for macOS"   
-  
-      * Click "R-4.2.1.pkg" 
-        
-## 3. Install RStudio  
-  * Go to https://www.rstudio.com/products/rstudio/download/  
-  * Scroll to the bottom of the page  
-  * Select "RStudio-2022.07.1-554.exe - Windows 10/11" for Windows users  
-  * Select "RStudio-2022.07.1-554.dmg - macOS 10.15+" for Mac users 
-    
-## 4. Create R Markdown file that “knits” HTML document in RStudio  
-  * What do we mean by this?  
-  
-    * We will use R Markdown for lectures and turning in problem sets (homeworks).  
-    * R Markdown allows us to create documents in a variety of formats (HTML, pdf, word, etc.). For example, this document was created using R markdown (pdf).  
-    * An R Markdown file is a file with a ".Rmd" extension
-    \
-    * [Here](https://rmarkdown.rstudio.com/formats.html) is a link to more information on R Markdown outputs.  
-  * Steps to follow to create R Markdown file that knits HTML document  
-    * Load RStudio  
-    * At the top left corner select “File” ->“New file” -> “R Markdown”  
-    * Select “HTML”, title your markdown file (optional), and click “OK”  
-    * Now select the “Knit” tab (icon with blue yarn ball) or scroll down and “Knit to HTML”  
-    * Give your file a name and save (can delete later) in place that is easy to locate (Desktop, Downloads, etc.)  
-    * You should have a saved HTML file (extension .HTML) and an R markdown file (extension .Rmd)  
+-   Go to <https://cran.r-project.org/>\
+
+-   Select "Download R for Windows"
+
+    -   Click "install R for the first time"
+    -   Click "Download R 4.3.1 for Windows"
+
+-   Select "Download R for macOS"
+
+    -   Click either "R-4.3.1-arm64.pkg" or "R-4.3.1-x86_64.pkg" depending on the version of your Mac.
+
+## 3. Install RStudio
+
+-   Go to <https://www.rstudio.com/products/rstudio/download/>\
+-   Scroll to the bottom of the page\
+-   Select "RSTUDIO-2023.06.2-561.EXE" for Windows users\
+-   Select "RSTUDIO-2023.06.2-561.DMG" for Mac users
+
+*Note: The newest Rstudio works on macOS 11 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/)*
+
+## 4. Create R Markdown file that "knits" HTML document in RStudio
+
+-   What do we mean by this?
+
+    -   We will use R Markdown for lectures and turning in problem sets (homeworks).\
+    -   R Markdown allows us to create documents in a variety of formats (HTML, pdf, word, etc.). For example, this document was created using R markdown (pdf).\
+    -   An R Markdown file is a file with a ".Rmd" extension\
+    -   [Here](https://rmarkdown.rstudio.com/formats.html) is a link to more information on R Markdown outputs.\
+
+-   Steps to follow to create R Markdown file that knits HTML document
+
+    -   Load RStudio\
+    -   At the top left corner select "File" -\>"New file" -\> "R Markdown"\
+    -   Select "HTML", title your markdown file (optional), and click "OK"\
+    -   Now select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to HTML"\
+    -   Give your file a name and save (can delete later) in place that is easy to locate (Desktop, Downloads, etc.)\
+    -   You should have a saved HTML file (extension .HTML) and an R markdown file (extension .Rmd)
 
 *Note: HTML stands for Hyper Text Markup Language and is the standard markup language for creating web pages*
-    
-## 5. Work through the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r)  
 
-  * _Note: All first chapters of DataCamp's standard courses are free._   
+## 5. Work through the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r).
 
-      * Follow the link and create an account  
-      * The tutorial may take about 1-2 hours  
-      * We encourage you all to complete this tutorial and run code on your own RStudio to get some practice.  
-  
-## 6. Install tinytex  
+-   *Note: All first chapters of DataCamp's standard courses are free.*
 
-  * Why are we asking you to do this?  
-    * You will need to install LaTeX (lah-tech or lay-tech) on your computer to create pdf documents in R Markdown.  
-    * You do not need to know how to use LaTeX. LaTeX is used in the background to compile pdf documents for you.  
-    * [Here](https://medium.com/@sorenlind/create-pdf-reports-using-r-r-markdown-latex-and-knitr-on-macos-high-sierra-e7b5705c9fd) is a helpful article on creating PDf reports using R, R Markdown, LaTeX, and knitr.
-  * We **strongly recommend** installing **tinytex** in RStudio because it is smaller in size and it only installs LaTeX packages you need. **However, if you have MikTeX/MacTeX already installed** on your computer or you plan to use LaTeX in other courses we recommend you update to the most current version of MikTeX/MacTeX and try to knit to a PDF (you will be asked to knit to a PDF in Section 8 of this document). Please email Ozan if you have MikTeX/MacTeX and are struggling to knit to a PDF. 
-    * __Please note that you only need to install one!__ You may run into some issues if you try to install tinytex and you already have MikTeX/MacTeX installed so please stick to only one.  
-    
-  * Instructions for installing tinytex  
-  
-    [Here](https://yihui.name/tinytex/) is a helpful link to install tinytex  
-    
-    1. Open up RStudio  
-    2. In the "console" paste the following and hit return(enter): __install.packages('tinytex')__  (When I re-installed RStudio I had to re-write the code so that it included straight quotes instead of the ones I copied and pasted from this document.)
-      + _Do not worry about the code right now. We will review how to install packages in the following weeks._ 
-    3. Once the package is installed, paste the following code in the "console" and hit return(enter): __tinytex::install_tinytex()__  
- 
-## 7. Create R Markdown file that “knits” PDF document in RStudio  
+    -   Follow the link and create an account\
+    -   The tutorial may take about 1-2 hours\
+    -   We encourage you all to complete this tutorial and run code on your own RStudio to get some practice.
 
-  * Why are we asking you to do this?  
-  
-    * We will ask you to submit problem sets (homeworks) as pdf documents.  
-  * Steps to follow to create R Markdown file that knits PDF document  
-  
-    * Once tinytex or MikTeX/MacTeX are installed, return to RStudio  
-    * At the top left corner select “File” -> “New file” -> “R Markdown”  
-    * Select “PDF”, title your markdown file (optional), and click “OK”  
-    * Now select the “Knit” tab (icon with blue yarn ball) or scroll down and “Knit to PDF”  
-    * Give your file a name and save (can delete later) in place that is easy to locate  
-    * You should have a saved pdf file (extension .pdf) and an R markdown file (extension .Rmd)  
-    
+## 6. Install tinytex
+
+-   Why are we asking you to do this?
+
+    -   You will need to install LaTeX (lah-tech or lay-tech) on your computer to create pdf documents in R Markdown.\
+    -   You do not need to know how to use LaTeX. LaTeX is used in the background to compile pdf documents for you.\
+    -   [Here](https://medium.com/@sorenlind/create-pdf-reports-using-r-r-markdown-latex-and-knitr-on-macos-high-sierra-e7b5705c9fd) is a helpful article on creating PDf reports using R, R Markdown, LaTeX, and knitr.
+
+-   We **strongly recommend** installing **tinytex** in RStudio because it is smaller in size and it only installs LaTeX packages you need. **However, if you have MikTeX/MacTeX already installed** on your computer or you plan to use LaTeX in other courses we recommend you update to the most current version of MikTeX/MacTeX and try to knit to a PDF (you will be asked to knit to a PDF in Section 8 of this document). Please email Ozan if you have MikTeX/MacTeX and are struggling to knit to a PDF.
+
+    -   **Please note that you only need to install one!** You may run into some issues if you try to install tinytex and you already have MikTeX/MacTeX installed so please stick to only one.
+
+-   Instructions for installing tinytex
+
+    [Here](https://yihui.name/tinytex/) is a helpful link to install tinytex
+
+    1.  Open up RStudio\
+    2.  In the "console" paste the following and hit return(enter): **install.packages('tinytex')** (When I re-installed RStudio I had to re-write the code so that it included straight quotes instead of the ones I copied and pasted from this document.)
+
+    -   *Do not worry about the code right now. We will review how to install packages in the following weeks.*
+
+    3.  Once the package is installed, paste the following code in the "console" and hit return(enter): **tinytex::install_tinytex()**
+
+## 7. Create R Markdown file that "knits" PDF document in RStudio
+
+-   Why are we asking you to do this?
+
+    -   We will ask you to submit problem sets (homeworks) as pdf documents.\
+
+-   Steps to follow to create R Markdown file that knits PDF document
+
+    -   Once tinytex or MikTeX/MacTeX are installed, return to RStudio\
+    -   At the top left corner select "File" -\> "New file" -\> "R Markdown"\
+    -   Select "PDF", title your markdown file (optional), and click "OK"\
+    -   Now select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF"\
+    -   Give your file a name and save (can delete later) in place that is easy to locate\
+    -   You should have a saved pdf file (extension .pdf) and an R markdown file (extension .Rmd)
+
     *If you receive an error shoot us an email and we can troubleshoot together*
 
-## 8. Create R Markdown file that “knits” (PDF) beamer presentation in RStudio  
+\newpage
 
-  * Why are we asking you to do this?  
-  
-    * Beamer is essentially a pdf presentation created by LaTeX.  
-    * Lectures will be in beamer format and we want you to be able to run lecture slides on your own.  
-    * Once tinytex or MikTeX/MacTeX are installed, create R Markdown file that knits to (PDf) beamer presentation.  
-  * Steps to follow to create R Markdown file that knits beamer presentation  
-  
-    * Return to RStudio  
-    * At the top left corner select “File” -> “New file” -> “R Mardown”  
-    * Select “Presentation” on the left table, then “(PDF) Beamer”, and click “OK”  
-    * Now select the “Knit” tab (icon with blue yarn ball) or scroll down and “Knit to PDF (Beamer)”  
-    * Give your file a name and save (can delete later) in place that is easy to locate  
-    * You should have a saved pdf file (extension .pdf) and an R markdown file (extension .Rmd)  
-    
-    *If you were unable to knit to pdf in the step above, this may not work for you. If you receive an error shoot us an email and we can troubleshoot together* 
+## 8. Create R Markdown file that "knits" (PDF) beamer presentation in RStudio
 
-\  
-\  
-  
+-   Why are we asking you to do this?
 
-*Disclaimer: We are Mac users and will do our best in assisting with any Windows issues*
+    -   Beamer is essentially a pdf presentation created by LaTeX.\
+    -   Lectures will be in beamer format and we want you to be able to run lecture slides on your own.\
+    -   Once tinytex or MikTeX/MacTeX are installed, create R Markdown file that knits to (PDf) beamer presentation.\
+
+-   Steps to follow to create R Markdown file that knits beamer presentation
+
+    -   Return to RStudio\
+    -   At the top left corner select "File" -\> "New file" -\> "R Mardown"\
+    -   Select "Presentation" on the left table, then "(PDF) Beamer", and click "OK"\
+    -   Now select the "Knit" tab (icon with blue yarn ball) or scroll down and "Knit to PDF (Beamer)"\
+    -   Give your file a name and save (can delete later) in place that is easy to locate\
+    -   You should have a saved pdf file (extension .pdf) and an R markdown file (extension .Rmd)
+
+    *If you were unable to knit to pdf in the step above, this may not work for you. If you receive an error shoot us an email and we can troubleshoot together*
+
+   
+
+*Disclaimer: We consist of both Mac and Windows users. Some of us are better at assisting with Mac issues as opposed to Windows issues and vice versa. We will do our best in assisting with any issues regardless if it's a Mac or Windows.*
