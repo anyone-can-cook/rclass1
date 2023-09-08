@@ -42,7 +42,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 3. Install RStudio
 
--   Go to <https://www.rstudio.com/products/rstudio/download/>\
+-   Go to <https://posit.co/download/rstudio-desktop/>\
 -   Scroll to the bottom of the page\
 -   Select "RSTUDIO-2023.06.2-561.EXE" for Windows users\
 -   Select "RSTUDIO-2023.06.2-561.DMG" for Mac users
