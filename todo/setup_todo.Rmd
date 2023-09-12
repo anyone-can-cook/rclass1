@@ -69,13 +69,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *Note: HTML stands for Hyper Text Markup Language and is the standard markup language for creating web pages*
 
-## 5. Work through the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r).
+## 5. Check out the first chapter of Introduction to R on Datacamp [here](https://learn.datacamp.com/courses/free-introduction-to-r).
 
 -   *Note: All first chapters of DataCamp's standard courses are free.*
 
     -   Follow the link and create an account\
     -   The tutorial may take about 1-2 hours\
-    -   We encourage you all to complete this tutorial and run code on your own RStudio to get some practice.
+    -   **We do not expect you to complete the entire first chapter.** Just spend some time with this course to get a better sense of R before the first class. This course assumes no R experience, so it is okay if you do not complete the first chapter. 
 
 ## 6. Install tinytex
 
