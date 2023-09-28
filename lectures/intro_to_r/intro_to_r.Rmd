@@ -538,7 +538,7 @@ typeof(c2)
 Logical vectors can take three possible values: `TRUE`, `FALSE`, `NA`
 
 - `TRUE`, `FALSE`, `NA` are special keywords; they are different from the character strings `"TRUE"`, `"FALSE"`, `"NA"`
-- Don't worry about `"NA"` for now
+- Don't worry about `NA` for now
 
 ```{r}
 typeof(TRUE)
