@@ -15,7 +15,7 @@ output:
   #  toc: yes
   #  toc_depth: '3'
 urlcolor: blue
-subtitle: Fall 2022
+subtitle: Fall 2023
 ---
 
 # Course information

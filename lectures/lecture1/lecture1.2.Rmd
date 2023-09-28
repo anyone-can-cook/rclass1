@@ -1,6 +1,6 @@
 ---
 title: "Lecture 1.2: Objects in R"
-subtitle:  "DUC 263: Introduction to Programming and Data Management Using R"
+subtitle:  "EDUC 263: Introduction to Programming and Data Management Using R"
 author: Ozan Jaquette
 date: 
 classoption: dvipsnames  # for colors
