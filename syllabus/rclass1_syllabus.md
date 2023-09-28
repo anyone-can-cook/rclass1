@@ -87,11 +87,8 @@ Recommended prerequisites (not absolutely required)
 - Email: [ozanj@ucla.edu](ozanj@ucla.edu)
 - Office hours:
   - Zoom office hours: Wednesdays 3-4PM, zoom [link](https://ucla.zoom.us/j/2545750562)
+      - Note: different than class zoom link
   - And by appointment (afternoons)
-- Fridays Ozan is only in class from 9-10AM
-  - 10/14/2022
-  - 11/18/2022
-
 
 ## Teaching assistants
 
@@ -108,7 +105,7 @@ Recommended prerequisites (not absolutely required)
 - Pronouns: he/his
 - Email: [tstockinger@g.ucla.edu](tstockinger@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Tuesdays XXXXX, zoom [link](https://ucla.zoom.us/j/99687673673)
+  - Zoom office hours: Weds 5-6pm, zoom [link](https://ucla.zoom.us/j/99687673673)
   - And by appointment
   
 **Diana Torres**  
