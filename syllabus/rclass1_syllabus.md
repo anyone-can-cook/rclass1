@@ -49,7 +49,7 @@ subtitle: Fall 2023
 
 # Course description
 
-The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than coginducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
+The primary goals of this course are (1) to teach fundamental skills of "data management," which are important regardless of which programming language you use, and (2) to develop a strong foundation in the R programming language. The course is designed for students who never thought they would become programmers and no prior experience with R is required. For goal (1), most statistics courses teach you how to analyze data that are ready for analysis. In real research projects, data management -- the process of cleaning, manipulating, and integrating datasets in order to create analysis datasets -- is often more challenging than conducting analyses. For goal (2), R is a free, open-source, object-oriented programming language. R is the most popular language for statistical analysis and one of the most popular languages for "data science" applications (e.g., web-scraping, interactive maps, network analysis).  Students will become proficient in data management and R programming through weekly problem sets, which will be completed in groups.
 
 ## Extended description
 
@@ -268,6 +268,14 @@ We will be using GitHub issues for questions, class discussion, and class announ
 
 For questions about course content, please post question on Github issues (we will provide guidance about how to do this). If you have a personal question or issue, you can email the instructor or TA directly. Additionally, we are available for office hours or by appointment if there is anything you would like to discuss with us in private.
 
+Limits to answering questions on github
+
+- Instructor/TAs may not answer questions about the problem set that are posted Thursday afternoon or later.
+  - But do post the question, because one of your classmates will likely answer it!
+- Some problem sets may have bonus/extra credit questions. Instructor/TAs will not answer questions about bonus questions.
+- Instructor/TAs may not answer questions about research/analysis you are conducting outside of class
+  - But no harm in asking! We may have time to answer or one of your classmates might help.
+
 # Course materials
 
 Course readings will be assigned from:
@@ -302,6 +310,7 @@ Students will complete 10 problem sets (the last one due during finals week). Pr
 - Since you will be working together, it is understandable that answers for many questions will be the same as your group members. However, if I find compelling evidence that a student merely copied solutions from a classmate, I will consider this a violation of academic integrity and that student will receive a zero for the homework assignment.
 
 A general strategy I recommend for completing the problem sets is as follows: (1) after lecture, do the reading associated with that lecture; (2) try doing the problem set on your own; (3) communicate with your group to work through the problem set, with a particular focus on areas group members find challenging.
+
 
 **Grading policies**
 
