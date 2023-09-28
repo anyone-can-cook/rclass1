@@ -24,8 +24,8 @@ subtitle: Fall 2023
 library(kableExtra)
 library(tidyverse)
 
-t <- c("Weekly meetings (online)","Class website (public)", "Questions & Discussion (private)", "Announcements (private)", "Class Zoom link (Meeting ID: 845 820 9354)")
-l <- c("Fridays 9-11AM Pacific","https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f22", "https://github.com/orgs/anyone-can-cook/teams/rclass1_f22_announcements", "https://ucla.zoom.us/j/8458209354")
+t <- c("Weekly meetings (online)","Class website (public)", "Questions, discussion, announcements (private)", "Class Zoom link")
+l <- c("Fridays 9-11AM Pacific","https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f23",  "https://ucla.zoom.us/j/99687673673")
 
 info <- tibble(t, l)
 
@@ -81,35 +81,35 @@ Recommended prerequisites (not absolutely required)
 
 ## Teaching assistants
 
-**TEXT TEXT TEXT**  
+**Belle Lee**  
 
-- Pronouns: she/her/hers
-- Email: [joycenguy@g.ucla.edu](joycenguy@g.ucla.edu)
+- Pronouns: she/her
+- Email: [bcl@g.ucla.edu](bcl@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Mondays 10-11am, Zoom [link](https://ucla.zoom.us/j/8458209354)
+  - Zoom office hours: Mondays 10-11am, Zoom [link](https://ucla.zoom.us/j/99687673673)
   - And by appointment
 
-**Xochilth Lopez**  
+**Trevor Stockinger**  
 
-- Pronouns: she/her/hers
-- Email: [lopezxochilth@ucla.edu](lopezxochilth@ucla.edu)
+- Pronouns: he/his
+- Email: [tstockinger@g.ucla.edu](tstockinger@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Tuesdays 11am-12pm, zoom [link](https://ucla.zoom.us/j/6550025244)
+  - Zoom office hours: Tuesdays XXXXX, zoom [link](https://ucla.zoom.us/j/99687673673)
   - And by appointment
   
-**Rachel Berwald**  
+**Diana Torres**  
 
-- Pronouns: she/her/hers
-- Email: [rberwald@g.ucla.edu](rberwald@g.ucla.edu)
+- Pronouns: she/her
+- Email: [dtorr@g.ucla.edu](dtorr@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Thursdays 12pm-1pm, zoom [link](https://ucla.zoom.us/j/3465888342)
+  - Zoom office hours: Wednesday 11am-12pm, zoom [link](https://ucla.zoom.us/j/99687673673)
 
-**Fernando Mora**  
+**Jeffrey Yo**  
 
 - Pronouns: he/him/his
-- Email: [fjmora@ucla.edu](fjmora@ucla.edu)
+- Email: [yjeffrey7@g.ucla.edu](yjeffrey7@g.ucla.edu)
 - Office hours:
-  - Zoom office hours: Wednesdays 2pm-3pm, zoom [link](https://ucla.zoom.us/j/4336432237)
+  - Zoom office hours: Tuesday 3pm-4pm, zoom [link](https://ucla.zoom.us/j/99687673673)
   
 # Course learning goals
 
@@ -147,7 +147,7 @@ Another broad goal of the course is for students to begin developing practical p
 
 ## Course structure
 
-__Overview__. Course structure consists of weekly __asynchronous course materials__ and weekly __synchronous workshop meetings__. Each week we will focus on a particular topic (e.g., creating variables; writing functions). For each weekly topic, students will complete a problem set. Problem sets will be completed in groups and focus on practical application of concepts/skills from the topic of the week.
+__Overview__. Course structure consists of weekly __asynchronous course materials__ and weekly __synchronous meetings__. Each week we will focus on a particular topic (e.g., creating variables; writing functions). For each weekly topic, students will complete a problem set. Problem sets will be completed in groups and focus on practical application of concepts/skills from the topic of the week.
 
 __Asynchronous course materials__.  Asynchronous course materials will focus on the topic for that week (e.g., processing across rows). Course materials will consist of three types of resources: 
 
@@ -156,9 +156,11 @@ __Asynchronous course materials__.  Asynchronous course materials will focus on 
 1. The ".Rmd" file that created the PDF/HTML lecture slides.
     - The .Rmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, students will  "learn by doing" in that they will run _R_ code on their own computer while they work through lecture materials on their own.
 
-__Synchronous workshop meetings__. Synchronous class time will largely consist of workshop-style meetings in which students work in zoom breakout rooms in small groups. Typically, students will be in a breakout room with members of their problem set group, though working with other students is fine too. During these synchronous workshop meetings, students will work through course materials (e.g., lecture slides, video lectures) and/or the associated problem set as they see fit. The synchronous workshops are also a great time to ask questions about course material or practical applications. The instructor/TAs will be moving from one breakout room to the next, providing help. In some weeks, the instructor will devote a modest amount of time to class-wide lecture or discussion with the goal of framing practical applications and/or addressing difficulties that many students are encountering.
+__Synchronous meetings__. Synchronous class meetings will be on Zoom. Attendance during the entire period is required, but students may ask instructor/TAs for exceptions due to scheduling conflicts. 
 
-Each group can develop their own approach to how they want to use the synchronous workshop time. Some groups may work relatively independently, while others may work collaboratively. Some groups may agree to work through all asynchronous lecture materials beforehand so they can devote all workshop time to making progress on the problem set. Other groups may use the workshop time to primarily to work through the course materials.
+During synchronous class time, students will have the option of (A) attending live lecture from the instructor or (B) working through lecture materials/problem sets in Zoom breakout rooms in small groups (e.g., problem set groups) or on their own. For the first three weeks of class, students will not have the option of working in Zoom breakout rooms.
+
+For students who decide to work in Zoom breakout rooms, you will use this time to work through course materials (e.g., lecture slides, video lectures) and/or the associated problem set as you see fit. The synchronous workshops are also a great time to ask questions about course material or practical applications. TAs will be moving from one breakout room to the next, providing help. Each group can develop their own approach to how they want to use the synchronous workshop time. Some groups may work relatively independently, while others may work collaboratively. Some groups may agree to work through all asynchronous lecture materials beforehand so they can devote all workshop time to making progress on the problem set. The one requirement I make: do not do the problem set before working through the associated lecture material.
 
 <!-- 
 __Overview__. For the first two or three weeks of the course, we will have synchronous lectures and class time that will take all or most of the allotted Friday 9:00am to 11:50am time. In the subsequent weeks, students will only be required to attend the Friday synchronous zoom class from 9AM-10AM. However, the instructor will continue lecturing until all material for the week has been covered. All lectures will be recorded. Weekly work students are expected to do outside of class time will consist of students working through lecture material on their own, a modest amount of required reading, and weekly problem sets completed in groups of three.
@@ -213,21 +215,14 @@ At times, this course will utilize data that reflect systemic gaps based on race
 
 # Course website and communication
 
-## Course Zoom link  
-
-Time: Fridays 09:00-11AM AM Pacific Time (US and Canada)   
-
-Join Zoom Meeting  
-
-- https://ucla.zoom.us/j/8458209354
- 
-
 ## Course website
 
 All course related material can be found on the [course website](https://anyone-can-cook.github.io/rclass1). Pre-recorded lecture videos, lecture slides (PDF/HTML), and .Rmd files will be posted on the class website under the associated sections. Additional resources (e.g., syllabus) may also be posted on the class website. 
 
 
 ## Course discussion
+
+<!-- 
 
 We will be using GitHub teams for class announcements [HERE](https://github.com/orgs/anyone-can-cook/teams/rclass1_f22_announcements).
 
@@ -238,9 +233,11 @@ We will be using GitHub teams for class announcements [HERE](https://github.com/
 <br>    
     [![](https://github.blog/wp-content/uploads/2017/11/32954856-4ba160e4-cb82-11e7-92f6-3e573c8a0821.gif?resize=1028%2C454)](https://github.blog/2017-11-20-introducing-team-discussions/)
 
-*Credit: [Introducing team discussions](https://github.blog/2017-11-20-introducing-team-discussions/)*  
+*Credit: [Introducing team discussions](https://github.blog/2017-11-20-introducing-team-discussions/)* 
+-->
+ 
 
-We will be using GitHub issues for questions and class discussion [HERE](https://github.com/anyone-can-cook/rclass1_student_issues_f22).
+We will be using GitHub issues for questions, class discussion, and class announcements [HERE](https://github.com/anyone-can-cook/rclass1_student_issues_f23).
 
   - __GitHub issues__: GitHub issues are traditionally used by collaborators of a repository for managing tasks for a project. Our rational for using issues is twofold: 1) help track and organize questions related to course material and problem sets and 2) promote classroom participation. Students are encouraged to contribute to issues by posting questions, sharing helpful resources, and/or taking a stab at answering questions posted on issues. Some features include: 
     
@@ -255,8 +252,7 @@ We will be using GitHub issues for questions and class discussion [HERE](https:/
 
 ## Communication with instructor and TA
 
-For questions about course content, please post question on Github issues, and '@' the instructor and TAs to bring it to our attention (we will provide guidance about how to do this). If you have a personal question or issue, you can email the instructor or TA directly. Additionally, we are available for office hours or by appointment if there is anything you would like to discuss with us in private. 
-
+For questions about course content, please post question on Github issues (we will provide guidance about how to do this). If you have a personal question or issue, you can email the instructor or TA directly. Additionally, we are available for office hours or by appointment if there is anything you would like to discuss with us in private.
 
 # Course materials
 
@@ -306,11 +302,10 @@ because we do not have resources to grade weekly due to the very large number of
 -->
 
 - For students working in a problem set group, one submission from each problem set group will be chosen at random. The grade on that problem set submission will be the grade for all members of the group.
-    - For up to two questions, you may ask TAs to regrade an answer that you feel you answered correctly that the graded submission did not answer correctly
     - If a member of a problem set group has not submitted the problem set by the time the TAs conduct grading, that submission will be grades separately once it is submitted
-- Students who are not part of a problem set group will have their problem sets graded individually.
+    - The lowest problem-set grade will be dropped from the calculation of your final grade. 
+- Students who are not part of a problem set group will have their problem sets graded individually. A random subset of 4 or 5 problem sets will be graded. For students who work individually, the lowest problem set grade will not be dropped from calculation of final grade.
 - Weekly required participation on github will be part of your problem set grade
-- The lowest problem-set grade will be dropped from the calculation of your final grade. 
 - Policy on late assignments
   - Problem sets submitted after 11:59PM on Friday will lose one percentage point (e.g., max grade becomes 99% instead of 100%)
   - Starting at 12AM Monday morning, problem sets will lose an additional percentage point for each week-day it is not submitted
@@ -319,15 +314,13 @@ because we do not have resources to grade weekly due to the very large number of
   - For late submissions due to an unexpected emergency, you will not lose points. Please contact the instructor and/or TAs and we will work it out together.  
 
 
-## Attendance and Participation (10 percent of total grade)
+## Participation (10 percent of total grade)
 
-TAs will take attendance each week. Each unexcused absence will result in a 1% deduction from your final grade for the course. Absences due to emergencies or professional obligations will not not affect your grade as long as you communicate with your TA.
+Broadly, we expect students to participate by being attentive, supportive of classmates, by asking questions, and by answering questions posed by classmates.
 
-Beyond attendance, we expect students to participate by being attentive, supportive of classmates, by asking questions, and by answering questions posed by classmates.
+Practically speaking, the vast majority of your participation grade will depend on weekly participation on Github. Each week, students are required to post one communication on Github. This could be asking a question about the problem set, answering a question posed by a classmate, or a post describing something you learned while working through the week's material/problem set. If you post at least one communication on Github each week, you will earn an "A" for participation for the quarter.
 
-Practically speaking, the much of your participation in this course occurs on Github. Each week, students are required to post one communication on Github. This could be asking a question about the problem set, answering a question posed by a classmate, or a post describing something you learned while working through the week's material/problem set. 
-
-If you have no unexcused absences and your communicate on Github each week, you will receive an "A" (95%) for your attendance and participation grade. If you are consistently helpful and supportive to your classmates on the Github community, you will earn a 100% for your attenance and participation grade.
+In addition, students can work towards an 100% participation grade for the quarter by asking/answering questions during synchronous lecture (e.g., zoom chat) or by consistently being helpful/supportive to your classmates on Github.
 
 ## Grading scale
 
@@ -377,10 +370,6 @@ Below is an overview of course topics. Topics and schedule are subject to change
     - Merge datasets using mutating joins, check quality of merge using filtering joins, append datasets by stacking rows
 
 # Course policies
-
-## Learning during a global pandemic
-
-With the ongoing spread of the COVID-19 pandemic, we understand that right now is a challenging time for everybody. Many of us may be experiencing added stress or responsibilities that make learning and completing classwork difficult. If you are having trouble keeping up with the class, please reach out to the teaching team and we will help work out a plan with you. We understand that right now is a precarious time and in the event that you or someone in your family and/or shared living space gets sick, we ask that you please reach out to us as soon as you are able to. We want to be accommodating to everyone's unique situation and hope to make this class an enjoyable learning experience for all.
 
 ## Online collaboration/netiquette
 
