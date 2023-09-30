@@ -935,6 +935,242 @@ event_berk %>% arrange(event_type, event_datetime_start) %>%
 
 ```
 
+# Summarize across multiple columns
+
+### What are column-wise operations?
+
+```{r, eval=FALSE, include=FALSE}
+?across
+```
+
+`across()` allows you to perform the same operation on multiple columns. 
+
+\medskip
+
+__Description__
+- `across()` apply the same transformation to multiple columns.
+
+__Syntax__
+- `across(.cols, .fns, .names)`
+
+__Arguments__
+
+- `.cols` Columns to transform
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`
+    - A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE)
+    - A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+- `.names` A glue specification that describes how to name the output columns. Use `{.col}` to stand for the selected column name and `{.fn}` to stand for the name of the function being applied, e.g. "`{.col}_{.fn}`"
+    
+### across() affects every variable
+
+```{r, eval=FALSE, include=FALSE}
+?across
+```
+Syntax: `across(.cols, .fns, .names)`
+
+- `.cols` Columns to transform
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`; A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+
+__Task__: 
+
+- For U. Pittsburgh (`univ_id = 215293`) events at public and private high schools, caclulate the __mean__ value of `med_inc` and `pct_white_zip` for each combination of `event_type` and `event_inst`
+```{r, results="hide"}
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), mean))
+```
+\medskip
+
+Try again, this time applying `na.rm = TRUE`
+- this is an example of a purr style lambda `~ mean(.x, na.rm = TRUE)` argument "for the function calls in `.fns`." 
+```{r, results="hide"}
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), ~mean(.x, na.rm = TRUE)))
+```
+
+
+### across() affects every variable
+
+```{r, eval=FALSE, include=FALSE}
+?across()
+```
+Syntax: `across(.cols, .fns, .names)`
+
+- `.cols` Columns to transform
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`; A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+
+
+__Task__: 
+
+- For U. Pittsburgh (`univ_id = 215293`) events at public and private high schools, caclulate __mean__ and __standard deviation__ of `med_inc` and `pct_white_zip` for each combination of `event_type` and `event_inst`
+
+- You can create a named list of functions to supply into the second argument `.fns`
+
+```{r, results="hide"}
+mean_sd <- list(
+  mean = ~mean(.x, na.rm = TRUE), 
+  sd = ~sd(.x, na.rm = TRUE)
+)
+
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), mean_sd))
+```
+
+### across() affects every variable
+
+Syntax: `across(.cols, .fns, .names)`
+
+- `.names` A glue specification that describes how to name the output columns. Use `{.col}` to stand for the selected column name and `{.fn}` to stand for the name of the function being applied, e.g. "`{.col}_{.fn}`"
+
+Use this syntax to control variable name suffixes:
+
+- `.names = "{.col}_{.fn}"`
+```{r, results="hide"}
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), mean_sd, .names = "{.col}_{.fn}"))
+```
+
+- `.names = "{.fn}_{.col}"` Change the order of the name to include function first and then the column name
+```{r, results="hide"}
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), mean_sd, .names = "{.fn}_{.col}"))
+```
+
+
+### across() affects every variable
+
+__Task__: 
+
+- Same task as before, but now calculate __mean__, __standard deviation__, __min__, and __max__ of `med_inc` and `pct_white_zip` for each combination of `event_type` and `event_inst`
+
+\medskip
+
+```{r}
+desc_stat <- list(
+  mean = ~mean(.x, na.rm = TRUE), 
+  sd = ~sd(.x, na.rm = TRUE),
+  low = ~min(.x, na.rm = TRUE),
+  high = ~max(.x, na.rm=TRUE)
+)
+
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(c(med_inc, pct_white_zip), desc_stat, .names = "{.col}_{.fn}"))
+```
+
+### across(), quosure style lambdas ~ func_name(.x)
+
+Syntax: `across(.cols, .fns, .names)`
+
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`; A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+
+__Task__: Calculate mean, number of obs, and number of non-missing obs for variables
+
+- Can exclude `n()` from the `.cols` argument in `across()` function because you only need to calculate once to get the number of observations for each group.
+    
+
+\medskip
+
+```{r, results="hide"}
+mean_obs_nmiss <- list(
+  mean = ~mean(.x, na.rm = TRUE), 
+  n_non_miss = ~sum(!is.na(.x))
+)
+
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,med_inc,pop_total) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(nrow = n(), across(c(med_inc, pop_total), mean_obs_nmiss,.names = "{.col}_{.fn}"))
+```
+
+
+### across() and where() affects selected variables if they meet a condition
+
+Syntax: `across(where(fn)), .fns, .names)`
+
+- `fn` A function that returns TRUE or FALSE
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`; A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+
+\medskip
+
+__Task__: For U. Pittsburgh events at public and private high schools, caclulate __mean__, __min__, and __max__ of variables `med_inc` and `event_date` for each combination of `event_type` and `event_inst`
+
+```{r, results="hide"}
+mean_min_max <- list(
+  mean = ~mean(.x, na.rm = TRUE),
+  low = ~min(.x, na.rm=TRUE),
+  high = ~max(.x, na.rm=TRUE)
+)
+
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst, med_inc, event_date) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(where(is.double), mean_min_max))
+
+```
+
+\medskip
+
+```{r, echo=FALSE, include=FALSE}
+typeof(df_event$event_date)
+class(df_event$event_date)
+```
+
+- Although `event_date` is a Date class, it is type double and therefore we can apply `is.double` to the `where()` function to calculate the mean, min, and max.
+
+
+### across() and where() affects selected variables if they meet a condition
+
+Useful if you want to apply functions to variables that are particular `type` or `class`
+
+Syntax: `across(where(fn)), .fns, .names)`
+
+- `fn` A function that returns TRUE or FALSE
+- `.fns`	Function to apply to each of the selected columns. Some values include: 
+    - A function, e.g. `mean()`; A purr-style lambda, e.g. ~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+
+\medskip
+
+__Task__: For events by U. Pittsburgh at public and private high schools, caclulate mean and standard deviation for __numeric variables__
+
+```{r, results="hide"}
+#First, which vars are numeric
+df_event %>% 
+  select(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) %>%
+  glimpse()
+
+df_event %>% 
+  filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
+  select(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) %>%
+  group_by(event_type,event_inst) %>%
+  summarize(across(where(is.numeric), mean_sd))
+```
+
+
+<!--
 # Summarize multiple columns
 
 ### What are "scoped" variants of a function?
@@ -1200,6 +1436,8 @@ df_event %>%
   summarize_if(.predicate = is.numeric, .funs = list(avg = mean,std = sd), 
     na.rm = TRUE)
 ```
+
+-->
 
 # Attach aggregate measures to your data frame
 
