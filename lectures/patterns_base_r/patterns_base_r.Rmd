@@ -1146,16 +1146,15 @@ Like `[]`, can use `[[]]` to return contents of __named__ elements specified usi
 
 - syntax: `obj_name[["element_name"]]`
 
-Same list as before, but this time elements named
 ```{r}
-list_x <- list(var1=1:3, var2="a", var3=4:6)
+list_x <- list(var1=1:3, var2="a", var3=4:6) # create list with named elements
 ```
 
-Subset list `list_x` using `[[]]` element names vs. element position
+Subset list `list_x` using `[[]]` element names
 ```{r}
-list_x[["var1"]]
-  # note: list_x[[1]] # same as above
-list_x[["var3"]]
+list_x[["var1"]] # subset by element position: list_x[[1]]
+str(list_x[["var1"]])
+str(list_x["var1"]) # note: suggests var name is attribute of list, not atomic vector
 ```
 
 Can do same thing with data frames because data frames are lists (output omitted)
@@ -1186,6 +1185,12 @@ General rules of applying `[]` vs. `[[]]` to nested objects
   - if object `x` is not a nested object, then applying `[[]]` to a single element of `x` will return object with same data structure as `x`
   - if object `x` has a nested data structure, then then applying `[[]]` to a single element of `x` will "move up one level of hierarchy" to extract the **contents** of an element within the object `x`
   
+When working w/ data frames, functions that calculate things expect to be working with atomic vectors (think `[[]]`) not lists (think `[]`)
+```{r}
+mean(df_event[['med_inc']], na.rm = TRUE)
+# mean(df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work
+```
+
 
 ### Subset lists/data frames using $
 
@@ -1243,10 +1248,11 @@ Filtering example using data frame `df_school`
 
 **Task**:
 
-- Using `df_school`, isolate obs where school received at least 1 visit from UC Berkeley
+- Isolate obs where school received at least 1 visit from UC Berkeley
 
 General syntax: `df_name[df_name$var_name <condition>, ]`
 
+- where `<condition>` is something that evaluates to `TRUE` or `FALSE` for each element of the atomic vector (i.e., variable)
 - Note that syntax uses "double index" `df_name[<rows>, <columns>]` syntax
   - Therefore, the `<condition>` in above syntax is isolating `<rows>`
 - __Cannot__ use "single index" syntax `df_name[<columns>]`
@@ -1408,7 +1414,7 @@ The next few slides will explain
 When sub-setting via `[]` combined with `$`, result will include:
 
 - rows where condition is `TRUE`
-- __as well as__ rows with `NA` (missing) values for condition. 
+- __as well as__ rows with `NA` (missing) values for `<condition>`. 
 
 __Task__ (using `df_event`, which has one obs per university, recruiting event)
 
