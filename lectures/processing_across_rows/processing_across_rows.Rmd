@@ -653,7 +653,7 @@ sum(c(TRUE,TRUE,FALSE,FALSE))
 ```
 `is.na()` returns `TRUE` if value is `NA` and otherwise returns `FALSE`
 ```{r}
-is.na(c(5,NA,4,NA))-
+is.na(c(5,NA,4,NA))
 sum(is.na(c(5,NA,4,NA,5)))
 sum(!is.na(c(5,NA,4,NA,5)))
 ```
