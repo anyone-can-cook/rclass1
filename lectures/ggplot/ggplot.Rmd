@@ -43,6 +43,7 @@ library(scales) # for formatting labels for axes and legends
 
 library(haven)
 library(labelled)
+library(RColorBrewer)
 ```
 
 Resources used to create this lecture:
@@ -1273,6 +1274,31 @@ diamonds %>%
 ```
 
 ## Colors
+
+<!--
+### Rcolorbrewer package
+
+### Hue
+- https://www.color-wheel-artist.com/hue/
+- https://www.sensationalcolor.com/hue-value-chroma/
+- Hue refers to the origin of the color we see. An easy way to think of hue is one of the six primary and secondary colors-- Yellow, Orange, Red, Violet, Blue or Green.
+
+### Gradient
+- http://www.sthda.com/english/wiki/colors-in-r#:~:text=The%20palettes%20names%20are%20%3A%20Blues,YlGn%2C%20YlGnBu%20YlOrBr%2C%20YlOrRd.
+- https://www.datanovia.com/en/blog/ggplot-gradient-color/
+- https://xd.adobe.com/ideas/principles/web-design/gradient-color-definition/
+- most relevant for sequential palettes, progress from low to high gradient
+
+### Palettes 
+- combination of colors displayed
+- palettes created in Rcolorbrewer and other libraries
+
+### Scales
+- sequential
+- diverging
+- qualitative
+
+-->
 
 There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color discrete/categorical variables and `scale_color_gradient()` is used when we want to color continuous variables.
 
