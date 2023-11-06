@@ -1275,35 +1275,99 @@ diamonds %>%
 
 ## Colors
 
-<!--
-### Rcolorbrewer package
+Below, we briefly overview some core concepts when using colors. This will be helpful when creating graphs. 
 
-### Hue
-- https://www.color-wheel-artist.com/hue/
-- https://www.sensationalcolor.com/hue-value-chroma/
-- Hue refers to the origin of the color we see. An easy way to think of hue is one of the six primary and secondary colors-- Yellow, Orange, Red, Violet, Blue or Green.
+### HCL Color Space
 
-### Gradient
-- http://www.sthda.com/english/wiki/colors-in-r#:~:text=The%20palettes%20names%20are%20%3A%20Blues,YlGn%2C%20YlGnBu%20YlOrBr%2C%20YlOrRd.
-- https://www.datanovia.com/en/blog/ggplot-gradient-color/
-- https://xd.adobe.com/ideas/principles/web-design/gradient-color-definition/
-- most relevant for sequential palettes, progress from low to high gradient
+The HCL color space is based on how the human perception works. "When using HCL, you can directly control the color (hue), the colorness (chroma) and the luminance (brightness)." ([Why HCL from hcl wizard ](https://hclwizard.org/why-hcl/))
 
-### Palettes 
-- combination of colors displayed
-- palettes created in Rcolorbrewer and other libraries
 
-### Scales
-- sequential
-- diverging
-- qualitative
+__Hue__ 
 
--->
+Hue refers to a specific color we see from one of the six Primary and Secondary colors in the Color Family-- Yellow, Orange, Red, Violent, Blue, or Green. This means that Black, Gray, and White are not Hues.
+- Example: Burgundy has a dominant hue of red. 
 
-There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color discrete/categorical variables and `scale_color_gradient()` is used when we want to color continuous variables.
+[![](https://color-wheel-artist.com/thrive/wp-content/uploads/2017/02/hue-color-wheel-featured.jpg)](https://www.color-wheel-artist.com/hue/)
+
+__Color__ 
+
+Color and Hue are used interchangeably, however, Color is used to describe hues, tints, shades, and tones.
+- Example: Black, Gray, and White are colors. 
+
+__Value__
+
+The value of a color is determined by how close the color is to Black or White. The closer a color is to Black, the darker the value and the closer a color is to White, the lighter the value.
+- Example: It is helpful to use a grayscale to determine the value of a color. 
+
+[![](https://www.sensationalcolor.com/wp-content/uploads/2019/06/Black-to-White-Graph.jpg)](https://www.sensationalcolor.com/hue-value-chroma/)
+
+- "All colors fall somewhere on the value scale between black and white" ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))
+
+
+__Chroma__
+- Chroma expresses the "purity" of a color. "Mixing a pure hue with black, white, gray, or any other color reduces its purity and lowers the chroma." ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))
+
+- Example: The image below displays the changes of a "pure" hue when adding the color white or black to it. As the red squares on the far left column are blended with white, they become lighter in value and lower in chroma and as the squares are blended with black, they become darker in value and lower in chroma. 
+
+__Hue, Value, and Chroma__
+[![](https://www.sensationalcolor.com/wp-content/uploads/2019/07/Value-Chroma-Chart.jpg)](https://www.sensationalcolor.com/hue-value-chroma/)
+
+
+__Luminance__  
+
+- "Luminance is a measure to describe the perceived brightness of a colour. In other words, how bright is the colour from a reflected surface." ([Mixing Colors of equal Luminance- Part 1 author: Colin Shanley](https://medium.com/sketch-app-sources/mixing-colours-of-equal-luminance-part-1-41f69518d647#:~:text=Luminance%20is%20a%20measure%20to,normalised%20to%20100%25%20for%20white.))
+
+- Example: The Hue-Chroma-Luminance (HCL) color scheme. 
+
+[![](https://hclwizard.org/images//hclscheme_pic0.png)](https://hclwizard.org/color-scheme/)
+
+
+### RColorBrewer Palettes  
+
+Palettes are a combination of colors displayed together. In the `RColorBrewer` package. 
+
+<br>
+Visualization of color palettes (e.g., `scale_color_brewer(palette=Pastel2)`)
+[![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
+<br>
+
+There are three types of palette scales: sequential, diverging, and qualitative. 
+
+- __Sequential__: Sequential palettes are best suited for ordered data that progress from low to high i.e., where colors go from high to low chroma and/or luminance. 
+    - Sequential palette names: Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd
+```{r}
+display.brewer.all(type="seq")
+```
+    
+- __Diverging__: Diverging palettes represent ordered data but in two directions. The middle represents a neutral value and the opposite ends represent two extremes. The hue distinguishes the direction of the values.  
+  - Diverging palette names: BrBG, PiYG, PRGn, PuOr, RdBu, RdGy, RdYlBu, RdYlGn, Spectral
+  
+```{r}
+display.brewer.all(type="div")
+```
+ 
+- __Qualitative__: Qualitative palettes are best suited for representing nominal or categorical data. There is not particular ordering of categories; every hue represents a different value where chroma and luminance are equal.  
+  - Qualitative palette names: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
+  
+```{r}
+display.brewer.all(type="qual")
+```
+
+You can run the code below to identify color-blind-friendly palettes.
+```{r}
+display.brewer.all(colorblindFriendly=TRUE)
+```
+
+Sources: ([R Color Brewer's palettes](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)); ([HCL Color Space](https://hclwizard.org/#somewhere-over-the-rainbow))  
+
+<br>
 
 
 ### `scale_color_brewer()` for discrete variables
+
+Bringing it all together to apply the `scale_color_brewer()` and `scale_color_gradient()` functions to our graphs.
+
+There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color discrete/categorical variables and `scale_color_gradient()` is used when we want to color continuous variables.
 
 <br>
 __The `scale_color_brewer()` function__ for categorical/discrete variables
@@ -1328,9 +1392,6 @@ scale_color_brewer(
     - `direction`: "Sets the order of colours in the scale. If 1, the default, colours are as output by `RColorBrewer::brewer.pal()`. If -1, the order of colours is reversed."
     - `aesthetics`: which aesthetic mappings the `scale_color_brewer()` function should apply to. Default is `aesthetics = "colour"`
 
-<br>
-Visualization of color palettes (e.g., `scale_color_brewer(palette=Pastel2)`)
-[![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
 
 <br>
 **Example**: Customizing color palette of discrete scale
