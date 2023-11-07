@@ -1284,19 +1284,22 @@ The HCL color space is based on how the human perception works. "When using HCL,
 
 __Hue__ 
 
-Hue refers to a specific color we see from one of the six Primary and Secondary colors in the Color Family-- Yellow, Orange, Red, Violent, Blue, or Green. This means that Black, Gray, and White are not Hues.
+Hue refers to a specific color we see from one of the six Primary and Secondary colors in the Color Family-- Yellow, Orange, Red, Violent, Blue, or Green. This means that Black, Gray, and White are not Hues.  
+
 - Example: Burgundy has a dominant hue of red. 
 
 [![](https://color-wheel-artist.com/thrive/wp-content/uploads/2017/02/hue-color-wheel-featured.jpg)](https://www.color-wheel-artist.com/hue/)
 
 __Color__ 
 
-Color and Hue are used interchangeably, however, Color is used to describe hues, tints, shades, and tones.
+Color and Hue are used interchangeably, however, Color is used to describe hues, tints, shades, and tones.  
+
 - Example: Black, Gray, and White are colors. 
 
 __Value__
 
-The value of a color is determined by how close the color is to Black or White. The closer a color is to Black, the darker the value and the closer a color is to White, the lighter the value.
+The value of a color is determined by how close the color is to Black or White. The closer a color is to Black, the darker the value and the closer a color is to White, the lighter the value.  
+
 - Example: It is helpful to use a grayscale to determine the value of a color. 
 
 [![](https://www.sensationalcolor.com/wp-content/uploads/2019/06/Black-to-White-Graph.jpg)](https://www.sensationalcolor.com/hue-value-chroma/)
@@ -1304,8 +1307,9 @@ The value of a color is determined by how close the color is to Black or White. 
 - "All colors fall somewhere on the value scale between black and white" ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))
 
 
-__Chroma__
-- Chroma expresses the "purity" of a color. "Mixing a pure hue with black, white, gray, or any other color reduces its purity and lowers the chroma." ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))
+__Chroma__  
+
+- Chroma expresses the "purity" of a color. "Mixing a pure hue with black, white, gray, or any other color reduces its purity and lowers the chroma." ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))  
 
 - Example: The image below displays the changes of a "pure" hue when adding the color white or black to it. As the red squares on the far left column are blended with white, they become lighter in value and lower in chroma and as the squares are blended with black, they become darker in value and lower in chroma. 
 
@@ -1324,14 +1328,14 @@ __Luminance__
 
 ### RColorBrewer Palettes  
 
-Palettes are a combination of colors displayed together. In the `RColorBrewer` package. 
+The `RColorBrewer` package is a helpful tool for managing colors in R. It offers several color palettes to choose from. 
 
 <br>
 Visualization of color palettes (e.g., `scale_color_brewer(palette=Pastel2)`)
 [![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
 <br>
 
-There are three types of palette scales: sequential, diverging, and qualitative. 
+Palettes are a combination of colors displayed together. In `RColorBrewer`, there are three types of palette scales: sequential, diverging, and qualitative. 
 
 - __Sequential__: Sequential palettes are best suited for ordered data that progress from low to high i.e., where colors go from high to low chroma and/or luminance. 
     - Sequential palette names: Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd
@@ -1359,6 +1363,11 @@ display.brewer.all(colorblindFriendly=TRUE)
 ```
 
 Sources: ([R Color Brewer's palettes](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)); ([HCL Color Space](https://hclwizard.org/#somewhere-over-the-rainbow))  
+
+To select a specific color not part of the `RColorBrewer` package or other color packages, you can use this tool to select a color
+
+<br>
+[![](https://r-graph-gallery.com/img/graph/42-colors-names.png)](https://r-graph-gallery.com/ggplot2-color.html)
 
 <br>
 
