@@ -1533,6 +1533,76 @@ diamonds %>%
 ```
 
 
+### `scale_color_manual()` to select specific colors
+
+If we want to customize our graph by selecting specific colors we could use `scale_color_manual()`. We could specify colors by their name (e.g., "red", "darkgreen"), rgb(), Number, and hex code ([Dealing with colors in ggplot2](https://r-graph-gallery.com/ggplot2-color.html))
+
+__The `scale_color_manual()` function__:
+
+```{r, eval = FALSE}
+?scale_color_manual
+
+# SYNTAX AND DEFAULT VALUES
+scale_colour_manual(
+  ...,
+  values,
+  aesthetics = "colour",
+  breaks = waiver(),
+  na.value = "grey50"
+)
+```
+
+- Description (from help file)
+    - "These functions allow you to specify your own set of mappings from levels in the data to aesthetic values."
+- Arguments
+    - `values`: a set of aesthetic values to map data values to.
+    
+<br>
+**Example**: Customizing our graph color palette 
+
+Let's go back to our example scatterplot of the relationship between carat (x-axis) and price (y-axis) with color of points determined by the variable `color`.
+
+We can manually select colors by their name ([An overview of color names in R](https://r-graph-gallery.com/42-colors-names.html)). 
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_manual(values = c("D" = "darkcyan",
+                                "E" = "beige",
+                                "F" = "darkorange",
+                                "G" = "darkslateblue",
+                                "H" = "darkmagenta",
+                                "I" = "darkslategrey",
+                                "J" = "brown4"),
+                     name = 'Diamond color')
+```
+
+
+If we want to be more specific, we could manually select colors by their Hex code ([Hex Code Selector](https://htmlcolorcodes.com/)). 
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_manual(values = c("D" = "#E73813",
+                                "E" = "#E7B713",
+                                "F" = "#F3EF10",
+                                "G" = "#45B39D",
+                                "H" = "#0F85C8",
+                                "I" = "#850FC8",
+                                "J" = "#B90FCD"
+                                ),
+                     name = 'Diamond color')
+```
+
+
 ## Themes
 
 From "[Complete Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)," **themes** control "non-data display."
