@@ -42,8 +42,8 @@ ADD WEEKLY BREAK DOWN
 * READINGS ETC.-->
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
+```{r echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+#uncomment for rendering in word or pdf because kable package only works for html, see code chunk below 
 Resource <- c("Weekly meetings (online)","Class website (public)", "Questions, discussion, announcements (private)", "Class Zoom link")
 Link <- c("Day(s), Time, Timezone","Link to website here", "Link to class repository for student issues here",  "Zoom link here")
 
@@ -57,6 +57,18 @@ ft
 
 ```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(kableExtra)
+library(tidyverse)
+
+t <- c("Weekly meetings (online)","Class website (public)", "Questions, discussion, announcements (private)", "Class Zoom link")
+l <- c("Day(s), Time, Timezone","https://anyone-can-cook.github.io/rclass1/", "Link to class repository for student issues here",  "Zoom link here")
+
+info <- tibble(t, l)
+
+kable(info,col.names = c("Resource","Link"), escape = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
+```
 
 
 # Course description
