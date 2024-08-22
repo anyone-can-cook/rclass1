@@ -1,0 +1,1736 @@
+---
+title: "Visualization using ggplot2"
+author:
+date: 
+urlcolor: blue
+output: 
+  html_document:
+    toc: TRUE
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    highlight: tango
+    theme: default
+    fig_caption: true
+    #fig_width = 7 #Default width (in inches) for figures
+    #fig_height = 5 #Default height (in inches) for figures
+    #html_preview: TRUE #TRUE to also generate an HTML file for the purpose of locally previewing what the document will look like on GitHub.    
+    df_print: default # Method to be used for printing data frames. Valid values include "default", "kable", "tibble", and "paged". The "default" method uses print.data.frame. 
+    
+    #Options you are not using yet:
+      
+    #dev = "png" #Graphics device to use for figure output (defaults to png)
+    #includes = NULL #Named list of additional content to include within the document (typically created using the includes function).
+    #md_extensions = NULL # Markdown extensions to be added or removed from the default definition or R Markdown. See the rmarkdown_format for additional details.
+    #hard_line_breaks = TRUE # TRUE to generate markdown that uses a simple newline to represent a line break (as opposed to two-spaces and a newline).
+    #pandoc_args = NULL # Additional command line options to pass to pandoc
+
+bibliography: rclass2_bib.bib
+csl: apa.csl
+---
+
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+# Introduction
+
+Load packages:
+```{r, message=FALSE}
+library(tidyverse)
+library(ggplot2) # superfluous because ggplot2 is part of tidyverse
+library(scales) # for formatting labels for axes and legends
+
+library(haven)
+library(labelled)
+library(RColorBrewer)
+```
+
+Resources used to create this lecture:
+
+- https://r4ds.had.co.nz/data-visualisation.html
+- https://cfss.uchicago.edu/notes/grammar-of-graphics/#data-and-mapping
+- https://codewords.recurse.com/issues/six/telling-stories-with-data-using-the-grammar-of-graphics
+- http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html
+- https://ggplot2-book.org/
+
+**ggplot cheatsheet**: It may be helpful to familiarize yourself with this cheatsheet and use it as a reference point for review and practice after going through the lecture.
+
+- https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf
+
+
+## Datasets we will use
+
+We will use two datasets that are part of the `ggplot2` package:
+
+- `mpg`: EPA fuel economy data in 1999 and 2008 for 38 car models that had a new release every year between 1999 and 2008
+    - Note: There are no set of variables that uniquely identify observations
+- `diamonds`: Prices and attributes of about 54,000 diamonds
+
+```{r}
+#?mpg
+glimpse(mpg)
+```
+
+```{r, echo = FALSE}
+#Uniquely identify obs?
+#mpg %>% group_by(manufacturer,model,cyl,trans,drv,fl,year) %>% count()
+#mpg %>% group_by(manufacturer,model,cyl,trans,drv,fl,year,displ,cty,hwy,class) %>% count()
+```
+
+```{r}
+#?diamonds
+glimpse(diamonds)
+```
+
+We will use public-use data from the _National Center for Education Statistics (NCES) Educational Longitudinal Survey (ELS)_ of 2002:
+
+- Follows 10th graders from 2002 until 2012
+- Variable `stu_id` uniquely identifies observations
+
+The following RData file contains 2 dataframes, `df_els_stu_allobs` (variables are mostly haven labelled) and `df_els_stu_allobs_fac` (variables are mostly factors). We will be using the `df_els_stu_allobs_fac` because `ggplot` generally expects categorical variables to be factor variables.
+
+```{r}
+load(file = url('https://github.com/anyone-can-cook/educ152/raw/main/data/els/output_data/els_stu.RData'))
+els <- df_els_stu_allobs_fac
+```
+
+
+<br>
+<details><summary>**ELS dataset**: Overview of variables using `glimpse()`</summary>
+
+```{r}
+els %>% glimpse()
+```
+
+</details>
+
+<br>
+<details><summary>**ELS dataset**: Overview of variable labels using `var_label()`</summary>
+
+```{r}
+els %>% var_label()
+```
+
+</details>
+
+
+```{r, echo = F}
+els <- els %>% 
+  mutate(
+    bys34a = unclass(bys34a),
+    f3ern2011 = unclass(f3ern2011),
+    f2evratt = unclass(f2evratt),
+    f1mothed = unclass(f1mothed),
+    f1fathed = unclass(f1fathed),
+    f1sex = recode_factor(f1sex, `1` = 'Male', `2` = 'Female')
+  )
+```
+
+## Type/class of variables ggplot expects
+
+
+`ggplot` often doesn't work well with variables whose class is haven labelled. For categorical variables, `ggplot` works best with factor class because there is an ordering to the categorical values. We can convert variables to factor class as part of the data manipulation step prior to plotting.
+
+<br>
+**Example**: Comparing plotting haven labelled and factor variables
+
+The `f1race` variable has a class of haven labelled in the `df_els_stu_allobs` dataframe and class of factor in the `df_els_stu_allobs_fac` dataframe. For the factor version, the levels should be the values we want the plot to display (e.g., `White, non-Hispanic`, `Black or African American, non-Hispanic`).
+
+```{r}
+# Haven labelled
+df_els_stu_allobs$f1race %>% str()
+df_els_stu_allobs %>% ggplot() + geom_bar(aes(y=f1race))
+```
+
+```{r}
+# Factor
+df_els_stu_allobs_fac$f1race %>% str()
+df_els_stu_allobs_fac %>% ggplot() + geom_bar(aes(y=f1race))
+```
+
+<br>
+If we try using `f1race` from `df_els_stu_allobs` (haven labelled) to specify the color of the points in the following scatterplot, we will get an error:
+
+```{r, eval = F}
+# Haven labelled (does not work)
+df_els_stu_allobs %>% 
+  filter(unclass(bys34a) > 0) %>%
+  ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
+  geom_point()
+```
+
+But using `f1race` from `df_els_stu_allobs_fac` (factor) works:
+
+```{r}
+# Factor
+df_els_stu_allobs_fac %>% 
+  filter(unclass(bys34a) > 0) %>%
+  ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
+  geom_point()
+```
+
+We can also specify the _levels_ of a factor variable to control the order in which the values are displayed:
+
+```{r}
+df_els_stu_allobs_fac$f1race <- factor(
+  df_els_stu_allobs_fac$f1race, 
+  levels = c('White, non-Hispanic', 
+             'Black or African American, non-Hispanic', 
+             'Asian, Hawaii/Pac. Islander,non-Hispanic', 
+             'Amer. Indian/Alaska Native, non-Hispanic', 
+             'More than one race, non-Hispanic', 
+             'Hispanic, race specified', 
+             'Hispanic, no race specified')
+)
+
+df_els_stu_allobs_fac %>% 
+  filter(unclass(bys34a) > 0) %>%
+  ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
+  geom_point()
+```
+
+
+# Concepts
+
+Basic definitions:
+
+- Grammar
+    - "The fundamental principles or rules of an art or science" (Oxford English dictionary)
+- Grammar of graphics [@RN4563]
+    - Principles/rules to describe and construct statistical graphics
+- Layered grammar of graphics [@RN4561]
+    - Principles/rules to describe and construct statistical graphics "based around the idea of building up a graphic from multiple layers of data" [@RN4561, p. 4]
+    - The layered grammar of graphics is a "formal system for building plots... based on the insight that you can uniquely describe _any_ plot as a combination of" seven paramaters [@RN4564, chapter 3] 
+- Aesthetics
+    - __Aesthetics__ are visual elements of the plot (e.g., lines, points, symbols, colors, axes)
+    - __Aesthetic mappings__ (**mappings**) are visual elements of the plot determined by values of specific variables (e.g., a scatterplot where the color of each point depends on the value of the variable `race`)
+    - In the context of visualization using ggplot, all **mappings** are **aesthetic mappings** but not all **aesthetics** are **aesthetic mappings** (i.e., determined by variable values). For example, when creating a scatterplot you may specify that the color of each point be blue.
+
+The seven parameters of the layered grammar of graphics consists of:
+
+- Five layers
+    - A dataset (__data__)
+    - A set of aesthetic mappings (__mappings__)
+    - A statistical transformation (__stat__)
+    - A geometric object (__geom__)        
+    - A position adjustment (__position__)
+- A coordinate system (__coord__)
+- A faceting scheme (__facets__)
+
+`ggplot2` -- part of `tidyverse` -- is an R package to create graphics and `ggplot()` is a function within the `ggplot2` package. 
+
+> "In practice, you rarely need to supply all seven parameters to make a graph because ggplot2 will provide useful defaults for everything except the data, the mappings, and the geom function." [@RN4564, chapter 3]
+
+Syntax conveying the seven parameters of the layered grammar of graphics:
+
+```{r, eval = FALSE}
+ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) + 
+  <GEOM_FUNCTION>(
+     stat = <STAT>, 
+     position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION>
+```
+
+## Layers
+
+What does Wickham mean by __layers__? (from "[Telling Stories with Data Using the Grammar of Graphics](https://codewords.recurse.com/issues/six/telling-stories-with-data-using-the-grammar-of-graphics)" by Liz Sander)
+
+- In the grammar of a language, words have different parts of speach (e.g., noun, verb, adjective), with each part of speech performing a different role in a sentence
+- The layered grammar of graphics decomposes a graphic into different __layers__
+    - "These are layers in a literal sense – you can think of them as transparency sheets for an overhead projector, each containing a piece of the graphic, which can be arranged and combined in a variety of ways."
+
+
+The five layers of the grammar of graphics:
+
+- [Dataset](#dataset-data) (__data__)
+- [Set of aesthetic mappings](#set-of-aesthetic-mappings-mappings) (__mappings__)
+- [Statistical transformation](#statistical-transformation-stat) (__stat__)
+- [Geometric object](#geometric-objects-geoms) (__geom__)
+- [Position adjustment](#position-adjustment-position) (__position__)
+
+
+### Dataset (__data__)
+
+**Data** defines the information to be visualized.
+
+**Example**: Imagine a dataset where each observation is a student
+
+- The variables of interest are hours per week spent on homework in high school (`bys34a`), earnings in 2011 (`f3ern2011`), and student sex (`f1sex`)
+
+```{r}
+els %>% select(stu_id, bys34a, f3ern2011, f1sex) %>% head(10)
+```
+
+
+### Set of aesthetic mappings (__mappings__)
+
+**Mapping** defines how variables in a dataset are applied (mapped) to a graphic.
+
+**Example**: Consider the previous dataset
+
+- Map hours/week spent on homework to the x-axis
+- Map 2011 income to the y-axis
+- Map sex to the color of each point
+
+```{r}
+els %>% select(stu_id, bys34a, f3ern2011, f1sex) %>% 
+  rename(x = bys34a, y = f3ern2011, color = f1sex) %>% 
+  head(10)
+```
+
+```{r}
+els %>% 
+  filter(bys34a > 0) %>%
+  ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1sex)) +
+  geom_point()
+```
+
+
+**Example**: Depending on the type of plot, a different set of mapping may be needed (i.e., not always `x` to one variable and `y` to another)
+
+- Map sex to the x-axis (_by default, bar plots will plot the counts, see next section_)
+
+```{r}
+els %>% select(stu_id, f1sex) %>% 
+  rename(x = f1sex) %>% 
+  head(10)
+```
+
+```{r}
+els %>% 
+  ggplot(mapping = aes(x = f1sex)) +
+  geom_bar(width = 0.6)
+```
+
+
+
+### Statistical transformation (__stat__)
+
+A **statistical transformation** transforms the underlying data before plotting it. Different types of plots (i.e., `geom_*()`) will use a different transformation by default so we often do not need to explicitly specify it.
+
+**Example**: Imagine creating a scatterplot of the relationship between hours/week spent on homework (x-axis) and 2011 income (y-axis)
+
+- When creating a scatterplot we usually do not transform the data prior to plotting
+- This is the "identity" transformation (_default for plots like scatterplots_)
+    
+```{r}
+els %>% select(stu_id,bys34a,f3ern2011) %>% rename(x=bys34a, y=f3ern2011) %>% 
+  head(10)
+```
+
+```{r}
+els %>% 
+  filter(bys34a > 0) %>% 
+  ggplot(mapping = aes(x = bys34a, y = f3ern2011)) +
+  geom_point()
+```
+    
+**Example**: Imagine creating a bar chart of the number of students by sex
+
+- Here, we do not plot the raw data. Rather, we count the number of observations for each sex category. 
+- This is the "count" transformation (_default for plots like barplots_)
+
+```{r}
+els %>% count(f1sex) 
+```
+
+```{r}
+els %>% 
+  ggplot(mapping = aes(x = f1sex)) +
+  geom_bar(width = 0.6)
+```
+
+
+### Geometric objects (__geoms__)
+
+Graphs visually display data, using **geometric objects** like a point, line, bar, etc.
+
+- Each geometric object in a graph is called a "geom" -- they are defined as "visual marks that represent data points" ([ggplot cheatsheet](https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf))
+- "A geom is the geometrical object that a plot uses to represent data" [@RN4564, chapter 3]
+- "People often describe plots by the type of geom that the plot uses. For example, bar charts use bar geoms, line charts use line geoms, boxplots use boxplot geoms"  [@RN4564, chapter 3]
+- __Aesthetics__ are "visual attributes of the geom" (e.g., color, fill, shape, position) ([Grammar of Graphics](https://cfss.uchicago.edu/notes/grammar-of-graphics/))
+    - Each geom can only display certain aesthetics
+    - For example, a "point geom" can only include the aesthetics position, color, shape, and size 
+- We can plot the same underlying data using different geoms (e.g., bar chart vs. pie chart)
+- A single graph can layer multiple geoms (e.g., scatterplot with a "line of best fit" layered on top)
+
+### Position adjustment (__position__)
+
+**Position adjustment** adjusts the position of visual elements in the plot so that these visual elements do not overlap with one another in ways that make the plot difficult to interpret.
+
+**Example**: The dataset `mpg` (included in the `ggplot2` package) contains variables for the specifications of different cars, with 234 observations
+
+- Create a scatterplot of the relationship between number of cylinders in the engine (x-axis) and highway miles-per-gallon (y-axis)
+- Below plot is difficult to interpet because many points overlap with one another
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cyl, y = hwy)) +
+  geom_point()
+```
+
+- The `jitter` position adjustment "adds a small amount of random variation to the location of each point" (from `?geom_jitter`)
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cyl, y = hwy)) +
+  geom_point(position = "jitter")
+```
+
+
+## Coordinate system (__coord__)
+
+"A **coordinate system** maps the position of objects onto the plane of the plot, and controls how the axes and grid lines are drawn. Plots typically use two coordinates (x,y), but could use any number of coordinates." ([Grammar of Graphics](https://cfss.uchicago.edu/notes/grammar-of-graphics/))
+
+**Example**: Cartesian coordinate system
+
+- Most plots use the Cartesian coordinate system
+
+```{r}
+x1 <- c(1, 10)
+y1 <- c(1, 5)
+p <- qplot(x = x1, y = y1, geom = "blank", xlab = NULL, ylab = NULL) +
+  theme_bw()
+
+p +
+  ggtitle(label = "Cartesian coordinate system")
+```
+
+- Use `coord_fixed()` to fix the scaling of the coordinate system
+
+```{r}
+p +
+  coord_fixed()
+```
+
+
+- When using the default Cartesian coordinate system, a common task is to flip the x and y axis using `coord_flip()`. (From [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html#coordinate-systems))
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot()
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot() +
+  coord_flip()
+```
+
+**Example**: Polar coordinate system
+
+```{r}
+p +
+  coord_polar() +
+  ggtitle(label = "Polar coordinate system")
+```
+
+
+## Faceting scheme (__facets__)
+
+__Facets__ are subplots that display one subset of the data. They are most commonly used to create "small multiples"
+
+**Example**: Imagine creating a scatterplot of the relationship between number of cylinders in the engine (x-axis) and highway miles-per-gallon (y-axis), with separate subplots for car `class` (e.g., midsize, minivan, pickup, suv)
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cyl, y = hwy), position = "jitter") + 
+  facet_wrap(~ class, nrow = 2)
+```
+
+
+
+# Creating graphs using `ggplot`
+
+## `ggplot()` and `aes()` functions
+
+Show help pages for package `ggplot2`:
+```{r, eval = FALSE}
+help(package = ggplot2)
+```
+
+__The `ggplot()` function__:
+
+```{r, eval = FALSE}
+?ggplot
+
+# SYNTAX AND DEFAULT VALUES
+ggplot(data = NULL, mapping = aes())
+```
+
+- Description (from help file)
+    - "`ggplot()` initializes a ggplot object. It can be used to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden"
+- Arguments
+    - `data`: Dataset to use for plot.  If not specified in `ggplot()` function, must be supplied in each layer added to the plot.
+    - `mapping`: Default list of aesthetic mappings to use for plot. If not specified, must be supplied in each layer added to the plot.
+ 
+    
+__The `aes()` function__ (often called within the `ggplot()` function): 
+
+```{r, eval = FALSE}
+?aes
+
+# SYNTAX
+aes(x, y, ...)
+``` 
+
+- Description (from help file)
+    - "Aesthetic mappings describe how variables in the data are mapped to visual properties (aesthetics) of geoms. Aesthetic mappings can be set in `ggplot()` and in individual layers."
+- Arguments
+    - `x, y, ...`: List of name value pairs giving aesthetics to map to variables
+      - The names for `x` and `y` aesthetics are typically omitted because they are so common
+      - All other aesthetics must be named
+    
+**Example**: Putting `ggplot()` and `aes()` together
+
+- Specifying `ggplot()` and `aes()` without specifying a geom layer (e.g., `geom_point()`) creates a blank ggplot:
+  - (The two lines of code below are functionally identical)
+
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price))
+ggplot(data = diamonds, mapping = aes(x = carat, y = price))
+```
+
+- Alternatively, we can use pipes with the dataframe we want to plot, which allows us to omit the first `data` argument of `ggplot()`:
+
+```{r}
+class(diamonds)
+diamonds %>% ggplot(mapping = aes(x = carat, y = price))
+```
+
+- We can also create a ggplot object and assign it to a variable for later use:
+
+```{r}
+diam_ggplot <- ggplot(data = diamonds, aes(x = carat, y = price))
+
+diam_ggplot # blank ggplot
+```
+
+- Investigate ggplot object:
+
+```{r}
+typeof(diam_ggplot)
+class(diam_ggplot)
+
+str(diam_ggplot)
+```
+
+- Attributes of ggplot object:
+
+```{r}
+attributes(diam_ggplot)
+
+diam_ggplot$mapping
+
+diam_ggplot$labels
+```
+
+
+## Adding geometric layers
+
+Adding a **geometric layer** to a ggplot object dictates how observations are displayed in the plot.
+
+- Geometric layers are specified using "geom functions"
+- There are many different geom functions:
+    - `geom_point()`: creates a scatterplot
+    - `geom_bar()`: creates a bar chart
+    - etc.
+
+### Scatterplots using `geom_point()`
+
+**Scatterplots** are most useful for showing the relationship between two continuous variables.
+
+**Example**: Scatterplot of the relationship between `carat` and `price`, using the `diamonds` dataset
+
+```{r}
+#ggplot(data = diamonds, aes(x = carat, y = price)) + geom_point()
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point()
+```
+
+- If we already created and assigned a ggplot object, we can use that object to create the plot:
+
+```{r}
+diam_ggplot + geom_point()
+```
+
+
+**Example**: Scatterplot of the hours/week spent on homework (`bys34a`) and 2011 earnings (`f3ern2011`), using the `els` dataset
+
+
+- First, let's investigate the underlying variables:
+
+```{r}
+els %>% select(bys34a,f3ern2011) %>%
+  summarize_all(.funs = list(~ mean(., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
+```
+
+- Investigate values less than zero:
+
+```{r}
+els %>% select(bys34a) %>% filter(bys34a<0) %>% count(bys34a)
+
+els %>% select(f3ern2011) %>% filter(f3ern2011<0) %>% count(f3ern2011)
+```
+
+- Create version of variables that replace values less than zero with `NA`:
+
+
+```{r}
+els_v2 <- els %>% 
+  mutate(
+    hw_time = if_else(bys34a<0,NA_real_,as.numeric(bys34a)),
+    earn2011 = if_else(f3ern2011<0,NA_real_,as.numeric(f3ern2011)),
+  )
+
+#check
+els_v2 %>% filter(bys34a<0) %>% count(bys34a, hw_time)
+els_v2 %>% filter(f3ern2011<0) %>% count(f3ern2011, earn2011)
+```
+
+- To avoid scatterplot with too many points, create a dataframe consisting of students whose parents have a PhD or first professional degree:
+
+```{r}
+els_v2 %>% count(f1pared)
+
+els_v2$f1pared %>% class()
+els_v2$f1pared %>% attributes()
+
+# els_v2$f1pared is a factor class variable so we filter based on factor levels
+els_parphd <- els_v2 %>% filter(f1pared=="Completed PhD, MD, other advanced degree")
+```
+
+- Plot the scatterplot:
+
+```{r, warning = FALSE}
+ggplot(data= els_parphd, aes(x = hw_time, y = earn2011)) + geom_point()
+```
+
+
+<br>
+
+**Example**: Scatterplot of the relationship between engine displacement (`displ`) and highway miles-per-gallon (`hwy`), using the `mpg` dataset
+
+- Color of points determined by type of car (`class`):
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+```
+
+- Alternatively, the `color` aesthetic can be specified within `geom_point()`:
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class))
+```
+
+<br>
+
+__The `geom_point()` function__:
+
+```{r, eval = FALSE}
+?geom_point
+
+# SYNTAX AND DEFAULT VALUES
+geom_point(mapping = NULL, data = NULL, stat = "identity",
+           position = "identity", ..., na.rm = FALSE, show.legend = NA,
+           inherit.aes = TRUE)
+```
+
+- note that the default statistical transformation is `stat = "identity"`
+  - that is, we simply plot values of `x` and `y` on the Cartesian coordinate system; we don't perform some kind of statistical transformation before plotting
+- The `mapping` argument determines Aesthetics, like this:
+  - `geom_point(mapping = aes(...))`
+- Aesthetics previously stated from `ggplot(mapping = aes(...))` will be carried forward unless you explicitly change them within `geom_point(mapping = aes(...))`
+- For any geometric layer function (e.g., `geom_point`, `geom_bar`, `geom_boxplot`), the help file will tell you which aesthetics the function will accept
+  - Aesthetics: `geom_point()` understands (i.e., accepts) the following aesthetics (required aesthetics in **bold**)
+    - **`x`**, **`y`**, `alpha`, `colour`, `fill`, `group`, `shape`, `size`, `stroke`
+  - Note: Other geom functions (e.g., `geom_bar()`) accepts a different set of aesthetics
+  
+
+**Student Task**: Using the `els_parphd` dataset, create a scatterplot of the relationship between hours/week spent on homework (`hw_time`) on the x-axis and 2011 earnings (`earn2011`) on the y-axis, with the color of points determined by sex (`f1sex`)
+
+<details><summary>Solution</summary>
+
+```{r, eval = FALSE}
+ggplot(data= els_parphd, aes(x = hw_time, y = earn2011, color = f1sex)) + geom_point()
+```
+
+</details>
+<br>
+
+### Smoothed prediction lines using `geom_smooth()`
+
+Why use `geom_smooth()`?
+
+- The biggest problem with scatterplots is "overplotting." That is, when you plot many observations, points may be plotted on top of one another and it becomes difficult to visually discern the relationship:
+
+```{r}
+ggplot(data = els_v2, aes(x = hw_time, y = earn2011)) + geom_point()
+```
+
+- Instead, using `geom_smooth()` creates smoothed prediction lines with shaded confidence intervals:
+
+```{r}
+ggplot(data = els_v2, aes(x = hw_time, y = earn2011)) + geom_smooth()
+```
+
+<br>
+
+__The `geom_smooth()` function__:
+
+```{r, eval = FALSE}
+?geom_smooth
+
+# SYNTAX AND DEFAULT VALUES
+geom_smooth(mapping = NULL, data = NULL, stat = "smooth",
+            position = "identity", ..., method = "auto", formula = y ~ x,
+            se = TRUE, na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+```
+
+- Arguments
+    - Note default "statistical transformation" (`stat`), as compared to that of `geom_point()`:
+        - `stat = "smooth"` for `geom_smooth()`
+        - `stat = "identity"` for `geom_point()`
+- Aesthetics: `geom_smooth()` accepts the following aesthetics (required aesthetics in **bold**)
+    - **`x`**, **`y`**, `alpha`, `colour`, `fill`, `group`, `linetype`, `size`, `weight`, `ymax`, `ymin`
+    
+<br>
+
+**Example**: Smoothed prediction lines for hours/week spent on homework (`bys34a`) versus 2011 earnings (`f3ern2011`), using the `els` dataset
+
+- This code produces same plot as above, when aesthetics were specified in `ggplot()`:
+
+```{r}
+ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011))
+```
+
+- Use `group` aesthetic to create separate prediction lines by sex (`f1sex`):
+
+```{r}
+#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, group=as_factor(f1sex))) + geom_smooth()
+ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, group=f1sex))
+```
+
+- Alternatively, we could produce the same plot by specifying all aesthetics -- including the `group` aesthetic -- within the `ggplot()` function rather than the `geom_smooth()` function:
+
+```{r}
+ggplot(data = els_v2, aes(x = hw_time, y = earn2011, group=f1sex)) + geom_smooth()
+```
+
+- Use `linetype` aesthetic to create separate prediction lines (with different line styles) by sex (`f1sex`):
+
+```{r}
+#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, linetype=as_factor(f1sex))) + geom_smooth()
+ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, linetype=f1sex))
+```
+
+- Use `color` aesthetic to create separate prediction lines (with different colors) by sex (`f1sex`):
+
+```{r}
+#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, color=as_factor(f1sex))) + geom_smooth()
+ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, color=f1sex))
+```
+
+
+### Plotting multiple geom layers
+
+**Example**: Layer smoothed prediction lines (`geom_smooth()`) on top of scatterplot (`geom_point()`)
+
+```{r}
+ggplot(data= els_v2) + 
+  geom_point(mapping = aes(x = hw_time, y = earn2011)) + 
+  geom_smooth(mapping = aes(x = hw_time, y = earn2011))
+```
+
+- Equivalently, the same plot can be created using this syntax:
+
+```{r}
+ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+  geom_point() +
+  geom_smooth()
+```
+
+- Adjust x-axis and y-axis limits by using `+ xlim()` and `+ ylim()`:
+
+```{r}
+ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+  geom_point() +
+  geom_smooth() +
+  xlim(c(0,21)) + ylim(c(0,100000))
+```
+
+- Let's try smaller y-axis limits:
+  - __Note__. Observations with income values above the y-axis limit are removed from the plot. This includes being removed from the calculation of the smooted prediction line
+
+```{r}
+ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+  geom_point() +
+  geom_smooth() +
+  xlim(c(0,21)) + ylim(c(0,35000))
+```
+
+- Layer smoothed prediction lines with different line types by sex (`f1sex`) on top of scatterplot with different point colors by sex:
+
+```{r}
+ggplot(data= els_v2) + 
+  geom_point(mapping = aes(x = hw_time, y = earn2011, color = f1sex)) + 
+  geom_smooth(mapping = aes(x = hw_time, y = earn2011, linetype = f1sex)) +
+  xlim(c(0,21)) + ylim(c(0,100000))
+```
+
+
+### Bar charts using `geom_bar()` and `geom_col()`
+
+**Bar charts** are used to plot a single, discrete variable.
+
+- X-axis typically represents a categorical variable (e.g,. race, sex, institutional type)
+    - Each value of the categorical variable is a "group"
+- Y-axis often represents the number of cases in a group (or the proportion of cases in a group)
+    - But height of bar could also represent mean value for a group or some other summary statistic (e.g., min, max, std)
+
+
+Two geom functions to create bar charts:
+
+- `geom_bar()`: The height of each bar represents the number of cases (i.e., observations) in the group
+    - Statistical transformation = "count"
+        - Y-value for a group is the number of cases in the group
+    - Use `geom_bar()` when using (for example) student-level data and you don't want to summarize student-level data prior to creating the chart
+- `geom_col()`: The height of each bar represents the value of some variable for the group
+    - Statistical transformation = "identity"
+        - Y-value for a group is the value of a variable in the dataframe
+    - Use `geom_col()` when you have already created an object of summary statistics (e.g., counts, mean value, etc.)
+    
+<br>
+
+__The `geom_bar()` and `geom_col()` functions__:
+    
+```{r, eval = FALSE}
+?geom_bar
+
+# SYNTAX AND DEFAULT VALUES
+geom_bar(mapping = NULL, data = NULL, stat = "count",
+         position = "stack", ..., width = NULL, binwidth = NULL,
+         na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+
+
+?geom_col
+
+# SYNTAX AND DEFAULT VALUES
+geom_col(mapping = NULL, data = NULL, position = "stack", ...,
+         width = NULL, na.rm = FALSE, show.legend = NA,
+         inherit.aes = TRUE)
+```
+
+- Both `geom_bar` and `geom_col` accept the following aesthetics:
+  - x, y, alpha, colour, fill, group, linetype, size
+  
+<br>
+
+**Example**: Bar chart with the variable `cut` (e.g., "Fair," "Good," "Ideal") as x-axis and number of diamonds as y-axis, using the `diamonds` dataset
+
+- Essentially, you are being asked to create a bar chart from the following frequency count:
+
+```{r}
+diamonds %>% count(cut)
+```
+
+***Method 1***: Create bar chart using `geom_bar()`
+
+- note: `geom_bar()` uses `stat = "count"`
+```{r}
+ggplot(data = diamonds, aes(x = cut)) +
+  geom_bar()
+```
+
+***Method 2***: Create bar chart using `geom_col()`
+
+By contrast, help file says `geom_col()` uses " uses `stat_identity()`: it leaves the data as is."
+
+
+- So before we create chart using `geom_col()` we create an object that contains the frequency count for the variable `cut`:
+
+```{r}
+cut_count <- diamonds %>% count(cut)
+cut_count
+
+cut_count %>% str()
+```
+- Note that the object `cut_count` is just a data frame with two variables:
+  - `cut` is a factor variable with five levels
+  - `n` is an integer variable, showing the number of observations for each level of `cut`
+
+- Next, use `ggplot() + geom_col` to plot the data from the object `cut_count`:
+
+```{r}
+ggplot(data = cut_count, aes(x = cut, y=n)) +
+  geom_col()
+```
+- note: if we didn't specify the aesthetic `y=n` we would get an error because `y` is a required aesthetic for `geom_col()`
+```{r, eval = F}
+ggplot(data = cut_count, aes(x = cut)) +
+  geom_col()
+```
+
+
+- Alternatively, we can use pipes to create the plot without creating a separate `cut_count` object first:
+
+```{r}
+#diamonds %>% count(cut) %>% str()
+diamonds %>% count(cut) %>% str()
+diamonds %>% count(cut) %>% ggplot(aes(x= cut, y=n)) + 
+  geom_col()
+```
+
+
+**Student Task**: Using the `els_v2` dataset, create a bar chart with the variable "ever attended postsecondary education" (`f2evratt`) as x-axis and number of students as y-axis
+
+<details><summary>Solution</summary>
+
+- Essentially, you are being asked to create a bar chart from the following frequency count:
+
+```{r, eval=FALSE, echo=FALSE}
+#glimpse(els_v2)
+els_v2 %>% select(f2evratt) %>% var_label()
+
+#ever attended
+els_v2 %>% count(f2evratt)
+```
+
+```{r}
+els_v2 %>% count(f2evratt)
+```
+
+***Method 1***: Create bar chart using `geom_bar()`
+
+```{r}
+ggplot(data = els_v2, aes(x = f2evratt)) +
+  geom_bar()
+```
+
+- Additionally, we can use pipes to filter values of `f2evratt` before plotting:
+
+```{r}
+els_v2 %>% filter(f2evratt %in% c('No','Yes')) %>% ggplot(aes(x = f2evratt)) +
+  geom_bar()
+```
+
+***Method 2***: Create bar chart using `geom_col()`
+
+```{r}
+els_v2 %>% 
+  # filter to remove missing values
+  filter(f2evratt %in% c('No','Yes')) %>% 
+  # use count() to create summary statistics object
+  count(f2evratt) %>%
+  # plot summary statistic object
+  ggplot(aes(x=f2evratt, y=n)) + geom_col()
+```
+
+</details>
+<br>
+
+<!-- Relationship between discrete x and discrete y -->
+
+```{r, echo=FALSE, eval=FALSE}
+els_v2 %>% select(f2evratt,f2ps1lvl) %>% var_label()
+
+#ever attended
+els_v2 %>%  count(f2evratt)
+
+#level of first postsec institution
+els_v2 %>%  count(f2ps1lvl)
+
+#ever attended by level attended
+els_v2 %>%  count(f2evratt,f2ps1lvl)
+
+```
+
+## Small multiples using faceting
+
+**Facets** divide a plot into subplots based on the values of one or more discrete variables. They are most commonly used to create "small multiples"
+
+Two functions to split your plots into facets:
+
+- `facet_grid()`: Display subplots in grid format, where rows and columns are determined by the faceting variable(s)
+    - `facet_grid()` is most useful when you have two discrete variables, and all combinations of the variables exist in the data
+- `facet_wrap()`: Display all subplots side-by-side, but can be wrapped to fill multiple rows
+    - `facet_wrap()` generally has better use of screen space, and you can specify the number of plots in each row or column
+
+<br>
+
+__The `facet_grid()` and `facet_wrap()` functions__:
+    
+```{r, eval = FALSE}
+?facet_grid
+
+# SYNTAX AND DEFAULT VALUES
+facet_grid(rows = NULL, cols = NULL, scales = "fixed",
+  space = "fixed", shrink = TRUE, labeller = "label_value",
+  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
+  facets = NULL)
+
+?facet_wrap
+
+# SYNTAX AND DEFAULT VALUES
+facet_wrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
+  shrink = TRUE, labeller = "label_value", as.table = TRUE,
+  switch = NULL, drop = TRUE, dir = "h", strip.position = "top")
+```
+
+Specifying which variable(s) to facet your plot on:
+
+- `facet_grid()`
+  - Since `facet_grid()` arranges subplots in a grid format, we need to specify how we define the rows and columns
+  - One way to do this is passing in the `rows` and `cols` arguments, which should be variables quoted by `vars()`
+    - `facet_grid(rows = vars(<var_1>), cols = vars(<var_2>))`: facet into both rows and columns
+    - `facet_grid(rows = vars(<var_1>))`: facet into rows only
+    - `facet_grid(cols = vars(<var_1>))`: facet into columns only
+  - Alternatively, we can pass in a _formula_, which has the syntax `<row_var> ~ <col_var>`
+    - `facet_grid(<var_1> ~ <var_2>)`: facet into both rows and columns
+    - `facet_grid(<var_1> ~ .)`: facet into rows only
+    - `facet_grid(. ~ <var_1>)`: facet into columns only
+- `facet_wrap()`
+  - `facet_wrap()` also accepts a _formula_ for its `facets` argument
+    - `facet_wrap(~ <var_1>)`: facet by one variable
+    - `facet_wrap(<var_1> ~ <var_2>)`: facet on the combination of two variables
+
+### Faceting by one variable
+
+**Example**: Scatterplot of the relationship between engine displacement (`displ`) and highway miles-per-gallon (`hwy`), faceted by number of cylinders (`cyl`), from the `mpg` dataset
+
+***Method 1***: Faceting using `facet_grid()`
+
+- For one variable, you can choose to facet into rows or columns:
+
+```{r}
+# Facet into rows
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(rows = vars(cyl))
+```
+
+```{r}
+# Facet into columns
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl))
+```
+
+- Alternatively, we could specify the input as a _formula_ to get the same results:
+
+```{r}
+# Facet into rows
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(cyl ~ .)
+```
+
+```{r}
+# Facet into columns
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(. ~ cyl)
+```
+
+***Method 2***: Faceting using `facet_wrap()`
+
+- Unlike `facet_grid()`, `facet_wrap()` is not restricted to either rows or columns:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(~ cyl)
+```
+
+- But we are free to set the number of rows or columns if we wanted:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(~ cyl, nrow = 1)
+```
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(~ cyl, ncol = 1)
+```
+
+### Faceting by two variables
+
+**Example**: Scatterplot of the relationship between engine displacement (`displ`) and highway miles-per-gallon (`hwy`), faceted by number of cylinders (`cyl`) and type of car (`class`), from the `mpg` dataset
+
+***Method 1***: Faceting using `facet_grid()`
+
+- For example, we can make the rows based on `cyl` and the columns based on `class`:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(rows = vars(cyl), cols = vars(class))
+```
+
+- Alternatively, we could specify the input as a _formula_ to get the same results:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(cyl ~ class)
+```
+
+***Method 2***: Faceting using `facet_wrap()`
+
+- Since `facet_wrap()` is not defined by rows and columns, it omits any subplots that do not display any data:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(cyl ~ class)
+```
+
+- We are also free to choose the number of rows or columns to display:
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(cyl ~ class, nrow = 3)
+```
+
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(cyl ~ class, ncol = 4)
+```
+
+
+# Customization
+
+There are many ways to customize the display of our plot. For this section, we will build upon this scatterplot we saw earlier:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price)) + 
+  geom_point()
+```
+
+
+## Labels
+
+Functions to add title and axis labels:
+
+- `ggtitle()`: Add title of graph
+- `xlab()`: Add x-axis label
+- `ylab()`: Add y-axis label
+
+**Example**: Adding title and axis labels
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price')
+```
+
+<br>
+Alternatively, the `labs()` function can be used to add all titles and labels:
+
+```{r, eval = FALSE}
+?labs
+
+# SYNTAX AND DEFAULT VALUES
+labs(
+  ...,
+  title = waiver(),
+  subtitle = waiver(),
+  caption = waiver(),
+  tag = waiver()
+)
+```
+
+_Note_: A **waiver** is a "flag" object, similar to `NULL`, that indicates the calling function should just use the default value. It is used in certain functions to distinguish between displaying nothing (`NULL`) and displaying a default value calculated elsewhere (`waiver()`).
+
+**Example**: Adding title and axis labels using `labs()`
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price)) + 
+  geom_point() +
+  labs(title = 'Correlation between diamond carat and price', x = 'Carat', y = 'Price')
+```
+
+
+## Scales
+
+The __`scale_x_continuous()`__ function is used to control the display of the x-axis when x is a continuous variable.
+
+Similarly, the __`scale_y_continuous()`__ function is to control the display of the y-axis when y is a continuous variable.
+
+```{r, eval = FALSE}
+?scale_x_continuous
+?scale_y_continuous
+
+# SYNTAX AND DEFAULT VALUES
+scale_x_continuous(
+  name = waiver(),
+  breaks = waiver(),
+  minor_breaks = waiver(),
+  n.breaks = NULL,
+  labels = waiver(),
+  limits = NULL,
+  expand = waiver(),
+  oob = censor,
+  na.value = NA_real_,
+  trans = "identity",
+  guide = waiver(),
+  position = "bottom",
+  sec.axis = waiver()
+)
+
+scale_y_continuous(
+  name = waiver(),
+  breaks = waiver(),
+  minor_breaks = waiver(),
+  n.breaks = NULL,
+  labels = waiver(),
+  limits = NULL,
+  expand = waiver(),
+  oob = censor,
+  na.value = NA_real_,
+  trans = "identity",
+  guide = waiver(),
+  position = "left",
+  sec.axis = waiver()
+)
+```
+
+- Description (from help file)
+    - "`scale_x_continuous()` and `scale_y_continuous()` are the default scales for continuous x and y aesthetics."
+- Arguments
+    - `name`: The name of the scale. Used as the axis or legend title.
+    - `labels`: Custom labelling of the scales (i.e., ticks)
+    - `limits`: Limits of the scale (i.e., min/max values)
+    - `position`: The position of the axis. (`'left'` or `'right'` for y axes, `'top'` or `'bottom'` for x axes)
+
+<br>
+
+To force "decimal display" of numbers (rather than scientific notation), we can use the `label_number()` function like this: 
+
+- `scale_y_continuous(labels = label_number(...))`
+
+__The `label_number()` function__:
+
+```{r, eval = FALSE}
+?label_number
+
+# SYNTAX AND DEFAULT VALUES
+label_number(
+  accuracy = NULL,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = " ",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
+```
+
+- Description (from help file)
+    - "Use `label_number()` force decimal display of numbers (i.e. don't use scientific notation)"
+- Arguments
+    - `accuracy`: A number to round to (e.g. use 0.01 to show 2 decimal places of precision)
+    - `scale`: A scaling factor (e.g., x will be multiplied by scale before formatting)
+    - `prefix`: Symbols to display before value
+    - `suffix`: Symbols to display after value
+
+<br>
+**Example**: Formatting numbers on the y-axis
+
+We can use `scale_y_continuous()`, in conjunction with `label_number()` from the `scales` package, to format the numbers on the y-axis:
+
+- Use `prefix` to add `$` before the number
+- Use `suffix` to add `K` after the number
+- Use `scale` of `1e-3` to divide number by `1000`
+- Use `accuracy` of `1` to round number to the ones digit
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
+```
+
+- Alternatively, we could specify scale like this: `scale = .001`:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = .001, accuracy = 1))
+```
+
+## Colors
+
+Below, we briefly overview some core concepts when using colors. This will be helpful when creating graphs. 
+
+### HCL Color Space
+
+The HCL color space is based on how the human perception works. "When using HCL, you can directly control the color (hue), the colorness (chroma) and the luminance (brightness)." ([Why HCL from hcl wizard ](https://hclwizard.org/why-hcl/))
+
+
+__Hue__ 
+
+Hue refers to a specific color we see from one of the six Primary and Secondary colors in the Color Family-- Yellow, Orange, Red, Violent, Blue, or Green. This means that Black, Gray, and White are not Hues.  
+
+- Example: Burgundy has a dominant hue of red. 
+
+[![](https://color-wheel-artist.com/thrive/wp-content/uploads/2017/02/hue-color-wheel-featured.jpg)](https://www.color-wheel-artist.com/hue/)
+
+__Color__ 
+
+Color and Hue are used interchangeably, however, Color is used to describe hues, tints, shades, and tones.  
+
+- Example: Black, Gray, and White are colors. 
+
+__Value__
+
+The value of a color is determined by how close the color is to Black or White. The closer a color is to Black, the darker the value and the closer a color is to White, the lighter the value.  
+
+- Example: It is helpful to use a grayscale to determine the value of a color. 
+
+[![](https://www.sensationalcolor.com/wp-content/uploads/2019/06/Black-to-White-Graph.jpg)](https://www.sensationalcolor.com/hue-value-chroma/)
+
+- "All colors fall somewhere on the value scale between black and white" ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))
+
+
+__Chroma__  
+
+- Chroma expresses the "purity" of a color. "Mixing a pure hue with black, white, gray, or any other color reduces its purity and lowers the chroma." ([Hue, Value, Chroma Explained from sensationalcolor.com](https://www.sensationalcolor.com/hue-value-chroma/))  
+
+- Example: The image below displays the changes of a "pure" hue when adding the color white or black to it. As the red squares on the far left column are blended with white, they become lighter in value and lower in chroma and as the squares are blended with black, they become darker in value and lower in chroma. 
+
+__Hue, Value, and Chroma__
+[![](https://www.sensationalcolor.com/wp-content/uploads/2019/07/Value-Chroma-Chart.jpg)](https://www.sensationalcolor.com/hue-value-chroma/)
+
+
+__Luminance__  
+
+- "Luminance is a measure to describe the perceived brightness of a colour. In other words, how bright is the colour from a reflected surface." ([Mixing Colors of equal Luminance- Part 1 author: Colin Shanley](https://medium.com/sketch-app-sources/mixing-colours-of-equal-luminance-part-1-41f69518d647#:~:text=Luminance%20is%20a%20measure%20to,normalised%20to%20100%25%20for%20white.))
+
+- Example: The Hue-Chroma-Luminance (HCL) color scheme. 
+
+[![](https://hclwizard.org/images//hclscheme_pic0.png)](https://hclwizard.org/color-scheme/)
+
+
+### RColorBrewer Palettes  
+
+The `RColorBrewer` package is a helpful tool for managing colors in R. It offers several color palettes to choose from. 
+
+<br>
+Visualization of color palettes (e.g., `scale_color_brewer(palette=Pastel2)`)
+[![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
+<br>
+
+Palettes are a combination of colors displayed together. In `RColorBrewer`, there are three types of palette scales: sequential, diverging, and qualitative. 
+
+- __Sequential__: Sequential palettes are best suited for ordered data that progress from low to high i.e., where colors go from high to low chroma and/or luminance. 
+    - Sequential palette names: Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd
+```{r}
+display.brewer.all(type="seq")
+```
+    
+- __Diverging__: Diverging palettes represent ordered data but in two directions. The middle represents a neutral value and the opposite ends represent two extremes. The hue distinguishes the direction of the values.  
+  - Diverging palette names: BrBG, PiYG, PRGn, PuOr, RdBu, RdGy, RdYlBu, RdYlGn, Spectral
+  
+```{r}
+display.brewer.all(type="div")
+```
+ 
+- __Qualitative__: Qualitative palettes are best suited for representing nominal or categorical data. There is not particular ordering of categories; every hue represents a different value where chroma and luminance are equal.  
+  - Qualitative palette names: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
+  
+```{r}
+display.brewer.all(type="qual")
+```
+
+You can run the code below to identify color-blind-friendly palettes.
+```{r}
+display.brewer.all(colorblindFriendly=TRUE)
+```
+
+Sources: ([R Color Brewer's palettes](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)); ([HCL Color Space](https://hclwizard.org/#somewhere-over-the-rainbow))  
+
+To select a specific color not part of the `RColorBrewer` package or other color packages, you can use this tool to select a color
+
+<br>
+[![](https://r-graph-gallery.com/img/graph/42-colors-names.png)](https://r-graph-gallery.com/ggplot2-color.html)
+
+<br>
+
+
+### `scale_color_brewer()` for discrete variables
+
+Bringing it all together to apply the `scale_color_brewer()` and `scale_color_gradient()` functions to our graphs.
+
+There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color discrete/categorical variables and `scale_color_gradient()` is used when we want to color continuous variables.
+
+<br>
+__The `scale_color_brewer()` function__ for categorical/discrete variables
+
+```{r, eval = FALSE}
+?scale_color_brewer
+
+# SYNTAX AND DEFAULT VALUES
+scale_color_brewer(
+  ...,
+  type = "seq",
+  palette = 1,
+  direction = 1,
+  aesthetics = "colour"
+)
+```
+
+- Description (from help file)
+    - "The `brewer` scales provides sequential, diverging and qualitative colour schemes from ColorBrewer"
+- Arguments
+    - `palette`: "If a string, will use that named palette. If a number, will index into the list of palettes of appropriate type. The list of available palettes can found in the Palettes section"
+    - `direction`: "Sets the order of colours in the scale. If 1, the default, colours are as output by `RColorBrewer::brewer.pal()`. If -1, the order of colours is reversed."
+    - `aesthetics`: which aesthetic mappings the `scale_color_brewer()` function should apply to. Default is `aesthetics = "colour"`
+
+
+<br>
+**Example**: Customizing color palette of discrete scale
+
+We'll color the points of the scatterplot by the variable `color`
+
+- from `?diamonds`, the variable `color` is described as "diamond colour, from D (best) to J (worst)"
+  - `diamonds$color` is an "ordered" "factor" variable with factor levels shown below
+  
+```{r}
+diamonds %>% count(color)
+
+diamonds$color %>% class()
+diamonds$color %>% attributes()
+```
+
+First, let's create a scatterplot of the relationship between carat (x-axis) and price (y-axis) with color of points determined by the variable `color` and we'll use the default display (i.e., don't specify `scale_color_brewer()` function:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
+```
+
+We can use `scale_color_brewer()` to customize the color palette. This also accepts other arguments for labeling including `name` to specify the legend title:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_brewer(palette = 'Spectral', name = 'Diamond color')
+```
+
+- Use `direction = -1` to reverse the order of colors drawn from the ('Spectral') palette
+  
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_brewer(palette = 'Spectral', direction = -1, name = 'Diamond color')
+```
+
+
+### `scale_color_gradient()` for continuous variables
+
+To color continuous variables, we need a _color gradient_, which is defined as "a gradual blending from one color to another" ([Being Shady: How to Use Gradient Color in UX Design](https://xd.adobe.com/ideas/principles/web-design/gradient-color-definition/)). A _two-color gradient_ transitions from one color to another (e.g., red to blue), where one end is called the _low end_ of the gradient and the other is the _high end_ of the gradient. There can also be other gradients between more than 2 colors (e.g., red to yellow to blue).
+
+__The `scale_color_gradient()` function__:
+
+```{r, eval = FALSE}
+?scale_color_gradient
+
+# SYNTAX AND DEFAULT VALUES
+scale_color_gradient(
+  ...,
+  low = "#132B43",
+  high = "#56B1F7",
+  space = "Lab",
+  na.value = "grey50",
+  guide = "colourbar",
+  aesthetics = "colour"
+)
+```
+
+- Description (from help file)
+    - "`scale_*_gradient` creates a two colour gradient (low-high)"
+- Arguments
+    - `low`: Color for low end of the gradient
+    - `high`: Color for high end of the gradient
+
+
+<br>
+**Example**: Customizing color palette of continuous scale 
+
+Let's color the points by the variable `diamonds$depth`, which represents "diamond depth percentage"
+
+- from [brilliance.com](https://www.brilliance.com/education/diamonds/depth-table): "Depth percentage is the diamond’s depth [height] divided by the width of the diamond. This percentage dictates the overall proportions of the diamond, which in turn directly impact how light reflects off the facets in the stone.
+- The variable `diamonds$depth` is a continous variable
+
+```{r}
+diamonds %>% select(depth) %>%
+  summarize_all(.funs = list(~ mean(., na.rm = TRUE), ~ sd(., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
+```
+
+
+
+First, color scatterplot by `depth` using the default display palette:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
+```
+
+Next, let's add `scale_color_gradient()` but we'll manually insert the default values for `low` and `high` arguments:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_gradient(low = '#132B43', high = '#56B1F7')
+```
+
+We can use `scale_color_gradient()` to customize the color palette. This also accepts other arguments for labeling including `name` to specify the legend title and `labels` to customize the legend values:
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_gradient(low = 'white', high = 'purple', name = 'Depth percentage', 
+                       labels = label_number(suffix = '%'))
+```
+
+
+### `scale_color_manual()` to select specific colors
+
+If we want to customize our graph by selecting specific colors we could use `scale_color_manual()`. We could specify colors by their name (e.g., "red", "darkgreen"), rgb(), Number, and hex code ([Dealing with colors in ggplot2](https://r-graph-gallery.com/ggplot2-color.html))
+
+__The `scale_color_manual()` function__:
+
+```{r, eval = FALSE}
+?scale_color_manual
+
+# SYNTAX AND DEFAULT VALUES
+scale_colour_manual(
+  ...,
+  values,
+  aesthetics = "colour",
+  breaks = waiver(),
+  na.value = "grey50"
+)
+```
+
+- Description (from help file)
+    - "These functions allow you to specify your own set of mappings from levels in the data to aesthetic values."
+- Arguments
+    - `values`: a set of aesthetic values to map data values to.
+    
+<br>
+**Example**: Customizing our graph color palette 
+
+Let's go back to our example scatterplot of the relationship between carat (x-axis) and price (y-axis) with color of points determined by the variable `color`.
+
+We can manually select colors by their name ([An overview of color names in R](https://r-graph-gallery.com/42-colors-names.html)). 
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_manual(values = c("D" = "darkcyan",
+                                "E" = "beige",
+                                "F" = "darkorange",
+                                "G" = "darkslateblue",
+                                "H" = "darkmagenta",
+                                "I" = "darkslategrey",
+                                "J" = "brown4"),
+                     name = 'Diamond color')
+```
+
+
+If we want to be more specific, we could manually select colors by their Hex code ([Hex Code Selector](https://htmlcolorcodes.com/)). 
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_manual(values = c("D" = "#E73813",
+                                "E" = "#E7B713",
+                                "F" = "#F3EF10",
+                                "G" = "#45B39D",
+                                "H" = "#0F85C8",
+                                "I" = "#850FC8",
+                                "J" = "#B90FCD"
+                                ),
+                     name = 'Diamond color')
+```
+
+
+## Themes
+
+From "[Complete Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)," **themes** control "non-data display."
+
+- A **theme** controls all non-data display (i.e., stuff not determined by values of the data)
+- Use `theme()` "if you just need to tweak the display of an existing theme"
+- Use one of the following "complete themes" (preset themes) if you want to control __all__ non-data display of a plot, e.g.:
+  - `theme_grey()` (_default_)
+  - `theme_bw()`
+  - `theme_light()`
+  - `theme_dark()`
+  - `theme_minimal()`
+  - `theme_classic()`
+
+**Example**: Using preset theme `theme_minimal()`
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_brewer(palette = 'Spectral', name = 'Color') +
+  theme_minimal()
+```
+
+**Example**: Using preset theme `theme_dark()`
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_brewer(palette = 'Spectral', name = 'Color') +
+  theme_dark()
+```
+
+<br>
+We can also use [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) to customize specific non-data components of the plot, including:
+
+- Font family, size, color of text
+- Color and gridlines of plot background
+- Display and positioning of axes and labels
+
+**Example**: Using custom theme
+
+```{r}
+diamonds %>% 
+  ggplot(mapping = aes(x = carat, y = price, color = color)) + 
+  geom_point() +
+  ggtitle('Correlation between diamond carat and price') +
+  xlab('Carat') + ylab('Price') +
+  scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
+  scale_color_brewer(palette = 'Spectral', name = 'Color') +
+  theme(
+    text = element_text(size = 8),
+    panel.background = element_blank(),
+    plot.title = element_text(color = '#444444', size = 10, hjust = 0.5, face = 'bold'),
+    axis.ticks = element_blank(),
+    axis.title = element_text(face = 'bold'),
+    legend.title = element_text(face = 'bold'),
+    legend.key = element_blank(),
+    legend.key.size = unit(0.5, 'cm')
+  )
+```
+
+
+# Exporting plots
+
+The plots generated by `ggplot` can be exported as a PDF, PNG, or other file types. (From [Creating and Saving Graphs - R Base Graphs](http://www.sthda.com/english/wiki/creating-and-saving-graphs-r-base-graphs))
+
+When working with RMarkdown files, you can directly embed the code for the plot within code chunks to knit into the final document. But for R scripts, there may be times where you want to save the plot outputs to be used elsewhere.
+
+There are many different kinds of file formats, including: ([Saving a `ggplot` object as an image](https://tmieno2.github.io/R-as-GIS-for-Economists/ggsave.html))
+
+- **vector graphics** (pdf, svg, eps)
+- **raster graphics** (jpg, png, tif)
+
+The main difference is that vector graphics are scalable, meaning the image retains its quality when enlarged, so they are generally preferred over raster graphics when possible.
+
+
+## Exporting in RStudio
+
+In RStudio, the generated plots will typically be displayed in the lower right panel. There is an `Export` button that allows you to save the plot as a PDF or PNG:
+
+[![](http://www.sthda.com/sthda/RDoc/images/create-save-plots-r.png)](http://www.sthda.com/english/wiki/creating-and-saving-graphs-r-base-graphs)
+
+## Exporting via R code
+
+There are also various R functions, including `jpeg()`, `png()`, `svg()`, and `pdf()`, for exporting plots.
+
+The steps for saving a plot:
+
+- Use one of the R functions to open a file
+  - Optional arguments include `height` and `width` for specifying image dimension
+- Create the plot
+- Close the file with `dev.off()`
+
+**Example**: Exporting plot using `pdf()`
+
+```{r, eval = FALSE}
+# Open the file
+pdf('Rplot.pdf')
+
+# Create the plot
+ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+
+# Close the file
+dev.off()
+```
+
+**Example**: Exporting plot using `jpeg()`
+
+```{r, eval = FALSE}
+# Open the file
+jpeg('Rplot.jpg', width = 350, height = 350)
+
+# Create the plot
+ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+
+# Close the file
+dev.off()
+```
+
+# References
+

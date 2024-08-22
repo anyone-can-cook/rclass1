@@ -1,0 +1,1452 @@
+---
+title: "Augmented vectors, factor + labelled class"
+subtitle: "EDUC 263: Introduction to Programming and Data Management Using R"
+author: 
+date: 
+fontsize: 8pt
+classoption: dvipsnames  # for colors
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: default #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header.tex
+      #after_body: table-of-contents.txt 
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+```{r, echo=FALSE, include=FALSE}
+#THIS CODE DOWNLOADS THE MOST RECENT VERSION OF THE FILE beamder_header.tex AND SAVES IT TO THE DIRECTORY ONE LEVEL UP FROM THIS .RMD LECTURE FILE
+download.file(url = 'https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/beamer_header.tex', 
+              destfile = '../beamer_header.tex',
+              mode = 'wb')
+```
+
+```{r, echo=FALSE, include=FALSE}
+# Download images
+imgs <- c('data-structures-overview.png')
+
+for (i in imgs) {
+  if(!file.exists(i)){
+  download.file(url = paste0('https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/lectures/intro_to_r/', i), 
+                destfile = i,
+                mode = 'wb')
+  }
+}
+```
+
+\tableofcontents
+
+```{r, eval=FALSE, echo=FALSE}
+#Use this if you want TOC to show level 2 headings
+\tableofcontents
+#Use this if you don't want TOC to show level 2 headings
+\tableofcontents[subsectionstyle=hide/hide/hide]
+```
+
+### Libraries we will use
+
+__Load the packages__ we will use by running this code chunk:
+
+```{r, message=FALSE}
+library(tidyverse)
+library(haven)
+library(labelled)
+library(lubridate)
+```
+
+__If package not yet installed__, then must install before you load. Install in "console" rather than .Rmd file:
+
+- Generic syntax: `install.packages("package_name")`
+- Install "tidyverse": `install.packages("tidyverse")`
+
+__Note__: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
+
+- `install.packages("tidyverse")`
+- `library(tidyverse)`
+
+### Dataset we will use
+
+```{r}
+rm(list = ls()) # remove all objects
+
+load(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/prospect_list/wwlist_merged.RData"))
+```
+
+# Attributes and augmented vectors
+
+## Review data types and structures
+
+### Review data structures: __Vectors__
+
+\medskip
+
+Two types of vectors:
+
+1. __Atomic vectors__
+1. __Lists__
+
+\medskip
+
+![Overview of data structures (Grolemund and Wickham, 2018)](data-structures-overview.png){width=60%}
+
+### Review data structures: atomic vectors
+
+
+\medskip An __atomic vector__ is a collection of values
+
+- Each value in an atomic vector is an __element__
+- All elements within vector must have same __data type__
+
+```{r}
+(a <- c(1,2,3)) # parentheses () assign and print object in one step
+length(a) # length = number of elements
+typeof(a) # numeric atomic vector, type=double
+str(a) # investigate structure of object
+```
+
+Can assign __names__ to vector elements, creating a __named atomic vector__
+
+```{r}
+(b <- c(v1=1,v2=2,v3=3))
+length(b) 
+typeof(b) 
+str(b) 
+```
+
+### Review data structures: lists
+
+\medskip
+
+- Like atomic vectors, __lists__ are objects that contain __elements__
+- However, __data type__ can differ across elements within a list
+    - E.g., an element of a list can be another list
+
+
+```{r}
+list_a <- list(1,2,"apple")
+typeof(list_a)
+length(list_a)
+str(list_a)
+
+list_b <- list(1, c("apple", "orange"), list(1, 2))
+length(list_b)
+str(list_b)
+```
+
+### Review data structures: lists
+
+Like atomic vectors, elements within a list can be named, thereby creating a __named list__
+
+```{r}
+# not named
+str(list_b) 
+
+# named
+list_c <- list(v1=1, v2=c("apple", "orange"), v3=list(1, 2, 3))
+str(list_c) 
+```
+
+### Review data structures: data frames
+
+\medskip A __data frame__ is a list with the following characteristics:
+
+- All the elements must be __vectors__ with the same __length__
+- Data frames are __augmented lists__ because they have additional __attributes__
+
+```{r}
+# a regular list
+(list_d <- list(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
+typeof(list_d)
+attributes(list_d)
+```
+
+### Review data structures: data frames
+
+```{r}
+# a data frame
+(df_a <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
+typeof(df_a)
+attributes(df_a)
+```
+
+## Attributes and augmented vectors
+
+### Atomic vectors versus augmented vectors
+
+__Atomic vectors__ [our focus so far]
+
+- I think of atomic vectors as "just the data"
+- Atomic vectors are the building blocks for augmented vectors
+
+\medskip 
+
+__Augmented vectors__
+
+- __Augmented vectors__ are atomic vectors with additional __attributes__ attached
+
+__Attributes__
+
+- __Attributes__ are additional "metadata" that can be attached to any object (e.g., vector or list)
+
+Example: Variables of a dataset
+
+- A data frame is a list
+- Each element in the list is a variable, which consists of:
+    - Atomic vector ("just the data")
+    - Any attributes we want to attach to each element/variable
+- Variable __name__, an attribute of the data frame object
+    
+Other examples of attributes in R
+
+- Value __labels__: Character labels (e.g., "Charter School") attached to numeric values
+- Object __class__: Specifies how object is treated by object oriented programming language
+
+__Main takeaway__:
+
+- __Augmented vectors__ are __atomic vectors__ (just the data) with additional __attributes__ attached
+
+### Attributes and functions to identify/modify attributes
+
+Description of attributes from Grolemund and Wickham 20.6
+
+- "Any vector can contain arbitrary additional __metadata__ through its __attributes__"
+- "You can think of __attributes__ as named list of vectors that can be attached to any object"
+
+Functions to identify and modify attributes
+
+- `attributes()` function to describe all attributes of an object
+- `attr()` to see individual attribute of an object or set/change an individual attribute of an object
+
+### attributes() function: describes all attributes of an object
+
+```{r, eval=FALSE}
+# pull up help file for the attributes() function
+?attributes
+```
+
+Attributes of a __named atomic vector__:
+
+```{r}
+# create named atomic vector
+(vector1 <- c(a = 1, b = 2, c = 3, d = 4))
+attributes(vector1)
+
+attributes(vector1) %>% str() # a named list of vectors!
+
+# remove all attributes from the object
+attributes(vector1) <- NULL
+vector1
+attributes(vector1)
+```
+
+### attributes() function, attributes of a variable in a data frame
+
+\medskip
+
+__Accessing variable using `[[]]` subset operator__
+
+- Recall `object_name[["element_name"]]` accesses contents of the element
+- If object is a data frame, `df_name[["var_name"]]` accesses contents of variable
+    - For simple vars like `firstgen`, syntax yields an atomic vector ("just the data")
+- Shorthand syntax for `df_name[["var_name"]]` is `df_name$var_name`
+
+```{r}
+str(wwlist[["firstgen"]])
+attributes(wwlist[["firstgen"]])
+
+str(wwlist$firstgen) # same same
+attributes(wwlist$firstgen)
+```
+
+__Accessing variable using `[]` subset operator__
+
+- `object_name["element_name"]` creates object of same type as `object_name`
+- If object is a data frame, `df_name["var_name"]` returns a data frame containing just the `var_name` column
+
+```{r, results="hide"}
+str(wwlist["firstgen"])
+attributes(wwlist["firstgen"])
+```
+
+### attributes() function, attributes of lists and data frames
+
+\medskip
+
+Attributes of a __named list__:
+
+```{r}
+list2 <- list(col_a = c(1,2,3), col_b = c(4,5,6))
+str(list2)
+attributes(list2)
+```
+Note that the `names` attribute is an attribute of the list, not an attribute of the elements within the list (which are atomic vectors)
+```{r}
+list2[['col_a']] # the element named 'col_a'
+str(list2[['col_a']]) # structure of the element named 'col_a'
+attributes(list2[['col_a']]) # attributes of element named 'col_a'
+```
+
+
+### attributes() function, attributes of lists and data frames
+
+Attributes of a __data frame__:
+
+```{r}
+list3 <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6))
+str(list3)
+attributes(list3)
+```
+Note: attributes `names`, `class` and `row.names` are attributes of the data frame
+
+- they are not attributes of the elements (variables) within the data frame, which are atomic vectors (i.e., just the data)
+```{r}
+str(list3[['col_a']]) # structure of the element named 'col_a'
+attributes(list3[['col_a']]) # attributes of element named 'col_a'
+```
+### attr() function: get or set specific attributes of an object
+
+```{r, eval=FALSE, include=FALSE}
+?attr
+```
+
+Syntax
+
+- Get: `attr(x, which, exact = FALSE)`
+- Set: `attr(x, which) <- value`
+
+Arguments
+
+- `x`:	an object whose attributes are to be accessed
+- `which`:	a non-empty character string specifying which attribute is to be accessed
+- `exact`	(logical): should `which` be matched exactly? default is `exact = FALSE`
+- `value`:	an object, new value of attribute, or `NULL` to remove attribute
+
+\medskip
+
+__Using `attr()` to get specific attribute of an object__
+```{r}
+vector1 <- c(a = 1, b= 2, c= 3, d = 4)
+attributes(vector1)
+attr(x=vector1, which = "names", exact = FALSE)
+attr(vector1, "names")
+attr(vector1, "name") # we don't provide exact name of attribute
+attr(vector1, "name", exact = TRUE) # don't provide exact name of attribute
+```
+
+### attr() function: get or set specific attributes of an object
+
+```{r, eval=FALSE, include=FALSE}
+?attr
+```
+
+Syntax
+
+- Get: `attr(x, which, exact = FALSE)`
+- Set: `attr(x, which) <- value`
+
+Arguments
+
+- `x`:	an object whose attributes are to be accessed
+- `which`:	a non-empty character string specifying which attribute is to be accessed
+- `exact`	(logical): should `which` be matched exactly? default is `exact = FALSE`
+- `value`:	an object, new value of attribute, or `NULL` to remove attribute
+
+\medskip
+
+__Using `attr()` to set specific attribute of an object__ (output omitted)
+```{r, results = "hide"}
+(vector1 <- c(a = 1, b= 2, c= 3, d = 4))
+attributes(vector1) # see all attributes
+
+attr(x=vector1, which = "greeting") <- "Hi!" # create new attribute
+attr(x=vector1, which = "greeting") # see attribute
+
+attr(vector1, "farewell") <- "Bye!" # create attribute
+
+attr(x=vector1, which = "names") # see names attribute
+attr(x=vector1, which = "names") <- NULL # delete names attribute
+
+attributes(vector1) # see all attributes
+```
+
+
+### attr() function, apply on data frames
+
+\medskip 
+
+__Using `wwlist`, create data frame with three variables__
+
+```{r, results = "hide"}
+wwlist_small <- wwlist[1:25, ] %>% select(hs_state,firstgen,med_inc_zip)
+str(wwlist_small)
+attributes(wwlist_small)
+attributes(wwlist_small) %>% str()
+```
+
+__Get/set attribute of a data frame__
+
+```{r, results = "hide"}
+#get/examine names attribute
+attr(x=wwlist_small, which = "names") 
+str(attr(x=wwlist_small, which = "names")) # names attribute is character atomic vector, length=3
+#add new attribute to data frame
+attr(x=wwlist_small, which = "new_attribute") <- "contents of new attribute"
+attributes(wwlist_small)
+```
+
+__Get/set attribute of a variable in data frame__
+
+```{r, results = "hide"}
+str(wwlist_small$med_inc_zip)
+attributes(wwlist_small$med_inc_zip)
+#create attribute for variable med_inc_zip
+attr(wwlist_small$med_inc_zip, "inc attribute") <- "inc attribute contents"
+#investigate attribute for variable med_inc_zip
+attributes(wwlist_small$med_inc_zip)
+str(wwlist_small$med_inc_zip)
+attr(wwlist_small$med_inc_zip, "inc attribute")
+```
+
+### Why add attributes to data frame or variables of data frame?
+
+Pedagogical reasons
+
+- Important to know how you can apply `attributes()` and `attr()` to data frames and to variables within data frames
+
+\medskip
+
+Example practical application: interactive dashboards
+
+- When creating "dashboard" you might want to add "tooltips"
+    - "Tooltip" is a message that appears when cursor is positioned over an icon
+    - The text in the tooltip is the contents of an attribute
+- Example dashboard: [LINK](https://jkcf.shinyapps.io/dashboard/)
+
+### Student exercises
+
+1. Using `wwlist`, create data frame of 30 observations with three variables: `state`, `zip5`, `pop_total_zip`
+
+2. Return all attributes of this new data frame using `attributes()`. Then, get the `names` attribute of the data frame using `attr()`.
+
+3. Add a new attribute to the data frame called `attribute_data` whose content is `"new attribute of data"`. Then, return all attributes of the data frame as well as get the value of the newly created `attribute_data`.
+
+4. Return the attributes of the variable `pop_total_zip` in the data frame.
+
+5. Add a new attribute to the variable `pop_total_zip` called `attribute_variable` whose content is `"new attribute of variable"`. Then, return all attributes of the variable as well as get the value of the newly created `attribute_variable`.
+
+### Solution to student exercises
+
+```{r, results = "hide"}
+# Part 1
+wwlist_exercise <- wwlist[1:30, ] %>% select(state, zip5, pop_total_zip)
+
+# Part 2
+attributes(wwlist_exercise)
+attr(x=wwlist_exercise, which = "names") 
+
+# Part 3
+attr(x=wwlist_exercise, which = "attribute_data") <- "new attribute of data"
+
+attributes(wwlist_exercise)
+attr(wwlist_exercise, which ="attribute_data")
+
+# Part 4
+attributes(wwlist_exercise$pop_total_zip)
+
+# Part 5
+attr(wwlist_exercise$pop_total_zip, "attribute_variable") <- "new attribute of variable"
+
+attributes(wwlist_exercise$pop_total_zip)
+attr(wwlist_exercise$pop_total_zip, "attribute_variable")
+```
+
+# Object class
+
+### Object class
+
+\medskip 
+Every object in R has a __class__
+
+- Class is an __attribute__ of an object
+- Object class controls how functions work and defines the rules for how objects can be treated by object oriented programming language
+    - E.g., which functions you can apply to object of a particular class
+    - E.g., what the function does to one object class, what it does to another object class
+
+You can use the `class()` function to identify object class:
+
+```{r}
+(vector2 <- c(a = 1, b= 2, c= 3, d = 4))
+typeof(vector2)
+class(vector2)
+```
+
+When I encounter a new object I often investigate object by applying `typeof()`, `class()`, and `attributes()` functions:
+
+```{r}
+typeof(vector2)
+class(vector2)
+attributes(vector2)
+```
+
+### Why is object class important?
+
+Functions care about object __class__, not object __type__
+
+\medskip
+
+Specific functions usually work with only particular __classes__ of objects
+
+- "Date" functions usually only work on objects with a date class
+- "String" functions usually only work on objects with a character class
+- Functions that do mathematical computation usually work on objects with a numeric class
+
+### Functions care about object __class__, not object __type__
+
+\medskip
+
+__Example__: `sum()` applies to __numeric__, __logical__, or __complex__ class objects
+```{r, eval=FALSE, include=FALSE}
+?sum
+```
+
+Apply `sum()` to object with class = __logical__:
+```{r}
+x <- c(TRUE, FALSE, NA, TRUE)
+typeof(x)
+class(x)
+sum(x, na.rm = TRUE)
+```
+
+Apply `sum()` to object with class = __numeric__:
+```{r}
+typeof(wwlist$med_inc_zip) 
+class(wwlist$med_inc_zip) 
+wwlist$med_inc_zip[1:5]
+sum(wwlist$med_inc_zip[1:5], na.rm = TRUE) 
+```
+
+What happens when we try to apply `sum()` to an object with class = __character__?
+```{r, eval=FALSE}
+typeof(wwlist$hs_city)
+class(wwlist$hs_city)
+wwlist$hs_city[1:5]
+sum(wwlist$hs_city[1:5], na.rm = TRUE) 
+```
+
+### Functions care about object __class__, not object __type__
+
+__Example__: `year()` from `lubridate` package applies to date-time objects
+
+```{r, include=FALSE, results = "hide"}
+library(lubridate)
+```
+
+```{r, eval=FALSE, include=FALSE}
+?year
+```
+
+Apply `year()` to object with class = __Date__:
+
+```{r}
+wwlist$receive_date[1:5]
+typeof(wwlist$receive_date)
+class(wwlist$receive_date) 
+year(wwlist$receive_date[1:5])
+```
+
+What happens when we try to apply `year()` to an object with class = __numeric__?
+
+```{r, eval=FALSE}
+typeof(wwlist$med_inc_zip) 
+class(wwlist$med_inc_zip) 
+year(wwlist$med_inc_zip[1:10]) 
+```
+
+### Functions care about object __class__, not object __type__
+
+__Example__: `tolower()` applies to __character__ class objects
+
+- Syntax: `tolower(x)`
+- `x` is "a character vector, or an object that can be coerced to character by `as.character()`"
+
+Most string functions are intended to apply to objects with a __character__ class
+
+- __type__ = character
+- __class__ = character
+
+```{r, eval=FALSE, include=FALSE}
+?tolower
+```
+
+Apply `tolower()` to object with class = __character__:
+
+```{r}
+str(wwlist$hs_city)
+typeof(wwlist$hs_city)
+class(wwlist$hs_city)
+
+wwlist$hs_city[1:6]
+tolower(wwlist$hs_city[1:6])
+```
+
+### Class and object-oriented programming
+
+R is an object-oriented programming language
+
+\medskip
+Definition of object oriented programming from this [LINK](https://www.webopedia.com/TERM/O/object_oriented_programming_OOP.html)
+
+\medskip
+
+> "Object-oriented programming (OOP) refers to a type of computer programming in which programmers define not only the data type of a data structure, but also the types of operations (functions) that can be applied to the data structure."
+
+\medskip
+
+Object __class__ is fundamental to object oriented programming because:
+
+- Object class determines which functions can be applied to the object
+- Object class also determines what those functions do to the object
+    - E.g., a specific function might do one thing to objects of __class__ A and another thing to objects of __class__ B
+    - What a function does to objects of different class is determined by whoever wrote the function
+
+\medskip
+Many different object classes exist in R
+
+- You can also create your own classes
+    - Example: the `labelled` class is an object class created by Hadley Wickham when he created the `haven` package
+- In this course we will work with classes that have been created by others
+
+# Class == factor
+
+### Recoding variable `ethn_code` from data frame `wwlist`
+
+Let's first recode the `ethn_code` variable:
+
+```{r, results= "hide"}
+wwlist <- wwlist %>%  
+  mutate(ethn_code = 
+    recode(ethn_code,
+      "american indian or alaska native" = "nativeam",
+      "asian or native hawaiian or other pacific islander" = "api",
+      "black or african american" = "black",
+      "cuban" = "latinx",
+      "mexican/mexican american" = "latinx",
+      "not reported" = "not_reported",
+      "other-2 or more" = "multirace",
+      "other spanish/hispanic" = "latinx",
+      "puerto rican" = "latinx",
+      "white" = "white"          
+    )
+  )
+
+str(wwlist$ethn_code)
+wwlist %>% count(ethn_code)
+```
+
+### Factors
+
+__Factors__ are an object _class_ used to display categorical data (e.g., marital status)
+
+- A factor is an __augmented vector__ built by attaching a __levels__ attribute to an (atomic) integer vectors
+
+Usually, we would prefer a categorical variable (e.g., race, school type) to be a factor variable rather than a character variable
+
+- So far in the course I have made all categorical variables character variables because we had not introduced factors yet
+
+__Create factor version of character variable `ethn_code` using base R `factor()` function__:
+```{r}
+str(wwlist$ethn_code)
+class(wwlist$ethn_code)
+
+# create factor var; tidyverse approach
+wwlist <- wwlist %>% mutate(ethn_code_fac = factor(ethn_code)) 
+#wwlist$ethn_code_fac <- factor(wwlist$ethn_code) # base r approach
+
+str(wwlist$ethn_code)
+str(wwlist$ethn_code_fac)
+```
+
+### Factors
+
+__Character variable `ethn_code`__:
+```{r}
+typeof(wwlist$ethn_code)
+class(wwlist$ethn_code)
+attributes(wwlist$ethn_code)
+str(wwlist$ethn_code)
+```
+
+__Factor variable `ethn_code_fac`__:
+```{r}
+typeof(wwlist$ethn_code_fac)
+class(wwlist$ethn_code_fac)
+attributes(wwlist$ethn_code_fac)
+str(wwlist$ethn_code_fac)
+```
+
+### Working with factor variables
+
+Main things to note about variable `ethn_code_fac`
+
+- __type__ = integer
+- __class__ = factor, because the variable has a __levels__ attribute
+- Underlying data are integers, but the values of the __levels__ attribute is what's displayed:
+
+```{r}
+# Print first few obs of ethn_code_fac
+wwlist$ethn_code_fac[1:5]
+
+# Print count for each category in ethn_code_fac
+wwlist %>% count(ethn_code_fac)
+```
+
+
+### Working with factor variables
+
+
+Apply `as.integer()` to display underlying integer values of factor variable
+```{r, eval=FALSE, include=FALSE}
+?as.integer
+```
+
+Investigate `as.integer()` function:
+```{r}
+typeof(wwlist$ethn_code_fac)
+class(wwlist$ethn_code_fac)
+
+typeof(as.integer(wwlist$ethn_code_fac))
+class(as.integer(wwlist$ethn_code_fac))
+```
+
+
+Display underlying integer values of variable `ethn_code_fac`:
+```{r}
+wwlist %>% count(as.integer(ethn_code_fac))
+```
+
+### Working with factor variables
+
+\medskip
+
+Refer to categories of a factor (e.g., when filtering obs) using values of __levels__ attribute rather than underlying values of variable
+
+- Values of __levels__ attribute for `ethn_code_fac` (output omitted)
+
+```{r, results='hide'}
+attributes(wwlist$ethn_code_fac)
+```
+
+\medskip
+
+__Example__: Count the number of prospects in `wwlist` who identify as "white"
+```{r}
+# referring to variable value; this doesn't work
+wwlist %>% filter(ethn_code_fac==7) %>% count() 
+
+#referring to value of level attribute; this works
+wwlist %>% filter(ethn_code_fac=="white") %>% count()
+```
+
+### Working with factor variables
+
+__Example__: Count the number of prospects in `wwlist` who identify as "white"
+
+- To refer to underlying integer values, apply `as.integer()` function to factor variable
+```{r}
+attributes(wwlist$ethn_code_fac)
+wwlist %>% filter(as.integer(ethn_code_fac)==7) %>% count
+```
+
+### How to identify the variable values associated with factor levels
+
+Create a factor version of the character variable `psat_range`
+```{r, results="hide", warning = FALSE}
+wwlist %>% count(psat_range)
+wwlist <- wwlist %>% mutate(psat_range_fac = factor(psat_range))
+wwlist %>% count(psat_range_fac)
+attributes(wwlist$psat_range_fac)
+```
+
+Investigate values associated with factor levels using `levels()` and `nlevels()`
+```{r, results="hide"}
+levels(wwlist$psat_range_fac) #starts at 1
+nlevels(wwlist$psat_range_fac) #7 levels total
+levels(wwlist$psat_range_fac)[1:3] #prints levels 1-3
+```
+
+Once values associated with factor levels are known:
+
+- Can filter based on underling integer values using `as.integer()`
+```{r}
+wwlist %>% filter(as.integer(psat_range_fac)==4) %>% count()
+```
+
+- Or filter based on value of factor __levels__
+```{r}
+wwlist %>% filter(psat_range=="1270-1520") %>% count()
+```
+
+### Creating factor variables from character variables or from integer variables
+
+See Appendix
+
+### Factor student exercise   
+
+1. After running the code below, use `typeof()`, `class()`, `str()`, and `attributes()` functions to check the new variable `receive_year`  
+2. Create a factor variable from the input variable `receive_year` and name it `receive_year_fac`  
+3. Run the same functions (`typeof()`, `class()`, etc.) from the first question using the new variable you created  
+4. Get a count of `receive_year_fac`. (__hint:__ you could also run this in the console to see values associated with each factor)
+
+Run this code to create a year variable from the input variable `receive_date`:
+```{r, results="hide", message=FALSE}
+# wwlist %>% glimpse()
+
+library(lubridate) # load library if you haven't already
+wwlist <- wwlist %>%
+  mutate(receive_year = year(receive_date)) # create year variable with lubridate
+
+# Check variable
+wwlist %>% 
+  count(receive_year)
+
+wwlist %>%
+  group_by(receive_year) %>% 
+  count(receive_date)
+
+```
+
+
+### Factor student exercise solutions   
+1. After running the code below, use `typeof()`, `class()`, `str()`, and `attributes()` functions to check the new variable `receive_year`
+```{r}
+typeof(wwlist$receive_year)
+class(wwlist$receive_year)
+str(wwlist$receive_year)
+attributes(wwlist$receive_year) 
+```
+
+### Factor student exercise solutions  
+2. Create a factor variable from the input variable `receive_year` and name it `receive_year_fac`  
+```{r}
+# create factor var; tidyverse approach
+wwlist <- wwlist %>%
+  mutate(receive_year_fac = factor(receive_year))  
+
+```
+
+### Factor student exercise solutions 
+3. Run the same functions (`typeof()`, `class()`, etc.) from the first question using the new variable you created  
+```{r}
+typeof(wwlist$receive_year_fac)
+class(wwlist$receive_year_fac)
+str(wwlist$receive_year_fac)
+attributes(wwlist$receive_year_fac)   
+```
+
+### Factor student exercise solutions 
+4. Get a count of `receive_year_fac`. (__hint:__ you could also run this in the console to see values associated with each factor)
+```{r}
+wwlist %>%
+  count(receive_year_fac)
+```
+
+
+# Class == labelled
+
+### Data we will use to introduce `labelled` class
+
+High school longitudinal surveys from National Center for Education Statistics (NCES)
+
+- Follow U.S. students from high school through college, labor market
+
+\medskip
+
+We will be working with [High School Longitudinal Study of 2009 (HSLS:09)](https://nces.ed.gov/surveys/hsls09/index.asp)
+
+- Follows 9th graders from 2009
+- Data collection waves
+    - Base Year (2009)
+    - First Follow-up (2012)
+    - 2013 Update (2013)
+    - High School Transcripts (2013-2014)
+    - Second Follow-up (2016)    
+
+### Using `haven` package to read SAS/SPSS/Stata datasets into R
+
+[`haven`](https://haven.tidyverse.org/), which is part of __tidyverse__, "enables R to read and write various data formats" from the following statistical packages: 
+
+- SAS
+- SPSS
+- Stata
+
+\medskip
+
+When using `haven` to read data, resulting R objects have these characteristics:
+
+- Data frames are __tibbles__, Tidyverse's preferred __class__ of data frames
+- Transform variables with "value labels" into the `labelled()` class
+    - `labelled` is an object class, just like `factor` is an object class
+    - `labelled` is an object __class__ created by folks who created `haven` package
+    - `labelled` and `factor` classes are both viable alternatives for categorical variables
+    - Helpful description of `labelled` class  [HERE](https://haven.tidyverse.org/articles/semantics.html)
+- Dates and times converted to R date/time classes
+- Character vectors not converted to factors
+
+### Using `haven` package to read SAS/SPSS/Stata datasets into R
+
+Use `read_dta()` function from `haven` package to import Stata dataset into R
+```{r, results="hide"}
+hsls <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/hsls/hsls_stu_small.dta")
+```
+
+__Must__ run this code chunk; permanently changes uppercase variable names to lowercase
+```{r, results="hide"}
+names(hsls)
+names(hsls) <- tolower(names(hsls)) # convert names to lowercase
+names(hsls) # names now lowercase
+
+str(hsls) # ugh
+```
+
+__Investigate variable `s3classes` from data frame `hsls`__
+
+-  Identifies whether respondent taking postsecondary classes as of 11/1/2013
+```{r, results="hide"}
+typeof(hsls$s3classes)
+class(hsls$s3classes)
+str(hsls$s3classes)
+```
+
+__Investigate attributes of `s3classes`__
+
+```{r, results="hide"}
+attributes(hsls$s3classes) # all attributes
+
+#specific attributes: using syntax: attr(x, which, exact = FALSE)
+attr(x=hsls$s3classes, which = "label") # label attribute
+attr(x=hsls$s3classes, which = "labels") # labels attribute
+```
+
+### What is object class = `labelled`?
+
+\medskip
+__Variable labels__ are labels attached to a specific variable (e.g., marital status)
+__Value labels__ [in Stata] are labels attached to specific values of a variable, e.g.:
+
+- Var value `1` attached to value label "married", `2`="single", `3`="divorced"
+
+\medskip
+
+`labelled` is object class for importing vars with __value labels__ from SAS/SPSS/Stata
+
+- `labelled` object class created by `haven` package 
+- Characteristics of variables in R data frame with `class==labelled`:
+    - Data `type` can be numeric(double) or character
+    - To see `value labels` associated with each value:
+        - `attr(df_name$var_name,"labels")`
+        - E.g., `attr(hsls$s3classes,"labels")`
+
+Investigate the attributes of `hsls$s3classes`
+```{r, results="hide"}
+typeof(hsls$s3classes)
+class(hsls$s3classes)
+str(hsls$s3classes)
+attributes(hsls$s3classes)
+```
+Use `attr(object_name,"attribute_name")` to refer to each attribute
+```{r, results="hide"}
+attr(hsls$s3classes,"label")
+attr(hsls$s3classes,"format.stata")
+attr(hsls$s3classes,"class")
+attr(hsls$s3classes,"labels")
+```
+
+
+### `labelled` package
+
+Purpose of the `labelled` package is to work with data imported from SPSS/Stata/SAS using the `haven` package
+
+- `labelled` package contains functions to work with objects that have `labelled` class
+- From package documentation: 
+    - "purpose of the `labelled` package is to provide functions to manipulate _metadata_ as variable labels, value labels and defined missing values using the `labelled` class and the `label` attribute introduced in `haven` package."
+- More info on the `labelled` package: [LINK](https://cran.r-project.org/web/packages/labelled/vignettes/intro_labelled.html)
+
+Functions in `labelled` package
+
+- [Full list](https://www.rdocumentation.org/packages/labelled/versions/1.1.0)
+```{r, eval=FALSE, include=FALSE}
+?labelled
+```
+
+## Get variable and value labels
+
+### Functions to get variable labels and value labels
+
+\medskip
+__Get variable labels__ using `var_label()`
+
+```{r}
+hsls %>% select(s3classes) %>% var_label()
+```
+
+\medskip
+__Get value labels__ using `val_labels()`
+
+```{r}
+hsls %>% select(s3classes) %>% val_labels()
+```
+
+### Working with `labelled` class data
+
+\medskip
+
+Create frequency tables with `labelled` class variables using `count()`
+
+- Default setting is to show variable __values__ not __value labels__
+```{r}
+hsls %>% count(s3classes)
+```
+
+\medskip
+
+To make frequency table show __value labels__ add `%>% as_factor()` to pipe
+
+- `as_factor()` is function from `haven` that converts an object to a factor
+```{r}
+hsls %>% count(s3classes) %>% as_factor()
+```
+### Working with `labelled` class data
+
+To isolate values of `labelled` class variables in `filter()` function:
+
+- Refer to variable __value__, not the __value label__
+
+__Task__ 
+
+- How many observations in var `s3classes` associated with "Unit non-response"
+- How many observations in var `s3classes` associated with "Yes"
+
+General steps to follow: 
+
+1. Investigate object
+1. Use `filter()` to isolate desired observations
+
+Investigate object
+```{r, results="hide"}
+class(hsls$s3classes)
+hsls %>% select(s3classes) %>% var_label() #show variable label
+hsls %>% select(s3classes) %>% val_labels() #show value label
+
+hsls %>% count(s3classes) # freq table, values
+hsls %>% count(s3classes) %>% as_factor() # freq table, value labels
+```
+
+Filter specific values
+```{r, results="hide"}
+hsls %>% filter(s3classes==-8) %>% count() # -8 = unit non-response
+hsls %>% filter(s3classes==1) %>% count() # 1 = yes
+```
+
+## Set variable and value labels
+
+### Functions to set variable labels and value labels
+
+\medskip
+__Set variable labels__ using `var_label()` or `set_variable_labels()`
+
+```{r, eval=F}
+# Set one variable label
+var_label(df_name$var_name) <- 'variable label'
+
+# Set multiple variable labels
+df_name <- df_name %>%
+  set_variable_labels(
+    var_name_1 = 'variable label 1',
+    var_name_2 = 'variable label 2',
+    var_name_3 = 'variable label 3'
+  )
+```
+
+\medskip
+__Set value labels__ using `val_label()` or `set_value_labels()`
+
+```{r, eval=F}
+# Set one value label
+val_label(df_name$var_name, 'variable_value') <- 'value_label'
+
+# Set multiple value labels
+df_name <- df_name %>%
+  set_value_labels(
+    var_name_1 = c('value_label_1' = 'variable_value_1',
+                   'value_label_2' = 'variable_value_2',
+    var_name_2 = c('value_label_3' = 'variable_value_3',
+                   'value_label_4' = 'variable_value_4')
+  )
+```
+
+
+### Create example data frame
+
+```{r}
+df <- tribble(
+  ~id, ~edu, ~sch,
+  #--|--|----
+  1, 2, 2,
+  2, 1, 1,
+  3, 3, 2,
+  4, 4, 2,
+  5, 1, 2
+)
+df
+str(df)
+```
+
+
+### Set variable labels
+  
+Use `set_variable_labels()` or `var_label()` to manually set variable labels  
+    
+```{r}
+str(df$sch)
+var_label(df$sch)
+
+# Using set_variable_labels()
+df <- df %>%
+  set_variable_labels(
+    id = "Unique identification number",
+    edu = "Education level"
+  )
+
+# Using var_label()
+var_label(df$sch) <- 'Type of school attending'
+
+str(df$sch)
+var_label(df$sch)
+```
+
+### Set value labels 
+
+Use `set_value_labels()` or `val_label()` to manually set value labels
+
+```{r}
+val_labels(df$sch)
+
+# Using set_value_labels()
+df <- df %>%
+  set_value_labels(
+    edu = c('High School' = 1,
+            'AA degree' = 2,
+            'BA degree' = 3,
+            'MA or higher' = 4),
+    sch = c('Private' = 1))
+
+# Using val_label()
+val_label(df$sch, 2) <- 'Public'
+
+str(df$sch)
+val_labels(df$sch)
+```
+
+### View the set variable and value labels
+
+```{r}
+# View variable and value labels using attributes()
+attributes(df$sch)
+
+# View variable label
+var_label(df$sch)
+attr(df$sch, 'label')
+
+# View value labels
+val_labels(df$sch)
+attr(df$sch, 'labels')
+```
+
+### `labelled` student exercise
+
+1. Get variable and value labels of the variable `s3hs` in the `hsls` data frame
+2. Get a count of the variable `s3hs` showing the values and the value labels (__hint__: use `as_factor()`)
+3. Get a count of the rows whose value for `s3hs` is associated with "Missing" (__hint__: use `filter()`)
+4. Get a count of the rows whose value for `s3hs` is associated with "Missing" or "Unit non-response"
+5. Add variable label for `pop_asian_zip` & `pop_asian_state` in data frame `wwlist`
+6. Add value labels for `ethn_code` in data frame `wwlist`
+
+### `labelled` student exercise solutions
+1. Get variable and value labels of the variable `s3hs` in the `hsls` data frame
+```{r}
+hsls %>% 
+  select(s3hs) %>% 
+  var_label() 
+
+hsls %>% 
+  select(s3hs) %>% 
+  val_labels()
+```
+
+### `labelled` student exercise solutions
+2. Get a count of the variable `s3hs` showing the values and the value labels (__hint__: use `as_factor()`)
+
+```{r}
+hsls %>% 
+  count(s3hs) 
+
+hsls %>% 
+  count(s3hs) %>% 
+  as_factor() 
+
+```
+
+### `labelled` student exercise solutions
+3. Get a count of the rows whose value for `s3hs` is associated with "Missing" (__hint__: use `filter()`)
+```{r}
+hsls %>%
+  filter(s3hs== -9) %>% 
+  count()
+```
+
+### `labelled` student exercise solutions  
+4. Get a count of the rows whose value for `s3hs` is associated with "Missing" or "Unit non-response"
+```{r}
+hsls %>%
+  filter(s3hs== -9 | s3hs== -8) %>% 
+  count()
+```
+
+### `labelled` student exercise solutions  
+5. Add variable label for `pop_asian_zip` & `pop_asian_state` in data frame `wwlist`
+
+```{r}
+# variable labels
+wwlist %>% select(pop_asian_zip, pop_asian_state) %>% var_label()
+
+# set variable labels
+wwlist <- wwlist %>% 
+  set_variable_labels(
+    pop_asian_zip = "total asian population in zip",
+    pop_asian_state ="total asian population in state"
+  )
+
+# attribute of variable
+attributes(wwlist$pop_asian_zip)
+attributes(wwlist$pop_asian_state)
+```
+
+### `labelled` student exercise solutions  
+6. Add value labels for `ethn_code` in data frame `wwlist`
+```{r, results="hide"}
+# count
+wwlist %>% count(ethn_code)
+
+# value labels
+wwlist %>% select(ethn_code) %>% val_labels
+
+# set value labels to ethn_code variable
+wwlist <- wwlist %>% 
+  set_value_labels(
+    ethn_code = c("asian or native hawaiian or other pacific islander" = "api",
+                  "black or african american" = "black",
+                  "cuban or mexican/mexican american or other spanish/hispanic or puerto rican" = "latinx",
+                  "other-2 or more" = "multirace",
+                  "american indian or alaska native" = "nativeam",
+                  "not reported" = "not_reported",
+                  "white" = "white"
+    )
+  )
+```
+
+# Comparing labelled class to factor class
+
+### Comparing `class==labelled` to `class==factor`
+
+|  | `class==labelled` | `class==factor`
+|---|----------|-------------|
+| data type  |    numeric or character   | integer |
+| name of value label attribute | labels | levels |
+| refer to data using | variable values | levels attribute |
+
+\bigskip
+
+So should you work with `class==labelled` or `class==factor`?
+
+- No right or wrong answer; this is a subjective decision
+- Personally, I prefer `labelled' class
+    - Easier to control underlying variable value
+    - Feels more suited to working with survey data variables, where there are usually several different values that represent different kinds of "missing" values
+
+### Converting `class==labelled` to `class==factor`
+
+The `as_factor()` function from `haven` package converts variables with `class==labelled` to `class==factor`
+
+- Can be used for descriptive statistics
+```{r, results="hide"}
+hsls %>% select(s3classes) %>% count(s3classes)
+hsls %>% select(s3classes) %>% count(s3classes) %>% as_factor()
+```
+
+- Can create object with some or all `labelled` vars converted to `factor`
+```{r}
+hsls_f <- as_factor(hsls, only_labelled = TRUE)
+```
+
+Let's examine this object
+```{r, results="hide"}
+glimpse(hsls_f)
+hsls_f %>% select(s3classes,s3clglvl) %>% str()
+typeof(hsls_f$s3classes)
+class(hsls_f$s3classes)
+attributes(hsls_f$s3classes)
+
+hsls_f %>% select(s3classes) %>% var_label()
+hsls_f %>% select(s3classes) %>% val_labels()
+```
+
+### Working with `class==factor` data
+
+Showing factor levels associated with a factor variable
+```{r}
+hsls_f %>% count(s3classes)
+```
+
+Showing variable values associated with a factor variable
+```{r}
+hsls_f %>% count(as.integer(s3classes))
+```
+
+### Working with `class==factor` data
+
+When sub-setting observations (e.g., filtering), refer `level` attribute not variable value
+```{r}
+hsls_f %>% filter(s3classes=="Yes") %>% count(s3classes)
+```
+
+# Appendix: Creating factor variables
+
+### Create factors [from string variables]
+
+To create a factor variable from string variable:
+
+1. Create a character vector containing underlying data
+1. Create a vector containing valid levels
+3. Attach levels to the data using the `factor()` function
+
+```{r}
+# Underlying data: months my fam is born
+x1 <- c("Jan", "Aug", "Apr", "Mar")
+# Create vector with valid levels
+month_levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+# Attach levels to data
+x2 <- factor(x1, levels = month_levels)
+```
+Note how attributes differ:
+```{r}
+str(x1)
+str(x2)
+```
+Sorting also differs:
+```{r}
+sort(x1)
+sort(x2)
+```
+
+### Create factors [from string variables]
+
+Let's create a character version of variable `hs_state` and then turn it into a factor:
+
+```{r, eval=FALSE}
+#wwlist %>%
+#  count(hs_state)
+# Subset obs to West Coast states 
+wwlist_temp <- wwlist %>%
+  filter(hs_state %in% c("CA", "OR", "WA"))
+
+# Create character version of high school state for West Coast states only
+wwlist_temp$hs_state_char <- as.character(wwlist_temp$hs_state)
+
+# Investigate character variable
+str(wwlist_temp$hs_state_char)
+table(wwlist_temp$hs_state_char)
+
+# Create new variable that assigns levels
+wwlist_temp$hs_state_fac <- factor(wwlist_temp$hs_state_char, levels = c("CA","OR","WA"))
+str(wwlist_temp$hs_state_fac)
+attributes(wwlist_temp$hs_state_fac)
+
+#wwlist_temp %>%
+#  count(hs_state_fac)
+rm(wwlist_temp)
+
+```
+
+### Create factors [from string variables]
+
+How the `levels` argument works when underlying data is character:
+
+- Matches value of underlying data to value of the level attribute
+- Converts underlying data to integer, with level attribute attached
+
+\medskip See [Chapter 15 of Wickham](https://r4ds.had.co.nz/factors.html) for more on factors (e.g., modifying factor order, modifying factor levels)
+
+### Creating factors [from integer vectors]
+
+Factors are just integer vectors with level attributes attached to them. So, to create a factor:
+
+1. Create a vector for the underlying data
+1. Create a vector that has level attributes
+3. Attach levels to the data using the `factor()` function
+
+```{r}
+a1 <- c(1,1,1,0,1,1,0) # A vector of data
+a2 <- c("zero","one") # A vector of labels
+
+# Attach labels to values
+a3 <- factor(a1, labels = a2)
+a3
+str(a3)
+
+```
+
+Note: By default, `factor()` function attached "zero" to the lowest value of vector `a1` because "zero" was the first element of vector `a2`
+
+### Creating factors [from integer vectors]
+
+Let's turn an integer variable into a factor variable in the `wwlist` data frame
+
+Create integer version of `receive_year`:
+
+```{r}
+#typeof(wwlist_temp$receive_year)
+wwlist$receive_year_int <- as.integer(wwlist$receive_year)
+str(wwlist$receive_year_int)
+typeof(wwlist$receive_year_int)
+
+```
+
+Assign levels to values of integer variable:
+
+```{r, eval=FALSE}
+wwlist$receive_year_fac <- factor(wwlist$receive_year_int, 
+      labels=c("Twenty-sixteen","Twenty-seventeen","Twenty-eighteen"))
+str(wwlist$receive_year_fac)
+str(wwlist$receive_year)
+
+#Check variable
+wwlist %>%
+  count(receive_year_fac)
+
+wwlist %>%
+  count(receive_year)
+```
