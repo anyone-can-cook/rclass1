@@ -62,7 +62,7 @@ library(kableExtra)
 library(tidyverse)
 
 t <- c("Weekly meetings (online)","Class website (public)", "Questions, discussion, announcements (private)", "Class Zoom link")
-l <- c("Day(s), Time, Timezone","https://anyone-can-cook.github.io/rclass1/", "Link to class repository for student issues here",  "Zoom link here")
+l <- c("Day(s), Time, Timezone","https://anyone-can-cook.github.io/rclass1/", "https://github.com/anyone-can-cook/rclass1_student_issues_f24",  "Zoom link here")
 
 info <- tibble(t, l)
 
