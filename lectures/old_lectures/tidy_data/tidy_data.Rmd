@@ -1,0 +1,1338 @@
+---
+title: "Tidy and Reshaping Data"
+subtitle: "EDUC 260A: Introduction to Programming and Data Management"
+author:
+date: 
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: # toc_float option to float the table of contents to the left of the main document content. floating table of contents will always be visible even when the document is scrolled
+      collapsed: false # collapsed (defaults to TRUE) controls whether the TOC appears with only the top-level (e.g., H2) headers. If collapsed initially, the TOC is automatically expanded inline when necessary
+      smooth_scroll: true # smooth_scroll (defaults to TRUE) controls whether page scrolls are animated when TOC items are navigated to via mouse clicks
+    number_sections: true
+    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk    
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax    
+    theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
+    df_print: tibble #options: default, tibble, paged
+    # keep_md: true # may be helpful for storing on github
+    
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+# Introduction
+
+## Libraries and datasets we will use
+
+Load packages:
+
+```{r, message=F}
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+<br>
+Load datasets:
+
+```{r}
+# NCES Digest Table 204.10
+load(url('https://github.com/anyone-can-cook/rclass1/raw/master/data/nces_digest/nces_digest_tbl_204_10.RData'))
+
+# IPEDS EFFY Table
+ipeds_table <- read_dta('https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/effy/ey15-16_hc.dta', encoding = NULL)
+```
+
+
+## Lecture overview
+
+Creating analysis datasets often require __changing the organizational structure__ of data. For example:
+
+- You want analysis dataset to have one obs per student, but your data has one obs per student-course
+- You want analysis dataset to have one obs per institution, but enrollment data has one obs per institution-enrollment level
+
+Two common ways to change organizational structure of data:
+
+1. Use `group_by()` to perform calculations separately within groups and then use `summarise()` to create an object with one observation per group. Examples:
+    - Creating objects containing summary statistics that are basis for tables and graphs
+    - Creating student-transcript level GPA variable from student-transcript-course level data
+1. __Reshape__ your data -- called __tidying__ in the R tidyverse world -- by transforming columns (variables) into rows (observations) and vice versa
+    - This is the focus of this lecture, where we will look at transforming __untidy__ data into __tidy__ data.
+    
+Working with tidy data has many benefits:
+
+- It is a consistent way of storing data
+- R is also well-suited for working with tidy data due to its vectorized nature. There's also many packages in `tidyverse` that are designed to work with tidy data, such as `tidyr`.
+
+Show index and example datasets in `tidyr` package:
+
+```{r, eval=FALSE}
+help(package="tidyr")
+
+# Note that example datasets (table1, table2, etc) are listed in the index alongside functions
+tidyr::table1
+
+df1 <- table1
+str(df1)
+
+table2
+table3
+```
+
+# Data structure vs. data semantics
+
+Before we define "tidy data", we will spend significant time defining and discussing some core terms/concepts about datasets. This discussion draws from the 2014 article [Tidy Data](https://www.jstatsoft.org/article/view/v059i10) by Hadley Wickham.
+
+Wickham (2014) distinguishes between __data structure__ (_layout_) and __data semantics__ (_concepts_).
+
+## Dataset structure
+
+__Dataset structure__ refers to the "physical layout" of a dataset.
+
+- Typically, datasets are "rectangular __tables__ made up of __rows__ and __columns__"
+- A __cell__ is the intersection of one column and one row (think cells in Microsoft Excel)
+
+There are many alternative data structures to present the same underlying data.
+
+<br>
+**Example**: 2 different ways to structure the same data (rows and columns are transposed)
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+library(kableExtra)
+
+# Create structure a: treatment as columns, names as rows
+structure_a <- tibble(
+  name = c("John Smith", "Jane Doe", "Mary Johnson"),
+  treatment_a = c(NA, 16, 3),
+  treatment_b = c(2, 11, 1)
+)
+
+# Create structure b: treatment as rows, names as columns
+structure_b <- tibble(
+  treatment = c("treatment_a", "treatment_b"),
+  `John Smith` = c(NA, 2),
+  `Jane Doe` = c(16, 11),
+  `Mary Johnson` = c(3, 1)
+)
+```
+
+```{r, echo=FALSE}
+kable(structure_a, caption = 'Structure A: treatment as columns, names as rows', table.attr = "style='min-width:40%;'") %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
+
+kable(structure_b, caption = 'Structure B: treatment as rows, names as columns') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
+```
+
+
+## Dataset semantics
+
+__Data semantics__ refer to the underlying meaning of the data being displayed, or how we think of the data conceptually.
+
+The difference between __data structure__ and __data semantics__:
+
+- __Data structure__ refers to the physical layout of the data (e.g., what are the rows and columns)
+- __Data semantics__ -- which were introduced by Wickham (2014) -- refer to the meaning of the data itself
+
+<br>
+**Example**: Describing a dataset
+
+Looking back at the previous example, we can see that although the data structure is different, the tables represent the same underlying data: _Each person can partake in any of multiple treatments and can have a result from each treatment._
+
+In the next section, we'll define some terms to make it easier to describe the semantics (meaning) of the data displayed in the tables.
+
+
+### Values, variables, and observations
+
+> "A dataset is a collection of _values_, usually either numbers (if quantitative) or strings (if qualitative). Values are organized in two ways. Every value belongs to a _variable_ and an _observation_."
+
+_Source: Wickham (2014, p. 3)_
+
+<br>
+**Terminology**:
+
+- __Value__: A single element within some data structure (e.g., vector, list)
+- __Variables__: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
+- __Observations__: "An observation contains all values measured on the same unit (e.g., corporation-year) across attributes (variables)"
+  - e.g., unit is corporation-year and one observation contains values of revenue and expense variables for Google for the 2021 fiscal year
+    
+<br>
+**Example**: Describing data semantics [revisited]
+
+- The experimental design data has 3 **variables**:
+  - `person`, with 3 possible _values_ (John Smith, Mary Johnson, Jane Doe)
+  - `treatment`, with 2 possible _values_ (treatment_a, treatment_b)
+  - `result`, with 6 possible _values_ (one of which is a missing value)
+- Since measurements were taken for each `person` for each `experiment`, there are 6 **observations**:
+  - 3 people x 2 treatments = 6 _observations_
+  - For each observation, the same attribute (result) was measured
+- There is a total of 18 **values**:
+  - 3 _variables_ x 6 _observations_ = 18 _values_
+
+## Unit of analysis
+
+__unit of analysis__ [my term, not Wickham's]: 
+
+- What each row represents in a dataset (referring to physical layout of dataset). 
+
+Examples of different units of analysis:
+
+- if each row represents a student, you have student level data
+- if each row represents a student-course, you have student-course level data
+- if each row represents an organization-year, you have organization-year level data
+ 
+__Questions__: 
+
+- What does each row represent in the data frame object `structure_a`?
+```{r}
+structure_a
+```
+
+- What does each row represent in the data frame object `structure_b`?
+```{r}
+structure_b
+```
+
+- What does each row represent in the data frame object `ipeds_hc_temp`?
+    - Below we load data on 12-month enrollment headcount for 2015-16 academic year from the Integrated Postsecondary Education Data System (IPEDS)
+```{r}
+ipeds_hc_temp <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL) %>% 
+  select(unitid,lstudy,efytotlt) %>% arrange(unitid,lstudy)
+
+ipeds_hc_temp
+#show variable labels and value labels
+#ipeds_hc_temp %>% var_label()
+#ipeds_hc_temp %>% val_labels()
+
+#print a few obs, with value labels rather than variable values
+ipeds_hc_temp %>% head(n=10) %>% as_factor()
+```
+
+### Which variable(s) uniquely identify rows in a data frame
+
+Identifying which combination of variables uniquely identifies rows in a data frame helps you identify the "unit of analysis" and understand the "structure" of your dataset
+
+- Said differently: for each value of this variable (or combination of variables), there is only one row
+- Very important for reshaping/tidying data (this week) and very important for joining/merging data frames (next week)
+- Sometimes a codebook will explicitly tell you which vars uniquely identify rows
+- Sometimes you have to figure this out through investigation
+    - focus on ID variables and categorical variables that identify what each row represents; not continuous numeric variables like `total_enrollment` or `family_income`
+
+__Task__: Let's try to identify the variable(s) that uniquely identify rows in `ipeds_hc_temp`
+
+- Multiple ways of doing this
+- I'll give you some code for one approach; just try to follow along and understand
+```{r}
+names(ipeds_hc_temp)
+ipeds_hc_temp %>% head(n=10)
+```
+
+<br>
+First, Let's investigate whether the ID variable `unitid` uniquely identifies rows in data frame `ipeds_hc_temp`
+
+- I'll annotate code for each step
+```{r}
+ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
+  group_by(unitid) %>% # group by unitid
+  summarise(n_per_group=n()) %>% # create measure of number of obs per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group (i.e., separate frequency table for each value of unitid)
+  count(n_per_group) # frequency of number of observations per group
+```
+
+What does above output tell us?
+
+- There are 5,127 values of `unitid` that have 2 rows for that value of `unitid`
+- There are 1,824 values of `unitid` that have 3 rows for that value of `unitid`
+- Note: `2*5127+3*1824==` `r format(round(2*5127+3*1824),nsmall=0, big.mark=",")` which is the number of observations in `ipeds_hc_temp`
+- __Conclusion__: the variable `unitid` does not uniquely identify rows in the data frame `ipeds_hc_temp`
+
+<br>
+Second, Let's investigate whether the comination of `unitid` and `lstudy` uniquely identifies rows in data frame `ipeds_hc_temp`
+
+```{r}
+ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
+  group_by(unitid,lstudy) %>% # group by unitid and lstudy
+  summarise(n_per_group=n()) %>% # create measure of number of obs per group
+  ungroup %>% # ungroup (otherwise frequency table [next step] created) separately for each group (i.e., separate frequency table for each value of unitid)
+  count(n_per_group) # frequency of number of observations per group
+```
+
+What does above output tell us?
+
+- There is `1` row each unique combination of `unitid` and `lstudy` 
+- __Conclusion__: the variables `unitid` and `lstudy` uniquely identify rows in the data frame `ipeds_hc_temp`
+
+<!--
+What happens if we didn't ungroup?
+```{r eval=FALSE}
+ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
+  group_by(unitid,lstudy) %>% # group by unitid and lstudy
+  summarise(n_per_group=n()) %>% # create measure of number of obs per group
+  count(n_per_group) # frequency of number of observations per group
+```
+-->
+
+# Tidy vs. untidy data
+
+## Defining tidy data
+
+> "_Tidy data_ is a standard way of mapping the _meaning_ of a dataset to its _structure_."
+
+_Source: Wickham (2014, p. 4)_
+
+<br>
+**Tidy data** always follow these 3 interrelated rules:
+
+1. Each __variable__ must have its own __column__
+1. Each __observation__ must have its own __row__
+1. Each __value__ must have its own __cell__
+
+![](http://r4ds.had.co.nz/images/tidy-1.png)
+
+**Example**: Representing data in tidy form
+
+
+```{r echo=FALSE}
+kable(table1, caption = 'Tidy data: `table1` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+
+This table shows the same data from earlier, but now the data is in **tidy** form because it satisfies the 3 rules:
+
+1. All 4 __variables__ (`country`, `year`, `cases`, `population`) have its own column
+1. All 6 __observations__ (combination of `country`-`year`) have its own row
+1. All 24 __values__ have its own cell in the table
+
+## Diagnosing untidy data
+
+**Untidy data** is any data that do not fully follow the 3 rules of tidy data defined previously. 
+
+<br>
+**Example**: Tidy vs. untidy data
+
+```{r, echo=FALSE}
+kable(table1, caption = 'Tidy data: `table1` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(table2, caption = 'Untidy data: `table2` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+The above tables show the same data, but `table1` is in **tidy** form while `table2` is **untidy** because it does not fully follow the 3 rules. Let's diagnose the problems with `table2` by answering these questions:
+
+1. Does each __variable__ have its own __column__?
+    - If not, how does the dataset violate this principle?
+    - What _should_ the variables be?
+1. Does each __observation__ have its own __row__?
+    - If not, how does the dataset violate this principle?
+    - What does each row _actually_ represent?
+    - What _should_ each row represent?
+1. Does each __value__ have its own __cell__?
+    - If not, how does the dataset violate this principle?
+
+<details><summary>**Solutions**</summary>
+
+1. Does each __variable__ have its own __column__? <span style="color: red;">No</span>
+    - If not, how does the dataset violate this principle? <span style="color: red;">`cases` and `population` should be two different variables because they are different attributes, but in `table2` these two attributes are recorded in the column `type` and the associated value for each type is recorded in the column `count`.</span>
+    - What _should_ the variables be? <span style="color: red;">`country`, `year`, `cases`, `population`</span>
+1. Does each __observation__ have its own __row__? <span style="color: red;">No</span>
+    - If not, how does the dataset violate this principle? <span style="color: red;">There is one observation for each `country`-`year`-`type`. But the values of type (`cases`, `population`) represent attributes of a unit, which should be represented by distinct variables rather than rows. So `table2` has two rows per observation but it should have one row per observation.</span>
+    - What does each row _actually_ represent? <span style="color: red;">`country`-`year`-`type`</span>
+    - What _should_ each row represent? <span style="color: red;">`country`-`year`</span>
+1. Does each __value__ have its own __cell__? <span style="color: red;">Yes</span>
+    - If not, how does the dataset violate this principle?
+
+</details><br>
+
+## Common types of untidy data
+
+**Tidy data** can only have one organizational structure, while **untidy data** can come in various different forms. It is important to identify the most common types of untidy data, so that we can develop solutions for each.
+
+Below are some of the common problems of untidy data.
+
+### Column headers are values, not variable names
+
+```{r, echo=FALSE}
+kable(table4b, caption = '`table4b` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+Here, `1999` and `2000` are not names of variables, but values of a variable (i.e., `year`). This form results in:
+
+- A single variable spreading over multiple columns (_both the last 2 columns contain values of country population_)
+- A single row containing multiple observations (e.g., _population in 1999 Afghanistan and population in 2000 Afghanistan should be different observations_)
+
+### Multiple variables are stored in one column
+
+```{r, echo=FALSE}
+kable(table2, caption = '`table2` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+`cases` and `population` are separate variables, but are stored here in the same column. This form results in:
+
+- An observation being scattered across multiple rows (e.g., _1999 Afghanistan data should be a single observation/row_)
+- The values of a column not sharing the same units (_the `count` column contains both number of cases and number of people_)
+
+
+### Column contains data from two variables
+
+```{r, echo=FALSE}
+kable(table3, caption = '`table3` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+`745` and `19987071` in the `rate` column belong in separate columns.
+
+### Single variable stored in multiple columns
+
+```{r, echo=FALSE}
+kable(table5, caption = '`table5` from the `tidyr` package') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+The values in `century` and `year` should be combined to form a 4-digit `year` variable.
+
+# Tidying untidy data
+
+Approach the task of "tidying" data -- or more generally, the task of "reshaping" data -- as a two-step process
+
+1. Conceptual task of understanding how the data are organized and how the data should be organized (in some order):
+    - Define these concepts for your dataset
+      - __variables__: what variables *should* the resulting dataset have
+      - __observations__: each observation should represent what in the resulting dataset
+    - How is the dataset currently structured (columns represent what, rows represent what)
+      - which rules of tidy data are violated; why?
+    - write out on a piece of scratch paper what the tidy dataset *should* look like
+1. Technical task of writing the code that reshapes/transforms the dataset from untidy to tidy    
+    - `pivot_longer()` function reshapes data from "wide to long"
+      - e.g., your dataset has separate variables for each year, but you should have one variable "year" that has rows for each value of year
+    - `pivot_wider()` function reshapes data from "long to wide"
+
+## Reshaping wide to long: `pivot_longer()`
+
+<br>
+Now that we have a better understanding of the differences between tidy and untidy data, let's practice reshaping our data. In the next two sections we are introducing the `pivot_longer()` and `pivot_wider()` functions to reshape our data.  
+
+__The `pivot_longer()` function__:
+
+```{r, eval = FALSE}
+?pivot_longer
+
+# SYNTAX AND DEFAULT VALUES
+pivot_longer(data, cols, names_to = "name", names_prefix = NULL,
+             names_sep = NULL, names_pattern = NULL, names_ptypes = list(),
+             names_repair = "check_unique", values_to = "value",
+             values_drop_na = FALSE, values_ptypes = list())
+```
+
+- Function: "lengthens" data, increasing the number of rows and decreasing the number of columns
+- Arguments (selected):
+  - `data`: Dataframe to pivot
+  - `cols`: Columns to pivot into longer format
+  - `names_to`: Name of the column to create from the data stored in the column names of `data`
+  - `values_to`: Name of the column to create from the data stored in cell values
+  - `names_sep`: If `names_to` contains multiple values, these arguments control how the column name is broken up.
+
+<br>
+**Example**: Tidying `table4b` (reshaping wide to long)
+
+As seen above, the first common reason for untidy data is that some of the column names are not names of variables, but values of a variable (e.g., `table4a`, `table4b`):
+
+```{r, echo=FALSE}
+kable(table4b) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+The solution to this problem is to transform the untidy columns (which represent variable values) into rows. Thus, we want to transform `table4b` into something that looks like this:
+
+```{r, echo=FALSE}
+kable(table1 %>% select(country, year, population)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+This can be achieved using `pivot_longer()`:
+
+```{r}
+table4b
+
+table4b %>%
+  pivot_longer(
+    cols = c('1999', '2000'),  # pivot `1999` and `2000` columns into longer format 
+    names_to = 'year',         # name of column that holds the pivoted values
+    values_to = 'population'   # name of column that holds the original cell values
+  )
+```
+
+<!--
+1. names of the set of columns that represent values, not variables in your untidy data 
+    - These are existing columns of the untidy data
+    - in table 4a these are the columns `1999` and `2000`
+2. __names_to__ : variable name(s) you will assign to columns you are gathering from the untidy data
+    - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+    - For the `table4a` example, we'll call this variable `year` because the values of this variable will be years
+    - Said different: the variable(s) you will create whose values will be the column names from the untidy data. 
+    - In using `gather()` this is the "key" variable
+3. __values to__: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
+    - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+    - in the `table4a` example, we'll call the "value variable" `cases` because the values refer to number of cases
+
+-->
+
+<br>
+<details><summary>**Example**: Choosing which column not to pivot</summary>
+<br>
+
+Looking at the previous example, we could have also equivalently pivoted the table by specifying which column we want to keep unchanged:
+
+```{r}
+table4b %>%
+  pivot_longer(
+    cols = -country,           # pivot all columns except `country`
+    names_to = 'year',         # name of column that holds the pivoted values
+    values_to = 'population'   # name of column that holds the original cell values
+  )
+```
+
+</details>
+
+<br>
+<details><summary>**Example**: Renaming pivoted columns</summary>
+<br>
+
+```{r, echo=FALSE}
+nces_table1 <- nces_table %>% select(state, tot_2000, tot_2010, tot_2011, tot_2012)
+```
+
+Sometimes, the name of the columns we want to pivot contain additional information that we want to remove before transforming to tidy data. Consider the following example where the columns all contain the prefix `tot_`:
+
+```{r}
+nces_table1
+```
+
+<br>
+If we pivot the table as is, we can see the `tot_` prefixes appearing in the `year` column:
+
+```{r}
+nces_table1 %>%
+  pivot_longer(
+    cols = -state,                # pivot all columns except `state`
+    names_to = 'year',            # name of column that holds the pivoted values
+    values_to = 'total_students'  # name of column that holds the original cell values
+  )
+```
+
+<br>
+To fix this, we can specify the `names_prefix` argument in `pivot_longer()` to match and remove the part of the names that we don't want to keep:
+
+```{r}
+nces_table1 %>%
+  pivot_longer(
+    cols = -state,                
+    names_to = 'year',            
+    names_prefix = 'tot_',        # rename pivoted values by striping the prefix 'tot_'
+    values_to = 'total_students'
+  )
+```
+
+</details>
+
+<br>
+<details><summary>**Example**: Pivoting columns by name pattern</summary>
+<br>
+
+```{r, echo=FALSE}
+nces_table2 <- nces_table %>%
+  select(state, tot_2000, tot_2010, tot_2011, tot_2012, frl_2000, frl_2010, frl_2011, frl_2012)
+```
+
+Consider the following example where the columns we want to reshape belongs to multiple variables. As seen, the 4 columns starting with `tot_` shows total student enrollment while the 4 columns starting with `frl_` shows number of students on free/reduced lunch:
+
+```{r}
+nces_table2
+```
+Applying the same approach we used for `nces_table1` doesn't give us the structure we want
+```{r}
+nces_table2 %>%
+  pivot_longer(
+    cols = -state,                
+    names_to = 'year',            
+    names_prefix = 'tot_',        # rename pivoted values by striping the prefix 'tot_'
+    values_to = 'total_students'
+  )
+```
+
+<br><br>
+
+The goal is to keep enrollment and lunch data in separate columns and only pivot the years part. To do this, we can provide a character vector (instead of the usual string) for `names_to` and additionally specify the `names_sep` argument. 
+
+Here, we copy the full description of the `names_to` and `names_sep` arguments from the `pivot_longer()` helpfile
+
+- `names_sep`: If names_to contains multiple values, these arguments control how the column name is broken up.
+- `names_to` A string specifying the name of the column to create from the data stored in the column names of data.
+  - can be a character vector, creating multiple columns, if names_sep or names_pattern is provided. In this case, there are two special values you can take advantage of:
+    - `NA` will discard that component of the name.
+    - `.value` indicates that component of the name defines the name of the column containing the cell values, overriding values_to.
+
+
+<br><br>
+How we will use these arguments to reshape `nces_table2`:
+
+- `names_sep` specifies the separator to use to separate the column names to 2 parts (e.g., the `tot`/`frl` measure part and the years part). 
+- `names_to` Then, we can specify how we want to treat each part inside the `names_to` vector:
+  - Use `.value` to indicate the part that we want to retain as separate columns (this replaces the need for the `values_to` argument)
+  - Provide a string to indicate the part to pivot to rows, where the string you provide will become the name of that column (like how we'd normally specify `names_to`)
+
+
+
+```{r}
+nces_table2 %>% head(n=5)
+
+nces_table2 %>%
+  pivot_longer(
+    -state,                          # pivot all columns except `state`
+    names_sep = '_',                  # use '_' as column name separator    
+    names_to = c('.value', 'year')  # keep `tot` & `frl` as separate columns, pivot year values
+  )
+```
+
+<br>
+Note the difference if we used `.value` as the second element in `names_to`:
+
+```{r}
+nces_table2 %>%
+  pivot_longer(
+    -state,
+    names_to = c('measure', '.value'),  # pivot `tot`/`frl`, keep years as separate columns
+    names_sep = '_'
+  )
+
+```
+
+</details>
+
+<br>
+**Practical example** of using the `pivot_longer()` function [in the Appendix](#appendix)
+
+
+## Reshaping long to wide: `pivot_wider()`
+
+<br>
+__The `pivot_wider()` function__:
+
+```{r, eval = FALSE}
+?pivot_wider
+
+# SYNTAX AND DEFAULT VALUES
+pivot_wider(data, id_cols = NULL, names_from = name,
+            names_prefix = "", names_sep = "_", names_repair = "check_unique",
+            values_from = value, values_fill = NULL, values_fn = NULL)
+```
+
+- Function: "widens" data, increasing the number of columns and decreasing the number of rows
+- Arguments:
+  - `data`: Dataframe to pivot
+  - `names_from`: Column(s) to get the name of the output column
+  - `values_from`: Column(s) to get the cell values from
+
+<br>
+**Example**: Tidying `table2` (reshaping long to wide)
+
+As seen previously, the second common reason for untidy data is that multiple variables are stored in one column (e.g., `table2`):
+
+- An observation is scattered across multiple rows
+- One column identifies variable type (e.g., `type`) and another column contains the values for each variable (e.g., `count`)
+
+```{r, echo=FALSE}
+kable(table2) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+This sort of data structure is very common "in the wild" (e.g., in data that you download), and it is up to you to tidy it before analyses.
+
+The solution to this problem is to transform the untidy rows (which represent different variables) into columns. Thus, we want to transform `table2` into something that looks like this:
+
+```{r, echo=FALSE}
+kable(table1) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+This can be achieved using `pivot_wider()`:
+
+```{r}
+table2
+
+table2 %>%
+  pivot_wider(
+    names_from = type,   # values in `type` become variable names
+    values_from = count  # values in `count` become values in the new `cases` and `population` cols
+  )
+```
+
+<!--
+1. __names_from__. Column name(s) in the untidy data whose values will become variable names in the tidy data
+    - this column name exists as a variable in the untidy data
+    - in `table2` this is the `type` column; the values of `type`, `cases` and `population`, will become variable names in the tidy data 
+
+1. __values_from__. Column name(s) in untidy data that contains values for the new variables that will be created in the tidy data
+    - this is a varname that exists in the untidy data
+    - in `table2` the value column is `count`; the values of `count` will become the values of the new variables `cases` and `population` in the tidy data
+-->
+
+<br>
+<details><summary>**Example**: Pivoting with multiple value variables</summary>
+<br>
+
+```{r, echo=FALSE}
+ipeds_table1 <- ipeds_table %>%
+  select(unitid, lstudy, efytotlt, efytotlm, efytotlw) %>% 
+  mutate(level = recode(as.integer(lstudy),
+    `1` = "ug",
+    `3` = "grad",
+    `999` = "all")
+  ) %>%
+  select(-lstudy)
+```
+
+Sometimes, we want to spread a dataset that contains multiple value variables. Consider the following example where there are separate enrollment variables for total, men, and women:
+
+```{r}
+ipeds_table1
+```
+
+<br>
+The goal is to turn the values in `levels` into columns - but which of the enrollment variables should be used as the values for the new columns? The solution is to create columns for each of the enrollment variables:
+
+```{r}
+ipeds_table1 %>%
+  pivot_wider(
+    names_from = level,
+    values_from = c(efytotlt, efytotlm, efytotlw)
+  )
+```
+
+</details><br>
+
+<br>
+**Practical example** of using the `pivot_wider()` function [in the Appendix](#appendix)
+
+# Missing values
+
+## Explicit vs. Implicit missing values
+
+There are two types of missing values:
+
+- __Explicit missing values__: variable has the value `NA` for a particular row
+- __Implicit missing values__: the row is simply not present in the data
+
+<br>
+**Example**: Identifying explicit and implicit missing values
+
+Consider the following dataset, which shows stock `return` for each year and quarter for some hypothetical company:
+
+```{r, echo=FALSE}
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+
+kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+
+The variable `return` has:
+
+- __1 explicit missing value__: There is an `NA` in the 4th quarter of 2015
+- __1 implicit missing value__: Data for the 1st quarter of 2016 simply does not exist
+
+<br>
+**Practical example** of identifying explicit and implicit missing values [in the Appendix](#appendix)
+
+
+## Making implicit missing values explicit
+
+An implicit missing value is the result of a row not existing. In order to make an implicit missing value explicit, we need to make the non-existent row exist. This can be done using the `complete()` function within `tidyr`.
+
+<br>
+__The `complete()` function__:
+
+```{r, eval = FALSE}
+?complete
+
+# SYNTAX AND DEFAULT VALUES
+complete(data, ..., fill = list())
+```
+
+- Function: Turns implicit missing values into explicit missing values
+- Arguments:
+  - `data`: A dataframe
+  - `...`: Variables to expand on
+- Returns: A dataframe object that has all unique combinations of the specified variables, including those not found in the original dataframe
+
+<br>
+**Example**: Making implicit missing values explicit
+
+Recall the stocks dataset from the previous example. There was 1 __implicit missing value__ for the 1st quarter of 2016 - that row simply did not exist. 
+
+If we want to turn that into an __explicit missing value__, then we need the row for the 1st quarter of 2016 to exist. The result would look like this:
+
+```{r, echo=FALSE}
+kable(stocks %>% complete(year, qtr)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+We can achieve this by using the `complete()` function:
+
+```{r}
+stocks
+
+stocks %>%
+  complete(year, qtr)
+```
+
+<br>
+Should you make __implicit__ missing values __explicit__?
+
+- No clear-cut answer - it depends on many context-specific things about your project
+- The important thing is to be aware of the presence of implicit missing values (both in the "input" datasets you read in and the datasets you create from the inputs) and be purposeful about how you deal with implicit missing values
+- Recommendation for the stage of creating analysis datasets from input data:
+    - If you feel unsure about making implicit values explicit, then make them explicit
+    - This forces you to be more fully aware of patterns of missing data and helps you avoid careless mistakes down the road
+    - After making implicit missing values explicit, you can drop these rows once you are sure you don't need them
+
+<br>
+**Practical example** of using the `complete()` function [in the Appendix](#appendix)
+
+## Reshaping long to wide: missing values
+
+Let's take a look at what happens with missing values when we reshape from long to wide. Recall the `stocks` dataset from the earlier example, where we have 1 explicit missing value (2015 4th quarter) and 1 implicit missing value (2016 1st quarter):
+
+```{r, echo=FALSE}
+kable(stocks) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+When we reshape it from long to wide using `pivot_wider()`, notice that both implicit and explicit missing values appear as `NA`. In other words, implicit missing values are automatically turned into explicit missing values. Therefore, there is no need to use `complete()` prior to pivoting.
+
+```{r, eval=FALSE}
+stocks %>% pivot_wider(
+  names_from = qtr,
+  values_from = return
+)
+```
+
+```{r, echo=FALSE}
+kable(pivot_wider(stocks, names_from = qtr, values_from = return)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+Note that we can no longer tell whether the `NA`s used to be implicit or explicit missing values, as they are now all explicit. One way to be able to distinguish between them is by specifying the `values_fill` argument when calling `pivot_wider()`. This will fill in the previously implicit values with any value of your choice, meaning any `NA` you see after reshaping must be from the previously explicit missing values. In other words, explicit missing values stay explicit while implicit missing values are filled.
+
+```{r, eval=FALSE}
+stocks %>% pivot_wider(
+  names_from = qtr,
+  values_from = return,
+  values_fill = list(return = -99)
+)
+```
+
+```{r, echo=FALSE}
+kable(pivot_wider(stocks, names_from = qtr, values_from = return, values_fill = list(return = -99))) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+# Appendix
+
+## Student exercise: Real-world example of wide to long
+
+[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
+
+The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics. 
+
+- The table shows  change over time in the number and percentage of K-12 students on free/reduced lunch for selected years.
+- [LINK to website with data](http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp)
+```{r}
+#Let's take a look at the data (we read in the data in the wide vs long section)
+glimpse(nces_table)
+
+#Create smaller version of data frame for purpose of student exercise
+total<- nces_table %>% 
+  select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
+head(total)
+```
+
+__Task (using the data frame `total`)__: 
+
+1. Diagnose the problem with the data frame `total`
+2. Sketch out what the tidy data should look like    
+3. Transform untidy to tidy. hint: use `names_prefix`
+
+<br>
+<details><summary>**Solution to student exercise:**</summary>
+<br>
+
+1. Diagnose the problem with the data frame `total`
+    - Column names `p_frl_2000`, `p_frl_2010`, etc. are not variables; rather they refer to values of the variable `year`
+    - Currently each observation represents a state with separate number of students on FRL variables for each year. 
+    - Each observation _should_ be a state-year, with only one variable for FRL
+2. Sketch out what the tidy data should look like    
+3. Transform untidy to tidy
+    - __names__ of the set of columns that represent values, not variables in your untidy data 
+        - `p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012`
+    - __names_to__ : variable name you will assign to columns you are gathering from the untidy data
+        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+        - In this example, it's year 
+    - __values_to__: The name of the variable that will contain values in the tidy dataset you create and whose values are spread across multiple columns in the untidy dataset
+        - This var doesn't yet exist in untidy data, but will be a variable name in the tidy data
+        - in this example, the value variable is frl_students
+    
+```{r}
+total %>%
+  pivot_longer(
+    cols = starts_with("p_frl_"),
+    names_to = "year",
+    names_prefix = ("p_frl_"),
+    values_to = "pct_frl"
+  )
+```
+</details>
+
+## Student exercise: real-world example of reshaping long to wide
+
+[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution]
+
+<br>
+The Integrated Postsecondary Education Data System (IPEDS) collects data on colleges and universities
+
+- Below we load IPEDS data on 12-month enrollment headcount for 2015-16 academic year
+```{r}
+#load these libraries if you haven't already
+#library(haven)
+#library(labelled)
+# ipeds_table <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL)
+```
+
+Create smaller version of dataset
+```{r}
+#ipeds_hc <- ipeds_table %>% select(instnm,unitid,lstudy,efytotlt,efytotlm,efytotlw)
+ipeds_hc <- ipeds_table %>% select(instnm,unitid,lstudy,efytotlt)
+```
+
+Get to know data
+```{r}
+head(ipeds_hc)
+str(ipeds_hc)
+
+#Variable labels
+ipeds_hc %>% var_label()
+
+#Only the variable lstudy has value labels
+ipeds_hc %>% select(lstudy) %>% val_labels()
+```
+
+__Student Task__: 
+
+1. Diagnose the problem with the data frame `ipeds_hc` (why is it untidy?)
+2. Sketch out what the tidy data should look like    
+3. Transform untidy to tidy
+
+<br>
+<details><summary>**Solution to student task:**</summary>
+<br>
+
+__1. Diagnose the problem with the data frame__
+    - First, let's investigate the data
+```{r}
+ipeds_hc <- ipeds_hc %>% arrange(unitid, lstudy)
+head(ipeds_hc, n=20)
+
+#code to investigate what each observation represents
+  #I'll break this code down next week when we talk about joining data frames
+ipeds_hc %>% group_by(unitid,lstudy) %>% # group_by our candidate
+  mutate(n_per_id=n()) %>% # calculate number of obs per group
+  ungroup() %>% # ungroup the data
+  count(n_per_id==1) # count "true that only one obs per group"
+
+```
+
+Summary of problems with the data frame:
+
+- In the untidy data frame, each row represents college-level_of_study
+    - there are separate rows for each value of level of study (`undergraduate`, `graduate`, `generated total`)
+    - so three rows for each college
+- the values of the column `lstudy` represent different attributes (`undergraduate`, `graduate`, `generated total`)
+    - each of these attributes should be its own variable
+
+    
+__2. Sketch out what the tidy data should look like__ (sketch out on your own)
+
+- What tidy data should look like:
+    - Each observation (row) should be a college
+    - There should be separate variables for each level of study, with each variable containing enrollment for that level of study
+
+__3. Transform untidy to tidy__
+
+- __names_from__. Column name in the untidy data whose values will become variable names in the tidy data
+that contains variable names
+    - this variable name exists in the untidy data
+    - in `ipeds_hc` the key column is `lstudy`; the values of `lstudy`, will become variable names in the tidy data 
+
+- __values_from__. Column name in untidy data that contains values for the new variables that will be created in the tidy data
+    - this is a varname that exists in the untidy data
+    - in `ipeds_hc` the value column is `efytotlt`; the values of `efytotlt` will become the values of the new variables in the tidy data
+    
+```{r}
+ipeds_hc %>% 
+    pivot_wider(names_from = lstudy, values_from = efytotlt) #notice it uses the underlying data not labels
+```
+
+</details>
+
+<br>
+<details><summary>**Alternative solution:**</summary>
+<br>
+
+Helpful to create a character version of variable lstudy prior to spreading
+```{r}
+ipeds_hc %>% select(lstudy) %>% val_labels()
+str(ipeds_hc$lstudy)
+
+ipeds_hcv2 <- ipeds_hc %>% 
+  mutate(level = recode(as.integer(lstudy),
+    `1` = "ug",
+    `3` = "grad",
+    `999` = "all")
+  ) %>% select(-lstudy) # drop variable lstudy
+
+head(ipeds_hcv2)
+
+ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
+    pivot_wider(names_from = level, values_from = efytotlt) #nicer!
+```
+
+</details>
+
+## Missing variables example using IPEDS
+
+This section deals with missing variables and tidying data.
+
+But first, it is helpful to create a new version of the IPEDS enrollment dataset as follows:
+
+- keeps observations for for-profit colleges
+- keeps the following enrollment variables: 
+    - total enrollment
+    - enrollment of students who identify as "Black or African American"
+```{r}
+ipeds_hc_na <- ipeds_table %>% filter(sector %in% c(3,6,9)) %>% #keep only for-profit colleges
+  select(instnm,unitid,lstudy,efytotlt,efybkaam) %>% 
+  mutate(level = recode(as.integer(lstudy), # create recoded version of lstudy
+    `1` = "ug",
+    `3` = "grad",
+    `999` = "all")
+  ) %>% select(instnm,unitid,level,efytotlt,efybkaam) %>% 
+  arrange(unitid,desc(level))
+```
+
+Now, let's print some rows
+
+- There is one row for each college-level_of_study
+- Some colleges have three rows of data (ug, grad, all)
+- Colleges that don't have any undergraduates or don't have any graduate students only have two rows of data
+```{r}
+ipeds_hc_na
+```
+
+Now let's create new versions of the enrollment variables, that replace `0` with `NA`
+```{r}
+ipeds_hc_na <- ipeds_hc_na %>% 
+  mutate(
+    efytotltv2 = ifelse(efytotlt == 0, NA, efytotlt),
+    efybkaamv2 = ifelse(efybkaam == 0, NA, efybkaam)
+  ) %>% select(instnm,unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
+
+ipeds_hc_na %>% select(unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
+```
+
+Create dataset that drops the original enrollment variables, keeps enrollment vars that replace `0` with `NA`
+```{r}
+ipeds_hc_nav2 <- ipeds_hc_na %>% select(-efytotlt,-efybkaam)
+```
+Now we can introduce the concepts of _explicit_ and _implicit_ missing values
+
+There are two types of missing values:
+
+- __Explicit missing values__: variable has the value `NA` for a parcitular row
+- __Implicit missing values__: the row is simply not present in the data
+
+Let's print data for the first two colleges
+```{r}
+ipeds_hc_nav2 %>% head( n=5)
+```
+`South University-Montgomery` has three rows:
+
+- variable `efytotltv2` has `0` explicit missing values and `0` implicit missing values
+- variable `efybkaamv2` has `0` explicit missing values and `0` implicit missing values
+
+`New Beginning College of Cosmetology` has two rows (because they have no graduate students):
+
+- variable `efytotltv2` has `0` explicit missing values and `1` implicit missing values (no row for grad students)
+- variable `efybkaamv2` has `2` explicit missing values and `1` implicit missing values (no row for grad students)
+
+## Applying complete() to IPEDS dataset
+
+Let's apply `complete()` to our IPEDS dataset
+
+```{r}
+ipeds_hc_nav2
+
+ipeds_complete <- ipeds_hc_nav2 %>% select(unitid,level,efytotltv2,efybkaamv2) %>%
+  complete(unitid, level)
+
+ipeds_complete
+
+#Confirm that the "complete" dataset always has three observations per unitid
+ipeds_complete %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
+
+#Note that previous dataset did not
+ipeds_hc_nav2 %>% group_by(unitid) %>% summarise(n=n()) %>% count(n)
+```
+
+
+<!--
+### Tables and observational unit
+
+A particular project or data collection (e.g., longitudinal survey tracking student achievement from high school through college), may require several data sources:
+
+- data on student characteristics (e.g., name, date of birth) with one observation per student
+- data on the high school the student attends with one observation per school
+- transcript data with one observation per student-course, etc.
+
+Each of these data sources may use a different "level of observation" and each requiring a different "table" (i.e., dataframe):
+
+- "Table" is the term database people use for what we would refer to as a "dataset" or a "data frame"
+- We talk more about "tables" next week, which is about joining/merging data frames
+
+<br>
+__Observational unit/observational level__ [Wickham's term, not mine]
+
+> "In a given analysis, there may be multiple __levels of observations__. For example, in a trial of new allergy medication we might have three observational types: demographic data collected from each person (age, sex, race), medical data collected from each person on each day (number of sneezes, redness of eyes), and meteorological data collected on each day (temperature,pollen count) (Wickham 2014, p. 4)"
+
+<br>
+So Wickham defines __observational unit/observational level__ as what each row __should__ represent in an appropriately structured data frame
+
+### Summary/parting thoughts
+
+These data concepts (e.g., value, variable, observation) seem easy on first glance, but can feel slippery on closer inspection. 
+
+In particular, when you confronted with a particular dataset, sometimes it can feel confusing what the variables/observations/unit of analysis __are__ (data structure) and what they __should be__ (data concepts).
+
+
+## Student exercise:
+
+For each of the following datasets -- `table1`, `table3`, `table4a`, and `table5` -- answer the following questions:
+
+1. Does each variable have its own column?
+    - if not, how does the dataset violate this principle?
+    - what _should_ the variables be?
+1. Does each observation have its own row?
+    - if not, how does the dataset violate this principle?
+    - what does each row represent _actually_ represent?
+    - what _should_ each row represent?
+1. Does each value  have its own cell."
+    - if not, how does the dataset violate this principle?
+
+We'll give you ~15 minutes for this
+
+<br>
+__ANSWERS TO STUDENT EXERCISE BELOW__:
+
+### `table1`
+```{r}
+table1
+```
+1. Does each variable have its own column? YES
+1. Does each observation have its own row? YES
+    - what does each row represent _actually_ represent? COUNTRY-YEAR
+    - what _should_ each row represent? COUNTERY-YEAR
+1. Does each value  have its own cell." YES
+
+### `table3`
+```{r}
+table3
+```
+
+1. Does each variable have its own column? __No__
+    - if not, how does the dataset violate this principle? __The column `rate` contains two variables, `cases` and `population`__
+    - what _should_ the variables be? __country, year, cases, population__
+1. Does each observation have its own row? __Yes__
+    - what does each row represent _actually_ represent? __country-year__
+    - what _should_ each row represent? __country-year__
+1. Does each value  have its own cell." __No__
+    - if not, how does the dataset violate this principle? __In the `rate` column, each cell contains two values, a value for `cases` and a value for `population`__
+    
+### `table4a`
+```{r}
+table4a
+```
+1. Does each variable have its own column? __No__
+    - if not, how does the dataset violate this principle? __The variable `cases` is spread over two columns and the variable `year` is also spread over two columns__
+    - what _should_ the variables be? __country, year, cases__
+1. Does each observation have its own row? __No__
+    - if not, how does the dataset violate this principle? __There are two country-year observations on each row__
+    - what does each row represent _actually_ represent? __country__
+    - what _should_ each row represent? __country-year__
+1. Does each value  have its own cell." __Yes__
+
+### `table4b` [not required to answer]
+```{r}
+table4b
+```
+Answers pretty much the same as `table4a`, except `table4b` shows data for `population` rather than `cases'
+
+### `table5`
+```{r}
+table5
+```
+1. Does each variable have its own column? __No__
+    - if not, how does the dataset violate this principle? __Two problems. First, the single variable `year' is spread across two columns `century` and `year`. Second, the `rate` column contains the two variables `cases` and `population`__
+    - what _should_ the variables be? __country, year, cases, population__
+1. Does each observation have its own row? __Yes__
+    - what does each row represent _actually_ represent? __country, year__
+    - what _should_ each row represent?  __country, year__
+1. Does each value  have its own cell?" __No__
+    - if not, how does the dataset violate this principle? __Two problems. First, the each value of `year' is spread across two cells. Second, the each cell of the `rate` column contains two values, one for `cases` and one for `population`__
+
+## Revisiting definitions of variables and observations
+
+Worthwhile to revisit Wickham's (2014) defintions of _variables_, and _observations_ in light of what we now know about tidy vs. untidy data.
+
+Whenever I work with datasets I tend to think of observations as being synonomous with rows and variables as being synonomous with columns. But if we use Wickham's definitions of observations and variables, this is not true.
+
+- Wickham definition of __variables__: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
+    - In a tidy dataset, variables and columns are the same thing. 
+    - In an untidy dataset, variables and columns are not the same thing; a single variable (i.e., attribute) may be represented by two columns 
+        - For example, in `table2` the attribute `population` was represented by two columns, `type` and `count`
+- Wickham definition of __observations__: "An observation contains all values measured on the same unit (like a person, or a day)...across attributes"
+    - In a tidy dataset, an observations is the same thing as a row
+    - In an untidy dataset, the values for a particular unit may be spread across multiple rows. 
+        - For example, in `table1` and `table2` Wickham would think of `country-year` as the proper __observational unit__. `table1` has one row per `country-year` (tidy) but `table2` has two rows per `country-year` (untidy). 
+        
+<br>
+__"Observational unit" (data concept) vs. "unit of analysis" (my term; data structure)__
+
+- __observational unit__. Wickham tends to think of observational unit as what each observation should represent (e.g., a person, a person-year) in a tidy dataset
+- __unit of analysis__. By contrast (right or wrong), I tend to think of "unit of analysis" as what each row of data _actually_ represents (e.g., country-year-type)
+
+<br>
+__Takeways from this discussion of formal data concepts and tidy vs. untidy data__
+
+- In everyday usage, the terms _variable_ and _observation_ refer to data structure, with :
+    - variables=columns
+    - observations=rows
+- In Wickham's definition, the terms _variables_ and _observation_ refer to data contents, with:
+    - A variable containing all values of one attribute for all _units_
+    - An observation contains the value of all attributes for one _unit_ 
+- Can think of Wickham's definitions of variables and observations as belonging only to tidy datasets.
+    - Based on Wickham's definition, variables=columns and observations=rows __only__ if the dataset is tidy
+    - Can think of Wickham's definitions of variables and observations as what _should be_. 
+    
+<br>
+In real world, we encounter many untidy datasets. We can still equate variables with columns and rows with observations. 
+
+- Just be mindful that you are using the "everyday" definitions of variables and observations rather than the Wickham definitions.
+
+
+## Why tidy data 
+
+Why should you create tidy datasets before conducting analyses?
+
+1. If you have a consistent organizational structure for analysis datasets, easier to learn tools for analyzing data
+
+2. tidy datasets are optimal for R
+- Base R functions and tidyverse functions are designed to work with vectors of values
+- In a tidy dataset, each column is the vector of values for a given variable, as shown below
+
+```{r}
+str(table1)
+str(table1$country)
+str(table1$cases)
+```
+<br>
+__Example__:
+
+- how would you calculate `rate` variable (`=cases/population*10000`) for `table1` (tidy) and `table2` (untidy)
+
+```{r}
+table1
+table1 %>% 
+  mutate(rate = cases / population * 10000)
+
+#Just looking at table2, obvious that calculating rate is much harder
+table2
+```
+
+### Caveat: But tidy data not always best
+
+Datasets are often stored in an untidy structure rather than a tidy structure when the untidy structure has a smaller file size than the tidy structure
+
+- smaller file-size leads to faster processing time, which is very important for web applications (e.g., facebook) and data visualizations (e.g., interactive maps)
+
+## Legacy concepts: "Long" vs. "wide" data
+
+Prior to Wickham (2014) and the creation of the "tidyverse," the concepts of "tidy"/"untidy" (adjective) data and "tidying" (verb) did not exist.  
+
+Instead, researchers would "reshape" (verb) data from "long" (adjective) to "wide" (adjective) and vice-versa
+
+Think "wide" and "long" as alternative presentations of the exact same data.ß
+
+__"wide" data__ represented with fewer rows and more columns  
+__"long" data__ represented with more rows and fewer columns
+
+Example, Table 204.10 of the Digest for Education Statistics shows changer over time in the number and percentage of K-12 students on free/reduced lunch [LINK](http://nces.ed.gov/programs/digest/d14/tables/dt14_204.10.asp)
+
+- Wide form display of data:
+```{r}
+#load("data/nces_digest/nces_digest_table_204_10.RData")
+load(url("https://github.com/ozanj/rclass/raw/master/data/nces_digest/nces_digest_table_204_10.RData"))
+table204_10
+```
+__Task__: Reshape `table204_10`from wide to long
+
+`gather()` from G&W can't deal with complex variable names and can't reshape multiple columns (will discuss this shortly): 
+```{r}
+total <- table204_10 %>%
+  select(state,tot_2000,tot_2010,tot_2011,tot_2012) #subset and assign to new object
+names(total)<-c("state","2000","2010","2011","2012") #change names for year "tot_2010" -> "2010"
+
+total_long <- total %>% 
+  gather(`2000`,`2010`,`2011`,`2012`,key=year,value=total_students) %>% 
+  arrange(state, year) #arrange by state and year
+
+head(total_long, n=10) #view 10 obs
+```
+
+`pivot_longer` can do the same task, but it can handle reshaping multiple columns and complex patterns at the same time (although, you won't be able handle complicated patterns until you learn regular expressions)
+```{r}
+
+total %>%
+  pivot_longer(
+    cols = (c("2000","2010", "2011", "2012")),
+    names_to = "year",
+    values_to = "total_students"
+  )
+```
+
+
+
+Note that the concepts "wide" vs. "long" are relative rather than absolute
+
+- For example, comparing `table4a` and `table1`: `table4a` is wide and `table1` is long
+```{r}
+table4a
+table1
+```
+- But comparing `table1` and `table2`: `table1` is wide and `table2` is long
+```{r}
+table1
+table2
+```
+
+
+-->

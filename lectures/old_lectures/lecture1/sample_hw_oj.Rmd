@@ -1,0 +1,68 @@
+---
+title: "homework 1"
+author: Ozan Jaquette
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+
+---
+
+Should probably create a separate document of instructions for homework in general. we'll update this over time.
+
+Second part of homework tells them to load some data in different ways. in the instructions for second part:
+
+- provide them links to: (A) the basic youtube video on relative and absolute directories and (B) the youtube video about changing directories in R
+    - tell them to re-watch these videos
+- tell them about list.files() command
+- tell them that `getwd()` is command to tell them filepath of current working directory
+    - tel them that when you `getwd()` from a code chunk in .Rmd, the file-path will be the directory where the .Rmd file is stored
+- tell them what `setwd()` does
+- tell them that `setwd()` executed within a code chunk only changes working directory for that code chunk, then reverts back to previous working directory
+
+
+
+
+some question where they load dataset directly from url we provide them [doesn't seem to be up yet]
+```{r}
+getwd()
+```
+
+Some question where they first change directories using `setwd()` using absolute filepath
+```{r}
+getwd() # in instructions, make sure that 
+setwd("C:/Users/ozanj/Documents/rclass/data/recruiting")
+getwd()
+list.files()
+load("recruit_event_somevars.Rdata")
+names(df_event)
+```
+
+```{r}
+load("C:/Users/ozanj/Documents/rclass/data/recruiting/recruit_event_somevars.Rdata")
+rm(df_event)
+```
+
+Some question where they first change directories using `setwd()` using relative filepath
+```{r}
+getwd() # in instructions, make sure that 
+setwd("../../data/recruiting")
+getwd()
+list.files()
+load("recruit_event_somevars.Rdata")
+names(df_event)
+```
+
+Some question where they load dataset using relative file-path without first changing directories
+```{r}
+getwd()
+load("../../data/recruiting/recruit_event_somevars.Rdata")
+names(df_event)
+```
+
+```{r}
+getwd()
+load("../../data/recruiting/recruit_ps1_small.Rdata")
+names(df_recruiting)
+```
+
