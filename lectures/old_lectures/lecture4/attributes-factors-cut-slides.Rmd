@@ -1,0 +1,367 @@
+---
+title: "Lecture 3: Variable creation, variable attributes, and pipes"
+subtitle:  "EDUC 263: Managing and Manipulating Data Using R"
+author: Ozan Jaquette
+date: 
+fontsize: 8pt
+classoption: dvipsnames  # for colors
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: true
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: tibble #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header.tex
+      #after_body: table-of-contents.txt 
+---
+
+<!-- CAN THIS BE MOVED TO SOME KIND OF HEADER FILE? --> 
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+#knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+# Introduction/logistics
+
+### Libraries we will use today
+
+```{r}
+library(tidyverse)
+```
+
+### Data we will use today
+
+Data on off-campus recruiting events by public universities
+
+```{r}
+rm(list = ls()) # remove all objects
+
+#load dataset with one obs per recruiting event
+load("../../data/recruiting/recruit_event_somevars.Rdata")
+
+#load dataset with one obs per high school
+load("../../data/recruiting/recruit_school_somevars.Rdata")
+
+load("../../data/prospect_list/western_washington_college_board_list.RData")
+
+```
+Object \hlgc{df\_event\}
+
+- One observation per university, recruiting event
+
+Object \hlgc{df\_event\}
+
+- One observation per high school (visited and non-visited)
+
+# Factors
+
+## Review data types and structures
+
+### Review data types
+
+Primary __data types__ in R:
+
+- numeric (integer & double)
+- character
+- logical
+
+R CODE CHUNK WITH EXAMPLES
+
+### Review data structures: vectors
+
+Primary __data structures__ in R are __vectors__ and __lists__
+
+\medskip A __vector__ is a collection of values
+
+- each value in a vector is an __element__
+- all elements within vector must have same __data type__
+
+```{r}
+a <- c(1,2,3)
+a
+str(a)
+```
+
+You can assign __names__ to elements of a vector, thereby creating a __named vector__
+
+```{r}
+b <- c(v1=1,v2=2,v3=3)
+b
+str(b)
+```
+
+### Review data structures: lists
+
+Like vectors, __lists__ are objects that contain __elements__; However, __data type__ can differ across elements within a list; an element of a list can be another list
+
+
+Examples of lists:
+```{r}
+list_a <- list(1,2,"apple")
+str(list_a)
+list_b <- list(1, c("apple", "orange"), list(1, 2, 3))
+str(list_b)
+```
+### Review data structures: lists
+
+Like vectors, elements within a list can be named, thereby creating a __named list__
+
+```{r}
+str(list_b) # not named
+
+list_c <- list(v1=1, v2=c("apple", "orange"), v3=list(1, 2, 3))
+str(list_c) # named
+```
+
+### Review data structures: a data frame is a list
+
+A __data frame__ is a list with the following characteristics:
+
+- All the elements must be __vectors__ with the same __length__
+- Data frames are __augmented lists__ because they have additional __attributes__ [described later]
+
+```{r}
+list_d <- list(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9))
+typeof(list_d)
+str(list_d)
+
+df_a <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9))
+typeof(df_a)
+str(df_a)
+```
+## Attributes and augmented vectors
+
+### Atomic vectors versus augmented vectors
+
+__Atomic vectors__ [our focus so far]
+- [(See figure)](http://r4ds.had.co.nz/diagrams/data-structures-overview.png)
+- I think of atomic vectors as "just the data"
+- Atomic vectors are the building blocks for augmented vectors
+
+Augmented vectors
+
+- __Augmented vectors__ are atomic vectors with additional __atributes__ attached
+
+__Attributes__
+
+- __Attributes__ are additional "metadata" that can be attached to any object (e.g., vector or list)
+- Important attributes in R:
+    - __Names__: name the elements of a vector (e.g., variable names)
+    - __Class__: How object should be treated by object oriented programming language [discussed below]
+
+Main takaway:
+
+- Augmented vectors are atomic vectors (just the data) with additional attributes attached
+
+### Attributes in vectors
+
+```{r}
+vector1 <- c(1,2,3,4)
+vector1
+attributes(vector1)
+
+vector2 <- c(a = 1, b= 2, c= 3, d = 4)
+vector2
+attributes(vector2)
+```
+
+
+### Attributes in lists
+
+```{r}
+list1 <- list(c(1,2,3), c(4,5,6))
+str(list1)
+attributes(list1)
+
+list2 <- list(col_a = c(1,2,3), col_b = c(4,5,6))
+str(list2)
+attributes(list2)
+
+list3 <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6))
+str(list3)
+attributes(list3)
+
+```
+### Object class
+
+```{r}
+vector1 <- c(1,2,3,4)
+vector1
+typeof(vector1)
+class(vector1)
+attributes(vector1)
+
+vector2 <- c(a = 1, b= 2, c= 3, d = 4)
+vector2
+attributes(vector2)
+typeof(vector2)
+class(vector2)
+
+
+```
+
+# FACTORS
+
+### Factors
+
+__Factors__ are used to display categorical data (e.g., marital status)
+
+- A factor is an __augmented vector__ built by attaching a "levels" attribute to an (atomic) integer vectors
+
+The \hlgc{str()} function is useful for identifying which variables are factors. Let's examine the factor variable \hlgc{ethn\_code}
+
+```{r}
+typeof(wwlist$ethn_code)
+class(wwlist$ethn_code)
+str(wwlist$ethn_code)
+```
+Note that \hlgc{ethn\_code} has \hlgc{type=integer} and \hlgc{class=factor} because the variable has a "levels" attribute
+
+```{r, results='hide'}
+attributes(wwlist$ethn_code)
+```
+
+Main takeaway:
+
+- The underlying data are integers but the levels attribute is used to display the data.
+
+
+
+### Working with factor variables
+
+```{r, results='hide'}
+attributes(wwlist$ethn_code)
+```
+Refer to categories of a factor by the values of the level attribute rather than the underlying values of the variable
+
+```{r}
+count(filter(wwlist,ethn_code==11))
+
+count(filter(wwlist,ethn_code=="White"))
+```
+
+If you want to refer to underlying values, then apply \hlgc{as.integer()} function to the factor variable
+```{r}
+count(filter(wwlist,as.integer(ethn_code)==11))
+```
+### How to identify the variable values associated with factor levels
+
+MAYBE CUT THIS SLIDE IF YOU CAN'T DO THIS WITHOUT PIPES
+```{r}
+
+wwlist %>% count(psat_range) %>% as_factor()
+```
+```{r}
+count(filter(wwlist,as.integer(psat_range)==4))
+count(filter(wwlist,psat_range=="1270-1520"))
+```
+
+
+### Some in-class exercise involving factors
+
+```{r}
+str(wwlist)
+```
+### Creating factors [from integer vectors]
+
+Factors are just integer vectors with level attributes attached to them. So, to create a factor:
+
+1. create a vector for the underlying data
+1. create a vector that has level attributes
+3. Attach levels to the data using the \hlgc{factor()} function
+
+```{r}
+a1 <- c(1,1,1,0,1,1,0) #a vector of data
+a2 <- c("zero","one") #a vector of labels
+
+#attach labels to values
+a3 <- factor(a1, labels = a2)
+a3
+str(a3)
+
+```
+
+Note: By default, \hlgc{factor()} function attached "zero" to the lowest value of vector \hlgc{a1} because "zero" was the first element of vector \hlgc{a2}
+
+### Creating factors [from integer vectors]
+
+Let's turn an integer variable into a factor variable in the \hlgc{wwlist} data frame
+
+Create integer version of \hlgc{sex}
+```{r}
+wwlist$sex_int <- as.integer(wwlist$sex)
+str(wwlist$sex_int)
+#wwlist %>% count(sex) %>% as_factor()
+```
+Assume we know that 1=female, 2=male, 3=unknown
+
+Assign levels to values of integer variable
+```{r}
+wwlist$sex_int <- factor(wwlist$sex_int, labels=c("female","male","unknown"))
+str(wwlist$sex_int)
+str(wwlist$sex)
+```
+
+### Create factors [from string variables]
+
+To create a factor variable from string variable
+
+1. create a character vector containing underlying data
+1. create a vector containing valid levels
+3. Attach levels to the data using the \hlgc{factor()} function
+
+```{r}
+#underlying data: months my fam is born
+x1 <- c("Jan", "Aug", "Apr", "Mar")
+#create vector with valid levels
+month_levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+#attach levels to data
+x2 <- factor(x1, levels = month_levels)
+```
+Note how attributes differ
+```{r}
+str(x1)
+str(x2)
+```
+Sorting differs
+```{r}
+sort(x1)
+sort(x2)
+```
+
+### Create factors [from string variables]
+
+Let's create a character version of variable \hlgc{sex} and then turn it into a factor
+
+```{r}
+#Create character version of sex
+wwlist$sex_char <- as.character(wwlist$sex)
+
+#investigate character variable
+str(wwlist$sex_char)
+table(wwlist$sex_char)
+
+#create new variable that assigns levels
+sex_fac <- factor(wwlist$sex_char, levels = c("F","M","U"))
+str(wwlist$sex_char)
+```
+How the \hlgc{levels} argument works when underlying data is character
+
+- Matches value of underlying data to value of the level attribute
+- Converts underlying data to integer, with level attribute attached
+
+\medskip See chapter 15 of Wickham for more on factors (e.g., modifying factor order, modifying factor levels)
+
+### Substantial exercise on using/creating factors, using either df_school or df_event datasets
+
+

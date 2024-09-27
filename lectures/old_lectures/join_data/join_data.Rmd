@@ -1,0 +1,1027 @@
+---
+title: "Joining Multiple Datasets"
+subtitle:  
+author: 
+date: 
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: # toc_float option to float the table of contents to the left of the main document content. floating table of contents will always be visible even when the document is scrolled
+      collapsed: false # collapsed (defaults to TRUE) controls whether the TOC appears with only the top-level (e.g., H2) headers. If collapsed initially, the TOC is automatically expanded inline when necessary
+      smooth_scroll: true # smooth_scroll (defaults to TRUE) controls whether page scrolls are animated when TOC items are navigated to via mouse clicks
+    number_sections: true
+    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk    
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax    
+    theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
+    df_print: tibble #options: default, tibble, paged
+    # keep_md: true # may be helpful for storing on github
+    
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(comment = "#>", highlight = TRUE, warning=F, message=F)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+# Introduction
+
+## Libraries and datasets we will use
+
+Load packages:
+
+```{r, message=F}
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+
+<br>
+Load datasets:
+
+```{r}
+# NLS student level data, containing variables about student demographics
+nls_stu <- read_dta('https://github.com/anyone-can-cook/rclass1/raw/master/data/nls72/nls72stu_percontor_vars.dta') %>%
+  select(id, schcode, bysex, csex, crace, cbirthm, cbirthd, cbirthyr)
+
+# NLS student level data, containing variables about postsecondary education transcripts (PETS)
+nls_stu_pets <- read_dta('https://github.com/ozanj/rclass/raw/master/data/nls72/nls72petsstu_v2.dta') %>%
+  select(id, reqtrans, numtrans)
+
+# NLS student-transcript level data
+nls_tran <- read_dta('https://github.com/ozanj/rclass/raw/master/data/nls72/nls72petstrn_v2.dta') %>%
+  select(id, transnum, findisp, trnsflag, terms, fice, state, cofcon, instype, itype)
+
+# NLS student-transcript-term level data
+nls_term <- read_dta('https://github.com/ozanj/rclass/raw/master/data/nls72/nls72petstrm_v2.dta') %>%
+  select(id, transnum, termnum, courses, termtype, season, sortdate, gradcode, transfer)
+```
+
+## Lecture overview
+
+It is rare for an analysis dataset to consist of data from only one input dataset. For most projects, each analysis dataset contains data from multiple data sources. Therefore, you must become proficient in combining data from multiple data sources.
+
+Two broad topics:
+
+1. __Joining__ datasets [big topic]
+    - Combine two datasets so that the resulting dataset has additional variables
+    - The term "join" comes from the relational databases world; Social science research often uses the term "merge" rather than "join"
+2. __Appending__ datasets  [small topic]
+    - Stack datasets on top of one another so that resulting dataset has more observations, but (typically) the same number of variables
+    - Often, longitudinal datasets are created by appending datasets
+
+
+Wickham differentiates between _mutating joins_ and _filtering joins_:
+
+- **Mutating joins** "add new variables to one data frame from matching observations in another"
+- **Filtering joins** "filter observations from one data frame based on whether or not they match an observation in the other table"
+    - Doesn't add new variables
+    - Usually, purpose is to check the quality of mutating joins (e.g., which observations didn't match)
+
+Our main focus today is on _mutating joins_. But _filtering joins_ are useful for data quality checks of _mutating joins_.
+
+
+## NLS72 data
+
+The datasets used for this lecture comes from the **National Longitudinal Survey of 1972 (NLS72)**:
+
+- Student level data
+- Student-transcript level data
+- Student-transcript-term level data
+
+These datasets are good for teaching "joining" because you get practice joining data sources with different "observational levels" (e.g., join student level and student-transcript level data)
+
+<br>
+<details><summary>**Investigating student level `nls_stu` dataframe**</summary>
+
+```{r, echo=FALSE}
+library(kableExtra)
+
+kable(head(nls_stu, 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+```{r}
+# Get a feel for the data
+names(nls_stu)
+glimpse(nls_stu)
+
+nls_stu %>% var_label()
+
+# We can investigate individual variables (e.g., bysex variable)
+class(nls_stu$bysex)
+str(nls_stu$bysex)
+
+nls_stu %>% select(bysex) %>% var_label()
+nls_stu %>% select(bysex) %>% val_labels()
+
+nls_stu %>% count(bysex)
+nls_stu %>% count(bysex) %>% as_factor()
+```
+
+</details>
+
+<br>
+<details><summary>**Investigating student level `nls_stu_pets` dataframe**</summary>
+
+```{r, echo=FALSE}
+kable(head(nls_stu_pets, 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+```{r}
+names(nls_stu_pets)
+glimpse(nls_stu_pets)
+
+nls_stu_pets %>% var_label()
+```
+
+</details>
+
+<br>
+<details><summary>**Investigating student-transcript level `nls_tran` dataframe**</summary>
+
+```{r, echo=FALSE}
+kable(head(arrange(nls_tran,id, transnum), 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+```{r}
+names(nls_tran)
+glimpse(nls_tran)
+
+nls_tran %>% var_label()
+
+nls_tran %>% val_labels()
+```
+
+</details>
+
+<br>
+<details><summary>**Investigating student-transcript-term level `nls_term` dataframe**</summary>
+
+```{r, echo=FALSE}
+kable(head(arrange(nls_term,id, transnum,termnum), 5)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+```{r}
+names(nls_term)
+glimpse(nls_term)
+
+nls_term %>% var_label()
+
+nls_term %>% val_labels()
+```
+
+</details>
+
+## Relational databases and tables
+
+__Traditionally, social scientists store data in "flat files"__
+
+- Flat files are "rectangular" datasets consisting of columns (usually called variables) and rows (usually called observations)
+- When we want to incorporate variables from two flat files, we "merge" them together
+
+__The rest of the world stores data in "relational databases"__
+
+- A relational database consists of multiple __tables__
+- Each table is a flat file
+- A goal of relational databases is to store data using the minimum possible space; therefore, a rule is to never duplicate information across tables
+- When you need information from multiple tables, you "join" (the database term for "merge") tables "on the fly" rather than creating some permanent flat file that contains data from multiple tables
+- Each table in a relational database has a different "observational level"
+    - For example, NLS72 has a student level table, a student-transcript level table, etc.
+    - From the perspective of a database person, it wouldn't make sense to store student level variables (e.g., birth-date) on the student-transcript level table because student birth-date does not vary by transcript, so this would result in needless duplication of data
+- Structured Query Language (SQL) is the universally-used programming language for relational databases
+
+__Real-world examples of relational databases__
+
+- iTunes
+    - Behind the scenes, there are separate tables for artist, album, song, genre, etc.
+    - The "library" you see as a user is the result of "on the fly" joins of these tables
+- Every social media app (e.g., Twitter, FB, Instagram) you use is a relational database
+    - What you see as a user is the result of "on the fly" joins of individual tables running in the background
+- Interactive maps typically have relational databases running in the background
+    - Clicking on some part of the map triggers a join of tables and you see the result of some analysis based on that join
+    - E.g., our [off-campus recruiting map](https://map.emraresearch.org/)
+
+__Should you think of combining dataframes in R as "merging" flat files or "joining" tables of a relational database?__
+
+- Can think of it either way; but I think better to think of it _both_ ways
+- For example, you can think of the NLS72 datasets as:
+    - A bunch of flat files that we merge
+    - OR a set of tables that comprise a relational database
+- Although we are combining flat files, tidyverse uses the terminology (e.g, "keys", "join") of relational databases for doing so
+
+# Keys
+
+What are **keys**?
+
+- **Keys** are "the variables used to connect each pair of tables" [[see here](https://r4ds.had.co.nz/relational-data.html#keys)]
+- Even though relational databases often consist of many tables, __relations__ are always defined between a __pair__ of tables
+- When joining tables, focus on joining __one__ table to __another__; you make this "join" using the __key variable(s)__ that define the relationship between these two tables
+- Even when your analysis requires variables from more than two tables, you proceed by joining one pair of tables at a time
+
+<br>
+There are two types of keys: **primary keys** and **foreign keys**
+
+- "The main reason for primary and foreign keys is to enforce data consistency" [[see here](https://stackoverflow.com/a/5771337/6373540)]
+- Although primary and foreign keys do not technically need to be defined in order to perform a join, they are important for maintaining database integrity
+
+## Primary keys
+
+What is a **primary key**?
+
+- A **primary key** uniquely identifies an observation in its own table
+- It is a variable (or combination of variables) in a table that uniquely identifies observations in its own table
+
+<br>
+**Example**: `id` is the primary key in the `nls_stu` table
+
+The variable `id` ("unique student identification variable") _uniquely_ identifies observations in the dataset `nls_stu`. In other words, no two observations in `nls_stu` have the same value of `id`.
+
+Let's confirm that each value of `id` is associated with only one observation:
+
+```{r}
+nls_stu %>% group_by(id) %>%  # group by primary key
+  summarise(n_per_id=n()) %>%  # create a measure of number of observations per group
+  ungroup() %>%  # ungroup, otherwise frequency table [next step] created separately for each group
+  count(n_per_id)  # frequency of number of observations per group
+```
+
+An alternative way to confirm that no values of `id` have more than one observation:
+
+```{r}
+nls_stu %>% 
+  count(id) %>%  # create object that counts the number of obs for each value of id
+  filter(n>1)  # keep only rows where count of obs per id is greater than 1
+```
+
+<br>
+**Example**: `id` and `transnum` make up the primary key in the `nls_tran` table
+
+Sometimes, more than one variable is required to make up the primary key in a table. For example, in the student-transcript level table `nls_tran`, both `id` and `transnum` are needed to uniquely identify the observations in the table:
+
+```{r}
+nls_tran %>%
+  group_by(id, transnum) %>%
+  summarise(n_per_key=n()) %>% 
+  ungroup() %>% 
+  count(n_per_key)
+```
+
+
+### Student exercise
+
+Which variable(s) make up the primary key in the `nls_term` table?
+
+<details><summary>**Solution**</summary>
+
+The variables `id`, `transnum`, and `termnum` make up the primary key for the `nls_term` table because these variables together uniquely identify each observation in the table:
+
+```{r}
+nls_term %>% 
+  group_by(id, transnum, termnum) %>% 
+  summarise(n_per_key=n()) %>% 
+  ungroup() %>% 
+  count(n_per_key)
+```
+
+</details>
+
+## Foreign keys
+
+What is a **foreign key**?
+
+- A **foreign key** uniquely identifies an observation in another table
+- Said differently, it is a variable (or combination of variables) in a table that is the primary key in another table
+- A foreign key creates a relationship between two tables
+
+<br>
+**Example**: With respect to datasets `nls_stu` and `nls_tran` 
+
+- Recall that the student `id` is the _primary key_ in `nls_stu` because it uniquely identifies each observation in the table. 
+- The variable `nls_tran$id` is the _foreign key_ for `nls_stu` because it uniquely identifies observations in `nls_stu`
+
+```{r}
+nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+```
+
+
+<br>
+<details><summary>**Ozan's way of thinking about foreign key**</summary>
+
+Personally, I find the concept __foreign key__ a little bit slippery. Here is how I wrap my head around it: 
+
+- First, always remember that "joins" happen between two specific tables, so have two specific tables in mind
+- Second, to understand _foreign key_ concept, I think of a "focal table" [my term] (e.g., `nls_tran`) and some "other table" (e.g., `nls_stu`)
+- Third, then, the foreign key is a variable (or combination of variables) that satisfies two conditions:
+    1. Exists in the "focal table" (but may or may not be the primary key for the focal table)
+    2. Exists in the "other table" __AND__ is the primary key for that "other table"
+
+__Example of foreign key__
+
+- With respect to the "focal table" `nls_tran` and the "other table" `nls_stu`, the variable `id` is the _foreign key_ because:
+    - `id` exists in the "focal table" `nls_trans` (though it does not uniquely identifies observations in `nls_trans`)
+    - `id` exists in the "other table" `nls_stu` and `id` uniquely identifies observations in `nls_stu`
+
+</details>
+
+### Student exercise
+
+With respect to `nls_trans`, which variable(s) make up the foreign key in the `nls_term` table?
+
+<details><summary>**Solution**</summary>
+
+Since `id` and `transnum` make up the _primary key_ in the `nls_trans` table, these variables make up the _foreign key_ in `nls_term` because they can be used to link the two tables:
+
+```{r}
+# id and transnum make up the primary key in nls_trans because they uniquely identify each obs
+nls_tran %>% 
+  group_by(id, transnum) %>% 
+  summarise(n_per_key=n()) %>% 
+  ungroup() %>% 
+  count(n_per_key)
+
+# id and transnum also both exist in nls_term, so they form the foreign key that links the 2 tables
+names(nls_term)
+```
+
+</details>
+## Requirements for joining two tables
+
+In practice, you join two tables without explicit thinking about "primary key" vs. "foreign key" and "focal table" vs. "other table"
+
+- Doesn't matter which data frame you "start with" (e.g., as the "focal table")
+
+The only requirements for joining are:
+
+1. One of the two data frames have a __primary key__ (variable or combination of variables that uniquely identify observations) __AND__
+1. That variable or combination of variables is available in the other of the two data frames
+
+With this in mind, let's examine the dataframes `nls_stu` and `nls_tran`
+
+```{r}
+# requirement 1: at least one of the two data frames must have a primary key
+  # let's check if id is the primary key in nls_stu
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+
+# requirement 2: that primary key (id) is available in the other of the two data frames
+names(nls_tran)
+
+nls_tran %>% arrange(id, transnum) %>% select(id,transnum,findisp,itype) %>% head(20)
+#nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_per_key)
+```
+
+
+# Mutating joins
+
+Following Wickham, we'll explain joins using the hypothetical tables `x` and `y`:
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+# Create table x
+x <- tribble(
+  ~key, ~val_x,
+     1, "x1",
+     2, "x2",
+     3, "x3"
+)
+
+# Create table y
+y <- tribble(
+  ~key, ~val_y,
+     1, "y1",
+     2, "y2",
+     4, "y3"
+)
+```
+
+![](https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/assets/images/join-setup.png)
+
+_Note: Credit for examples and images belong to [Wickham](https://r4ds.had.co.nz/relational-data.html#mutating-joins)_
+
+<br>
+What is a **join**?
+
+- A **join** "is a way of connecting each row in `x` to zero, one, or more rows in `y`"
+- Observations in table `x` matched to observations in table `y` using a "key" variable
+- A **key** is a variable (or combination of variables) that exist in both tables and uniquely identifies observations in at least one of the two tables
+
+<br>
+There are four types of joins between tables `x` and `y`:
+
+- __inner join__: keep all observations that appear in both table `x` and table `y`
+- __left join__: keep all observations in `x` (regardless of whether these obs appear in `y`)
+- __right join__: keep all observations in `y` (regardless of whether these obs appear in `x`)
+- __full join__: keep all observations that appear in `x` or in `y`
+
+The last three joins -- left, right, full -- keep observations that appear in at least one table and are collectively referred to as __outer joins__.
+
+![](http://r4ds.had.co.nz/diagrams/join-venn.png)
+
+
+<br>
+We will join tables `x` and `y` using the  `join()` command from `dplyr` package.  `join()` is a general command, which has more specific commands for each type of join:
+
+- `inner_join()`
+- `left_join()`
+- `right_join()`
+- `full_join()`
+
+
+## Inner joins
+
+__Inner joins__ keep all observations that appear in both table `x` and table `y` (i.e., keep observations <code style="background-color:lightgreen">1</code> and <code style="background-color:lavender">2</code>):
+
+![](https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/assets/images/join-inner.png)
+
+<br>
+__The `inner_join()` function__:
+
+```{r, eval = FALSE}
+?inner_join
+
+# SYNTAX AND DEFAULT VALUES
+inner_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  na_matches = c("na", "never")
+)
+```
+
+- Function: Perform inner join between dataframes `x` and `y`
+- Arguments:
+  - `x`, `y`: Dataframes to join
+  - `by`: Variable(s) to join by
+    - If joining by single variable: `inner_join(x, y, by = "keyvar")`
+    - If joining by multiple variables: `inner_join(x, y, by = c("keyvar1", "keyvar2", ...))`
+    - If variables to join by have different names: `inner_join(x, y, by = c("keyvarx" = "keyvary", ...))`
+
+<br>
+**Example**: Using `inner_join()` to join `x` and `y`
+
+```{r, echo=FALSE}
+kable(x, caption = 'Table `x`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(y, caption = 'Table `y`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+We want to join `x` and `y` by the common variable `key`:
+
+```{r}
+inner_join(x, y, by = "key")  # Equivalent to: inner_join(x, y, by = c("key" = "key"))
+
+inner_join(x = x, y = y, by = "key")
+```
+
+<br>
+This is an example of a **one-to-one** relationship because `key` uniquely identifies observations in both table `x` and `y`. In other words, `key` can be the _primary key_ for both `x` and `y`, as well as _foreign key_ when we think about the relationship between the tables.
+<!-- https://stackoverflow.com/a/30517805/6373540 -->
+
+
+<br>
+<details><summary>**Example**: One-to-one inner join between `nls_stu` and `nls_stu_pets`</summary>
+
+Recall that `nls_stu` and `nls_stu_pets` are both student level data 
+
+- `nls_stu` contains info on student demographics and `nls_stu_pets` contains info on student postsecondary education transcripts (PETS). It makes sense that we'll want to join the tables by student, namely using the student `id` variable. This will be a one-to-one join because `id` uniquely identifies the observations in both `nls_stu` and `nls_stu_pets`:
+
+```{r}
+nls_stu %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>% count(n_per_id) 
+nls_stu_pets %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>% count(n_per_id) 
+
+# Join the nls_stu and nls_stu_pets by id variable
+nls_stu_stu <- nls_stu %>% inner_join(nls_stu_pets, by = "id")
+
+# Joined dataframe now have variables from both nls_stu and nls_stu_pets
+names(nls_stu_stu)
+
+# Print a few obs and selected variables from joined dataframe
+nls_stu_stu %>% select(id, bysex, crace, reqtrans, numtrans) %>% as_factor()
+
+# Compare number of obs in input datasets to joined dataset
+nrow(nls_stu)
+nrow(nls_stu_pets)
+
+# Remember inner join only keeps obs that are common in both tables, so it makes sense that the joined dataset cannot have more rows than either input datasets
+nrow(nls_stu_stu)
+```
+
+</details>
+
+### Duplicate keys
+
+There are times when the key variable(s) we join by do not uniquely identify observations in both the tables. For example, the table on the right (`y`) below has unique values for `key` but the table on the left (`x`) contains multiple observations with the same value:
+
+![](https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/assets/images/join-many-to-one.png)
+
+This represents a **one-to-many** relationship, where one observation in `y` matches to multiple observations in `x`. Since `key` uniquely identifies observations in `y`, it is the _primary key_ in table `y` and the _foreign key_ in table `x`.
+
+<br>
+**Example**: Using `inner_join()` to join `x` and `y`
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+# Create table x
+x <- tribble(
+  ~key, ~val_x,
+     1, "x1",
+     2, "x2",
+     2, "x3",
+     1, "x4"
+)
+
+# Create table y
+y <- tribble(
+  ~key, ~val_y,
+     1, "y1",
+     2, "y2"
+)
+```
+
+```{r, echo=FALSE}
+kable(x, caption = 'Table `x`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(y, caption = 'Table `y`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+We can confirm that `x` and `y` have a **many-to-one** relationship because `key` does not uniquely identify observations in `x` but does uniquely identify observations in `y`:
+
+```{r}
+x %>% group_by(key) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+y %>% group_by(key) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+```
+
+We want to join `x` and `y` by the common variable `key`:
+
+```{r}
+inner_join(x, y, by = "key")  # Equivalent to: inner_join(x, y, by = c("key" = "key"))
+```
+
+<br>
+<details><summary>**Summary of the types of relationships**</summary>
+
+General rule of thumb for joining two tables:
+
+- __Key variable should uniquely identify observations in at least one of the tables you are joining__
+
+Depending on whether the key variable uniquely identifies observations in table `x` and/or table `y` you will have:
+
+- __one-to-one__ join: key variable uniquely identifies observations in table `x` and uniquely identifies observations in table `y`
+    - The join between `nls_stu` and `nls_stu_pets` was a one-to-one join; the variable `id` uniquely identifies observations in both tables
+    - In the relational database world one-to-one joins are rare and are considered special cases of one-to-many or many-to-one joins
+        - Why? if tables can be joined via one-to-one join, then they should already be part of the same table.
+- __one-to-many__ join: key variable uniquely identifies observatiosn in table `x` and does not uniquely identify observations in table `y`
+    - Each observation from table `x` may match to multiple observations from table `y`
+    - E.g., Joining `nls_stu` and `nls_trans`: _one_ observation (student) in `nls_stu` has _many_ observations in `nls_trans` (transcripts)
+- __many-to-one__ join: key variable does not uniquely identify observations in table `x` and does uniquely identify observations in table `y`
+    - Each observation from table `y` may match to multiple observations from table `x`
+    - E.g., Joining `nls_trans` and `nls_stu`: _many_ observations (transcripts) in `nls_trans` have _one_ observation in `nls_stu` (student)
+- __many-to-many__ join: key variable does not uniquely identify observations in table `x` and does not uniquely identify observations in table `y`
+    - This is usually an error
+
+</details>
+
+
+<br>
+<details><summary>**Example**: One-to-many inner join between `nls_stu` and `nls_trans`</summary>
+
+Recall that `nls_stu` contains student level demographics data, where the student `id` variable uniquely identifies each observation in the table. `nls_trans` on the other hand is student-transcript level data, so `id` does not uniquely identify each observation. Thus, if we join by `id`, it would be a one-to-many relationship:
+
+```{r}
+# id uniquely identify obs in nls_stu
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key) 
+
+# id does not uniquely identify obs in nls_tran
+nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key) 
+
+# Join the nls_stu and nls_tran by id variable
+nls_stu_tran <- nls_stu %>% inner_join(nls_tran, by = "id")
+
+# Joined dataframe now have variables from both nls_stu and nls_tran
+names(nls_stu_tran)
+
+# Print a few obs and selected variables from joined dataframe
+nls_stu_tran %>% select(id, transnum, bysex, findisp, trnsflag) %>% as_factor()
+
+# Compare number of obs in input datasets to joined dataset
+nrow(nls_stu)
+nrow(nls_tran)
+
+# Since each id in nls_stu may match to more than one observation in nls_tran, it makes sense that the joined dataset may have more rows than nls_stu
+nrow(nls_stu_tran)
+```
+
+</details>
+
+### Joining by multiple variables
+
+Thus far, tables have been joined by a single "key" variable using this syntax:
+
+- `inner_join(x, y, by = "keyvar")`
+
+Often, multiple variables form the "key". Specify this using this syntax:
+
+- `inner_join(x, y, by = c("keyvar1", "keyvar2", ...))`
+
+<br>
+**Example**: Joining `nls_tran` and `nls_term` by multiple variables
+
+Recall that the student-transcript level dataset `nls_tran` is uniquely identified by the combination of two variables: `id` and `transnum`. Together, these variables form the _primary key_ of `nls_tran` and _foreign key_ of `nls_term`, the table we want to join `nls_tran` with. 
+
+```{r}
+# Join nls_tran and nls_term by multiple variables
+inner_join(nls_tran, nls_term, by = c("id", "transnum"))
+# Equivalent to: inner_join(nls_tran, nls_term, by = c("id" = "id", "transnum" = "transnum"))
+```
+
+## Outer joins
+
+**Outer joins** keep observations that appear in at least one table. Recall tables `x` and `y`:
+
+![](https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/assets/images/join-setup.png)
+
+<br>
+To perform each of the 3 types of **outer joins**:
+
+- **Left join**: keep all observations in `x`, regardless of whether they appear in `y` (i.e., keep observations <code style="background-color:lightgreen">1</code>, <code style="background-color:lavender">2</code>, and <code style="background-color:peachpuff">3</code>)
+- **Right join**: keep all observations in `y`, regardless of whether they appear in `x` (i.e., keep observations <code style="background-color:lightgreen">1</code>, <code style="background-color:lavender">2</code>, and <code style="background-color:palegoldenrod">4</code>)
+- **Full join**: keep all observations that appear in `x` or in `y` (i.e., keep observations <code style="background-color:lightgreen">1</code>, <code style="background-color:lavender">2</code>, <code style="background-color:peachpuff">3</code>, and <code style="background-color:palegoldenrod">4</code>)
+
+Note that any unmatched rows will have `NA` values in the column. As explained by Wickham, "These joins work by adding an additional 'virtual' observation to each table. This observation has a key that always matches (if no other key matches), and a value filled with `NA`."
+
+![](https://raw.githubusercontent.com/anyone-can-cook/rclass1/master/assets/images/join-outer.png)
+
+<br>
+<details><summary>**Example**: Left joins between `nls_stu`, `nls_stu_pets`, and `nls_tran`</summary>
+
+The **left join** is the most commonly used outer join in social science research (more common than inner join too). This is because we often start with some dataset `x` (e.g., `nls_stu`) and we want to add variables from dataset `y`.
+
+- Usually, we want to keep observations from `x` regardless of whether they match with `y`
+- Usually, we are uninterested in observations from `y` that did not match with `x`
+
+In this example, we will:
+
+- Start with `nls_stu`
+- Perform a left join with `nls_stu_pets`
+- Then perform a left join with `nls_tran`
+
+```{r}
+# Recall that id uniquely identifies both nls_stu and nls_stu_pets
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+nls_stu_pets %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+
+# Left join nls_stu with nls_stu_pets (one-to-one)
+nls_stu_pets_stu <- nls_stu %>% left_join(nls_stu_pets, by = "id")
+
+# Investigate data structure of merged object
+nrow(nls_stu_pets)
+nrow(nls_stu)
+nrow(nls_stu_pets_stu)
+
+# Recall that id and transnum (not id alone) uniquely identifies nls_tran
+nls_tran %>% group_by(id, transnum) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+
+# Left join nls_stu_pets_stu with nls_tran (one-to-many)
+nls_stu_pets_stu_tran <- nls_stu_pets_stu %>% left_join(nls_tran, by = "id")
+
+# Investigate data structure of merged object
+nrow(nls_stu_pets_stu)
+nrow(nls_tran)
+nrow(nls_stu_pets_stu_tran)
+```
+
+</details>
+
+
+# Filtering joins
+
+What are **filtering joins**?
+
+- **Filtering joins** filter rows from `x` based on the presence or absence of matches in `y`
+- Unlike _mutating joins_ which results in an object with variables (columns) from both `x` and `y`, _filtering joins_ only retains variables from `x`
+- In other words, filtering joins keeps observations (rows) from the `x` dataframe depending on whether or not it has a match in `y`
+
+<br>
+There are two types of filtering joins:
+
+- `anti_join(x, y)`: return all rows from `x` without a match in `y`
+- `semi_join(x, y)`: return all rows from `x` with a match in `y`
+
+<br>
+**Example**: Using `anti_join()` and `semi_join()`
+
+Imagine we have the following tables `x` and `y`:
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+# Create table x
+x <- tribble(
+  ~key, ~val_x,
+  1, "x1",
+  2, "x2",
+  2, "x3",
+  3, "x5",
+  4, "x6",
+  5, "x7",
+  6, "x8"
+)
+
+# Create table y
+y <- tribble(
+  ~key, ~val_y,
+  1, "y1",
+  1, "y2",
+  2, "y3",
+  3, "y4",
+  4, "y5",
+  9, "y6"
+)
+```
+
+```{r, echo=FALSE}
+kable(x, caption = 'Table `x`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(y, caption = 'Table `y`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+**Semi join** returns all rows from `x` where there are matching values in `y`: `semi_join(x, y, by = "key")`
+
+```{r, echo=FALSE}
+kable(semi_join(x, y, by = "key"), caption = 'Semi join') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+**Anti join** returns all rows from `x` where there are _no_ matching values in `y`: `anti_join(x, y, by = "key")`
+
+```{r, echo=FALSE}
+kable(anti_join(x, y, by = "key"), caption = 'Anti join') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+We can see which rows from `x` have or do not have a match in `y` from the **left join**: `left_join(x, y, by = "key")`
+
+```{r, echo=FALSE}
+kable(left_join(x, y, by = "key"), caption = 'Left join') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+Note that the row from `x` where `key == 1` and `val_x == x1` appears twice in the left join because it has a one-to-many relationship with `y`. However, this row is not duplicated in the semi join.
+
+<br>
+<details><summary>**Example**: Using `anti_join()` to diagnose mismatches in mutating joins</summary>
+
+A primary use of **filtering joins** is as an investigative tool to diagnose problems with _mutating joins_. We can use `anti_join()` to investigate the rows that did not have a match during the join.
+
+For example, consider an inner join between `nls_tran`, which contains info on postsecondary transcripts, and `nls_term`, which contains term level info for each transcript:
+
+```{r}
+# id and transnum uniquely identify obs in nls_trans
+nls_tran %>% group_by(id, transnum) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+
+# There are 24253 unique student transcripts (rows) in nls_tran
+nls_tran %>% nrow()
+
+# inner_join
+nls_tran %>% inner_join(nls_term, by = c("id", "transnum"))
+
+# figure out number of obs from nls_tran that merged w/ nls_term
+nls_tran %>% inner_join(nls_term, by = c("id", "transnum")) %>% 
+  group_by(id,transnum) %>% summarize() %>% # keep one obs per each combination of id,transnum
+  nrow() # number of number of obs from nls_tran that had merged with nls_term by id,transnum
+```
+
+<br>
+As seen, **18855** of the **24253** student transcripts (rows) in `nls_tran` have a match in `nls_term`, leaving a remaining **5398** student transcripts that did not match to any term level info. We can use `anti_join()` to investigate these unmatched rows to see why these transcripts do not have any term level data.
+
+```{r}
+# Create object of observations that didn't merge
+tran_term_anti <- nls_tran %>% anti_join(nls_term, by = c("id", "transnum"))
+
+# There are 5398 unmatched student transcripts from nls_tran
+nrow(tran_term_anti)
+
+# We can investigate the findisp variable of the unmatched rows
+attributes(tran_term_anti$findisp)
+
+# None of the unmatched rows has "TRANSCRIPT RECEIVED" status, which could explain why they had no match
+tran_term_anti %>% select(findisp) %>% count(findisp) %>% as_factor()
+```
+
+</details>
+
+# Appending data
+
+**Appending data** involve "stacking" multiple datasets (which typically have the same variables) on top of one another.
+
+<br>
+__The `bind_rows()` function__:
+
+```{r, eval = FALSE}
+?bind_rows
+
+# SYNTAX AND DEFAULT VALUES
+bind_rows(..., .id = NULL)
+```
+
+- Function: Bind rows of multiple dataframes into one
+- Arguments:
+  - `...`: Dataframes to bind
+
+<br>
+**Example**: Using `bind_rows()` to bind `time1` and `time2`
+
+The most common practical use of stacking is creating "longitudinal dataset" when input data are released separately for each time period. _Longitudinal data_ has one row per time period for a person/place/observation.
+
+Imagine we have the following tables `time1` and `time2`:
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+# Create table time1
+time1 <- tribble(
+  ~id, ~year, ~income,
+     1, 2017, 50,
+     2, 2017, 100,
+     3, 2017, 200
+)
+
+# Create table time2
+time2 <- tribble(
+  ~id, ~year, ~income,
+     1, 2018, 70,
+     2, 2018, 120,
+     3, 2018, 220
+)
+```
+
+```{r, echo=FALSE}
+kable(time1, caption = 'Table `time1`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(time2, caption = 'Table `time2`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+Use `bind_rows()` to stack the dataframes on top of one another:
+
+```{r, eval=FALSE}
+bind_rows(time1, time2)
+```
+
+```{r, echo=FALSE}
+kable(bind_rows(time1, time2)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+
+<br>
+<details><summary>**Example**: Creating longitudinal dataset from IPEDS data</summary>
+
+IPEDS collects annual survey data from colleges/universities. We will create a longitudinal dataset about university characteristics by appending/stacking annual data from the 2014-15, 2015-16, and 2016-17 academic years.
+
+```{r}
+# Load 2014-15 IPEDS data
+admit14_15 <- read_dta("https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/ic/ic14_15_admit.dta") %>%
+  select(unitid, endyear, sector, contains("numapply"), contains("numadmit"))
+
+# Load 2015-16 IPEDS data
+admit15_16 <- read_dta("https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/ic/ic15_16_admit.dta") %>%
+  select(unitid, endyear, sector, contains("numapply"), contains("numadmit"))
+
+# Load 2016-17 IPEDS data
+admit16_17 <- read_dta("https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/ic/ic16_17_admit.dta") %>% select(unitid, endyear, sector, contains("numapply"), contains("numadmit"))
+```
+
+```{r, echo=FALSE}
+kable(head(admit14_15, 3), caption = 'Table `admit14_15`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(head(admit15_16, 3), caption = 'Table `admit15_16`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(head(admit16_17, 3), caption = 'Table `admit16_17`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+Use `bind_rows()` to stack the dataframes on top of one another:
+
+```{r}
+admit_append <- bind_rows(admit14_15, admit15_16, admit16_17)
+
+# The stacked dataframe has 9 columns and 6514 rows (sum of rows from the 3 input dataframes)
+dim(admit_append)
+```
+
+```{r, eval=FALSE}
+admit_append %>% arrange(unitid, endyear) %>% head(n = 9)
+```
+
+```{r, echo=FALSE}
+kable(admit_append %>% arrange(unitid, endyear) %>% head(n = 9)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+</details>
+
+<br>
+<details><summary>**Example**: Appending datasets where not all columns match</summary>
+
+If we try appending datasets where not all columns match, this will result in `NA` being filled for observations where columns do not match.
+
+```{r}
+# Remove some variables from 2014-15 dataframe
+admit14_15 <- admit14_15 %>% select(-contains("numadmit"))
+
+# Remove some variables from 2015-16 dataframe
+admit15_16 <- admit15_16 %>% select(-contains("numapply"))
+```
+
+```{r, echo=FALSE}
+kable(head(admit14_15, 3), caption = 'Table `admit14_15`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(head(admit15_16, 3), caption = 'Table `admit15_16`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+
+kable(head(admit16_17, 3), caption = 'Table `admit16_17`') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+<br>
+Use `bind_rows()` to stack the dataframes on top of one another:
+
+```{r, results='hide'}
+admit_append <- bind_rows(admit14_15, admit15_16, admit16_17)
+
+# NA's are filled for missing values after the datasets are appended together
+admit_append %>% arrange(unitid, endyear) %>% head(n = 9)
+```
+
+```{r, echo=FALSE}
+kable(admit_append %>% arrange(unitid, endyear) %>% head(n = 9)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
+```
+
+</details>
+
+# Appendix
+
+## Troubleshooting join problems
+
+<br>
+<details><summary>**Overcoming join problems before they arise**</summary>
+
+1. Start by investigating the data structure of tables you are going to merge
+    - Identify the primary key in each table
+        - This investigation should be based on your understanding of the data and reading data documentation rather than checking if each combination of variables is a primary key
+    - Does either table have missing or strange values (e.g., `-8`) for the primary key; if so, these observations won't match
+1. Before joining, make sure that key you will use for joining uniquely identifies observations in at least one of the datasets and that the key variable(s) is present in both datasets
+    - Investigate whether key variables have different names across the two tables. If different, then you will have to adjust syntax of your join statement accordingly.
+1. Before joining, you also want to make sure the key variable in one table and key variable in another table are the same type (both numeric or both string, etc.)  
+    - You could use the `typeof()` function or the `str()` function  
+    - Change type with this command `x$key <- as.double(x$key)` or `x$key <- as.character(x$key)`
+    - If you try to join with key variables of different type, you will get this error message: <span style="color:red">Can't join on 'key' x 'key' because of incompatible types (character / numeric)</span>  
+1. Think about which observations you want retained after joining
+    - Think about which dataset should be the `x` table and which should be the `y` table
+    - Think about whether you want an inner, left, right, or full join
+1. Since mutating joins keep all variables in `x` and `y`, you may want to keep only specific variables in `x` and/or `y` as a prior step to joining
+    - Make sure that non-key variables from tables have different names; if duplicate names exist, the default is to add `.x` and `.y` to the end of the variable name. For example, if you have two tables with non-key variables with the name `type` and you join them, you will end up with variables (columns) `type.x` and `type.y`. 
+
+</details>
+
+<br>
+<details><summary>**Overcoming join problems when they do arise**</summary>
+
+- Identify which observations don't match
+    - `anti_join()` is your friend here
+- Investigate the reasons that observations don't match
+    - Investigating joins is a craft that takes some practice getting good at; this is essentially an exercise in exploratory data analysis for the purpose of data quality
+    - First, you have to _care_ about data quality
+    - Identifying causes for non-matches usually involves consulting data documentation for both tables and performing basic descriptive statistics (e.g., frequency tables) on specific variables that documentation suggests may be relevant for whether observations match or not  
+
+</details>
+
+## How to think about different types of joins and perform one
+
+We noticed that many students were having trouble with understanding the difference between the different types of joins and how to use them. We hope that this section can help clarify some of the frequently asked questions.
+
+### Types of joins
+
+Oftentimes, we have a primary table that we are interested in - for example, a table of recruiting events where each observation is an event held at a specific location. In order to understand more about each event, we can join in other data sources to it, such as zip code level data obtained from the Census. 
+
+![](http://r4ds.had.co.nz/diagrams/join-venn.png)
+
+_Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html#mutating-joins) by Wickham_
+
+The main difference between the types of joins is which rows they keep from each of the 2 tables you are joining (i.e., what rows you see in the end result of the join). For example, if our recruiting events data is the `x` (left) table and zip code data is the `y` (right) table:
+
+- **Inner join**: The result only includes events at a zip code that has Census data available **and** Census zip codes where at least 1 event occurred
+  - Any event at a zip code that does not have Census data **and** any Census zip code where no events occurred will be dropped
+- **Left join**: The result includes _all_ recruiting events in our original table, whether or not Census data for the event's zip code is available or not
+  - Any Census zip code where no events occurred will be dropped
+- **Right join**: The result includes _all_ zip codes in the Census data, whether or not any events occurred there 
+  - Any event at a zip code that does not have Census data will be dropped
+- **Full join**: The result includes _all_ recruiting events in our original table **and** _all_ zip codes in the Census data
+  - No observations in either of the original tables will be dropped
+  
+When deciding which type of join to use, we need to consider what our focus is. Here, we want to analyze the recruiting events, so we would want the end result of our join to include all events in our original events table, where each event has zip code data attached when available. According to the bulleted list above, that would be a **left join** using the recruiting events data as the `x` (left) table and zip code data as the `y` (right) table.
+
+What about an **inner join**? You may wonder, if we have an event at a zip code that does not have any zip code level data, what is the point of keeping that observation when we can't conduct any analysis on zip code characteristics? The answer may depend on your goal for the join. But oftentimes, we are joining more than 2 tables. For example, we may want to join zip code level data, HS level data, and university level data to each event. Not all events will have a match in each of the 3 data sources, but left joins will allow us to keep all events in the end result regardless. This is useful because the recruiting events are our main focus, and we can then choose whichever type of analysis we want to perform (zip code, HS, or univ-level).
+
+### Deciding on `x` and `y` table in a join
+
+As seen in the Venn diagram above, each join function takes in 2 arguments - we refer to the 1st arg `x` as the **left table** and the 2nd arg `y` as the **right table**. Which table we choose to be the `x` and which to be the `y` only matters when we are performing a left or right join, since inner and full joins are symmetrical.
+
+In our previous example, if we use the recruiting events table for `x` and zip code table for `y`, then a **left join** will keep all observations in the recruiting events table and drop all Census zip codes where no events occurred. But if we were to use the zip code table for `x` and recruiting events table for `y`, then it would be a **right join** that keeps all recruiting events and drop any Census zip code where no events occurred.
+
+Given the above 2 options to get the same results, performing a **left join** is more conventional and can be easier to visualize. For example, imagine performing a series of left joins to the recruiting events table (e.g., left join zip code level data to each event, left join HS level data to each event that occurred at a HS, left join university level data to each event that occurred at a university), we can think of it as continually chaining the tables from left to right.
+

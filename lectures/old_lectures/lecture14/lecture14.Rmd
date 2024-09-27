@@ -1,0 +1,324 @@
+---
+title:  "Lecture 14: Introduction to GitHub"
+subtitle:  "Managing and Manipulating Data Using R"
+author:
+date: 
+fontsize: 8pt
+classoption: dvipsnames  # for colors
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: default #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header.tex
+      #after_body: table-of-contents.txt 
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+
+# Introduction
+
+### Libraries and data we will use today
+
+Libraries
+```{r, results="hide"}
+library(tidyverse)
+library(haven)
+library(labelled)
+```
+Data frame
+```{r}
+#load dataset with one obs per recruiting event
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+
+```
+
+### Logistics
+
+__(LAST!) Lecture 14: Intro to GitHub__
+
+- GitHub can be difficult to get the hang of! 
+
+- Learning goals: Develop basic understanding; set up a repo on your local machine; get some practice working with GitHub
+
+__Teacher Course Evaluations:__
+
+- All but one completed as of this morning! 
+
+
+
+### What we will do today
+
+\tableofcontents
+
+```{r, eval=FALSE, echo=FALSE}
+#Use this if you want TOC to show level 2 headings
+\tableofcontents
+#Use this if you don't want TOC to show level 2 headings
+\tableofcontents[subsectionstyle=hide/hide/hide]
+```
+
+## What is Git and GitHub?
+
+### What is Git and GitHub?
+
+__Git__ is the most commonly used version-control system to manage code
+
+- Save drafts of code 
+- Look back at previous versions
+- Undo mistakes
+- Track your changes
+
+\medskip
+A project managed in __Git__ is called a __Git repository__
+
+- local git repository: the repository tracking changes YOU make on your own machine
+- remote git repository: local repositories are MOST often connected to a remote repository tracking changes by ALL collaborators
+
+\medskip
+__GitHub__ is the hosting site/service for __Git repositories__ 
+
+- Stores your local repos in "the cloud"
+- You can store files, share code, collaborate with others
+- Who uses GitHub? Netflix, Airbnb, Lyft, Coursera 
+- Competes with Microsoft's and Google's in-house systems
+
+\medskip
+This course is a __Git repository__!
+
+
+
+## Git Set-up
+
+### Create and Verify a Git Account
+
+You should have created a free git account prior to class.
+
+- If you haven't, please create one now: [https://github.com/](https://github.com/)
+- Be sure to verify your account via email sent by GitHub 
+
+\medskip
+
+Share your usernames with me: 
+
+- ksalazar3
+
+
+\medskip
+
+We will setup Git using __Code Academy__ instructions: [Link](https://www.codecademy.com/articles/f1-u3-git-setup)
+
+
+### Git Setup for Mac Users
+ 
+1. Open a Terminal window (command+space bar to open Spotlight Search)
+
+ - Terminal is the CLI (command line interface) for Linux and Mac users
+1. Type in git to the command line and press enter
+1. If you don't already have Git installed, you'll get an warning saying __Git__ requires command line developer tools. Click install and agree to terms. 
+
+![](terminal.png)
+
+
+### Git Setup for Windows Users
+Warning: I have never worked/installed on a Windows so this may take some time! Mac Users please be patient :) 
+
+1. Need to first install Git Bash
+
+- _Bash_ is the default shell (a specific type of CLI) for Linux and Mac Users so only Windows users need to install this first. Windows default is _Command Prompt_.
+- Download and intall Git Bash: [https://gitforwindows.org/](https://gitforwindows.org/)
+- Run the downloaded .exe file and allow the application to make changes to your PC. 
+- Once it is finished install, check it installed by searching "git bash" in your start menu
+
+
+![](gitbash.png)
+
+
+### Git Setup for Windows Users
+
+2. Open your CLI and verify Git installed
+    - Click on the Git Bash icon to open a new CLI window
+    - Type in ``git --version`` and press enter
+    - If installed it will return which Git version is installed
+    
+    
+    
+![](gitversion.png)
+
+
+
+### Authenticating Users in GitHub
+
+There are two ways to authenticate users when making changes to a GitHub repository:
+
+1. HTTPS: Using a URL to "clone" and make changes to a repository
+    - Will require you to enter your username and password everytime you make a change
+    - Much easier setup but very inefficient/inconvenient 
+    
+\medskip
+2. SSH (Secure Shell): Using a "keypair" between your computer and GitHub
+    - Doesn't require you to enter your username and password everytime you make a change
+    - But more time consuing to setup
+
+\medskip
+To make things easier for this introduction to GitHub, we will be using HTTPS. Remember your username and password!
+
+
+
+## GitHub Work Flow and Basics
+
+### Git Workflow
+
+Three components to a Git project:
+
+1. Local working directory
+    - This is the area where all your work happens! You are writing Rmd files, debugging R-scripts, adding and deleting files
+    - These changes are made on your local machine!
+2. Staging Area
+    - The area where you list the changes you've made in the workind directory
+    - Essentially what changes would you like to keep and save to the repository (or "commiting")
+3. The repository
+    - This is the actual repository where Git permanently stores the changes you've made in the working directory and listed in the staging area as _different_ versions of the project file
+
+
+### Git Basics: Working Directory
+
+First you need to create the working directory on your local machine.
+
+- When working on a collaborative project, one person is usually assigned to creating the repository on GitHub (via browser) and adding all team members as collaborators. Collaborators then ``clone`` the repository on their local machine. 
+- You can also create a "folder" on your local machine via the command line, _initialize_ it as a git repo, and link it to a remote repository on GitHub
+
+\medskip
+We'll practice doing both! 
+
+\medskip
+__Basic Git Commands__
+1. `git clone`: will "clone" a repository into the current directory 
+1. `git status`: allows you check the status of any changes you've made to the working directory
+  - If you are revising files that already exist in the remote git repository, these changes be listed in red as modified files under `Changes not staged to commit`
+  - If you create a new file that does not already exist in the remote git repository, these changes will be listed in red under `Untracked files`
+
+### Git Basics: Staging Area
+
+In order for __Git__ to start permanently tracking any changes you've made in the working directory those files need to be added to the working directory
+
+Once you've made changes:
+
+__Basic Git Commands__
+
+1. `git add filename`: Adds filename (you specify this) to staging area
+2. `git status`: Lists filenames in green which have been added to the staging area
+3. `git diff filename`: Once a file is added to the staging area you can check differences between the working directory and the staging area 
+4. `git commit`: Permanently stores changes from the staging area to the repository
+
+    - Always use the `git commit -m "your message here"` option when commiting your changes!
+    - The message needs to be in quotation marks; should be brief (up to 50 characters); and in present tense (new to me!)
+5. `git log`: logs all commmits made chronologically, uniquely identifies each commit via SHA
+    - Helpful when you need to revert your local repository to a previous commit (my safety blanket!)
+    - I often need old code (that I've deleted) as a foundation for new code
+
+### Git Basics: The Repository 
+
+When working on a __remote repository__ you will often need to:
+
+__"push" your changes__ 
+
+- In order for your collaboraters to see the changes you have made, you need to `push` the changes in your local repository to the remote repository  
+- Think of as "uploading" 
+
+__"pull" the changes of your collaborators__
+
+- In order for your working directory to contain the changes collaborators have made, you need to `pull` those changes made to the remote repository into your local repository
+- Think of as "downloading" 
+
+\medskip
+__Basic Git Commands__
+
+1. `git push`: "Uploads" local repository content to the remote repository
+2. `git pull`: Updates the local repository by "downloading" any changes made by collaborators 
+
+### Git Basics: Other Stuff and "Stylistic Issues"
+
+Always start a git repository with a README file:
+    
+    - Usually includes important information about what the project is, how folks can use your code, who maintains and contributes to the project
+    - In a remote server, GitHub will display the README file; it's the first thing collaborators see
+    - Use other README files as a template!  
+
+\medskip
+In a collaborative project, you'll often establish Code of Conduct/Contribution Guidelines together
+
+    - These are some of the first files to add to a remote repository!
+    - They set standards for folks using and contributing to the project (necessary when it's a public project!)
+    - Generally good practice!
+
+\medskip
+Other good practices when working in GitHub:
+
+- Use the issues feature to keep track of bugs, to-do's, assingments to particular collaborators, etc
+- Whenever you make changes to a remote repository, let your collaborators know by issuing a `pull` request
+- Sometimes your own work and working collaboratively is not a linear process. Branching and Merging (won't cover in this intro) are really important for these reasons! 
+
+
+## GitHub Practice
+
+### Create a Local Git Repository 
+
+Let's initialize a Git repository on your local machine to get started! 
+
+1. Open your CLI (terminal for Mac Users or Git Bash for Windows Users)
+    - CLI should always open to your home directory; indicted by a tilde `~`
+    - You can switch directories in the command line via `cd filepath_here`
+    - For today and to make things simple, we're going to stay in our home directories
+1. Lets make a directory on your local machine (aka a folder) 
+    - `mkdir git_practice`
+1. Change your directory to this new folder so we can work within the new folder
+    - `cd git_practice`
+
+\medskip 
+Now, your command line should be pointing to this new `git_practice` folder (notice no more `~`)
+
+![](directory.png)
+
+### Create a Local Git Repository 
+
+3. Initialize the `git_practice` folder into a _git repository_
+    - `git init`
+4. ALWAYS start a git repository by creating a README file 
+    - `echo "Our first read me file" >> README.txt"`
+5. Add the new file to the "staging area"
+    - `git add README.txt`
+5. Commit the changes to your local repository!
+    - `git commit -m "add readme file"`
+
+
+
+### Create a Remote Repository 
+
+1. I have created a remote repository for the class `HED696C_gitrepo`
+    - Set it as a private repo for now
+    - I added you as a collaborator if you submitted your HW with a git username
+    - If you all want to create the remote repository we will need to add you! (you can also just follow along)
+1.  Clone with HTTPS the `HED696C_gitrepo`
+    - The URL is located in the top right corner of the GitHub page
+    - In your CLI shell: set your directory to where you'd like to copy this project
+    - I keep my git projects in my home directory
+    - `git clone CLONELINK`
+    
+    
+![](clonebutton.png)
+
+
+### Create a Remote Repository 
+
+Now we'll practice as a class making some changes to this repository!

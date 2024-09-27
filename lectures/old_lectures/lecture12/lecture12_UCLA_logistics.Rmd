@@ -1,0 +1,56 @@
+---
+title: "Lecture 10: Accessing object elements and looping"
+subtitle:  "EDUC 263: Managing and Manipulating Data Using R"
+author: Ozan Jaquette
+date: 
+fontsize: 8pt
+classoption: dvipsnames  # for colors
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: default # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: default #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header.tex
+      #after_body: table-of-contents.txt 
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+
+# Introduction
+
+### Logistics
+
+__Course evaluations__  
+
+Please take a few minutes to complete instructor and T.A. evaluations
+
+- Complete online evaluation for Ozan  
+    - Should have received an email or log on to your MyUCLA account
+- Complete online evaluation for Patricia (TA), Link [here](https://goo.gl/forms/tnBwfR2Ot29NXR023)
+
+__Problem set 10__
+
+- Due next Friday at noon; focuses on accessing vector elements and basics of looping
+- We give big hints; less emphasis on "figure it out on your own"
+
+__Reading:__
+
+- Grolemund and Wickham 20.4 - 20.5 (Chapter 20 is on "Vectors")
+- Grolemund and Wickham 21.1 - 21.3 (Chapter 21 is on "Iteration")
+- [OPTIONAL] Any slides from lecture we don't cover
+    - I wrote this lecture knowing we won't have time to get through all sections
+    - Slides we don't cover are mainly for your future reference  
+
+__Programming courses and resources__
+
+- Link [here](https://docs.google.com/spreadsheets/d/1zF1Rkqu_T3UdtrmItj79ASN5-_cvbqFoIr7wzhaTY0M/edit#gid=0)

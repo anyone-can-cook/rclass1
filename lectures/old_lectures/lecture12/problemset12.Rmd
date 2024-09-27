@@ -1,0 +1,384 @@
+---
+title: "Lecture 10 problem set"
+author: "INSERT YOUR NAME HERE"
+date: "December 14, 2018"
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true 
+    toc_depth: 1
+    df_print: tibble 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+```
+# Required reading and instructions  
+
+##  Required reading
+
+- Grolemund and Wickham 20.4 - 20.5 (chapter 20 is on "Vectors)
+- Grolemund and Wickham 21.1 - 21.3 (chapter 21 is on "iteration")
+
+## General Problem Set instructions  
+
+In this homework, you will specify `pdf_document` as the output format. You must have LaTeX installed in order to create pdf documents. 
+
+If you have not yet installed MiKTeX/MacTeX, I recommend installing TinyTeX, which is much simpler to install!
+
+- Instructions for installation of TinyTeX can be found [Here](https://bookdown.org/yihui/rmarkdown/installation.html#installation)
+
+- General Instructions for Problem Sets [Here](https://github.com/ozanj/rclass/raw/master/lectures/problemset_resources.pdf)  
+
+****** 
+
+## Overview of problem set
+
+This problem set will require you to do tasks that apply skills we learned about accessing elements of vectors to modify a user written function. It will also ask you to build some simple loops that give you practice utilizing the three different approaches to looping over an object. Step-by-step instructions are given below.
+
+
+# Part 1: Modify function from previous problem set that calculated for percent of people in each race/ethnicity group 
+
+First, you will run a couple chunks of code below, then you will answer specific questions described below.
+
+Load libraries
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+Run code below to load zip-code level data from the Census American Community Survey (ACS) and keep selected variables
+```{r}
+#options(tibble.print_min=90)
+#options(tibble.print_min=10) 
+
+zip_data <- as.tibble(read.csv('https://github.com/ozanj/rclass/raw/master/data/acs/zip_to_state.csv', na.strings=c('','NA'),colClasses=c("zip_code"="character"))) %>% 
+  filter(!(state_code %in% c("PR"))) %>%
+  arrange(zip_code) %>%
+  select(state_code,zip_code,pop_total, pop_white, pop_black, pop_amerindian, pop_asian, pop_nativehawaii, pop_otherrace, pop_tworaces, pop_hispanic) %>%
+  rename(pop_nativeamer = pop_amerindian, pop_latinx = pop_hispanic)
+  
+names(zip_data)
+class(zip_data)
+
+
+```
+
+Run code below [answer to question from previous problem set] which creates percent race/ethnicity variables outside of a function for two race/ethnicity categories
+```{r}
+#white
+zip_data$pop_white_pct <- (zip_data$pop_white/zip_data$pop_total)*100
+
+zip_data %>% select(state_code,zip_code,pop_white,pop_total,pop_white_pct) %>% head(n=10)
+
+zip_data$pop_white_pct <- NULL # remove variable
+
+#latinx
+zip_data$pop_latinx_pct <- (zip_data$pop_latinx/zip_data$pop_total)*100
+
+zip_data %>% select(state_code,zip_code,pop_latinx,pop_total,pop_latinx_pct) %>% head(n=10)
+
+zip_data$pop_latinx_pct <- NULL # remove variable
+```
+
+
+## Question 1: Modify your approach to creating these percent race/ethnicity variables outside of a function
+
+__Specific task__
+
+- Instead of using this "Base R" approach to create variables
+    - `data_frame_name$var_name_pct <- (data_frame_name$var_name/zip_data$pop_total)*100`  
+- I want you to use this "Base R" approach to create variables
+    - `data_frame_name[["var_name_pct"]] <- (data_frame_name[["var_name"]]/zip_data[[pop_total]])*100`  
+- Perform task outside of a function for at least two race/ethnicity categories (can be white and latinx)
+
+```{r}
+
+```
+
+
+## Question 2: Modify the function call you use to create these percent race/ethnicity variables within a function
+
+First, you will run code below and then complete the specific task
+
+Run code below [solution to previous problem set] which creates and calls the `pct_race` function to create percent race/ethnicity variables
+
+- Note: the `pct_race` function below is slightly revised version of the solution from the previous problem set. Specifically, the below function only takes two arguments. In previous problem set I told you this function should take three arguments. I realized that one of these arguments was superfluous.  
+- Make sure to delete variable after checking that your function worked   
+    - `zip_data$pop_latinx_pct <- NULL`
+
+```{r}
+pct_race <- function(pop_var,total_var){
+
+  (pop_var/total_var)*100 # this is what function returns; this code exists only inside function and will go away after function call unless you assign its values to a variable using <-
+}
+
+#show what this function returns fpr these inputs; but note that this doesn't create anything
+str(pct_race(zip_data$pop_white,zip_data$pop_total))
+
+#call function to create pct white variable
+zip_data$pop_white_pct <- pct_race(zip_data$pop_white,zip_data$pop_total)
+
+zip_data %>% select(state_code,zip_code,pop_white,pop_total,pop_white_pct) %>% head(n=10)
+
+zip_data$pop_white_pct <- NULL # remove variable
+
+#call function to create pct latinx variable
+zip_data$pop_latinx_pct <- pct_race(zip_data$pop_latinx,zip_data$pop_total)
+
+zip_data %>% select(zip_code,pop_latinx,pop_total,pop_latinx_pct) %>% head(n=10)
+
+zip_data$pop_latinx_pct <- NULL # remove variable
+```
+
+
+__Specific task/question: Modify the function call you use to create these percent race/ethnicity variables within a function.__ Here are additional details
+
+- Modify the function **call** of your `pct_race` function so that you replace instances of `df_name$var_name` with `df_name[["var_name"]]
+- Note: the actual function `pct_race` will be exactly the same as before
+- Call function for at least two race/ethnicity groups  
+- Make sure to delete variable after checking that your function worked   
+    - `zip_data$pop_latinx_pct <- NULL`
+
+```{r}
+
+```
+
+
+## Question 3: Modify function and function call used to create percent race/ethnicity variables within a function
+
+__Specific requirements__
+
+- Modify function so that the name of the data frame is a separate argument from the name of the variables and call function for at least two race/ethnicity groups
+- Function will now take three arguments:
+    1. `df`: name of the data frame (e.g., `zip_data`)
+    2. `pop_var`: name of the variable that is the numerator for the percent race variable
+    3. `total_var`: name of the variable that is the denominator for the percent race variable
+- Hint for how to modify function body
+    - Change code from this:
+        - `(pop_var/total_var)*100`
+    - To this:
+        - `(df[[pop_var]]/df[[total_var]])*100`
+- Hint for program call 
+    - For the arguments `pop_var` and `total_var` you will now just refer to `"variable name"` rather than `df_name[["variable name"]]`
+        - Note: In function call, the values for `pop_var` and `total_var` should be in quotes
+    - However, in program call for `df` will be `df name` [i.e., without quotes]
+        - Hint: `df[["new variable"]] <- pct_race(df, "variable", "variable")` 
+
+```{r}
+
+```
+
+
+
+# Part 2: Loops
+
+There are three ways to loop over a data frame:
+
+1. Loop over elements
+    - e.g., sequence syntax is: `for (i in data_frame_name)`
+1. Loop over element names
+    - e.g., sequence syntax is: `for (i in names(data_frame_name))`
+1. Loop over numeric indices of element position
+    - e.g., sequence syntax is: `for (i in 1:length(data_frame_name))`
+
+This part of the problem set will give you some practice looping over elements of a data frame using these three approaches. First, you will run the code below to create data frame called `zip_tiny` that consists of the first 10 observations of data frame `zip_data`. Then you will answer specific questions. All questions for this part of the problem set will utilize the data frame `zip_tiny`
+
+Run the code below to create data frame called `zip_tiny` that consists of the first 10 observations of data frame `zip_data`
+
+- Note: when we created `zip_data` above, we sorted by `zip_code` so no need to `arrange()` observations when creating `zip_tiny`
+```{r}
+#names(zip_data)
+
+zip_tiny <- NULL # remove object if it exists
+zip_tiny <- zip_data[1:10,] # base r approach
+#zip_tiny <- zip_data %>% head(n=10) # tidyverse approach; yields same result as base r approach
+
+#investigate object
+typeof(zip_tiny) # list
+class(zip_tiny) # tibble, which is particular kind of data frame
+str(zip_tiny)
+```
+
+
+## Question 1: Loop across elements of object
+
+For this question, you get full credit just by running the code below. But try to understand how the sequence syntax works and what each line of the body is doing.
+
+- Note that one line of the loop body calculates the mean value of the variable using the `mean()` function. The `mean()` function will not calculate mean values for variables that do not have numeric or logical classes (e.g., character vars, factor vars). But this won't stop code from running, so you can ignore these warnings.  
+
+```{r}
+for (i in zip_tiny) {
+  
+  cat("Value of object i=",i, fill=TRUE) # value of local variable i
+  cat("Object type=",typeof(i),"; length=",length(i),"; class=",class(i),sep="",fill=TRUE) # type, length, and class of i
+  print(attributes(i)) # note: we have to print attributes separately rather than in cat() because if variable attributes are not NULL then they are a "list" rather than a vector and cat() function cannot print lists
+  cat("Mean value of object i=",mean(i, na.rm = TRUE),"\n", fill=TRUE) # calculate mean value of variable associated with i
+  #cat("\n",fill=TRUE)
+  
+}
+
+```
+
+
+## Question 2: Loop across names of object elements
+
+
+__Question__: Write a loop that loops across **names** of object elements of data frame `zip_tiny` [as opposed to looping across element contents as above]
+
+- The body of the loop only needs to contain this line of code:
+    - `cat("\n","value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`
+    
+
+```{r}
+
+```
+
+
+## Question 3: Loop across names of object elements continued
+
+
+__Question__: Modify the previous loop to also print the element contents associated with each element name, using `[]` rather than `[[]]` to access the element contents
+
+- I want you to print the structure (i.e., `str()` function) of the element contents rather than directly printing the element contents
+    - Hint for syntax: `print(str(data_frame_name[i]))`
+- First line of loop body should be the same as previous loop:
+    - `cat("\n","value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`  
+- You should have two lines of code in your loop body
+
+
+```{r}
+
+```
+
+
+## Question 4: Loop across names of object elements continued
+
+__Question__: Modify the previous loop to revise the way the loop prints the element contents associated with each element name, this time using `[[]]` rather than `[]` to access the element contents
+
+- I want you to print the structure (i.e., `str()` function) of the element contents rather than directly printing the element contents
+    - Hint for syntax: `print(str(data_frame_name[[i]]))`
+- First line of loop body should be the same as previous loop:
+    - `cat("\n","value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`  
+- You should have two lines of code in your loop body (same as above)
+    
+   
+```{r}
+
+```
+
+
+## Question 5: Loop across names of object elements continued
+
+__Question__: When using the `for (i in names(data_frame_name))` approach to loop over elements in a data frame, what is the difference between objects created by the syntax `data_frame_name[i])` and objects created by the syntax `data_frame_name[[i]])`?
+
+YOUR ANSWER HERE:
+
+
+
+
+## Question 6: Loop across names of object elements continued
+
+__Question__: Modify the previous loop to add a line that prints the mean value for each element of the data frame `zip_tiny`
+
+- First line of loop body should be: 
+    - `cat("\n","value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`
+- Second line of loop body should print the structure (i.e., `str()` function) of the element contents [this line will be the same as second line in previous loops]
+- Third line of loop body will print the mean value for each element
+    - Hint: when calculating means, use the `data_frame_name[[i]])` approach to access element contents rather than the `data_frame_name[i])` approach  
+    - Third line of code should start with:
+        - `cat("Mean of element named",i,"is",....`)
+    - Note: the `mean()` function will not calculate mean values for variables that do not have numeric or logical classes (e.g., character vars, factor vars). But this won't stop code from running, so you can ignore these warnings.  
+
+
+```{r}
+
+```
+
+
+## Question 7: Loop across names of object elements continued
+
+
+__Question__: Modify the previous loop (which calculates mean values in the last line of the loop body) so that the loop is only run for variables that are logical or numeric
+
+- The body of the loop will be exactly the same as the body of the previous loop
+- Change the sequence syntax as follows:
+    - from this approach: `for (i in names(zip_tiny))`
+    - to this approach: `for (i in c("var_name1","var_name2","var_name3","etc...")`
+        - Essentially, you will manually insert the name of all variables from `zip_data` that have a numeric class
+        - Note that variable names must be enclosed by quotes  
+        - Note that a more advanced approach to this is on page 80 of lecture 10
+
+
+```{r}
+
+```
+
+
+## Question 8: Loop over elements based on numeric element position
+
+First, run this code to become acquainted with the components involved for writing the `sequence` syntax for this approach to looping
+```{r}
+zip_tiny
+length(zip_tiny) # length = number of elements = number of variables (when object is data frame)
+1:length(zip_tiny)
+```
+
+
+__Question__: Use `for (i in 1:length(data_frame_name))` approach to loop over elements of the data frame `zip_tiny` based on element position. 
+
+- Your loop body should be: 
+    - `cat("\n","value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`
+
+
+```{r}
+
+```
+
+
+## Question 9: Loop over elements based on numeric element position, continued
+
+__Question__: Modify the loop above to add a second line that prints out the name of the variable associated with that element position
+
+- Hint for syntax: `names(data_frame_name)[[i]]`
+- First line of loop body should be: 
+    - `cat("\n","Value of object i=",i,"; type=",typeof(i),sep="",fill=TRUE)`  
+- Second line of loop body should start with:  
+    - `cat("Variable name associated with object i =", ...)`
+    
+```{r}
+
+```
+
+
+## Question 10: Loop over elements based on numeric element position, continued
+
+__Question__: Keeping all the code from the loop above, add a third line to the loop body that prints the structure of the element contents associated with that variable, using `[[]]` rather than `[]` to accesss element contents
+
+- syntax hint: `print(str(data_frame_name[[i]]))`
+
+```{r}
+
+```
+
+
+## Question 11: Loop over elements based on numeric element position, continued
+
+__Question__: Keeping all the code from the loop above, add a fourth line to the loop body that prints the mean value for each element of the data frame `zip_tiny`
+
+- Hint: when calculating means, use the `data_frame_name[[i]])` approach to access element contents rather than the `data_frame_name[i])` approach
+- Note: the `mean()` function will not calculate mean values for variables that do not have numeric or logical classes (e.g., character vars, factor vars). But this won't stop code from running, so you can ignore these warnings.  
+- Fourth line of code should start with:  
+    - `cat("Mean of element named",names(df[[i]]),"is", ...`)
+
+```{r}
+
+```
+
+
+
+Once finished, knit to (pdf) and upload both .Rmd and pdf files to class website under the week 10 tab  
+*Remember to use this naming convention "lastname_firstname_ps10"*

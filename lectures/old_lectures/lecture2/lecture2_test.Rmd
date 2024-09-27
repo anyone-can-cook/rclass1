@@ -1,0 +1,1213 @@
+---
+title: "Lecture 2: Investigating data patterns" # potentially push to header
+subtitle:  "Managing and Manipulating Data Using R"
+author: 
+date: 
+classoption: dvipsnames  # for colors
+fontsize: 8pt
+urlcolor: blue
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    slide_level: 3
+    theme: default # AnnArbor # push to header?
+    #colortheme: "dolphin" # push to header?
+    #fonttheme: "structurebold"
+    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax highlighting); push to header
+    df_print: tibble #default # tibble # push to header?    
+    latex_engine: xelatex #  Available engines are pdflatex [default], xelatex, and lualatex; The main reasons you may want to use xelatex or lualatex are: (1) They support Unicode better; (2) It is easier to make use of system fonts.
+    includes:
+      in_header: ../beamer_header_test.tex
+      #after_body: table-of-contents.txt 
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+#knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
+  #comment = "#>" makes it so results from a code chunk start with "#>"; default is "##"
+```
+
+```{r, echo=FALSE, include=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists('transform-logical.png')){
+  download.file(url = 'https://raw.githubusercontent.com/ozanj/rclass/master/lectures/lecture2/transform-logical.png', 
+                destfile = 'transform-logical.png',
+                mode = 'wb')
+}
+```
+
+
+```{r echo=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists("fp1.JPG")) {
+  download.file(url ="https://github.com/ozanj/rclass/raw/master/lectures/lecture2/fp1.JPG",
+                destfile = 'fp1.JPG',
+                mode = 'wb')
+}
+```
+
+```{r echo=FALSE}
+#DO NOT WORRY ABOUT THIS
+if(!file.exists("fp2.JPG")) {
+  download.file(url ="https://github.com/ozanj/rclass/raw/master/lectures/lecture2/fp2.JPG",
+                destfile = 'fp2.JPG',
+                mode = 'wb')
+}
+```
+
+# Introduction
+
+### What we will do today
+
+\tableofcontents
+```{r, eval=FALSE, echo=FALSE}
+#Use this if you want TOC to show level 2 headings
+\tableofcontents
+#Use this if you don't want TOC to show level 2 headings
+\tableofcontents[subsectionstyle=hide/hide/hide]
+```
+
+
+### Libraries we will use today
+
+"Load" the package we will use today (output omitted)
+```{r, message=FALSE}
+library(tidyverse)
+```
+If package not yet installed, then must install before you load. Install in "console" rather than .Rmd file
+
+- Generic syntax: `install.packages("package_name")`
+- Install "tidyverse": `install.packages("tidyverse")`
+
+Note: when we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
+
+- `install.packages("tidyverse")`
+- `library(tidyverse)`
+
+# R Markdown
+
+### What is R Markdown
+
+Borrowing from Darin Christensen:
+
+- R Markdown documents embed R code, the output associated with R code, and text into one document
+- An R Markdown document is a "'Living' document that updates every time you compile ["knit"] it"
+- R Markdown documents have the extension .Rmd
+    - can think of them as text files with the extension .Rmd rather than .txt
+- At top of .Rmd file you specify the "output" style, which dictates what kind of formatted document will be created
+- When you compile ["knit"] a .Rmd file, the resulting formatted document can be an HTML document, a PDF document, an MS Word document, or many other types
+
+How we will be using R Markdown files in this class:
+
+- homework you submit will be .Rmd files, with "output" style will be `html_document` or `pdf_document`
+- lectures we write are .Rmd files, where we the output style will usually be `beamer_presentation`
+    - this is essentially a PDF document, where each page is a slide
+
+### Creating RMarkdown documents
+
+__Do this with a partner__
+
+Approach for creating a RMarkdown document. 
+
+1. Point-and-click from within RStudio
+    - Click on _File_ >> _New File_ >> _R Markdown_ >> _Document_ >> choose _HTML_ >> click _OK_
+    - save the .Rmd file [any name, anywhere you can find it]
+    - "Knit" the entire .Rmd file
+        - point-and-click OR shortcut: __Cmd/Ctrl + Shift + k__
+
+```{r eval=FALSE, echo=FALSE}
+# 2. From blank text file
+#     - create blank text file
+#         - can give it any name, but change extension from .txt to .Rmd
+#     - Open this blank .Rmd file in Rstudio
+#     - copy this text into file [LINK HERE][PATRICIA CREATE LINK TO sample_simple_rmarkdown.txt FILE WHICH IS STORED IN LECTURE 2 DIRECTORY]
+#     - "knit" the entire .Rmd file
+#         - point-and-click OR shortcut: __Cmd/Ctrl + Shift + k__
+
+#Don't worry about this. Ozan's notes
+```
+
+### Components of a .Rmd file
+
+An RMarkdown (.Rmd) file consists of several parts
+
+1. __YAML header__
+    - YAML stands for "yet another markup language"
+    - controls settings that apply to the whole document (e.g., "output" should be html_document or pdf_document, whether to include table of contents, etc.)
+    - YAML header goes at very top of document
+    - starts with a line of three horizontal dashes `---`; ends with a line of three horizontal dashes `---`
+2. __Text__ in body of .Rmd file
+    - e.g., headings; description of results, etc.
+3. __R code chunks__ in body of .Rmd file
+```{r, eval=FALSE}
+a <- c(2,4,6)
+a
+a-1
+```
+4. __R output__ associated with code chunks
+```{r, echo=FALSE}
+a <- c(2,4,6)
+a
+a-1
+```
+
+### Comment: Running R code chunks vs. "knit" entire .Rmd file
+
+Two ways to execute R commands in .Rmd file:
+
+1. "Knit" entire .Rmd file
+    - shortcut: __Cmd/Ctrl + Shift + k__
+1. "Run" code chunk or selected lines within code chunk
+    - Run selected line(s): __Cmd/Ctrl + Enter__
+    - Run current chunk: __Cmd/Ctrl + Shift + Enter__
+
+Comment on default settings for RStudio:
+
+- When you knit entire .Rmd file, "objects" created within .Rmd file will not be available after file comples
+- When you run code chunk (or selected lines in chunk), objects created by lines you run will be in your "environment" until you remove them or quit R session
+
+### Output types of .Rmd file
+
+Common/important output types:
+
+- __html_document__: R Markdown originally designed to create HTML documents
+    - Most features/code in .Rmd files were written for html_document
+    - many of these features are available in other output types
+    - When learning R Markdown, best to start by learning html_document
+- __pdf_document__: Requires installation of LaTeX (MiKTeX/MacTeX)
+    - How it works:
+        - You write .Rmd code; 
+        - When you compile, this .Rmd code is transformed into LaTeX code
+        - LaTeX "engine" creates the formatted .pdf file
+    - Can include some of the same features available for _html_document_
+    - Can insert LaTeX commands in .Rmd file with _pdf_document_ output
+- __beamer_presentation__: Requires installation of LaTeX
+    - "beamer" is the name for presentations written in LaTeX
+    - essentially creates PDF of presentation slides
+    - Lectures for this class created with _beamer_presentation_ output
+    - note: YAML header includes `beamer_header.tex` file, which creates some formatting rules and additional commands
+
+### Learning more about R Markdown
+
+Resources
+
+- Cheat sheets and quick reference:
+    - [Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+    - [Quick Reference](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) [I prefer the quick reference]
+- Chapters/books
+    - [Chapter 27](http://r4ds.had.co.nz/r-markdown.html) of "R for Data Science"  book
+    - [R Markdown: The Definative Guide](https://bookdown.org/yihui/rmarkdown/) book [I prefer this book]
+
+How you will learn R Markdown
+
+- Lectures written as .Rmd file
+    - During class run "code chunks" and try to "knit" entire .Rmd file
+- I'll assign __small__ amount of reading on R Markdown
+    - prior to next week:
+        - spend 10-15 minutes familiarizing yourself with [Quick Reference](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+        - Read section [3.1 of R Markdown: The Definative Guide](https://bookdown.org/yihui/rmarkdown/html-document.html), about creating html_document
+- Homework must be written in .Rmd file
+    - you submit .Rmd file AND output of compiled file
+    - for next week, you will submit homework as html_document output
+
+# More R basics: functions and directories
+
+## Introduction to using functions
+
+### What are functions
+
+\medskip __Functions__ are pre-written bits of code that accomplish some task. 
+
+\medskip Functions generally follow three sequential steps:
+
+1. take in an __input__ object(s)
+2. __process__ the input.
+3. __return__ (A) a new object or (B) a visualizatoin (e.g., plot)
+
+For example, `sum()` function calcualtes sum of elements in a vector
+
+1. __input__. takes in a vector of elements (numeric or logical)
+2. __processing__. Calculates the sum of elements
+3. __return__. Returns numeric vector of length=1; value is sum of input vector
+```{r}
+sum(c(1,2,3))
+typeof(sum(c(1,2,3)))
+length(sum(c(1,2,3)))
+
+sum(c(TRUE,TRUE,FALSE))
+typeof(sum(c(TRUE,TRUE,FALSE))); length(sum(c(TRUE,TRUE,FALSE)))
+```
+### Function syntax
+
+Components of a function
+
+- function name (e.g., `sum()`, `length()`, `seq()`)
+- function arguments
+    - Inputs that the function takes, which determine what function does
+        - can be vectors, data frames, logical statements, etc.
+    - In "function call" you specify values to assign to these function arguments
+        - e.g., `sum(c(1,2,3))`
+    - Separate arguments with a comma `,`
+        - e.g., `seq(10,15)`
+Example: the sequence function, `seq()`
+```{r}
+seq(10,15)
+```
+### Function syntax: More on function arguments
+
+Usually, function arguments have names
+
+- e.g., the `seq()` function includes the arguments `from`, `to`, `by`
+- when you call the function, you need to assign values to these arguments; but you usually don't have to specify the name of the argument
+```{r}
+seq(from=10, to=20, by=2)
+seq(10,20,2)
+```
+Many function arguments have "default values", set by whoever wrote function
+
+- if you don't specify a value for that argument, the default value is inserted
+- e.g., partial list of default values for `seq()`: `seq(from=1, to=1, by=1)`
+```{r}
+seq()
+seq(to=10)
+seq(10) # R assigned value of 10 to "to" rather than "from" or "by"
+```
+### Function arguments, the `na.rm` argument
+
+When R performs calculation and an input has value `NA`, output value is `NA`
+```{r}
+5+4+NA
+```
+
+R functions that perform calculations often have argument named `na.rm`
+
+- `na.rm` argument asks whether to remove `NA` values prior to calculation
+- For most functions, default value is `na.rm = FALSE`
+    - This means "do not remove `NAs`" prior to calculation
+    - e.g., default values for `sum()` function: `sum(..., na.rm = FALSE)`
+```{r}
+sum(c(1,2,3,NA), na.rm = FALSE) # default value
+sum(c(1,2,3,NA))
+```
+- if you specify, `na.rm = TRUE`, `NA` values removed prior to calculation
+```{r}
+sum(c(1,2,3,NA), na.rm = TRUE)
+```
+
+### Help files for functions
+
+To see help file on a function, type `?function_name` without parentheses
+```{r, eval=FALSE}
+?sum
+?seq
+```
+
+__Contents of help files__
+
+- __Description__. What the function does
+- __Usage__. Syntax, including default values for arguments
+- __Arguments__. Description of function arguments
+- __Details__. Details and idiosyncracies of about how the function works.
+- __Value__. What (object) the function "returns"
+    - e.g., `sum()` returns vector of length 1 whose value is sum of input vector
+- __References__. Additional reading
+- __See Also__. Related functions
+- __Examples__. Examples of function in action
+- Bottom of help file identifies the package the function comes from
+
+\medskip __Practice!__
+
+- when you encounter new function, spend two minutes reading help file
+- over time, help files will feel less cryptic and will start to feel helpful
+
+### Function arguments, the dot-dot-dot (`...`) argument
+
+\medskip On help file for many functions, you will see an argument called `...`, referred to as the "dot-dot-dot" argument
+```{r, eval=FALSE}
+?sum
+?seq
+```
+
+"Dot-dot-dot" arguments have several uses. What you should know for now:
+
+- `...` refers to arguments that are "un-named"; but user can specify values
+    - e.g., default syntax for `sum()`: `sum(..., na.rm = FALSE)`
+        - argument `na.rm` is "named" (name is `na.rm`); argument `...` un-named
+- `...` used to allow a function to take an arbitrary number of arguments:
+```{r}
+sum(c(10,5,NA),na.rm=TRUE)
+
+#Here the sum function takes 3 un-named arguments
+sum(10,5,NA,na.rm=TRUE)
+
+#Here the sum function takes 5 un-named arguments
+sum(10,5,10,20,NA,na.rm=TRUE)
+```
+
+## Directories and filepaths 
+
+### Working directory
+
+__(Current) Working directory__
+
+- the folder/directory in which you are currently working
+- this is where R looks for files
+- Files located in your current working directory can be accessed without specifying a filepath because R automatically looks in this folder
+
+Function `getwd()` shows current working directory
+```{r}
+getwd()
+```
+Command `list.files()` lists all files located in working directory
+```{r}
+getwd()
+list.files()
+```
+
+### Working directory, "Code chunks" vs. "console" and "R scripts"
+
+When you run __code chunks__ in RMarkdown files (.Rmd), the working directory is set to the filepath where the .Rmd file is stored
+
+```{r}
+getwd()
+list.files()
+```
+
+When you run code from the __R Console__ or an __R Script__, the working directory is....
+
+
+Command `getwd()` shows current working directory
+```{r}
+getwd()
+```
+
+### Absolute vs. relative filepath  
+**Absolute file path**:  The absolute file path is the complete list of directories needed to locate a file or folder.  
+`setwd("/Users/pm/Desktop/rclass/lectures/lecture2")`
+
+
+**Relative file path**:  The relative file path is the path relative to your current location/directory. Assuming your current working directory is in the "lecture2" folder and you want to change your directory to the data folder, your relative file path would look something like this:  
+`setwd("../../data")`  
+
+            File path shortcuts
+
+| **Key** | **Description** |
+| ------ | -------- |
+| ~    | tilde is a shortcut for user's home directory (mine is my name pm)   |
+| ../    | moves up a level   |
+| ../../    | moves up two level   |
+
+
+### Exercise  
+1. Let's create a folder on our desktop and name it red  
+2. Inside the red folder, create two subfolders named orange and yellow  
+3. Inside the yellow folder create another subfolder named green  
+
+Make sure to name these folders in lowercase.  
+
+You should have 1 folder on your desktop called red. Inside the red folder you have two folders called orange and yellow. Inside the yellow folder you have a folder called green.  
+
+Here is a visual of how it should look...  
+
+### File path visual  
+![](fp1.JPG)
+![](fp2.JPG)  
+
+### Exercise continued  
+Let's say we want to get to the green folder using the absolute file path.  
+1. View your current working directory `getwd()`  
+2. Set your working directory to the green folder using the absolute file path  
+3. Now set your working directory to the orange folder using the relative file path  (hint: ../)  
+
+
+### Solution
+
+```{r, eval=FALSE}
+getwd()
+setwd("~/Desktop/red/yellow/green")
+getwd() 
+setwd("../../orange")
+getwd()
+```
+
+
+# Investigating objects
+
+### Load .Rdata data frames we will use today
+
+Data on off-campus recruiting events by public universities
+
+- Data frame object `df_event`
+    - One observation per university, recruiting event
+- Data frame object `df_school`
+    - One observation per high school (visited and non-visited)
+
+```{r}
+rm(list = ls()) # remove all objects in current environment
+
+getwd()
+#load dataset with one obs per recruiting event
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+#load("../../data/recruiting/recruit_event_somevars.Rdata")
+
+#load dataset with one obs per high school
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData"))
+#load("../../data/recruiting/recruit_school_somevars.Rdata")
+```
+
+
+### Listing objects
+
+__Files in your working directory__
+
+`list.files()` function lists files in your current working directory
+
+- if you run this code from .Rmd file, working directory is location .Rmd file is stored
+```{r}
+getwd() # what is your current working directory
+list.files()
+```
+__Objects currently open in your R session__
+
+`ls()` function lists objects currently open in R
+```{r}
+x <- "hello!"
+ls() # Objects open in R
+```
+### Removing objects
+
+`rm()` function removes specified objects open in R
+```{r}
+rm(x)
+ls()
+```
+Command to remove all objects open in R (I don't run it)
+```{r, eval=FALSE}
+rm(list = ls())
+```
+
+### Describing objects, focus on __data frames__
+
+\medskip __type__ and __length__ of a data frame object
+
+- Recall that a data frame is an object where __type__ is a list
+- __Length__ of an object is the number of elements
+    - When object is a data frame, number of elements = number of variables
+
+```{r}
+typeof(df_event)
+length(df_event) # = num elements = num columns
+```
+Number of __columns__ and __rows__ of data frame object
+
+- number of columns = number of elements = number of variables
+- number of rows = number of observations
+```{r}
+ncol(df_event) # num columns = num variables
+nrow(df_event) # num rows = num observations
+dim(df_event) # shows number rows by columns
+```
+`str()` provides compact information on structure any object (output omitted)
+```{r, results="hide"}
+str(df_event)
+```
+
+## Variables names
+
+### Variable names
+
+`names()` function lists names of elements in an object
+```{r, eval=FALSE}
+?names
+```
+
+
+When object is a data frame:
+
+- each element is a variable
+- each element name is a variable name
+
+```{r}
+names(df_event)
+```
+### Variable names
+
+Refer to specific named elements of an object using this syntax:
+
+- `obj_name$element_name`
+
+When object is data frame, refer to specific variables using this syntax: 
+
+- `data_fram_name$varname`
+- __This approach to isolating variables very useful for investigating data__
+
+```{r}
+typeof(df_event$instnm)
+typeof(df_event$med_inc)
+```
+### Variable names
+
+\medskip Recall that data frames are lists with following criteria:
+
+- each element of the list is a vector
+    - each element of list is a variable; length of data frame = number of variables
+```{r}
+length(df_event)
+nrow(df_event)
+#str(df_event)
+```
+
+- each element of the list (i.e., variable) has the same length
+    - Length of each variable is equal to number of observations in data frame
+
+```{r}
+typeof(df_event$event_state)
+length(df_event$event_state)
+str(df_event$event_state)
+
+typeof(df_event$med_inc)
+length(df_event$med_inc)
+str(df_event$med_inc)
+```
+
+### Variable names
+
+Recall that object `df_school` has one obs per high school
+
+- the variable `visits_by_100751` shows number of visits by University of Alabama to each high school
+- like all variables in a data frame, the var `visits_by_100751` is just a vector
+```{r}
+typeof(df_school$visits_by_100751)
+length(df_school$visits_by_100751) # num elements in vector
+sum(df_school$visits_by_100751)
+```
+Sp we perform calculations on a variable, just like we would any numeric vector
+```{r}
+v <- c(2,4,6)
+typeof(v)
+length(v)
+sum(v)
+```
+
+## View and print data
+
+### Viewing and printing data frames
+
+Three ways to view/print a data frame object
+
+1. Simply type the object name (output omitted)
+
+    - number of observations and rows printed depend on YAML header settings and on attributes (discussed next week) of the object
+```{r, results="hide"}
+df_event
+```
+    
+2. Use the `View()` function to view data in a browser
+```{r eval=FALSE}
+View(df_event)
+```
+3. `head()` to show the first _n_ rows
+```{r results="hide"}
+#?head
+head(df_event, n=5)
+```
+### Viewing and printing data frames
+
+`obj_name[<rows>,<cols>]` to print specific rows and columns of data frame
+
+- particularly powerful when combined with sequences (e.g., `1:10`)
+
+\medskip Examples:
+
+- Print first five rows
+```{r results="hide"}
+df_event[1:5, ]
+```
+- Print first five rows and first three columns
+```{r results="hide"}
+df_event[1:5, 1:3]
+```
+- Print first three columns of the 100th observation
+```{r results="hide"}
+df_event[100, 1:3]
+```
+- Print the 50th observation, all variables
+```{r results="hide"}
+df_event[50,]
+```
+### Viewing and printing data
+
+\medskip type `obj_name$var_name` to print specific elements (i.e., vars) in data frame
+
+```{r results="hide"}
+df_event$zip
+```
+- recall that these elements are vectors, with length = number of obs
+
+```{r}
+typeof(df_event$zip)
+length(df_event$zip)
+```
+
+- `obj_name$var_name` syntax can be combined with sequences
+    - vectors don't have "rows" or "columns"; they just have elements
+    - so use sequence to identify which elements you want to print
+```{r}
+df_event$event_state[1:10]
+df_event$event_type[6:10]
+```
+
+Can also print multiple variables using `combine()` function
+```{r}
+c(df_event$event_state[1:5],df_event$event_type[1:5])
+```
+
+
+### Exercise
+
+
+Create a printing exercise using the df_school data frame
+
+1. Use `obj_name[<rows>,<cols>]` to print the first 5 rows and 3 columns of data frame
+1. Use head() to print first 4 observations
+1. Use `obj_name$var_name[1:10]` to print the first 10 observations of a variable
+1. Use combine() to print the first 3 observations of variables "school_type" & "name"
+
+### Solution
+
+1. Use `obj_name[<rows>,<cols>]` to print the first 5 rows and 3 columns of data frame
+```{r}
+df_school[1:5,1:3]
+```
+
+### Solution
+2. Use head() to print first 4 observations
+```{r}
+head(df_school, n=4)
+```
+
+### Solution
+3. Use `obj_name$var_name[1:10]` to print the first 10 observations of a variable
+```{r}
+df_school$name[1:10]
+```
+
+### Solution
+4. Use combine() to print the first 3 observations of variables "school_type" & "name"
+```{r}
+c(df_school$school_type[1:3],df_school$name[1:3])
+```
+
+
+## Missing values
+
+### Missing values
+
+Missing values have the value `NA`
+
+- `NA` is a special keyword, not the same as the character string `"NA"`
+
+use `is.na()` function to determine if a value is missing
+
+- `is.na()` returns a logical vector
+```{r}
+is.na(5)
+is.na(NA)
+is.na("NA")
+typeof(is.na("NA")) # example of a logical vector
+
+nvector <- c(10,5,NA)
+is.na(nvector)
+typeof(is.na(nvector)) # example of a logical vector
+
+svector <- c("e","f",NA,"NA")
+is.na(svector)
+```
+
+### Missing values are "contagious"
+
+What does "contagious" mean?
+
+- operations involving a missing value will yield a missing value
+
+```{r}
+7>5
+7>NA
+0==NA
+2*c(0,1,2,NA)
+NA*c(0,1,2,NA)
+```
+###  Function and missing values, the `table()` function
+
+`table()` function useful for investigating categorical variables
+```{r}
+table(df_event$g12offered)
+```
+
+By default `table()` ignores `NA` values
+
+- `useNA` argument determines whether to include `NA` values
+    - "allowed values correspond to never ("no"); only if count is positive ("ifany"); and even for zero counts ("always")"
+```{r}
+nrow(df_event)
+table(df_event$g12offered, useNA="always")
+```
+Broader point:
+
+- Most functions that create descriptive statistics have options about how to treat missing values
+- When investigating data, good practice to _always_ show missing values
+
+Tip: 
+
+- command `str(df_event)` shows which variables have missing values
+```{r results="hide", echo=FALSE}
+str(df_event)
+```
+
+
+# Investigating data patterns with tidyverse
+
+### Introduction to the `dplyr` library
+
+`dplyr`, a package within the `tidyverse` suite of packages, provide tools for manipulating data frames
+
+- Wickham describes functions within `dplyr` as a set of "verbs" that fall in the broader categories of __subsetting__, __sorting__, and __transforming__
+
+Today | Next two weeks
+------------- | -------------
+__Subsetting data__ | __Transforming data__
+- `select()` variables  | - `mutate()` creates new variables
+- `filter()` observations | - `summarize()` calculates across rows
+__Sorting data__ | - `group_by()` to calculate across rows within groups
+- `arrange()` | 
+
+All `dplyr` verbs (i.e., functions) work as follows
+
+1. first argument is a data frame
+1. subsequent arguments describe what to do with variables and observations in data frame
+    - refer to variable names without quotes
+1. result of the function is a new data frame
+
+## Select variables
+
+### Select variables using `select()` function
+
+Printing observations is key to investigating data, but datasets often have hundreds, thousands of variables
+
+`select()` function selects __columns__ of data (i.e., variables) you specify
+
+- first argument is the name of data frame object
+- remaining arguments are variable names, which are separated by commas and without quotes
+
+Without __assignment__, `select()` function by itself simply prints selected vars
+```{r}
+select(df_event,instnm,event_date,event_type,event_state,med_inc)
+```
+
+### Select variables using `select()` function
+
+Recall that all `dplyr` functions (e.g., `select()`) return a new data frame object
+
+- __type__ equals "list"
+- __length__ equals number of vars you select
+
+```{r}
+typeof(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+
+length(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+`glimpse()` function -- a tidyverse function for viewing data frames -- is a cross between `str()` and simply printing data
+```{r}
+#?glimpse
+glimpse(select(df_event,instnm,event_date,event_type,event_state,med_inc))
+```
+
+### Select variables using `select()` function
+
+With __assignment__, `select()` creates a new object containing only the variables you specify
+
+```{r}
+event_small <- select(df_event,instnm,event_date,event_type,event_state,med_inc)
+glimpse(event_small)
+```
+
+### Select
+
+`select()` can use "helper functions" `starts_with()`, `contains()`, and `ends_with()` to choose columns 
+
+Example:
+```{r}
+#names(df_event)
+select(df_event,instnm,starts_with("event"))
+```
+
+### Exercise
+
+The data frame `df_school` has one observation for each high school and indicators for whether the high school received a recruiting visit.
+
+```{r results="hide"}
+names(df_school)
+```
+1. Use `select()` to familiarize yourself with variables in the data frame
+1. Practice using the `contains()` and `ends_with()` helper functions to to choose variables
+
+### Rename variables
+
+
+
+`rename()` function renames variables within a data frame object
+
+\medskip Syntax:
+
+- `rename(obj_name, new_name = old_name,...)`
+\medskip
+```{r results="hide"}
+rename(df_event, g12_offered = g12offered, 
+       titlei = titlei_status_pub)
+names(df_event)
+```
+Variable names do not change permanently unless we combine rename with assignment
+\medskip
+```{r results="hide"}
+rename_event <- rename(df_event, g12_offered = g12offered, titlei = titlei_status_pub)
+names(rename_event)
+rm(rename_event)
+```
+
+## Filter rows
+
+### The `filter()` function
+
+`filter()` allows you to __select observations__ based on values of variables
+
+- Arguments
+    - first argument is name of data frame
+    - subsequent arguments are _logical expressions_ to filter the data frame
+    - Multiple expressions separated by commas work as __AND__ operators (e.g., condtion 1 `TRUE` AND condition 2 `TRUE`)
+
+- What is the result of a `filter()` command?
+    - `filter()` returns a data frame consisting of rows where the condition is `TRUE`
+
+\medskip Example using data frame object `df_school`, where each observation is a high school
+
+- Show all obs where the high school received 1 visit from UC Berkeley (110635) [output omitted]
+```{r results="hide"}
+filter(df_school,visits_by_110635 == 1)
+```
+
+Note that resulting object is list, consisting of obs where condition `TRUE`
+```{r}
+nrow(df_school)
+nrow(filter(df_school,visits_by_110635 == 1))
+```
+
+### Exercise
+
+Task
+
+- Create a filter to identify all the high schools that recieved 1 visit from UC Berkeley (110635) AND 1 visit from CU Boulder (126614)[output omitted]
+
+### Solution
+
+```{r, results="hide"}
+filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+
+nrow(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+count(filter(df_school,visits_by_110635 == 1, visits_by_126614==1))
+```
+
+
+- Must __assign__ to create new object based on filter
+```{r results="hide"}
+berk_boulder <- filter(df_school,visits_by_110635 == 1, visits_by_126614==1)
+count(berk_boulder)
+```
+### Filter, character variables
+
+Use single quotes `''` or double quotes `""` to refer to values of character variables
+
+Below, we identify all private high schools in CA that got visit by particular universities
+```{r results="hide"}
+glimpse(df_school)
+#Berkeley
+filter(df_school,visits_by_110635 == 1, school_type == "private", 
+       state_code == "CA")
+#Bama
+filter(df_school,visits_by_100751 == 1, school_type == "private", 
+       state_code == "CA") 
+
+#Berkeley and Bama
+filter(df_school,visits_by_100751 == 1, visits_by_110635 == 1, 
+       school_type == "private", state_code == "CA") 
+```
+
+
+### Logical operators for comparisons
+
+Symbol | Meaning
+-------|-------
+`==` | Equal to
+`!=` | Not equal to
+`>` | greater than
+`>=` | greater than or equal to
+`<` | less than
+`<=` | less than or equal to
+`&` | AND 
+`|` | OR
+`%in` | includes
+
+\medskip 
+
+!["Boolean" operations, x=left circle, y=right circle, from Wichkam (2018)](transform-logical.png){width=50%}
+
+### Filters and comparisons, Demonstration
+
+Schools visited by Bama (100751) and/or Berkeley (110635)
+
+```{r results="hide"}
+#berkeley and bama
+filter(df_school,visits_by_100751 >= 1, visits_by_110635 >= 1) 
+filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
+#berkeley or bama
+filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1) 
+```
+Apply `count()` function on top of `filter()` function to count the number of observations that satisfy criteria
+
+- Avoids printing individual observations
+```{r}
+#Number of schools that git visit by Berkeley AND Bama
+count(filter(df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1))
+#Number of schools that git visit by Berkeley OR Bama
+count(filter(df_school,visits_by_100751 >= 1 | visits_by_110635 >= 1))
+```
+
+### Filters and comparisons, >=
+
+\medskip Number of public high schools that are at least 50% Black in Alabama compared to number of schools that received visit by Bama
+```{r}
+#at least 50% black
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_black >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+#at least 50% white
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL"))
+count(filter(df_school, school_type == "public", pct_white >= 50, 
+             state_code == "AL", visits_by_100751 >= 1))
+```
+### Filters and comparisons, not equals (`!=`)
+
+Count the number of high schools visited by University of Colorado (126614) that are not located in CO
+```{r}
+
+#number of high schools visited by U Colorado
+count(filter(df_school, visits_by_126614 >= 1))
+
+#number of high schools visited by U Colorado not located in CO
+count(filter(df_school, visits_by_126614 >= 1, state_code != "CO"))
+#number of high schools visited by U Colorado located in CO
+#count(filter(df_school, visits_by_126614 >= 1, state_code == "CO"))
+```
+### Filters and comparisons, %in% operator
+
+What if you wanted to count the number of schools visited by Bama (100751) in a group of states?
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code == "MA" |
+               state_code == "VT" | state_code == "ME"))
+```
+Easier way to do this is with `%in%` operator
+```{r}
+count(filter(df_school,visits_by_100751 >= 1, state_code %in% c("MA","ME","VT")))
+```
+
+Select the private high schools that got either 2 or 3 visits from Bama
+```{r}
+count(filter(df_school, visits_by_100751 %in% 2:3, school_type == "private"))
+```
+### Identifying data type and possible values of variable is helpful for filtering
+
+- `class()` and `str()` shows data type of a variable 
+- `table()` to show potential values of categorical variables
+
+```{r}
+class(df_event$event_type)
+str(df_event$event_type)
+table(df_event$event_type)
+
+class(df_event$event_state)
+str(df_event$event_state) # double quotes indicate character
+
+class(df_event$med_inc)
+str(df_event$med_inc)
+```
+
+Now that we know `event_type` is a character, we can filter values
+```{r}
+count(filter(df_event, event_type == "public hs", event_state =="CA"))
+#below code would return an error because variables are character
+#count(filter(df_event, event_type == public hs, event_state ==CA))
+```
+
+
+### Exercises
+
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`  
+1. Count the number of recruiting events by Pitt at public or private high schools  
+1. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000  
+1. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000  
+1. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000  
+
+
+### Solution  
+1. Count the number of events attended by the University of Pittsburgh (Pitt) `univ_id == 215293`
+```{r}
+count(filter(df_event, univ_id == 215293))
+```
+
+2. Count the number of recruiting events by Pitt at public or private high schools 
+```{r }
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs"))
+```
+
+### Solution
+3. Count the number of recruiting events by Pitt at public or private high schools located in the state of PA
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "private hs" |
+               event_type == "public hs", event_state == "PA"))
+```
+
+4. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is less than 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc < 100000))
+```
+
+### Solution
+5. Count the number of recruiting events by Pitt at public high schools not located in PA where median income is greater than or  equal to 100,000
+
+```{r}
+count(filter(df_event, univ_id == 215293, event_type == "public hs",
+             event_state != "PA", med_inc >= 100000))
+```
+
+6. Count the number of out-of-state recruiting events by Pitt at private high schools or public high schools with median income of at least 100,000
+```{r}
+count(filter(df_event, univ_id == 215293, event_state != "PA", 
+             (event_type == "public hs" & med_inc >= 100000) |
+               event_type == "private hs"))
+```
+
+
+### Filtering and missing values
+
+Wickham (2018) states:
+
+- "`filter()` only includes rows where condition is TRUE; it excludes both `FALSE` and `NA` values. To preserve missing values, ask for them explicitly:"
+
+\medskip Investigate var `df_event$fr_lunch`, number of free/reduced lunch students
+
+- only available for visits to public high schools
+
+```{r}
+#visits to public HS with less than 50 students on free/reduced lunch
+count(filter(df_event,event_type == "public hs", fr_lunch<50))
+#visits to public HS, where free/reduced lunch missing
+count(filter(df_event,event_type == "public hs", is.na(fr_lunch)))
+#visits to public HS, where free/reduced is less than 50 OR is missing
+count(filter(df_event,event_type == "public hs", fr_lunch<50 | is.na(fr_lunch)))
+```
+
+## Arrange rows
+
+### `arrange()` function
+
+`arrange()` function "arranges" rows in a data frame; said different, it sorts observations
+
+\medskip
+Syntax: `arrange(x,...)`
+
+- First argument, `x`, is a data frame
+- Subsequent arguments are a "comma separated list of unquoted variable names"
+
+```{r, results="hide"}
+arrange(df_event, event_date)
+```
+Data frame goes back to previous order unless you __assign__ the new order
+```{r, results="hide"}
+df_event
+df_event <- arrange(df_event, event_date)
+df_event
+```
+### `arrange()` function
+
+Ascending and descending order
+
+- `arrange()` sorts in __ascending__ order by default
+- use `desc()` to sort a column by descending order
+```{r results="hide"}
+arrange(df_event, desc(event_date))
+```
+
+Can sort by multiple variables
+```{r results="hide"}
+arrange(df_event, univ_id, desc(event_date), desc(med_inc))
+
+#sort by university and descending by size of 12th grade class; combine with select
+select(arrange(df_event, univ_id, desc(g12)),instnm,event_type,event_date,g12)
+```
+
+### `arrange()`, missing values sorted at the end
+
+Missing values automatically sorted at the end, regardless of whether you sort ascending or descending
+
+Below, we sort by university, then by date of event, then by ID of high school
+```{r, results="hide"}
+#by university, date, ascending school id
+select(arrange(df_event, univ_id, desc(event_date), school_id),
+       instnm,event_date,event_type,school_id)
+
+#by university, date, descending school id
+select(arrange(df_event, univ_id, desc(event_date), desc(school_id)),
+       instnm,event_date,event_type,school_id)
+```
+Can sort by `is.na` to put missing values first
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))),
+       instnm,event_date,event_type,school_id)
+```
+
+### Exercise, arranging  
+
+Use the data from df_event, which has one observation for each off-campus recruiting event a university attends
+
+1. Sort ascending by "univ_id" and descending by "event_date"  
+1. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+1. Now using the same variables from above, sort by `is.na` to put missing values in "school_id" first  
+
+### Solution 
+1. Sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+arrange(df_event, univ_id, desc(event_date))
+```
+
+### Solution
+2. Select four variables in total and sort ascending by "univ_id" and descending by "event_date"  
+```{r}
+select(arrange(df_event, univ_id, desc(event_date)), univ_id, event_date, 
+       instnm, event_type)
+```
+
+### Solution
+3. Select the variables "univ_id", "event_date", and "school_id" and sort  by `is.na` to put missing values in "school_id" first. 
+```{r}
+select(arrange(df_event, univ_id, desc(event_date), desc(is.na(school_id))), 
+       univ_id, event_date, school_id)
+```
+

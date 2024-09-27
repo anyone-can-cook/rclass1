@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="">
+
+<title>data_quality</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="data_quality_files/libs/clipboard/clipboard.min.js"></script>
+<script src="data_quality_files/libs/quarto-html/quarto.js"></script>
+<script src="data_quality_files/libs/quarto-html/popper.min.js"></script>
+<script src="data_quality_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="data_quality_files/libs/quarto-html/anchor.min.js"></script>
+<link href="data_quality_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="data_quality_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="data_quality_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="data_quality_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="data_quality_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#guidelines-for-exploratory-data-analysis-eda" id="toc-guidelines-for-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#guidelines-for-exploratory-data-analysis-eda"><span class="header-section-number">2</span> Guidelines for exploratory data analysis (EDA)</a></li>
+  <li><a href="#tools-for-exploratory-data-analysis-eda" id="toc-tools-for-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#tools-for-exploratory-data-analysis-eda"><span class="header-section-number">3</span> Tools for exploratory data analysis (EDA)</a></li>
+  <li><a href="#appendix-skip-patterns-in-survey-data" id="toc-appendix-skip-patterns-in-survey-data" class="nav-link" data-scroll-target="#appendix-skip-patterns-in-survey-data"><span class="header-section-number">4</span> Appendix: Skip patterns in survey data</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="what-we-will-do-today" class="level3" data-number="0.0.1">
+<h3 data-number="0.0.1" class="anchored" data-anchor-id="what-we-will-do-today"><span class="header-section-number">0.0.1</span> What we will do today</h3>
+
+</section>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<section id="what-is-exploratory-data-analysis-eda" class="level3" data-number="1.0.1">
+<h3 data-number="1.0.1" class="anchored" data-anchor-id="what-is-exploratory-data-analysis-eda"><span class="header-section-number">1.0.1</span> What is exploratory data analysis (EDA)?</h3>
+<p>The <a href="https://towardsdatascience.com/exploratory-data-analysis-8fc1cb20fd15">Towards Data Science</a> website has a nice definition of EDA:</p>
+<blockquote class="blockquote">
+<p>“Exploratory Data Analysis refers to the critical process of performing initial investigations on data so as to discover patterns,to spot anomalies,to test hypothesis and to check assumptions with the help of summary statistics”</p>
+</blockquote>
+<p><strong>This course focuses on “data management”:</strong></p>
+<ul>
+<li>investigating and cleaning data for the purpose of creating analysis variables</li>
+<li>Basically, everything that happens <strong>before</strong> you conduct analyses</li>
+</ul>
+<p><strong>I think about “exploratory data analysis for data quality”</strong></p>
+<ul>
+<li>Investigating values and patterns of variables from “input data”</li>
+<li>Identifying and cleaning errors or values that need to be changed</li>
+<li>Creating analysis variables</li>
+<li>Checking values of analysis variables agains values of input variables</li>
+</ul>
+</section>
+<section id="how-we-will-teach-exploratory-data-analysis" class="level3" data-number="1.0.2">
+<h3 data-number="1.0.2" class="anchored" data-anchor-id="how-we-will-teach-exploratory-data-analysis"><span class="header-section-number">1.0.2</span> How we will teach exploratory data analysis</h3>
+<p>Will teach exploratory data analysis (EDA) in two sub-sections:</p>
+<ol type="1">
+<li>Provide “Guidelines for EDA”
+<ul>
+<li>Less about coding, more about practices you should follow and mentality necessary to ensure high data quality</li>
+</ul></li>
+<li>Introduce “Tools of EDA”:
+<ul>
+<li>Demonstrate code to investigate variables and relatioship between variables</li>
+<li>Most of these tools are just the application of programming skills you have already learned</li>
+</ul></li>
+</ol>
+</section>
+<section id="libraries" class="level3" data-number="1.0.3">
+<h3 data-number="1.0.3" class="anchored" data-anchor-id="libraries"><span class="header-section-number">1.0.3</span> Libraries</h3>
+<p>“Load” the package we will use today (output omitted)</p>
+<ul>
+<li><strong>you must run this code chunk after installing these packages</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>If package not yet installed</strong>, then must install before you load. Install in “console” rather than .Rmd file</p>
+<ul>
+<li>Generic syntax: <code>install.packages("package_name")</code></li>
+<li>Install “tidyverse”: <code>install.packages("tidyverse")</code></li>
+</ul>
+<p>Note: when we load package, name of package is not in quotes; but when we install package, name of package is in quotes:</p>
+<ul>
+<li><code>install.packages("tidyverse")</code></li>
+<li><code>library(tidyverse)</code></li>
+</ul>
+</section>
+<section id="data-we-will-use" class="level3" data-number="1.0.4">
+<h3 data-number="1.0.4" class="anchored" data-anchor-id="data-we-will-use"><span class="header-section-number">1.0.4</span> Data we will use</h3>
+<p>Use <code>read_dta()</code> function from <code>haven</code> to import Stata dataset into R</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hsls <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="at">file=</span><span class="st">"https://github.com/ozanj/rclass/raw/master/data/hsls/hsls_stu_small.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s examine the data [you <strong>must</strong> run this code chunk]</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">names</span>() <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">names</span>() <span class="sc">%&gt;%</span> <span class="fu">tolower</span>() <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hsls) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">names</span>(hsls)) <span class="co"># convert names to lowercase</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hsls)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(hsls) <span class="co"># ugh</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(hsls<span class="sc">$</span>s3classes)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(hsls<span class="sc">$</span>s3classes)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(hsls<span class="sc">$</span>s3classes)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hsls<span class="sc">$</span>s3classes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Download the HSLS Codebook: https://nces.ed.gov/pubs2014/2014361_AppendixI.pdf</p>
+</section>
+<section id="data-we-will-use-1" class="level3" data-number="1.0.5">
+<h3 data-number="1.0.5" class="anchored" data-anchor-id="data-we-will-use-1"><span class="header-section-number">1.0.5</span> Data we will use</h3>
+<p>First, Let’s create a smaller version of the HSLS:09 dataset</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#hsls %&gt;% var_label()</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="ot">&lt;-</span> hsls <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(stu_id,x3univ1,x3sqstat,x4univ1,x4sqstat,s3classes,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         s3work,s3focus,s3clgft,s3workft,s3clgid,s3clgcntrl,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         s3clglvl,s3clgsel,s3clgstate,s3proglevel,x4evrappclg,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         x4evratndclg,x4atndclg16fb,x4ps1sector,x4ps1level,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         x4ps1ctrl,x4ps1select,x4refsector,x4reflevel,x4refctrl,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>         x4refselect, x2sex,x2race,x2paredu,x2txmtscor,x4x2ses,x4x2sesq5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hsls_small)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="guidelines-for-exploratory-data-analysis-eda" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Guidelines for exploratory data analysis (EDA)</h1>
+<section id="rule-1-for-data-quality-data-better-be-right" class="level3" data-number="2.0.1">
+<h3 data-number="2.0.1" class="anchored" data-anchor-id="rule-1-for-data-quality-data-better-be-right"><span class="header-section-number">2.0.1</span> Rule #1 for data quality: <strong>DATA BETTER BE RIGHT</strong></h3>
+<ul>
+<li><p><a href="https://journals.sagepub.com/doi/abs/10.3102/0002831214553705">Cabrera, N. L., Milem, J. F., Jaquette, O., &amp; Marx, R. (2014). Missing the (student achievement) forest for all the (political) trees: Empiricism and the Mexican American Studies controversy in Tucson. <em>American Educational Research Journal</em>, 51(6), 1084-1118.</a> </p>
+<ul>
+<li>Sometimes social justice is creating a GPA variable from course-level data</li>
+<li>Very politically charged issue; would’ve been bad if we didn’t get the data right</li>
+</ul></li>
+<li><p><a href="https://link.springer.com/article/10.1007/s11162-015-9399-2">Jaquette, O., &amp; Parra, E. (2016). The Problem with the Delta Cost Project Database. <em>Research in Higher Education</em>, 57(5), 630-651</a> </p>
+<ul>
+<li>They didn’t get the data right; I took them to task</li>
+</ul></li>
+<li><p><a href="https://www.jkcf.org/research/state-university-no-more-out-of-state-enrollment-and-the-growing-exclusion-of-high-achieving-low-income-students-at-public-flagship-universities/">Jaquette, O. (2017). <em>State university no more: Out-of-state enrollment and the growing exclusion of high-achieving, low-income students at flagship public universities</em>. Lansdowne, VA: Jack Kent Cooke Foundation.</a> </p>
+<ul>
+<li>I didn’t get the data right; I got taken to task</li>
+</ul></li>
+<li><p>Salazar, K. G., Jaquette, O., &amp; Han, C. (2021). Coming Soon to a Neighborhood Near You? Off-Campus Recruiting by Public Research Universities. <em>American Educational Research Journal</em>, 58(6), 1270-1314</p>
+<ul>
+<li>Karina/Crystal/Patricia spent thousands of hours getting the data right</li>
+</ul></li>
+</ul>
+</section>
+<section id="rule-1-data-better-be-right-for-grad-students" class="level3" data-number="2.0.2">
+<h3 data-number="2.0.2" class="anchored" data-anchor-id="rule-1-data-better-be-right-for-grad-students"><span class="header-section-number">2.0.2</span> Rule #1: <strong>DATA BETTER BE RIGHT</strong> (for grad students)</h3>
+<p>Researchers who develop a reputation for always geting the data right are the ones who always get research funding</p>
+<ul>
+<li>Grad students working on research projects are usually the front-line of getting the data right</li>
+</ul>
+<p>The virtuous circle of getting the data right, delivering on deliverables, and inter-generational grad student opportunity</p>
+<ul>
+<li>you don’t pay it forward later, you pay it forward now with the quality of work you do now</li>
+<li>sometimes you pay it forward even when you didn’t get the opportunities you deserve</li>
+</ul>
+<p>Challenges that arise</p>
+<ul>
+<li>Principal investigators who don’t have respect for getting the data right</li>
+<li>Not enough time or resources to get the data right</li>
+</ul>
+</section>
+<section id="guidelines-for-eda-for-data-quality" class="level3" data-number="2.0.3">
+<h3 data-number="2.0.3" class="anchored" data-anchor-id="guidelines-for-eda-for-data-quality"><span class="header-section-number">2.0.3</span> Guidelines for “EDA for data quality”</h3>
+<p>Assme that your goal in “EDA for data quality” is to investigate “input” data sources and create “analysis variables”</p>
+<ul>
+<li>Usually, your analysis dataset will incorporate multiple sources of input data, including data you collect (primary data) and/or data collected by others (secondary data)</li>
+</ul>
+<p>While this is not a linear process, these are the broad steps I follow</p>
+<ol type="1">
+<li>Understand how input data sources were created
+<ul>
+<li>e.g., when working with survey data, have survey questionnaire and codebooks on hand</li>
+<li>watch out for skip patterns!!!</li>
+</ul></li>
+<li>For each input data source, identify the “unit of analysis” and which combination of variables uniquely identify observations</li>
+<li>Investigate patterns in input variables</li>
+<li>Create analysis variable from input variable(s)</li>
+<li>Verify that analysis variable is created correctly through descriptive statistics that compare values of input variable(s) against values of the analysis variable</li>
+</ol>
+<p><strong>Always be aware of missing values</strong></p>
+<ul>
+<li>They will not always be coded as <code>NA</code> in input variables</li>
+</ul>
+</section>
+<section id="unit-of-analysis-and-which-variables-uniquely-identify-observations" class="level3" data-number="2.0.4">
+<h3 data-number="2.0.4" class="anchored" data-anchor-id="unit-of-analysis-and-which-variables-uniquely-identify-observations"><span class="header-section-number">2.0.4</span> “Unit of analysis” and which variables uniquely identify observations</h3>
+<p>“Unit of analysis” refers to “what does each observation represent” in an input data source</p>
+<ul>
+<li>If each obs represents a student, you have “student level data”</li>
+<li>If each obs represents a student-course, you have “student-course level data”</li>
+<li>If each obs represents a school, you have “school-level data”</li>
+<li>If each obs represents a school-year, you have “school-year level data”</li>
+</ul>
+<p>How to identify unit of analysis</p>
+<ul>
+<li>data documentation</li>
+<li>investigating the data set</li>
+</ul>
+<p>We will go over syntax for identifying unit of analysis in subsequent weeks</p>
+</section>
+<section id="rules-for-variable-creation" class="level3" data-number="2.0.5">
+<h3 data-number="2.0.5" class="anchored" data-anchor-id="rules-for-variable-creation"><span class="header-section-number">2.0.5</span> Rules for variable creation</h3>
+<p>Rules I follow for variable creation</p>
+<ol type="1">
+<li>Never modify “input variable”; instead create new variable based on input variable(s)
+<ul>
+<li>Always keep input variables used to create new variables</li>
+</ul></li>
+<li>Investigate input variable(s) and relationship between input variables</li>
+<li>Developing a plan for creation of analysis variable
+<ul>
+<li>e.g., for each possible value of input variables, what should value of analysis variable be?</li>
+</ul></li>
+<li>Write code to create analysis variable</li>
+<li>Run descriptive checks to verify new variables are constructed correctly
+<ul>
+<li>Can “comment out” these checks, but don’t delete them</li>
+</ul></li>
+<li>Document new variables with notes and labels</li>
+</ol>
+</section>
+<section id="rules-for-variable-creation-1" class="level3" data-number="2.0.6">
+<h3 data-number="2.0.6" class="anchored" data-anchor-id="rules-for-variable-creation-1"><span class="header-section-number">2.0.6</span> Rules for variable creation</h3>
+<p><strong>Task</strong>:</p>
+<ul>
+<li>Create analysis for variable ses qunitile called <code>sesq5</code> based on <code>x4x2sesq5</code> that converts negative values to <code>NAs</code></li>
+</ul>
+<p>[some of the code here will be covered in the next section]</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#investigate input variable</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">val_labels</span>()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x4x2sesq5)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#create analysis variable</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="ot">&lt;-</span> hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sesq5=</span><span class="fu">ifelse</span>(x4x2sesq5<span class="sc">==-</span><span class="dv">8</span>,<span class="cn">NA</span>,x4x2sesq5)) <span class="co"># approach 1</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="ot">&lt;-</span> hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sesq5=</span><span class="fu">ifelse</span>(x4x2sesq5<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x4x2sesq5)) <span class="co"># approach 2</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#verify</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(x4x2sesq5) <span class="sc">%&gt;%</span> <span class="fu">count</span>(sesq5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="skip-patterns-in-survey-data" class="level3" data-number="2.0.7">
+<h3 data-number="2.0.7" class="anchored" data-anchor-id="skip-patterns-in-survey-data"><span class="header-section-number">2.0.7</span> Skip patterns in survey data</h3>
+<p>Pretty easy to create an analysis variable based on a single input variable</p>
+<p>Harder to create analysis variables based on multiple input variables</p>
+<ul>
+<li>When working with survey data, even seemingly simple analysis variables require multiple input variables due to “skip patterns”</li>
+</ul>
+<p>What are “skip patterns”?</p>
+<ul>
+<li>Response on a particular survey item determines whether respondent answers some set of subsequent questions</li>
+<li>What are some examples of this?</li>
+</ul>
+<p>Key to working with skip patterns</p>
+<ul>
+<li>Have the survey questionnaire on hand</li>
+<li>Sometimes it appears that analysis variable requires only one input variable, but really depends on several input variables because of skip patterns
+<ul>
+<li>Don’t just blindly turn “missing” and “skips” from survey data to <code>NAs</code> in your analysis variable</li>
+<li>Rather, trace why these “missing” and “skips” appear and decide how they should be coded in your analysis variable</li>
+</ul></li>
+</ul>
+<p>See appendix of this lecture for more detail on working with skip patterns</p>
+</section>
+<section id="problem-set-due-next-week" class="level3" data-number="2.0.8">
+<h3 data-number="2.0.8" class="anchored" data-anchor-id="problem-set-due-next-week"><span class="header-section-number">2.0.8</span> Problem set due next week</h3>
+<p><strong>Assignment</strong>:</p>
+<ul>
+<li>create GPA from postsecondary transcript student-course level data</li>
+<li>last week’s problem set created the input var: numgrade_v2</li>
+<li>this wek you are responsible for developing plan to create GPA vars and for executing plan (rather than us giving you step-by-step quations)</li>
+</ul>
+<p><strong>Why this assignment?</strong></p>
+<ol type="1">
+<li>Give you more practice investigating data, cleaning data, creating variables that require processing across rows</li>
+<li>Real world example of “simple” task with complex data management needs</li>
+</ol>
+<p><strong>Data source</strong>: <a href="https://nces.ed.gov/surveys/nls72/">National Longitudinal Study of 1972 (NLS72)</a></p>
+<ul>
+<li>Follows 12th graders from 1972
+<ul>
+<li>Base year: 1972</li>
+<li>Follow-up surveys in: 1973, 1974, 1976, 1979, 1986</li>
+<li>Postsecondary transcripts collected in 1984</li>
+</ul></li>
+<li>Why use such an old survey for this assignment?
+<ul>
+<li>NLS72 predates data privacy agreements; transcript data publicly available</li>
+</ul></li>
+</ul>
+<p><strong>Recommendation for making decisions in presence of “dirty data”</strong></p>
+<ul>
+<li>Spend some reasonable amount of time investigating data patterns</li>
+<li>Make decisions about what to when variable values seem problematic (e.g., a course is worth 30 credits)
+<ul>
+<li><strong>DON’T</strong> make (subjective) decisions one observation at a time; rather, decide on rules that will apply across all observations</li>
+<li>you can explain rationale for your decisions in comments of your code</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="tools-for-exploratory-data-analysis-eda" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Tools for exploratory data analysis (EDA)</h1>
+<section id="tools-of-eda" class="level3" data-number="3.0.1">
+<h3 data-number="3.0.1" class="anchored" data-anchor-id="tools-of-eda"><span class="header-section-number">3.0.1</span> Tools of EDA</h3>
+<p><strong>To do EDA for data quality, must master the following tools:</strong></p>
+<ul>
+<li>*Select, sort, filter, and print** in order to see data patterns, anomolies
+<ul>
+<li>Select and sort particular values of particular variables</li>
+<li>Print particular values of particular variables</li>
+</ul></li>
+<li><strong>One-way descriptive analyses</strong> (i.e,. focus on one variable)
+<ul>
+<li>Descriptive analyses for continuous variables</li>
+<li>Descriptive analyses for discreet/categorical variables</li>
+</ul></li>
+<li><strong>Two-way descriptive analyses</strong> (relationship between two variables)
+<ul>
+<li>Categorical by categorical</li>
+<li>Categorical by continuous</li>
+<li>Continuous by continuous</li>
+</ul></li>
+</ul>
+<p>Whenever using any of these tools, <strong>pay close attention to missing values and how they are coded</strong></p>
+<ul>
+<li>Often, the “input” variables don’t code missing values as <code>NA</code></li>
+<li>Especially when working with survey data, missing values coded as a negative number (e.g., <code>-9</code>,<code>-8</code>,<code>-4</code>) with different negative values representing different reasons for data being missing</li>
+<li>sometimes missing values coded as very high positive numbers</li>
+<li>Therefore, important to investigate input vars prior to creating analysis vars</li>
+</ul>
+</section>
+<section id="tools-of-eda-caveat-using-graphs-to-investigate-variables" class="level3" data-number="3.0.2">
+<h3 data-number="3.0.2" class="anchored" data-anchor-id="tools-of-eda-caveat-using-graphs-to-investigate-variables"><span class="header-section-number">3.0.2</span> Tools of EDA, caveat (using graphs to investigate variables)</h3>
+<p>Caveat on tools of EDA introduced in this lecture</p>
+<ul>
+<li>Usually you can investigate categorical variables pretty effectively by creating table of frequency counts</li>
+<li>More difficult to investigate continuous variables or relationship between continuous variable and another variable
+<ul>
+<li>too many different values for frequency counts</li>
+<li>summary statistics (e.g., min, max) sometimes not very effective</li>
+</ul></li>
+<li>Graphs can be a great way to investigate continuous variables
+<ul>
+<li>also effective for investigating relationship between continuous variable and some other variable</li>
+<li>but we do not introduce graphs until beginning of EDUC260B (Rclass2)</li>
+</ul></li>
+</ul>
+</section>
+<section id="caveat-using-base-r-ifelse-rather-than-tidyverse-if_else" class="level3" data-number="3.0.3">
+<h3 data-number="3.0.3" class="anchored" data-anchor-id="caveat-using-base-r-ifelse-rather-than-tidyverse-if_else"><span class="header-section-number">3.0.3</span> Caveat (using base R <code>ifelse()</code> rather than Tidyverse <code>if_else()</code>)</h3>
+<p>The below slides use the base <em>R</em> <code>ifelse()</code> function rather than Tidyverse <code>if_else()</code> function to create variables</p>
+<ul>
+<li><p>For example, below code uses <code>ifelse()</code> to create a version of the variable <code>s3classes</code> that replaces values less than zero with <code>NA</code></p>
+<ul>
+<li>Note that the new variable we create <code>s3classes_na</code> is a numeric class variable, rather than labelled class, so it won’t have value labels</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(s3classes,s3classes_na) <span class="sc">%&gt;%</span> <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+</ul>
+<p>Why not use Tidyverse <code>if_else()</code>?</p>
+<ul>
+<li><p>below code won’t work because <code>if_else(&lt;condition&gt;,&lt;true&gt;,&lt;false&gt;)</code> expects values assigned when condition is <code>TRUE</code> to have the same <em>class</em> as values assigned when condition is <code>FALSE</code></p>
+<ul>
+<li>but there is no variation of <code>NA</code> that has the labelled class, so <em>R</em> throws an error</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">if_else</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">if_else</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA_real_</span>,s3classes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<h3 id="caveat-using-base-r-ifelse-rather-than-tidyverse-if_else-1" data-number="3.0.4" class="anchored"><span class="header-section-number">3.0.4</span> Caveat (using base R <code>ifelse()</code> rather than Tidyverse <code>if_else()</code>)</h3></li>
+</ul>
+<p>This “stack overflow” (<a href="https://stackoverflow.com/questions/61489740/if-else-with-haven-labelled-column-fails-because-of-wrong-class">LINK</a>) post explains some solutions to get around the problem</p>
+<ul>
+<li>We don’t implement any of these solutions because we want to keep the code as simple as possible</li>
+</ul>
+<p>The downside of using <code>ifelse</code> is that the new variable has numeric class rather than labelled class; we lose value labels (and variable labels)</p>
+<ul>
+<li>One way around this, is to assign the <code>labelled()</code> function from “haven” package to assign “labels” attribute from the input variable</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="ot">&lt;-</span> hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(hsls_small_temp<span class="sc">$</span>s3classes_na) <span class="co"># null</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(hsls_small_temp<span class="sc">$</span>s3classes) <span class="co"># labelled class</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>hsls_small_temp<span class="sc">$</span>s3classes_na <span class="ot">&lt;-</span> <span class="fu">labelled</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  hsls_small_temp<span class="sc">$</span>s3classes_na, </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">attr</span>(<span class="at">x=</span>hsls_small_temp<span class="sc">$</span>s3classes, <span class="at">which =</span> <span class="st">"labels"</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">attr</span>(<span class="at">x=</span>hsls_small_temp<span class="sc">$</span>s3classes, <span class="at">which =</span> <span class="st">"label"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="sc">%&gt;%</span> <span class="fu">select</span>(s3classes,s3classes_na) <span class="sc">%&gt;%</span> <span class="fu">glimpse</span>()</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes_na)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(hsls_small_temp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tools-of-eda-select-sort-filter-and-print" class="level3" data-number="3.0.5">
+<h3 data-number="3.0.5" class="anchored" data-anchor-id="tools-of-eda-select-sort-filter-and-print"><span class="header-section-number">3.0.5</span> Tools of EDA: select, sort, filter, and print</h3>
+<p>We’ve already know <code>select()</code>, <code>arrange()</code>, <code>filter()</code></p>
+<p>Select, sort, and print specific vars</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sort and print</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(stu_id)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(stu_id,x3univ1,x3sqstat,s3classes,s3clglvl)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#investigate variable attributes</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(stu_id)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(stu_id,x3univ1,x3sqstat,s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#print observations with value labels rather than variable values</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(stu_id)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(stu_id,x3univ1,x3sqstat,s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Sometimes helpful to increase the number of observations printed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hsls_small) <span class="co">#it's a tibble, which is the "tidyverse" version of a data frame</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tibble.print_min=</span><span class="dv">50</span>) </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># execute this in console</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(stu_id)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(stu_id,x3univ1,x3sqstat,s3classes,s3clglvl)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tibble.print_min=</span><span class="dv">10</span>) <span class="co"># set default printing back to 10 lines</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-continuous-vars-base-r-approach-skip" class="level3" data-number="3.0.6">
+<h3 data-number="3.0.6" class="anchored" data-anchor-id="one-way-descriptive-stats-for-continuous-vars-base-r-approach-skip"><span class="header-section-number">3.0.6</span> One-way descriptive stats for continuous vars, Base R approach [SKIP]</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hsls_small<span class="sc">$</span>x2txmtscor)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(hsls_small<span class="sc">$</span>x2txmtscor)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Careful: summary stats include value of -8!</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(hsls_small<span class="sc">$</span>x2txmtscor)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(hsls_small<span class="sc">$</span>x2txmtscor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Be careful with <code>NA</code> values</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Create variable replacing -8 with NA</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="ot">&lt;-</span> hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x2txmtscorv2=</span><span class="fu">ifelse</span>(x2txmtscor<span class="sc">==-</span><span class="dv">8</span>,<span class="cn">NA</span>,x2txmtscor))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>hsls_small_temp <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">is.na</span>(x2txmtscorv2)) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x2txmtscorv2)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hsls_small_temp<span class="sc">$</span>x2txmtscorv2)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hsls_small_temp<span class="sc">$</span>x2txmtscorv2, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(hsls_small_temp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach" class="level3" data-number="3.0.7">
+<h3 data-number="3.0.7" class="anchored" data-anchor-id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach"><span class="header-section-number">3.0.7</span> One-way descriptive stats for continuous vars, Tidyverse approach</h3>
+<p>Use <code>summarise_at()</code>, a variation of <code>summarise()</code>, to make descriptive stats</p>
+<ul>
+<li><code>.args=list(na.rm=TRUE)</code>= a named list of additional arguments to be added to all function calls</li>
+</ul>
+<p><strong>Task</strong>:</p>
+<ul>
+<li>calculate descriptive stats for <code>x2txmtscor</code>, math test score</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?summarise_at</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x2txmtscor) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x2txmtscor</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "X2 Mathematics standardized theta score"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.funs =</span> <span class="fu">funs</span>(mean, sd, min, max, <span class="at">.args=</span><span class="fu">list</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mean    sd   min   max</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  44.1  21.8    -8  84.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-1" class="level3" data-number="3.0.8">
+<h3 data-number="3.0.8" class="anchored" data-anchor-id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-1"><span class="header-section-number">3.0.8</span> One-way descriptive stats for continuous vars, Tidyverse approach</h3>
+<p>Can calculate descriptive stats for more than one variable at a time</p>
+<p><strong>Task</strong>:</p>
+<ul>
+<li>calculate descriptive stats for <code>x2txmtscor</code>, math test score, and <code>x4x2ses</code>, socioeconomic index score</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x2txmtscor,x4x2ses) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x2txmtscor</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "X2 Mathematics standardized theta score"</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x4x2ses</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "X4 Revised X2 Socio-economic status composite"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor,x4x2ses),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.funs =</span> <span class="fu">funs</span>(mean, sd, min, max, <span class="at">.args=</span><span class="fu">list</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 8</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x2txmtscor_mean x4x2ses_mean x2txmtscor_sd x4x2ses_sd x2txmtscor_min</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1            44.1       -0.802          21.8       2.63             -8</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 3 more variables: x4x2ses_min &lt;dbl&gt;, x2txmtscor_max &lt;dbl&gt;,</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   x4x2ses_max &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-2" class="level3" data-number="3.0.9">
+<h3 data-number="3.0.9" class="anchored" data-anchor-id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-2"><span class="header-section-number">3.0.9</span> One-way descriptive stats for continuous vars, Tidyverse approach</h3>
+<p>“Input vars” in survey data often have negative values for missing/skips</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x2txmtscor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>R includes those negative values when calculating stats; you don’t want this</p>
+<ul>
+<li>Solution: create version of variable that replaces negative values with <code>NA</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">x2txmtscor_na=</span><span class="fu">ifelse</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x2txmtscor)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor_na),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.funs =</span> <span class="fu">funs</span>(mean, sd, min, max, <span class="at">.args=</span><span class="fu">list</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mean    sd   min   max</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  51.5  10.2  22.2  84.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What if you didn’t include <code>.args=list(na.rm=TRUE)</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">x2txmtscor_na=</span><span class="fu">ifelse</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x2txmtscor)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor_na),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.funs =</span> <span class="fu">funs</span>(mean, sd, min, max))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mean    sd   min   max</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    NA    NA    NA    NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-3" class="level3" data-number="3.0.10">
+<h3 data-number="3.0.10" class="anchored" data-anchor-id="one-way-descriptive-stats-for-continuous-vars-tidyverse-approach-3"><span class="header-section-number">3.0.10</span> One-way descriptive stats for continuous vars, Tidyverse approach</h3>
+<p>How to identify these missing/skip values if you don’t have a codebook?</p>
+<ul>
+<li><code>count()</code> combined with <code>filter()</code> helpful for finding extreme values of continuous vars, which are often associated with missing or skip</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#variable x2txmtscor</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(x2txmtscor)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x2txmtscor     n</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         -8  2909</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#variable s3clglvl</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $s3clglvl</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "S3 Enrolled college IPEDS level"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(s3clglvl<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3clglvl                         n</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;                    &lt;int&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 -9 [Missing]                   487</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 -8 [Unit non-response]        4945</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 -7 [Item legitimate skip/NA]  5022</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-student-exercise" class="level3" data-number="3.0.11">
+<h3 data-number="3.0.11" class="anchored" data-anchor-id="one-way-descriptive-stats-student-exercise"><span class="header-section-number">3.0.11</span> One-way descriptive stats student exercise</h3>
+<ol type="1">
+<li>Using the object <code>hsls</code>, identify variable type, variable class, and check the variable values and value labels of <code>x4ps1start</code>
+<ul>
+<li>variable <code>x4ps1start</code> identifies month and year student first started postsecondary education</li>
+<li><strong>Note</strong>: This variable is a bit counterintuitive.
+<ul>
+<li>e.g., the value <code>201105</code> refers to May 2011</li>
+</ul></li>
+</ul></li>
+<li>Get a frequency count of the variable <code>x4ps1start</code><br>
+</li>
+<li>Get a frequency count of the variable, but this time only observations that have negative values <strong>hint</strong>: use filter()<br>
+</li>
+<li>Create a new version of the variable <code>x4ps1start_na</code> that replaces negative values with NAs and use <code>summarise_at()</code> to get the min and max value.</li>
+</ol>
+</section>
+<section id="one-way-descriptive-stats-student-exercise-solutions" class="level3" data-number="3.0.12">
+<h3 data-number="3.0.12" class="anchored" data-anchor-id="one-way-descriptive-stats-student-exercise-solutions"><span class="header-section-number">3.0.12</span> One-way descriptive stats student exercise solutions</h3>
+<ol type="1">
+<li>Using the object <code>hsls</code>, identify variable type, variable class, and check the variable vakyes and value labels of <code>x4ps1start</code></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(hsls<span class="sc">$</span>x4ps1start)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "double"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hsls<span class="sc">$</span>x4ps1start)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "haven_labelled" "vctrs_vctr"     "double"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4ps1start) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x4ps1start</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "X4 Month and year of enrollment at first postsecondary institution"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">select</span>(x4ps1start) <span class="sc">%&gt;%</span> <span class="fu">val_labels</span>()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x4ps1start</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                      Missing </span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -9 </span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                            Unit non-response </span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -8 </span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                      Item legitimate skip/NA </span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -7 </span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                     Component not applicable </span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -6 </span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Item not administered: abbreviated interview </span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -4 </span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Carry through missing </span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -3 </span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                   Don't know </span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                           -1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-student-exercise-solutions-1" class="level3" data-number="3.0.13">
+<h3 data-number="3.0.13" class="anchored" data-anchor-id="one-way-descriptive-stats-student-exercise-solutions-1"><span class="header-section-number">3.0.13</span> One-way descriptive stats student exercise solutions</h3>
+<ol start="2" type="1">
+<li>Get a frequency count of the variable <code>x4ps1start</code></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(x4ps1start)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 2</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x4ps1start                           n</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;                        &lt;int&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     -9 [Missing]                   107</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     -8 [Unit non-response]        6168</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     -7 [Item legitimate skip/NA]  4281</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 201100                              57</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 201200                             206</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 201300                           10800</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 201400                            1295</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 201500                             471</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 201600                             118</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-student-exercise-solutions-2" class="level3" data-number="3.0.14">
+<h3 data-number="3.0.14" class="anchored" data-anchor-id="one-way-descriptive-stats-student-exercise-solutions-2"><span class="header-section-number">3.0.14</span> One-way descriptive stats student exercise solutions</h3>
+<ol start="3" type="1">
+<li>Get a frequency count of the variable, but this time only observations that have negative values <strong>hint</strong>: use filter()<br>
+</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x4ps1start<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(x4ps1start)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x4ps1start                       n</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;                    &lt;int&gt;</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 -9 [Missing]                   107</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 -8 [Unit non-response]        6168</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 -7 [Item legitimate skip/NA]  4281</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-student-exercise-solutions-3" class="level3" data-number="3.0.15">
+<h3 data-number="3.0.15" class="anchored" data-anchor-id="one-way-descriptive-stats-student-exercise-solutions-3"><span class="header-section-number">3.0.15</span> One-way descriptive stats student exercise solutions</h3>
+<ol start="4" type="1">
+<li>Create a new version <code>x4ps1start_na</code> of the variable <code>x4ps1start</code> that replaces negative values with NAs and use <code>summarise_at()</code> to get the min and max value.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>hsls <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">x4ps1start_na=</span><span class="fu">ifelse</span>(x4ps1start<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x4ps1start)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.vars =</span> <span class="fu">vars</span>(x4ps1start_na),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.funs =</span> <span class="fu">funs</span>(min, max, <span class="at">.args=</span><span class="fu">list</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      min    max</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 201100 201600</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="one-way-descriptive-stats-for-discretecategorical-vars-tidyverse-approach" class="level3" data-number="3.0.16">
+<h3 data-number="3.0.16" class="anchored" data-anchor-id="one-way-descriptive-stats-for-discretecategorical-vars-tidyverse-approach"><span class="header-section-number">3.0.16</span> One-way descriptive stats for discrete/categorical vars, Tidyverse approach</h3>
+<p>Use <code>count()</code> to investigate values of discrete or categorical variables</p>
+<p>For variables where <code>class==labelled</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hsls_small<span class="sc">$</span>s3classes)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(hsls_small<span class="sc">$</span>s3classes)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#show counts of variable values</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) <span class="co">#print in console to show both</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#show counts of value labels</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>I like <code>count()</code> because the default setting is to show <code>NA</code> values too!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3classes_na)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Simultaneously show both values and value labels on count tables for <code>class==labelled</code> if entered into console</p>
+<ul>
+<li>This requires some concepts/functions we haven’t introduced [SKIP]</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a> hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">bind_cols</span>(x[,<span class="dv">1</span>], y) <span class="co">#wont show in updated R</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- ### One-way descriptive stats for factor vars [OPTIONAL/SKIP] -->
+<!-- For variables where `class==factor` -->
+<!-- - Create object with some or all `labelled` vars converted to `factor` -->
+<!-- ```{r} -->
+<!-- hsls_f <- as_factor(hsls) -->
+<!-- ``` -->
+<!-- ```{r, results="hide"} -->
+<!-- #use variable from the hsls data frame where vars are factors -->
+<!-- typeof(hsls_f$s3classes) -->
+<!-- class(hsls_f$s3classes) -->
+<!-- attributes(hsls_f$s3classes) -->
+
+<!-- #show frequency table -->
+<!-- hsls_f %>% count(s3classes) -->
+
+<!-- #Create VAR that converts different types of missing to NA and then create frequency table -->
+<!-- #note: within ifelse() used levels(s3classes)[s3classes]) rather than s3classes  to show attribute levels not values -->
+<!-- hsls_f %>%  -->
+<!--   mutate(s3classes_f=ifelse(s3classes %in% c("Missing","Unit      -->
+<!--   non-response"),NA,levels(s3classes)[s3classes])) %>%  -->
+<!--   count(s3classes_f) -->
+<!-- ``` -->
+</section>
+<section id="relationship-between-variables-categorical-by-categorical" class="level3" data-number="3.0.17">
+<h3 data-number="3.0.17" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-categorical"><span class="header-section-number">3.0.17</span> Relationship between variables, categorical by categorical</h3>
+<p>Two-way frequency table, called “cross tabulation”, important for data quality</p>
+<ul>
+<li>When you create categorical analysis var from single categorical “input” var
+<ul>
+<li>Two-way tables show us whether we did this correctly<br>
+</li>
+</ul></li>
+<li>Two-way tables helpful for understanding skip patterns in surveys</li>
+</ul>
+<p><strong>key to syntax</strong></p>
+<ul>
+<li><code>df_name %&gt;% group_by(var1) %&gt;% count(var2)</code> <strong>OR</strong></li>
+<li><code>df_name %&gt;% count(var1,var2)</code></li>
+<li>play around with which variable is <code>var1</code> and which variable is <code>var2</code></li>
+</ul>
+</section>
+<section id="relationship-between-variables-categorical-by-categorical-1" class="level3" data-number="3.0.18">
+<h3 data-number="3.0.18" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-categorical-1"><span class="header-section-number">3.0.18</span> Relationship between variables, categorical by categorical</h3>
+<p><strong>Task</strong>: Create a two-way table between <code>s3classes</code> and <code>s3clglvl</code></p>
+<ul>
+<li>Investigate variables</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">val_labels</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Create two-way table</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="co"># show values</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes,s3clglvl)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#hsls_small %&gt;% group_by(s3classes) %&gt;% count(s3clglvl) %&gt;% as_factor() # show value labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Are these objects the same?</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">glimpse</span>()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 8</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 3</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Groups: s3classes [5]</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ s3classes &lt;dbl+lbl&gt; -9, -8,  1,  1,  1,  1,  2,  3</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ s3clglvl  &lt;dbl+lbl&gt; -9, -8, -9,  1,  2,  3, -7, -7</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n         &lt;int&gt; 59, 4945, 428, 8894, 3929, 226, 3401, 1621</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">glimpse</span>()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 8</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 3</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ s3classes &lt;dbl+lbl&gt; -9, -8,  1,  1,  1,  1,  2,  3</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ s3clglvl  &lt;dbl+lbl&gt; -9, -8, -9,  1,  2,  3, -7, -7</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n         &lt;int&gt; 59, 4945, 428, 8894, 3929, 226, 3401, 1621</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="relationship-between-variables-categorical-by-categorical-2" class="level3" data-number="3.0.19">
+<h3 data-number="3.0.19" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-categorical-2"><span class="header-section-number">3.0.19</span> Relationship between variables, categorical by categorical</h3>
+<p>Two-way frequency table, also called “cross tabulation”</p>
+<!-- What if one of the variables has `NAs`? -->
+
+<!-- - Table created by `group_by()` and `count()` shows `NAs`! -->
+<p><strong>Task</strong>:</p>
+<ul>
+<li>Create a version of <code>s3classes</code> called <code>s3classes_na</code> that changes negative values to <code>NA</code></li>
+<li>Create a two-way table between <code>s3classes_na</code> and <code>s3clglvl</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes_na) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3classes_na, s3clglvl)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#example where we create some NA obs in the second variable</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes),</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">s3clglvl_na=</span><span class="fu">ifelse</span>(s3clglvl<span class="sc">==-</span><span class="dv">7</span>,<span class="cn">NA</span>,s3clglvl)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes_na) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl_na)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s3classes_na=</span><span class="fu">ifelse</span>(s3classes<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,s3classes),</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">s3clglvl_na=</span><span class="fu">ifelse</span>(s3clglvl<span class="sc">==-</span><span class="dv">7</span>,<span class="cn">NA</span>,s3clglvl)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3classes_na, s3clglvl_na)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="relationship-between-variables-categorical-by-categorical-skip" class="level3" data-number="3.0.20">
+<h3 data-number="3.0.20" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-categorical-skip"><span class="header-section-number">3.0.20</span> Relationship between variables, categorical by categorical [SKIP]</h3>
+<p>Tables above are pretty ugly</p>
+<p>Use the <code>spread()</code> function from <code>tidyr</code> package to create table with one variable as columns and the other variable as rows</p>
+<ul>
+<li>The variable you place in <code>spread()</code> will be columns</li>
+<li>We learn <code>spread()</code> function in a subsequent lecture</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(s3classes, n)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_factor</span>() <span class="sc">%&gt;%</span>  <span class="fu">spread</span>(s3classes, n)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_factor</span>() <span class="sc">%&gt;%</span>  <span class="fu">spread</span>(s3clglvl, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="relationship-between-variables-categorical-by-continuous" class="level3" data-number="3.0.21">
+<h3 data-number="3.0.21" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-continuous"><span class="header-section-number">3.0.21</span> Relationship between variables, categorical by continuous</h3>
+<p>Investigating relationship between multiple variables is a little tougher when at least one of the variables is continuous</p>
+<p><strong>Conditional mean</strong> (like regression with continuous Y and one categorical X):</p>
+<ul>
+<li>Shows average values of continous variables within groups</li>
+<li>Groups are defined by your categorical variable(s)</li>
+</ul>
+<p><strong>key to syntax</strong></p>
+<ul>
+<li><code>group_by(categorical_var) %&gt;% summarise_at(.vars = vars(continuous_var)</code></li>
+</ul>
+</section>
+<section id="relationship-between-variables-categorical-by-continuous-1" class="level3" data-number="3.0.22">
+<h3 data-number="3.0.22" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-continuous-1"><span class="header-section-number">3.0.22</span> Relationship between variables, categorical by continuous</h3>
+<p><strong>Task</strong></p>
+<ul>
+<li>Calculate mean math score, <code>x2txmtscor</code>, for each value of parental education, <code>x2paredu</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#first, investigate parental education [print in console]</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(x2paredu) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using dplyr to get average math score by parental education level [print in console]</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(x2paredu) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">.funs =</span> <span class="fu">funs</span>(mean, <span class="at">.args =</span> <span class="fu">list</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))) </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 2</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x2paredu                                                            x2txmtscor</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;                                                                &lt;dbl&gt;</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 -8 [Unit non-response]                                                    -8  </span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  1 [Less than high school]                                                44.3</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  2 [High school diploma or GED or alterntive HS credential]               47.2</span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  3 [Certificate/diploma from school providing occupational trainin…       46.4</span></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  4 [Associate's degree]                                                   48.9</span></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  5 [Bachelor's degree]                                                    53.3</span></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  6 [Master's degree]                                                      55.6</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  7 [Ph.D/M.D/Law/other high lvl prof degree]                              58.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="relationship-between-variables-categorical-by-continuous-2" class="level3" data-number="3.0.23">
+<h3 data-number="3.0.23" class="anchored" data-anchor-id="relationship-between-variables-categorical-by-continuous-2"><span class="header-section-number">3.0.23</span> Relationship between variables, categorical by continuous</h3>
+<p><strong>Task</strong></p>
+<ul>
+<li>Calculate mean math score, <code>x2txmtscor</code>, for each value of <code>x2paredu</code></li>
+</ul>
+<p>For checking data quality, helpful to calculate other stats besides mean</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(x2paredu) <span class="sc">%&gt;%</span> <span class="co">#[print in console]</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">.funs =</span> <span class="fu">funs</span>(mean, min, max, <span class="at">.args =</span> <span class="fu">list</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Always Investigate presence of missing/skip values</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x2paredu<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x2paredu)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(x2txmtscor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Replace <code>-8</code> with <code>NA</code> and re-calculate conditional stats</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x2paredu_na=</span><span class="fu">ifelse</span>(x2paredu<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x2paredu),</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">x2txmtscor_na=</span><span class="fu">ifelse</span>(x2txmtscor<span class="sc">&lt;</span><span class="dv">0</span>,<span class="cn">NA</span>,x2txmtscor)) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(x2paredu_na) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor_na),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">.funs =</span> <span class="fu">funs</span>(mean, min, max, <span class="at">.args =</span> <span class="fu">list</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_factor</span>()</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: There were 2 warnings in `summarise()`.</span></span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The first warning was:</span></span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In argument: `min = min(x2txmtscor_na, na.rm = TRUE)`.</span></span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In group 8: `x2paredu_na = NA`.</span></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Caused by warning in `min()`:</span></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! no non-missing arguments to min; returning Inf</span></span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes,s3clglvl) <span class="sc">%&gt;%</span> as_factor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="student-exercise" class="level3" data-number="3.0.24">
+<h3 data-number="3.0.24" class="anchored" data-anchor-id="student-exercise"><span class="header-section-number">3.0.24</span> Student exercise</h3>
+<p>Can use same approach to calculate conditional mean by multiple <code>group_by()</code> variables</p>
+<ul>
+<li>Just add additional variables within <code>group_by()</code></li>
+</ul>
+<ol type="1">
+<li>Calculate mean math test score (<code>x2txmtscor</code>), for each combination of parental education (<code>x2paredu</code>) and sex (<code>x2sex</code>).</li>
+</ol>
+</section>
+<section id="student-exercise-solution" class="level3" data-number="3.0.25">
+<h3 data-number="3.0.25" class="anchored" data-anchor-id="student-exercise-solution"><span class="header-section-number">3.0.25</span> Student exercise solution</h3>
+<ol type="1">
+<li>Calculate mean math test score (<code>x2txmtscor</code>), for each combination of parental education (<code>x2paredu</code>) and sex (<code>x2sex</code>)</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#hsls_small %&gt;% count(x2sex)</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(x2paredu,x2sex) <span class="sc">%&gt;%</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(x2txmtscor),</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">.funs =</span> <span class="fu">funs</span>(mean, <span class="at">.args =</span> <span class="fu">list</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_factor</span>()</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `funs()` was deprecated in dplyr 0.8.0.</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please use a list of either functions or lambdas: </span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Simple named list: </span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(mean = mean, median = median)</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Auto named with `tibble::lst()`: </span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   tibble::lst(mean, median)</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   # Using lambdas</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="appendix-skip-patterns-in-survey-data" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Appendix: Skip patterns in survey data</h1>
+<section id="what-are-skip-patterns" class="level3" data-number="4.0.1">
+<h3 data-number="4.0.1" class="anchored" data-anchor-id="what-are-skip-patterns"><span class="header-section-number">4.0.1</span> What are skip patterns</h3>
+<p>Pretty easy to create an analysis variable based on a single input variable</p>
+<p>Harder to create analysis variables based on multiple input variables</p>
+<ul>
+<li>When working with survey data, even seemingly simple analysis variables require multiple input variables due to “skip patterns”</li>
+</ul>
+<p>What are “skip patterns”?</p>
+<ul>
+<li>Response on a particular survey item determines whether respondent answers some set of subsequent questions</li>
+<li>What are some examples of this?</li>
+</ul>
+<p>Key to working with skip patterns</p>
+<ul>
+<li>Have the survey questionnaire on hand</li>
+<li>Sometimes it appears that analysis variable requires only one input variable, but really depends on several input variables because of skip patterns
+<ul>
+<li>Don’t just blindly turn “missing” and “skips” from survey data to <code>NAs</code> in your analysis variable</li>
+<li>Rather, trace why these “missing” and “skips” appear and decide how they should be coded in your analysis variable</li>
+</ul></li>
+</ul>
+</section>
+<section id="creating-analysis-variables-in-the-presence-of-skip-patterns" class="level3" data-number="4.0.2">
+<h3 data-number="4.0.2" class="anchored" data-anchor-id="creating-analysis-variables-in-the-presence-of-skip-patterns"><span class="header-section-number">4.0.2</span> Creating analysis variables in the presence of skip patterns</h3>
+<p>Task: Create a measure of “level” of postsecondary institution attended in 2013 from HSLS:09 survey data</p>
+<ul>
+<li>“level” is highest award-level of the postsecondary institution
+<ul>
+<li>e.g., if highest award is associate’s degree (a two-year degree), then `level==2’</li>
+</ul></li>
+<li>The measure, <code>pselev2013</code>, should have following [non-missing] values:
+<ol type="1">
+<li>Not attending postsecondary education institution</li>
+<li>Attending a 2-year or less-than-2-year institution</li>
+<li>Attending 4-year or greater-than-4year institution</li>
+</ol></li>
+</ul>
+<p>Background info:</p>
+<ul>
+<li>In “2013 Update” of HSLS:09, students asked about college attendance
+<ul>
+<li>Variables from student responses to “2013 Update” have prefix <code>s3</code></li>
+</ul></li>
+<li>Survey questionnaire for 2013 update can be found <a href="https://nces.ed.gov/surveys/hsls09/pdf/2013_Student_Parent_Questionnaire.pdf">HERE</a></li>
+<li>The “online codebook” website <a href="https://nces.ed.gov/onlinecodebook">HERE</a> has info about specific variables</li>
+<li>Measure has 3 input variables [usually must figure this out yourself]:
+<ol type="1">
+<li><code>x3sqstat</code>: “X3 Student questionnaire status”</li>
+<li><code>s3classes</code>: “S3 B01A Taking postsecondary classes as of Nov 1 2013”</li>
+<li><code>s3clglvl</code>: “S3 Enrolled college IPEDS level”</li>
+</ol></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x3sqstat,s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You won’t have time to complete this task, but develop a plan for the task and get as far as you can</p>
+</section>
+<section id="creating-analysis-variables-in-the-presence-of-skip-patterns-1" class="level3" data-number="4.0.3">
+<h3 data-number="4.0.3" class="anchored" data-anchor-id="creating-analysis-variables-in-the-presence-of-skip-patterns-1"><span class="header-section-number">4.0.3</span> Creating analysis variables in the presence of skip patterns</h3>
+<p>Step 1a: Investigate each input variable separately</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#variable labels</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">select</span>(x3sqstat,s3classes,s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">var_label</span>()</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(x3sqstat)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(x3sqstat) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-analysis-variables-in-the-presence-of-skip-patterns-2" class="level3" data-number="4.0.4">
+<h3 data-number="4.0.4" class="anchored" data-anchor-id="creating-analysis-variables-in-the-presence-of-skip-patterns-2"><span class="header-section-number">4.0.4</span> Creating analysis variables in the presence of skip patterns</h3>
+<p>Step 1b: Investigate relationship between input variables</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#x3sqstate and s3classes</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(x3sqstat) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(x3sqstat) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat<span class="sc">==</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat<span class="sc">==</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes<span class="sc">==-</span><span class="dv">8</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3classes)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="co">#x3sqstate, s3classes and s3clglvl</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) </span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co">#add filter for whether student did not respond to X3 questionnaire</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat<span class="sc">==</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) </span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="co">#continued on the next page</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-analysis-variables-in-the-presence-of-skip-patterns-3" class="level3" data-number="4.0.5">
+<h3 data-number="4.0.5" class="anchored" data-anchor-id="creating-analysis-variables-in-the-presence-of-skip-patterns-3"><span class="header-section-number">4.0.5</span> Creating analysis variables in the presence of skip patterns</h3>
+<p>Step 1b: Investigate relationship between input variables continued…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add filter for s3classes is "missing" [-9]</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">==-</span><span class="dv">9</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [1]</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes    s3clglvl         n</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;    &lt;int&gt;</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 -9 [Missing] -9 [Missing]    59</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">!=-</span><span class="dv">9</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [3]</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes      s3clglvl                                     n</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;      &lt;dbl+lbl&gt;                                &lt;int&gt;</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1 [Yes]        -9 [Missing]                               428</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 [Yes]         1 [4 or more years]                      8894</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1 [Yes]         2 [At least 2 but less than 4 years]     3929</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1 [Yes]         3 [Less than 2 years (below associate)]   226</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 2 [No]         -7 [Item legitimate skip/NA]              3401</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 3 [Don't know] -7 [Item legitimate skip/NA]              1621</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co">#add filter for s3classes equal to "no" or "don't know"</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">!=-</span><span class="dv">9</span>, s3classes <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [2]</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes      s3clglvl                         n</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt;      &lt;dbl+lbl&gt;                    &lt;int&gt;</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2 [No]         -7 [Item legitimate skip/NA]  3401</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 3 [Don't know] -7 [Item legitimate skip/NA]  1621</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">!=-</span><span class="dv">9</span>, s3classes <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [2]</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes  s3clglvl                    n</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;fct&gt;      &lt;fct&gt;                   &lt;int&gt;</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 No         Item legitimate skip/NA  3401</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Don't know Item legitimate skip/NA  1621</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">!=-</span><span class="dv">9</span>, s3classes<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [1]</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes s3clglvl                                     n</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl+lbl&gt; &lt;dbl+lbl&gt;                                &lt;int&gt;</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1 [Yes]   -9 [Missing]                               428</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 [Yes]    1 [4 or more years]                      8894</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1 [Yes]    2 [At least 2 but less than 4 years]     3929</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1 [Yes]    3 [Less than 2 years (below associate)]   226</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>hsls_small <span class="sc">%&gt;%</span> <span class="fu">filter</span>(x3sqstat <span class="sc">!=</span><span class="dv">8</span>,s3classes<span class="sc">!=-</span><span class="dv">9</span>, s3classes<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s3classes) <span class="sc">%&gt;%</span> <span class="fu">count</span>(s3clglvl) <span class="sc">%&gt;%</span> <span class="fu">as_factor</span>()</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   s3classes [1]</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s3classes s3clglvl                                n</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;fct&gt;     &lt;fct&gt;                               &lt;int&gt;</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Yes       Missing                               428</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Yes       4 or more years                      8894</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Yes       At least 2 but less than 4 years     3929</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Yes       Less than 2 years (below associate)   226</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
