@@ -249,6 +249,7 @@ Three ways to execute commands in R
 1.  Type/copy commands directly into the "console"
 2.  \`code chunks' in RMarkdown (.Rmd & .QMD files)
     -   Can execute one command at a time, one chunk at a time, or "knit" the entire\
+        -   **Cmd/Ctrl + Alt + i**: insert a new code chunk
     -   **Cmd/Ctrl + Enter**: execute highlighted line(s) within chunk
     -   **Cmd/Ctrl + Shift + k**: "knit" entire document
 3.  R scripts (.R files)
