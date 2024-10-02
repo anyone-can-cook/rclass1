@@ -1094,7 +1094,7 @@ include_graphics("one_carriage_train_vs_contents.png")
 
 Object created by `list_x[1]` is a list with one element (output omitted)
 
-```{r, results = "hide"}
+```{r}
 list_x[1]
 str(list_x[1])
 ```
@@ -1104,7 +1104,7 @@ Object created by `list_x[[1]]` is a vector with 3 elements (output omitted)
 -   `list_x[[1]]` gives us "contents" of element 1
 -   Since element 1 contains a numeric vector, object created by `list_x[[1]]` is a numeric vector
 
-```{r, results = "hide"}
+```{r}
 list_x[[1]]
 str(list_x[[1]])
 ```
