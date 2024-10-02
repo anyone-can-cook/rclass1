@@ -1334,12 +1334,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Advanced R</em> <a href="https://adv-r.hadley.nz/subsetting.html#subset-single">chapter 4.3</a> by Wickham uses the “train metaphor” to explain a list vs.&nbsp;<strong>contents</strong> of a list and how this relates to <code>[]</code> vs.&nbsp;<code>[[]]</code></p>
 <p>Below code chunk makes a list named <code>list_x</code> that contains 3 elements</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list object list_x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list object list_x</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 3</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ : int [1:3] 1 2 3</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ : chr "a"</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ : int [1:3] 4 5 6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In our train metaphor, object <code>list_x</code> is a train that contains 3 carriages</p>
 <p><a href="https://adv-r.hadley.nz/subsetting.html#subset-single"><img src="three_carriage_train.png" class="img-fluid"></a></p>
 <p>list object <code>list_x</code> is a train that contains 3 carriages</p>
 <div class="cell">
+<pre><code>#&gt; Warning: package 'knitr' was built under R version 4.3.3</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1364,18 +1370,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>you can think of this as a train with fewer carriages</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co">#str(list_x)</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="dv">1</span>]) <span class="co"># returns a list</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 1</span></span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ : int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co">#str(list_x)</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="dv">1</span>]) <span class="co"># returns a list</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 1</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ : int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>Extracting element using <code>[[]]</code> returns <strong><em>contents</em></strong> of particular carriage</p>
 <ul>
 <li>I say applying <code>[[]]</code> to a list or data frame returns a simpler object that moves up one level of hierarchy</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="dv">1</span>]]) <span class="co"># returns an atomic vector</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="dv">1</span>]]) <span class="co"># returns an atomic vector</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 </ol>
 </section>
@@ -1389,7 +1395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Here is a list object named <code>list_x</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here is an image of a few “trains” that can be created by applying <code>[]</code> to <code>list_x</code> <!-- [![](smaller_trains.png)](https://adv-r.hadley.nz/subsetting.html#subset-single){height=50%} --></p>
 <div class="cell">
@@ -1403,11 +1409,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>And here is code to create the “trains” shown in above image (output omitted)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>list_x[<span class="sc">-</span><span class="dv">2</span>]</span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>list_x[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)]</span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">0</span>]</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>list_x[] <span class="co"># returns the original list; not shown in above train picture</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>list_x[<span class="sc">-</span><span class="dv">2</span>]</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>list_x[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)]</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">0</span>]</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>list_x[] <span class="co"># returns the original list; not shown in above train picture</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Rules about applying subset operator <code>[[]]</code> to a list</p>
 <ul>
@@ -1415,7 +1421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Create list <code>list_x</code> and show “train” Image of applying <code>list_x[1]</code> vs.&nbsp;<code>list_x[[1]]</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -1428,8 +1434,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Object created by <code>list_x[1]</code> is a list with one element (output omitted)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">1</span>]</span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>list_x[<span class="dv">1</span>]</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Object created by <code>list_x[[1]]</code> is a vector with 3 elements (output omitted)</p>
 <ul>
@@ -1437,41 +1443,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Since element 1 contains a numeric vector, object created by <code>list_x[[1]]</code> is a numeric vector</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="dv">1</span>]]</span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="dv">1</span>]]</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Rules about applying subset operator <code>[[]]</code> to a list</p>
 <ul>
 <li>Can apply <code>[[]]</code> to return the <strong>contents</strong> of a <strong>single element</strong> of a list</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list list_x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"a"</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list list_x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We cannot use <code>[[]]</code> to subset multiple elements of a list (output omitted)</p>
 <ul>
 <li>e.g., we could write <code>list_x[[2]]</code> but not <code>list_x[[2:3]]</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="fu">c</span>(<span class="dv">2</span>)]] <span class="co"># this works, subset element 2 using [[]]</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)]] <span class="co"># this doesn't work; subset element 2 and 3 using [[]]</span></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>list_x[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)] <span class="co"># this works; subset element 2 and 3 using []</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="fu">c</span>(<span class="dv">2</span>)]] <span class="co"># this works, subset element 2 using [[]]</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)]] <span class="co"># this doesn't work; subset element 2 and 3 using [[]]</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>list_x[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)] <span class="co"># this works; subset element 2 and 3 using []</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Like <code>[]</code>, can use <code>[[]]</code> to return contents of <strong>named</strong> elements specified using quotes</p>
 <ul>
 <li>syntax: <code>obj_name[["element_name"]]</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">var2=</span><span class="st">"a"</span>, <span class="at">var3=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list with named elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">var2=</span><span class="st">"a"</span>, <span class="at">var3=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>) <span class="co"># create list with named elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Subset list <code>list_x</code> using <code>[[]]</code> element names</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="st">"var1"</span>]] <span class="co"># subset by element position: list_x[[1]]</span></span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
-<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="st">"var1"</span>]])</span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  int [1:3] 1 2 3</span></span>
-<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="st">"var1"</span>]) <span class="co"># note: suggests var name is attribute of list, not atomic vector</span></span>
-<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 1</span></span>
-<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ var1: int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="st">"var1"</span>]] <span class="co"># subset by element position: list_x[[1]]</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[[<span class="st">"var1"</span>]])</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  int [1:3] 1 2 3</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(list_x[<span class="st">"var1"</span>]) <span class="co"># note: suggests var name is attribute of list, not atomic vector</span></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 1</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ var1: int [1:3] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Can do same thing with data frames because data frames are lists (output omitted)</p>
 <ul>
@@ -1479,11 +1485,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>object created by <code>df_event[["zip"]]</code> is character vector of length = 18,680</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df_event[["zip"]] # this works but long output</span></span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">"zip"</span>]]) <span class="co"># character vector of length 18,860</span></span>
-<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(df_event[[<span class="st">"zip"</span>]])</span>
-<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(df_event[[<span class="st">"zip"</span>]])</span>
-<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[<span class="st">"zip"</span>]) <span class="co"># by contrast, this is a dataframe w/ one variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df_event[["zip"]] # this works but long output</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">"zip"</span>]]) <span class="co"># character vector of length 18,860</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(df_event[[<span class="st">"zip"</span>]])</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(df_event[[<span class="st">"zip"</span>]])</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[<span class="st">"zip"</span>]) <span class="co"># by contrast, this is a dataframe w/ one variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="general-rules-of-applying-vs-to-nested-objects" class="level3" data-number="2.3.4">
@@ -1503,40 +1509,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>When working w/ data frames, functions that calculate things expect to be working with atomic vectors (think <code>[[]]</code>) not lists (think <code>[]</code>)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_event[[<span class="st">'med_inc'</span>]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 89089.28</span></span>
-<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mean(df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work</span></span>
-<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[<span class="st">'med_inc'</span>])</span>
-<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Classes 'tbl_df', 'tbl' and 'data.frame':    18680 obs. of  1 variable:</span></span>
-<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ med_inc: num  71714 89122 70136 70136 71024 ...</span></span>
-<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">'med_inc'</span>]])</span>
-<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:18680] 71714 89122 70136 70136 71024 ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_event[[<span class="st">'med_inc'</span>]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 89089.28</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mean(df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[<span class="st">'med_inc'</span>])</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Classes 'tbl_df', 'tbl' and 'data.frame':    18680 obs. of  1 variable:</span></span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ med_inc: num  71714 89122 70136 70136 71024 ...</span></span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">'med_inc'</span>]])</span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:18680] 71714 89122 70136 70136 71024 ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="subset-listsdata-frames-using" class="level3" data-number="2.3.5">
 <h3 data-number="2.3.5" class="anchored" data-anchor-id="subset-listsdata-frames-using"><span class="header-section-number">2.3.5</span> Subset lists/data frames using $</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">var2=</span><span class="st">"a"</span>, <span class="at">var3=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>list_x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">var2=</span><span class="st">"a"</span>, <span class="at">var3=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>obj_name$element_name</code> is shorthand operator for <code>obj_name[["element_name"]]</code></p>
 <p>These three lines of code all give the same result</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="dv">1</span>]]</span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="st">"var1"</span>]]</span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>list_x<span class="sc">$</span>var1</span>
-<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="dv">1</span>]]</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>list_x[[<span class="st">"var1"</span>]]</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>list_x<span class="sc">$</span>var1</span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>df_name$var_name</code>: easiest way in base R to refer to variable in a data frame</p>
 <ul>
 <li>these two lines of code are equivalent</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">"zip"</span>]])</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:18680] "01002" "01007" "01020" "01020" "01027" "01027" "01027" ...</span></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event<span class="sc">$</span>zip)</span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:18680] "01002" "01007" "01020" "01020" "01027" "01027" "01027" ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event[[<span class="st">"zip"</span>]])</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:18680] "01002" "01007" "01020" "01020" "01027" "01027" "01027" ...</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_event<span class="sc">$</span>zip)</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:18680] "01002" "01007" "01020" "01020" "01027" "01027" "01027" ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1589,7 +1595,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Note: below code filters observations but keeps all variables</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="subset-data-frames-by-combining-and-decompose-syntax" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="subset-data-frames-by-combining-and-decompose-syntax"><span class="header-section-number">3.1.1</span> Subset Data Frames by combining <code>[]</code> and <code>$</code>, decompose syntax</h3>
@@ -1603,9 +1609,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>df_school$visits_by_110635 &gt;= 1</code>: returns a logical (<code>TRUE</code>/<code>FALSE</code>) atomic vector with length equal to number of obs in <code>df_school</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><code>df_school[df_school$visits_by_110635 &gt;= 1, ]</code>
@@ -1621,8 +1627,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>example using atomic vectors (output omitted)</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">2.2</span>, <span class="fl">3.3</span>, <span class="fl">4.4</span>, <span class="fl">5.5</span>)</span>
-<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>x[x<span class="sc">&gt;</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">2.2</span>, <span class="fl">3.3</span>, <span class="fl">4.4</span>, <span class="fl">5.5</span>)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>x[x<span class="sc">&gt;</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="subset-data-frames-by-combining-and-keep-desired-columns" class="level3" data-number="3.1.2">
@@ -1636,13 +1642,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Extract observations where the high school received at least 1 visit from UC Berkeley and the first three columns</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Extract observations where the high school received at least 1 visit from UC Berkeley and variables “state_code” “school_type” “name”</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="fu">c</span>(<span class="st">"state_code"</span>,<span class="st">"school_type"</span>,<span class="st">"name"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="fu">c</span>(<span class="st">"state_code"</span>,<span class="st">"school_type"</span>,<span class="st">"name"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="subset-data-frames-by-combining-and-more-examples" class="level3" data-number="3.1.3">
@@ -1667,20 +1673,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Count obs where high schools received at least 1 visit by Bama (100751) <strong>and</strong> at least one visit by Berkeley (110635)</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> </span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>                 df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>, ])</span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 247</span></span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Equivalently:</span></span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nrow(df_school[df_school[["visits_by_110635"]] &gt;= 1 &amp; </span></span>
-<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                df_school[["visits_by_100751"]] &gt;= 1, ])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> </span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>                 df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>, ])</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 247</span></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Equivalently:</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nrow(df_school[df_school[["visits_by_110635"]] &gt;= 1 &amp; </span></span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                df_school[["visits_by_100751"]] &gt;= 1, ])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Count obs where schools received 1+ visit by Bama <strong>or</strong> 1+ visit by Berkeley</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> </span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span> df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>, ])</span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2763</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> </span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span> df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>, ])</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2763</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="logical-operators-for-comparisons" class="level3" data-number="3.1.4">
@@ -1745,27 +1751,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><strong>Example</strong>: Count the number of out-of-state high schools that UC Berkeley visited.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The `inst_110635` variable contains the home state of UC Berkeley</span></span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df_school<span class="sc">$</span>inst_110635)</span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "CA"</span></span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for schools visited by UC Berkeley AND whose state is not "CA"</span></span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span></span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>                 df_school<span class="sc">$</span>state_code <span class="sc">!=</span> df_school<span class="sc">$</span>inst_110635, ])</span>
-<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 302</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The `inst_110635` variable contains the home state of UC Berkeley</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df_school<span class="sc">$</span>inst_110635)</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "CA"</span></span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for schools visited by UC Berkeley AND whose state is not "CA"</span></span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span></span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>                 df_school<span class="sc">$</span>state_code <span class="sc">!=</span> df_school<span class="sc">$</span>inst_110635, ])</span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 302</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br></p>
 <p><strong>Example</strong>: Count the number of schools in the Northeast that received a visit from either UC Berkeley, U of Alabama, or CU Boulder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector containing states located in the Northeast region</span></span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>northeast_states <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'CT'</span>, <span class="st">'ME'</span>, <span class="st">'MA'</span>, <span class="st">'NH'</span>, <span class="st">'RI'</span>, <span class="st">'VT'</span>, <span class="st">'NJ'</span>, <span class="st">'NY'</span>, <span class="st">'PA'</span>)</span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for schools in the Northeast AND visited by any of the 3 univs</span></span>
-<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>state_code <span class="sc">%in%</span> northeast_states <span class="sc">&amp;</span></span>
-<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>                 (df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span></span>
-<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>                    df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span></span>
-<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>                    df_school<span class="sc">$</span>visits_by_126614 <span class="sc">&gt;=</span> <span class="dv">1</span>), ])</span>
-<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 544</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector containing states located in the Northeast region</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>northeast_states <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'CT'</span>, <span class="st">'ME'</span>, <span class="st">'MA'</span>, <span class="st">'NH'</span>, <span class="st">'RI'</span>, <span class="st">'VT'</span>, <span class="st">'NJ'</span>, <span class="st">'NY'</span>, <span class="st">'PA'</span>)</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for schools in the Northeast AND visited by any of the 3 univs</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school[df_school<span class="sc">$</span>state_code <span class="sc">%in%</span> northeast_states <span class="sc">&amp;</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>                 (df_school<span class="sc">$</span>visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>                    df_school<span class="sc">$</span>visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>                    df_school<span class="sc">$</span>visits_by_126614 <span class="sc">&gt;=</span> <span class="dv">1</span>), ])</span>
+<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 544</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="subset-data-frames-by-combining-and-na-observations" class="level3" data-number="3.1.5">
@@ -1786,23 +1792,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>How many events at public HS with at least $50k median household income?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)) <span class="co"># number of observations (all events) with missing values for med_inc</span></span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 470</span></span>
-<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" and med_inc is missing</span></span>
-<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)<span class="sc">==</span><span class="dv">1</span> , ]) <span class="co"># note TRUE evaluates to 1</span></span>
-<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 75</span></span>
-<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" &amp; med_inc is not NA &amp; med_inc &gt;= $50,000</span></span>
-<span id="cb102-10"><a href="#cb102-10" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb102-11"><a href="#cb102-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span> , ])  <span class="co"># note FALSE evaluates to 0</span></span>
-<span id="cb102-12"><a href="#cb102-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
-<span id="cb102-13"><a href="#cb102-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-14"><a href="#cb102-14" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" and med_inc &gt;= $50,000</span></span>
-<span id="cb102-15"><a href="#cb102-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb102-16"><a href="#cb102-16" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span> , ])</span>
-<span id="cb102-17"><a href="#cb102-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)) <span class="co"># number of observations (all events) with missing values for med_inc</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 470</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" and med_inc is missing</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)<span class="sc">==</span><span class="dv">1</span> , ]) <span class="co"># note TRUE evaluates to 1</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 75</span></span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" &amp; med_inc is not NA &amp; med_inc &gt;= $50,000</span></span>
+<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb103-11"><a href="#cb103-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc)<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span> , ])  <span class="co"># note FALSE evaluates to 0</span></span>
+<span id="cb103-12"><a href="#cb103-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
+<span id="cb103-13"><a href="#cb103-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-14"><a href="#cb103-14" aria-hidden="true" tabindex="-1"></a><span class="co">#num obs event_type=="public hs" and med_inc &gt;= $50,000</span></span>
+<span id="cb103-15"><a href="#cb103-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb103-16"><a href="#cb103-16" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span> , ])</span>
+<span id="cb103-17"><a href="#cb103-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To exclude rows where condition is <code>NA</code> if subset using <code>[]</code> combined w/ <code>$</code></p>
 <ul>
@@ -1810,24 +1816,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>which()</code> returns position numbers for elements where condition is <code>TRUE</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?which</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>)</span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  TRUE FALSE    NA  TRUE</span></span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>))</span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  logi [1:4] TRUE FALSE NA TRUE</span></span>
-<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>))</span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?which</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>)</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  TRUE FALSE    NA  TRUE</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>))</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  logi [1:4] TRUE FALSE NA TRUE</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">NA</span>,<span class="cn">TRUE</span>))</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Task: Count events at public HS with at least $50k median household income?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`; without which()</span></span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>, ])</span>
-<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span>
-<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`; with which()</span></span>
-<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>), ])</span>
-<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`; without which()</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>, ])</span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`; with which()</span></span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>), ])</span>
+<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="student-exercises-1" class="level3" data-number="3.1.6">
@@ -1844,24 +1850,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Solution to 1</p>
 <p><strong>base R</strong> using [] and $</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>df_school_br1<span class="ot">&lt;-</span> df_school[df_school<span class="sc">$</span>school_type <span class="sc">==</span> <span class="st">"public"</span> </span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&amp;</span> df_school<span class="sc">$</span>pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&amp;</span> df_school<span class="sc">$</span>state_code <span class="sc">==</span> <span class="st">"CA"</span>, ]</span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_br1)</span>
-<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>df_school_br1<span class="ot">&lt;-</span> df_school[df_school<span class="sc">$</span>school_type <span class="sc">==</span> <span class="st">"public"</span> </span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&amp;</span> df_school<span class="sc">$</span>pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&amp;</span> df_school<span class="sc">$</span>state_code <span class="sc">==</span> <span class="st">"CA"</span>, ]</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_br1)</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solution to 2:</p>
 <p><strong>base R</strong> using [] and $</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use is.na to exclude NA</span></span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>event_inst <span class="sc">==</span><span class="st">"Out-State"</span> </span>
-<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc <span class="sc">&gt;</span> <span class="dv">30000</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc) <span class="sc">==</span><span class="dv">0</span>, ])</span>
-<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7784</span></span>
-<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use which to exclude NA</span></span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>event_inst <span class="sc">==</span><span class="st">"Out-State"</span> </span>
-<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc <span class="sc">&gt;</span> <span class="dv">30000</span> ), ])</span>
-<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7784</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use is.na to exclude NA</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>event_inst <span class="sc">==</span><span class="st">"Out-State"</span> </span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc <span class="sc">&gt;</span> <span class="dv">30000</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>(df_event<span class="sc">$</span>med_inc) <span class="sc">==</span><span class="dv">0</span>, ])</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7784</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use which to exclude NA</span></span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> <span class="sc">&amp;</span> df_event<span class="sc">$</span>event_inst <span class="sc">==</span><span class="st">"Out-State"</span> </span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc <span class="sc">&gt;</span> <span class="dv">30000</span> ), ])</span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7784</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <p><br></p>
@@ -1885,7 +1891,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>?subset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>?subset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Syntax [when object is data frame]: <strong>subset(x, subset, select, drop = FALSE)</strong></p>
 <ul>
@@ -1901,64 +1907,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><em>Note</em>. <code>subset()</code> automatically excludes rows where condition is <code>NA</code>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`, without which(); includes `NA`</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>, ]) </span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`, with which(); excludes `NA`</span></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>), ])</span>
-<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
-<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `subset()`; excludes `NA`</span></span>
-<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_event, event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>            <span class="sc">&amp;</span> med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>))</span>
-<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
-<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `subset()`; excludes `NA`; explicitly name arguments of subset()</span></span>
-<span id="cb108-17"><a href="#cb108-17" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_event, <span class="at">subset =</span> event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
-<span id="cb108-18"><a href="#cb108-18" aria-hidden="true" tabindex="-1"></a>            <span class="sc">&amp;</span> med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>))</span>
-<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`, without which(); includes `NA`</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>              <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>, ]) </span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10016</span></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `[]` combined with `$`, with which(); excludes `NA`</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_event[<span class="fu">which</span>(df_event<span class="sc">$</span>event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">&amp;</span> df_event<span class="sc">$</span>med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>), ])</span>
+<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
+<span id="cb109-10"><a href="#cb109-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-11"><a href="#cb109-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `subset()`; excludes `NA`</span></span>
+<span id="cb109-12"><a href="#cb109-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_event, event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb109-13"><a href="#cb109-13" aria-hidden="true" tabindex="-1"></a>            <span class="sc">&amp;</span> med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>))</span>
+<span id="cb109-14"><a href="#cb109-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span>
+<span id="cb109-15"><a href="#cb109-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-16"><a href="#cb109-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Base R, `subset()`; excludes `NA`; explicitly name arguments of subset()</span></span>
+<span id="cb109-17"><a href="#cb109-17" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_event, <span class="at">subset =</span> event_type <span class="sc">==</span> <span class="st">"public hs"</span> </span>
+<span id="cb109-18"><a href="#cb109-18" aria-hidden="true" tabindex="-1"></a>            <span class="sc">&amp;</span> med_inc<span class="sc">&gt;=</span><span class="dv">50000</span>))</span>
+<span id="cb109-19"><a href="#cb109-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9941</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using <code>df_school</code>, show all public high schools that are at least 50% Latinx (var=<code>pct_hispanic</code>) student enrollment in California</p>
 <ul>
 <li>Using base R, <code>subset()</code> [output omitted]</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co">#public high schools with at least 50% Latinx student enrollment </span></span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x=</span> df_school, <span class="at">subset =</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>     <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co">#public high schools with at least 50% Latinx student enrollment </span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x=</span> df_school, <span class="at">subset =</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>     <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Can wrap <code>subset()</code> within <code>nrow()</code> to count number of observations that satisfy criteria</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>     <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>))</span>
-<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>     <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>))</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that <code>subset()</code> identify the number of observations for which the condition is <code>TRUE</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 21301</span></span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 21301</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Count all CA public high schools that are at least 50% Latinx and received at least 1 visit from UC Berkeley (var=<code>visits_by_110635</code>)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>))</span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>))</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>subset()</code> can also use <code>%in%</code> operator, which is more efficient version of <strong>OR</strong> operator <code>|</code></p>
 <ul>
 <li>Count number of schools from MA, ME, or VT that received at least one visit from University of Alabama (var=<code>visits_by_100751</code>)</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, state_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"MA"</span>,<span class="st">"ME"</span>,<span class="st">"VT"</span>) </span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>))</span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 108</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, state_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"MA"</span>,<span class="st">"ME"</span>,<span class="st">"VT"</span>) </span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>))</span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 108</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Use the <code>select</code> argument within <code>subset()</code> to keep selected variables</p>
 <ul>
@@ -1966,26 +1972,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Subset all CA public high schools that are at least 50% Latinx <strong>AND</strong> only keep variables <code>name</code> and <code>address</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>, <span class="at">select =</span> <span class="fu">c</span>(name, address)))</span>
-<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(<span class="at">x =</span> df_school, <span class="at">subset =</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>, <span class="at">select =</span> <span class="fu">c</span>(name, address)))</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Combine <code>subset()</code> with assignment (<code>&lt;-</code>) to create a new data frame</p>
 <p>Create a new date frame of all CA public high schools that are at least 50% Latinx <strong>AND</strong> only keep variables <code>name</code> and <code>address</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>df_school_v2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>, <span class="at">select =</span> <span class="fu">c</span>(name, address))</span>
-<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_school_v2, <span class="at">n=</span><span class="dv">5</span>)</span>
-<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                       name               address</span></span>
-<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1254           Tustin High   1171 El Camino Real</span></span>
-<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1301     Bell Gardens High         6119 Agra St.</span></span>
-<span id="cb115-8"><a href="#cb115-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1309        Santa Ana High         520 W. Walnut</span></span>
-<span id="cb115-9"><a href="#cb115-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1332           Warren High     8141 De Palma St.</span></span>
-<span id="cb115-10"><a href="#cb115-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1336 Hollywood Senior High 1521 N. Highland Ave.</span></span>
-<span id="cb115-11"><a href="#cb115-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb115-12"><a href="#cb115-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_v2)</span>
-<span id="cb115-13"><a href="#cb115-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>df_school_v2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> </span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> state_code <span class="sc">==</span> <span class="st">"CA"</span>, <span class="at">select =</span> <span class="fu">c</span>(name, address))</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_school_v2, <span class="at">n=</span><span class="dv">5</span>)</span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                       name               address</span></span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1254           Tustin High   1171 El Camino Real</span></span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1301     Bell Gardens High         6119 Agra St.</span></span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1309        Santa Ana High         520 W. Walnut</span></span>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1332           Warren High     8141 De Palma St.</span></span>
+<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1336 Hollywood Senior High 1521 N. Highland Ave.</span></span>
+<span id="cb116-11"><a href="#cb116-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-12"><a href="#cb116-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_v2)</span>
+<span id="cb116-13"><a href="#cb116-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 713</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="student-exercises-2" class="level3" data-number="3.2.2">
@@ -2003,39 +2009,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </summary>
 <p>Solution to 1</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>df_event_br <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_event, <span class="at">select=</span><span class="fu">c</span>(instnm, event_date, event_type))</span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_event_br)</span>
-<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "instnm"     "event_date" "event_type"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>df_event_br <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_event, <span class="at">select=</span><span class="fu">c</span>(instnm, event_date, event_type))</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_event_br)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "instnm"     "event_date" "event_type"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solution to 2</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>df_school_br <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_school, state_code <span class="sc">!=</span> <span class="st">"CA"</span> <span class="sc">&amp;</span> school_type <span class="sc">==</span> <span class="st">"public"</span> </span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>                        <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span><span class="dv">1</span> )</span>
-<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_br)</span>
-<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>df_school_br <span class="ot">&lt;-</span> <span class="fu">subset</span>(df_school, state_code <span class="sc">!=</span> <span class="st">"CA"</span> <span class="sc">&amp;</span> school_type <span class="sc">==</span> <span class="st">"public"</span> </span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>                        <span class="sc">&amp;</span> pct_hispanic <span class="sc">&gt;=</span> <span class="dv">50</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span><span class="dv">1</span> )</span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_school_br)</span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solution to 3</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, state_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"CA"</span>, <span class="st">"FL"</span>, <span class="st">"MA"</span>)  </span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">&amp;</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>) ))</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 246</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">subset</span>(df_school, state_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"CA"</span>, <span class="st">"FL"</span>, <span class="st">"MA"</span>)  </span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>             <span class="sc">&amp;</span> school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>) ))</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 246</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solution to 4</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> state_code <span class="sc">!=</span> <span class="st">"CA"</span> </span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>       <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> pct_black <span class="sc">&gt;=</span> <span class="dv">50</span>, </span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(state_code, name, zip_code))</span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       state_code                                name zip_code</span></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4523          GA                   Grady High School    30309</span></span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8519          MD             Frederick Douglass High    20772</span></span>
-<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9666          MN                     DOWNTOWN CAMPUS    55403</span></span>
-<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10681         MS                  MURRAH HIGH SCHOOL    39202</span></span>
-<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14569         OH              Shaker Hts High School    44120</span></span>
-<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14632         OH       Cleveland Heights High School    44118</span></span>
-<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17142         SC                  Spring Valley High    29229</span></span>
-<span id="cb119-12"><a href="#cb119-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17143         SC             Richland Northeast High    29223</span></span>
-<span id="cb119-13"><a href="#cb119-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17623         TN           Soulsville Charter School    38106</span></span>
-<span id="cb119-14"><a href="#cb119-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17624         TN KIPP Memphis Collegiate High School    38108</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(df_school, school_type <span class="sc">==</span> <span class="st">"public"</span> <span class="sc">&amp;</span> state_code <span class="sc">!=</span> <span class="st">"CA"</span> </span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>       <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> pct_black <span class="sc">&gt;=</span> <span class="dv">50</span>, </span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(state_code, name, zip_code))</span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       state_code                                name zip_code</span></span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4523          GA                   Grady High School    30309</span></span>
+<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8519          MD             Frederick Douglass High    20772</span></span>
+<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9666          MN                     DOWNTOWN CAMPUS    55403</span></span>
+<span id="cb120-8"><a href="#cb120-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10681         MS                  MURRAH HIGH SCHOOL    39202</span></span>
+<span id="cb120-9"><a href="#cb120-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14569         OH              Shaker Hts High School    44120</span></span>
+<span id="cb120-10"><a href="#cb120-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14632         OH       Cleveland Heights High School    44118</span></span>
+<span id="cb120-11"><a href="#cb120-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17142         SC                  Spring Valley High    29229</span></span>
+<span id="cb120-12"><a href="#cb120-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17143         SC             Richland Northeast High    29223</span></span>
+<span id="cb120-13"><a href="#cb120-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17623         TN           Soulsville Charter School    38106</span></span>
+<span id="cb120-14"><a href="#cb120-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17624         TN KIPP Memphis Collegiate High School    38108</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <p><br></p>
@@ -2047,66 +2053,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="create-new-data-frame-based-on-df_school_all"><span class="header-section-number">3.3.1</span> Create new data frame based on <code>df_school_all</code></h3>
 <p>Data frame <code>df_school_all</code> has one obs per US high school and then variables identifying number of visits by particular universities</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"</span>))</span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_school_all)</span>
-<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "state_code"         "school_type"        "ncessch"           </span></span>
-<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] "name"               "address"            "city"              </span></span>
-<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] "zip_code"           "pct_white"          "pct_black"         </span></span>
-<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] "pct_hispanic"       "pct_asian"          "pct_amerindian"    </span></span>
-<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] "pct_other"          "num_fr_lunch"       "total_students"    </span></span>
-<span id="cb120-8"><a href="#cb120-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] "num_took_math"      "num_prof_math"      "num_took_rla"      </span></span>
-<span id="cb120-9"><a href="#cb120-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] "num_prof_rla"       "avgmedian_inc_2564" "latitude"          </span></span>
-<span id="cb120-10"><a href="#cb120-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] "longitude"          "visits_by_196097"   "visits_by_186380"  </span></span>
-<span id="cb120-11"><a href="#cb120-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] "visits_by_215293"   "visits_by_201885"   "visits_by_181464"  </span></span>
-<span id="cb120-12"><a href="#cb120-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] "visits_by_139959"   "visits_by_218663"   "visits_by_100751"  </span></span>
-<span id="cb120-13"><a href="#cb120-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] "visits_by_199193"   "visits_by_110635"   "visits_by_110653"  </span></span>
-<span id="cb120-14"><a href="#cb120-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] "visits_by_126614"   "visits_by_155317"   "visits_by_106397"  </span></span>
-<span id="cb120-15"><a href="#cb120-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] "visits_by_149222"   "visits_by_166629"   "total_visits"      </span></span>
-<span id="cb120-16"><a href="#cb120-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] "inst_196097"        "inst_186380"        "inst_215293"       </span></span>
-<span id="cb120-17"><a href="#cb120-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] "inst_201885"        "inst_181464"        "inst_139959"       </span></span>
-<span id="cb120-18"><a href="#cb120-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] "inst_218663"        "inst_100751"        "inst_199193"       </span></span>
-<span id="cb120-19"><a href="#cb120-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] "inst_110635"        "inst_110653"        "inst_126614"       </span></span>
-<span id="cb120-20"><a href="#cb120-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] "inst_155317"        "inst_106397"        "inst_149222"       </span></span>
-<span id="cb120-21"><a href="#cb120-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] "inst_166629"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"</span>))</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_school_all)</span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "state_code"         "school_type"        "ncessch"           </span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] "name"               "address"            "city"              </span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] "zip_code"           "pct_white"          "pct_black"         </span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] "pct_hispanic"       "pct_asian"          "pct_amerindian"    </span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] "pct_other"          "num_fr_lunch"       "total_students"    </span></span>
+<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] "num_took_math"      "num_prof_math"      "num_took_rla"      </span></span>
+<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] "num_prof_rla"       "avgmedian_inc_2564" "latitude"          </span></span>
+<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] "longitude"          "visits_by_196097"   "visits_by_186380"  </span></span>
+<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] "visits_by_215293"   "visits_by_201885"   "visits_by_181464"  </span></span>
+<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] "visits_by_139959"   "visits_by_218663"   "visits_by_100751"  </span></span>
+<span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] "visits_by_199193"   "visits_by_110635"   "visits_by_110653"  </span></span>
+<span id="cb121-14"><a href="#cb121-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] "visits_by_126614"   "visits_by_155317"   "visits_by_106397"  </span></span>
+<span id="cb121-15"><a href="#cb121-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] "visits_by_149222"   "visits_by_166629"   "total_visits"      </span></span>
+<span id="cb121-16"><a href="#cb121-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] "inst_196097"        "inst_186380"        "inst_215293"       </span></span>
+<span id="cb121-17"><a href="#cb121-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] "inst_201885"        "inst_181464"        "inst_139959"       </span></span>
+<span id="cb121-18"><a href="#cb121-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] "inst_218663"        "inst_100751"        "inst_199193"       </span></span>
+<span id="cb121-19"><a href="#cb121-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] "inst_110635"        "inst_110653"        "inst_126614"       </span></span>
+<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] "inst_155317"        "inst_106397"        "inst_149222"       </span></span>
+<span id="cb121-21"><a href="#cb121-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] "inst_166629"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create new version of data frame, called <code>school_v2</code>, which we’ll use to introduce how to create new variables</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># below code use tidyverse functions and pipe operator</span></span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ forcats   1.0.0     ✔ stringr   1.5.1</span></span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ ggplot2   3.4.3     ✔ tibble    3.2.1</span></span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ lubridate 1.9.3     ✔ tidyr     1.3.1</span></span>
-<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ purrr     1.0.2     </span></span>
-<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
-<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
-<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
-<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>school_v2 <span class="ot">&lt;-</span> df_school_all <span class="sc">%&gt;%</span> </span>
-<span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"inst_"</span>)) <span class="sc">%&gt;%</span> <span class="co"># remove vars that start with "inst_"</span></span>
-<span id="cb121-14"><a href="#cb121-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>( <span class="co"># rename selected variables</span></span>
-<span id="cb121-15"><a href="#cb121-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_berkeley =</span> visits_by_110635,</span>
-<span id="cb121-16"><a href="#cb121-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_boulder =</span> visits_by_126614,</span>
-<span id="cb121-17"><a href="#cb121-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_bama =</span> visits_by_100751,</span>
-<span id="cb121-18"><a href="#cb121-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_stonybrook =</span> visits_by_196097,</span>
-<span id="cb121-19"><a href="#cb121-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_rutgers =</span> visits_by_186380,</span>
-<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_pitt =</span> visits_by_215293,</span>
-<span id="cb121-21"><a href="#cb121-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_cinci =</span> visits_by_201885,</span>
-<span id="cb121-22"><a href="#cb121-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_nebraska =</span> visits_by_181464,</span>
-<span id="cb121-23"><a href="#cb121-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_georgia =</span> visits_by_139959,</span>
-<span id="cb121-24"><a href="#cb121-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_scarolina =</span> visits_by_218663,</span>
-<span id="cb121-25"><a href="#cb121-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_ncstate =</span> visits_by_199193,</span>
-<span id="cb121-26"><a href="#cb121-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_irvine =</span> visits_by_110653,</span>
-<span id="cb121-27"><a href="#cb121-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_kansas =</span> visits_by_155317,</span>
-<span id="cb121-28"><a href="#cb121-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_arkansas =</span> visits_by_106397,</span>
-<span id="cb121-29"><a href="#cb121-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_sillinois =</span> visits_by_149222,</span>
-<span id="cb121-30"><a href="#cb121-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_umass =</span> visits_by_166629,</span>
-<span id="cb121-31"><a href="#cb121-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_took_read =</span> num_took_rla,</span>
-<span id="cb121-32"><a href="#cb121-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_prof_read =</span> num_prof_rla,</span>
-<span id="cb121-33"><a href="#cb121-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">med_inc =</span> avgmedian_inc_2564</span>
-<span id="cb121-34"><a href="#cb121-34" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb121-35"><a href="#cb121-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-36"><a href="#cb121-36" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(school_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># below code use tidyverse functions and pipe operator</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ forcats   1.0.0     ✔ stringr   1.5.1</span></span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ ggplot2   3.4.3     ✔ tibble    3.2.1</span></span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ lubridate 1.9.3     ✔ tidyr     1.3.1</span></span>
+<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ purrr     1.0.2     </span></span>
+<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
+<span id="cb122-10"><a href="#cb122-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span id="cb122-11"><a href="#cb122-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span id="cb122-12"><a href="#cb122-12" aria-hidden="true" tabindex="-1"></a>school_v2 <span class="ot">&lt;-</span> df_school_all <span class="sc">%&gt;%</span> </span>
+<span id="cb122-13"><a href="#cb122-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"inst_"</span>)) <span class="sc">%&gt;%</span> <span class="co"># remove vars that start with "inst_"</span></span>
+<span id="cb122-14"><a href="#cb122-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>( <span class="co"># rename selected variables</span></span>
+<span id="cb122-15"><a href="#cb122-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_berkeley =</span> visits_by_110635,</span>
+<span id="cb122-16"><a href="#cb122-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_boulder =</span> visits_by_126614,</span>
+<span id="cb122-17"><a href="#cb122-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_bama =</span> visits_by_100751,</span>
+<span id="cb122-18"><a href="#cb122-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_stonybrook =</span> visits_by_196097,</span>
+<span id="cb122-19"><a href="#cb122-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_rutgers =</span> visits_by_186380,</span>
+<span id="cb122-20"><a href="#cb122-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_pitt =</span> visits_by_215293,</span>
+<span id="cb122-21"><a href="#cb122-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_cinci =</span> visits_by_201885,</span>
+<span id="cb122-22"><a href="#cb122-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_nebraska =</span> visits_by_181464,</span>
+<span id="cb122-23"><a href="#cb122-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_georgia =</span> visits_by_139959,</span>
+<span id="cb122-24"><a href="#cb122-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_scarolina =</span> visits_by_218663,</span>
+<span id="cb122-25"><a href="#cb122-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_ncstate =</span> visits_by_199193,</span>
+<span id="cb122-26"><a href="#cb122-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_irvine =</span> visits_by_110653,</span>
+<span id="cb122-27"><a href="#cb122-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_kansas =</span> visits_by_155317,</span>
+<span id="cb122-28"><a href="#cb122-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_arkansas =</span> visits_by_106397,</span>
+<span id="cb122-29"><a href="#cb122-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_sillinois =</span> visits_by_149222,</span>
+<span id="cb122-30"><a href="#cb122-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">visits_by_umass =</span> visits_by_166629,</span>
+<span id="cb122-31"><a href="#cb122-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_took_read =</span> num_took_rla,</span>
+<span id="cb122-32"><a href="#cb122-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_prof_read =</span> num_prof_rla,</span>
+<span id="cb122-33"><a href="#cb122-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">med_inc =</span> avgmedian_inc_2564</span>
+<span id="cb122-34"><a href="#cb122-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb122-35"><a href="#cb122-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-36"><a href="#cb122-36" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(school_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="base-r-approach-to-creating-new-variables" class="level3" data-number="3.3.2">
@@ -2122,20 +2128,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Task</strong>: Create measure of percent of students on free-reduced lunch</p>
 <p><strong>base R approach</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="ot">&lt;-</span> school_v2 <span class="co">#create copy of dataset; not necessary</span></span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>pct_fr_lunch <span class="ot">&lt;-</span> </span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>   school_v2_temp<span class="sc">$</span>num_fr_lunch<span class="sc">/</span>school_v2_temp<span class="sc">$</span>total_students</span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co">#investigate variable you created</span></span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(school_v2_temp<span class="sc">$</span>pct_fr_lunch)</span>
-<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:21301] 0.723 1 0.967 0.93 1 ...</span></span>
-<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>pct_fr_lunch[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co"># print first 5 obs</span></span>
-<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7225549 1.0000000 0.9666667 0.9303483 1.0000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="ot">&lt;-</span> school_v2 <span class="co">#create copy of dataset; not necessary</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>pct_fr_lunch <span class="ot">&lt;-</span> </span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>   school_v2_temp<span class="sc">$</span>num_fr_lunch<span class="sc">/</span>school_v2_temp<span class="sc">$</span>total_students</span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a><span class="co">#investigate variable you created</span></span>
+<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(school_v2_temp<span class="sc">$</span>pct_fr_lunch)</span>
+<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  num [1:21301] 0.723 1 0.967 0.93 1 ...</span></span>
+<span id="cb123-8"><a href="#cb123-8" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>pct_fr_lunch[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co"># print first 5 obs</span></span>
+<span id="cb123-9"><a href="#cb123-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7225549 1.0000000 0.9666667 0.9303483 1.0000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>tidyverse approach (with pipes)</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp <span class="ot">&lt;-</span> school_v2 <span class="sc">%&gt;%</span> </span>
-<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_fr_lunch =</span> num_fr_lunch<span class="sc">/</span>total_students) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp <span class="ot">&lt;-</span> school_v2 <span class="sc">%&gt;%</span> </span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_fr_lunch =</span> num_fr_lunch<span class="sc">/</span>total_students) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If creating new variable based on the condition/values of input variables, basically the tidyverse equivalent of <code>mutate()</code> <strong>with</strong> <code>if_else()</code> or <code>recode()</code></p>
 <ul>
@@ -2145,29 +2151,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Task</strong>: Create 0/1 indicator if school has median income greater than $100k</p>
 <p><strong>tidyverse approach (using pipes)</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp <span class="sc">%&gt;%</span> <span class="fu">select</span>(med_inc) <span class="sc">%&gt;%</span> </span>
-<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inc_gt_100k=</span> <span class="fu">if_else</span>(med_inc<span class="sc">&gt;</span><span class="dv">100000</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(inc_gt_100k) <span class="co"># note how NA values of med_inc treated</span></span>
-<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   inc_gt_100k     n</span></span>
-<span id="cb124-6"><a href="#cb124-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt; &lt;int&gt;</span></span>
-<span id="cb124-7"><a href="#cb124-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           0 18632</span></span>
-<span id="cb124-8"><a href="#cb124-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           1  2045</span></span>
-<span id="cb124-9"><a href="#cb124-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          NA   624</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp <span class="sc">%&gt;%</span> <span class="fu">select</span>(med_inc) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inc_gt_100k=</span> <span class="fu">if_else</span>(med_inc<span class="sc">&gt;</span><span class="dv">100000</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(inc_gt_100k) <span class="co"># note how NA values of med_inc treated</span></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   inc_gt_100k     n</span></span>
+<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           0 18632</span></span>
+<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           1  2045</span></span>
+<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          NA   624</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Base R approach</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k<span class="ot">&lt;-</span><span class="cn">NA</span> <span class="co">#initialize an empty column with NAs </span></span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>                              <span class="co"># otherwise you'll get warning</span></span>
-<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k[school_v2_temp<span class="sc">$</span>med_inc<span class="sc">&gt;</span><span class="dv">100000</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k[school_v2_temp<span class="sc">$</span>med_inc<span class="sc">&lt;=</span><span class="dv">100000</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(school_v2_temp, inc_gt_100k)</span>
-<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   inc_gt_100k     n</span></span>
-<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt; &lt;int&gt;</span></span>
-<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           0 18632</span></span>
-<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           1  2045</span></span>
-<span id="cb125-11"><a href="#cb125-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          NA   624</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k<span class="ot">&lt;-</span><span class="cn">NA</span> <span class="co">#initialize an empty column with NAs </span></span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>                              <span class="co"># otherwise you'll get warning</span></span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k[school_v2_temp<span class="sc">$</span>med_inc<span class="sc">&gt;</span><span class="dv">100000</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>school_v2_temp<span class="sc">$</span>inc_gt_100k[school_v2_temp<span class="sc">$</span>med_inc<span class="sc">&lt;=</span><span class="dv">100000</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(school_v2_temp, inc_gt_100k)</span>
+<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   inc_gt_100k     n</span></span>
+<span id="cb126-8"><a href="#cb126-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb126-9"><a href="#cb126-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           0 18632</span></span>
+<span id="cb126-10"><a href="#cb126-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           1  2045</span></span>
+<span id="cb126-11"><a href="#cb126-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          NA   624</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Task</strong>: Using data frame <code>wwlist</code> and input vars <code>state</code> and <code>firstgen</code>, create a 4-category var with following categories:</p>
 <ul>
@@ -2175,52 +2181,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>tidyverse approach (using pipes)</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_merged.RData"</span>))</span>
-<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="ot">&lt;-</span> wwlist <span class="sc">%&gt;%</span> </span>
-<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_gen =</span> <span class="fu">case_when</span>(</span>
-<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">==</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"instate_firstgen"</span>,</span>
-<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">==</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"N"</span> <span class="sc">~</span> <span class="st">"instate_nonfirstgen"</span>,</span>
-<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">!=</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"outstate_firstgen"</span>,</span>
-<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">!=</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"N"</span> <span class="sc">~</span> <span class="st">"outstate_nonfirstgen"</span>)</span>
-<span id="cb126-8"><a href="#cb126-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb126-9"><a href="#cb126-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wwlist_temp<span class="sc">$</span>state_gen)</span>
-<span id="cb126-10"><a href="#cb126-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:268396] NA "instate_nonfirstgen" "instate_nonfirstgen" ...</span></span>
-<span id="cb126-11"><a href="#cb126-11" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="sc">%&gt;%</span> <span class="fu">count</span>(state_gen)</span>
-<span id="cb126-12"><a href="#cb126-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 2</span></span>
-<span id="cb126-13"><a href="#cb126-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state_gen                 n</span></span>
-<span id="cb126-14"><a href="#cb126-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;int&gt;</span></span>
-<span id="cb126-15"><a href="#cb126-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 instate_firstgen      32428</span></span>
-<span id="cb126-16"><a href="#cb126-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 instate_nonfirstgen   58646</span></span>
-<span id="cb126-17"><a href="#cb126-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 outstate_firstgen     32606</span></span>
-<span id="cb126-18"><a href="#cb126-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 outstate_nonfirstgen 134616</span></span>
-<span id="cb126-19"><a href="#cb126-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 &lt;NA&gt;                  10100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_merged.RData"</span>))</span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="ot">&lt;-</span> wwlist <span class="sc">%&gt;%</span> </span>
+<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_gen =</span> <span class="fu">case_when</span>(</span>
+<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">==</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"instate_firstgen"</span>,</span>
+<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">==</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"N"</span> <span class="sc">~</span> <span class="st">"instate_nonfirstgen"</span>,</span>
+<span id="cb127-6"><a href="#cb127-6" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">!=</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"outstate_firstgen"</span>,</span>
+<span id="cb127-7"><a href="#cb127-7" aria-hidden="true" tabindex="-1"></a>    state <span class="sc">!=</span> <span class="st">"WA"</span> <span class="sc">&amp;</span> firstgen <span class="sc">==</span><span class="st">"N"</span> <span class="sc">~</span> <span class="st">"outstate_nonfirstgen"</span>)</span>
+<span id="cb127-8"><a href="#cb127-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb127-9"><a href="#cb127-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wwlist_temp<span class="sc">$</span>state_gen)</span>
+<span id="cb127-10"><a href="#cb127-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:268396] NA "instate_nonfirstgen" "instate_nonfirstgen" ...</span></span>
+<span id="cb127-11"><a href="#cb127-11" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="sc">%&gt;%</span> <span class="fu">count</span>(state_gen)</span>
+<span id="cb127-12"><a href="#cb127-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span id="cb127-13"><a href="#cb127-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state_gen                 n</span></span>
+<span id="cb127-14"><a href="#cb127-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;int&gt;</span></span>
+<span id="cb127-15"><a href="#cb127-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 instate_firstgen      32428</span></span>
+<span id="cb127-16"><a href="#cb127-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 instate_nonfirstgen   58646</span></span>
+<span id="cb127-17"><a href="#cb127-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 outstate_firstgen     32606</span></span>
+<span id="cb127-18"><a href="#cb127-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 outstate_nonfirstgen 134616</span></span>
+<span id="cb127-19"><a href="#cb127-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 &lt;NA&gt;                  10100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Task</strong>: Using <code>wwlist</code> and input vars <code>state</code> and <code>firstgen</code>, create a 4-category var</p>
 <p><strong>base R approach</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="ot">&lt;-</span> wwlist </span>
-<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"WA"</span> </span>
-<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"Y"</span>] <span class="ot">&lt;-</span> <span class="st">"instate_firstgen"</span></span>
-<span id="cb127-6"><a href="#cb127-6" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"WA"</span> </span>
-<span id="cb127-7"><a href="#cb127-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"N"</span>] <span class="ot">&lt;-</span> <span class="st">"instate_nonfirstgen"</span></span>
-<span id="cb127-8"><a href="#cb127-8" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">!=</span> <span class="st">"WA"</span> </span>
-<span id="cb127-9"><a href="#cb127-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"Y"</span>] <span class="ot">&lt;-</span> <span class="st">"outstate_firstgen"</span></span>
-<span id="cb127-10"><a href="#cb127-10" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">!=</span> <span class="st">"WA"</span> </span>
-<span id="cb127-11"><a href="#cb127-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"N"</span>] <span class="ot">&lt;-</span> <span class="st">"outstate_nonfirstgen"</span></span>
-<span id="cb127-12"><a href="#cb127-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb127-13"><a href="#cb127-13" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wwlist_temp<span class="sc">$</span>state_gen)</span>
-<span id="cb127-14"><a href="#cb127-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:268396] NA "instate_nonfirstgen" "instate_nonfirstgen" ...</span></span>
-<span id="cb127-15"><a href="#cb127-15" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(wwlist_temp, state_gen)</span>
-<span id="cb127-16"><a href="#cb127-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 2</span></span>
-<span id="cb127-17"><a href="#cb127-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state_gen                 n</span></span>
-<span id="cb127-18"><a href="#cb127-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;int&gt;</span></span>
-<span id="cb127-19"><a href="#cb127-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 instate_firstgen      32428</span></span>
-<span id="cb127-20"><a href="#cb127-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 instate_nonfirstgen   58646</span></span>
-<span id="cb127-21"><a href="#cb127-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 outstate_firstgen     32606</span></span>
-<span id="cb127-22"><a href="#cb127-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 outstate_nonfirstgen 134616</span></span>
-<span id="cb127-23"><a href="#cb127-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 &lt;NA&gt;                  10100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>wwlist_temp <span class="ot">&lt;-</span> wwlist </span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"WA"</span> </span>
+<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"Y"</span>] <span class="ot">&lt;-</span> <span class="st">"instate_firstgen"</span></span>
+<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"WA"</span> </span>
+<span id="cb128-7"><a href="#cb128-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"N"</span>] <span class="ot">&lt;-</span> <span class="st">"instate_nonfirstgen"</span></span>
+<span id="cb128-8"><a href="#cb128-8" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">!=</span> <span class="st">"WA"</span> </span>
+<span id="cb128-9"><a href="#cb128-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"Y"</span>] <span class="ot">&lt;-</span> <span class="st">"outstate_firstgen"</span></span>
+<span id="cb128-10"><a href="#cb128-10" aria-hidden="true" tabindex="-1"></a>wwlist_temp<span class="sc">$</span>state_gen[wwlist_temp<span class="sc">$</span>state <span class="sc">!=</span> <span class="st">"WA"</span> </span>
+<span id="cb128-11"><a href="#cb128-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span> wwlist_temp<span class="sc">$</span>firstgen <span class="sc">==</span><span class="st">"N"</span>] <span class="ot">&lt;-</span> <span class="st">"outstate_nonfirstgen"</span></span>
+<span id="cb128-12"><a href="#cb128-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-13"><a href="#cb128-13" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(wwlist_temp<span class="sc">$</span>state_gen)</span>
+<span id="cb128-14"><a href="#cb128-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  chr [1:268396] NA "instate_nonfirstgen" "instate_nonfirstgen" ...</span></span>
+<span id="cb128-15"><a href="#cb128-15" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(wwlist_temp, state_gen)</span>
+<span id="cb128-16"><a href="#cb128-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span id="cb128-17"><a href="#cb128-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state_gen                 n</span></span>
+<span id="cb128-18"><a href="#cb128-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;int&gt;</span></span>
+<span id="cb128-19"><a href="#cb128-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 instate_firstgen      32428</span></span>
+<span id="cb128-20"><a href="#cb128-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 instate_nonfirstgen   58646</span></span>
+<span id="cb128-21"><a href="#cb128-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 outstate_firstgen     32606</span></span>
+<span id="cb128-22"><a href="#cb128-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 outstate_nonfirstgen 134616</span></span>
+<span id="cb128-23"><a href="#cb128-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 &lt;NA&gt;                  10100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -2236,12 +2242,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Need to set decreasing argument to <code>TRUE</code> to sort from high to low</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?sort()</span></span>
-<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">25</span>)</span>
-<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(x)</span>
-<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  2  5  8 25 31</span></span>
-<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(x, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 31 25  8  5  2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?sort()</span></span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">25</span>)</span>
+<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(x)</span>
+<span id="cb129-4"><a href="#cb129-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  2  5  8 25 31</span></span>
+<span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(x, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 31 25  8  5  2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="base-r-order-for-dataframes" class="level3" data-number="3.4.2">
@@ -2258,15 +2264,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>use <code>-</code> when you want to indicate which variables are descending while using the default ascending sorting</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date), ] </span>
-<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>total_12), ]</span>
-<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-4"><a href="#cb129-4" aria-hidden="true" tabindex="-1"></a><span class="co">#sort descending via argument</span></span>
-<span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ] </span>
-<span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>total_12, <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ] </span>
-<span id="cb129-7"><a href="#cb129-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-8"><a href="#cb129-8" aria-hidden="true" tabindex="-1"></a><span class="co">#sorting by both ascending and descending variables</span></span>
-<span id="cb129-9"><a href="#cb129-9" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, <span class="sc">-</span>df_event<span class="sc">$</span>total_12), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date), ] </span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>total_12), ]</span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a><span class="co">#sort descending via argument</span></span>
+<span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ] </span>
+<span id="cb130-6"><a href="#cb130-6" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>total_12, <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ] </span>
+<span id="cb130-7"><a href="#cb130-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-8"><a href="#cb130-8" aria-hidden="true" tabindex="-1"></a><span class="co">#sorting by both ascending and descending variables</span></span>
+<span id="cb130-9"><a href="#cb130-9" aria-hidden="true" tabindex="-1"></a>df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, <span class="sc">-</span>df_event<span class="sc">$</span>total_12), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="example-sorting" class="level3" data-number="3.4.3">
@@ -2276,8 +2282,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>base R</strong> using <code>order()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>df_event_br1 <span class="ot">&lt;-</span> df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>event_state, </span>
-<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>                               <span class="sc">-</span>df_event<span class="sc">$</span>pop_total), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>df_event_br1 <span class="ot">&lt;-</span> df_event[<span class="fu">order</span>(df_event<span class="sc">$</span>event_date, df_event<span class="sc">$</span>event_state, </span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>                               <span class="sc">-</span>df_event<span class="sc">$</span>pop_total), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

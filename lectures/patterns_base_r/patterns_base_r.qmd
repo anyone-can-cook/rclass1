@@ -1005,6 +1005,7 @@ Below code chunk makes a list named `list_x` that contains 3 elements
 
 ```{r}
 list_x <- list(1:3, "a", 4:6) # create list object list_x
+str(list_x)
 ```
 
 In our train metaphor, object `list_x` is a train that contains 3 carriages
