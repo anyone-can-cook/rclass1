@@ -32,7 +32,7 @@ library(haven)
 library(labelled)
 ```
 
-**If package not yet installed**, then must install before you load. Install in "console" rather than .Rmd file:
+**If package not yet installed**, then must install before you load. Install in "console" rather than .qmd file:
 
 -   Generic syntax: `install.packages("package_name")`
 -   Install "tidyverse": `install.packages("tidyverse")`
@@ -40,7 +40,7 @@ library(labelled)
 **Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
 
 -   `install.packages("haven")`
--   `library(scales)`
+-   `library(haven)`
 
 
 ## Datasets we will use 
