@@ -24,9 +24,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
 
 # Introduction
 
-## Libraries and datasets we will use
-
-Load packages:
+**Load packages:**
 
 ```{r, message=F}
 library(tidyverse)
@@ -34,12 +32,35 @@ library(haven)
 library(labelled)
 ```
 
-<br> Load datasets:
+**If package not yet installed**, then must install before you load. Install in "console" rather than .Rmd file:
+
+-   Generic syntax: `install.packages("package_name")`
+-   Install "tidyverse": `install.packages("tidyverse")`
+
+**Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
+
+-   `install.packages("haven")`
+-   `library(scales)`
+
+
+## Datasets we will use 
+
+**Load datasets:**
+
+We will use public-use data from the *National Center for Education Statistics (NCES) Educational Longitudinal Survey (ELS)* of 2002:
+
+-   Recall from the lecture on ggplot, this data follows 10th graders from 2002 until 2012
+-   We will be working with the NCES Digest Table 204.10, which represents the number and percentage of public school students eligible for free or reduced lunch by state for the years 2000, 2010, 2011, and 2012.
 
 ```{r}
 # NCES Digest Table 204.10
 load(url('https://github.com/anyone-can-cook/rclass1/raw/master/data/nces_digest/nces_digest_tbl_204_10.RData'))
+```
 
+We will also use data from the Integrated Postsecondary Education Data System (IPEDS), which is collected by the US Department of Education's National Center for Education Statistics (NCES). IPEDS gathers information from all institutions participating in federal student financial aid programs.
+
+-   We are using data on the 12-month unduplicated headcount by race/ethnicity, gender and level of student.
+```{r}
 # IPEDS EFFY Table
 ipeds_table <- read_dta('https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/effy/ey15-16_hc.dta', encoding = NULL)
 ```
@@ -48,16 +69,22 @@ ipeds_table <- read_dta('https://github.com/anyone-can-cook/rclass1/raw/master/d
 
 Creating analysis datasets often require **changing the organizational structure** of data. For example:
 
--   You want analysis dataset to have one obs per student, but your data has one obs per student-course
--   You want analysis dataset to have one obs per institution, but enrollment data has one obs per institution-enrollment level
+-   You want analysis dataset to have one observation per student, but your data has one observation per student-course.
+-   You want analysis dataset to have one observation per institution, but enrollment data has one observation per institution-enrollment level.
 
-Two common ways to change organizational structure of data:
+Two common ways to change the organizational structure of data:
 
 1.  Use `group_by()` to perform calculations separately within groups and then use `summarise()` to create an object with one observation per group.
 
-**Examples:** - Creating objects containing summary statistics that are basis for tables and graphs - Creating student-transcript level GPA variable from student-transcript-course level data 2. **Reshape** your data -- called **tidying** in the R tidyverse world -- by transforming columns (variables) into rows (observations) and vice versa - This is the focus of this lecture, where we will look at transforming **untidy** data into **tidy** data.
+**Examples:**  
 
-Working with tidy data has many benefits:
+1. Creating objects containing summary statistics that are basis for tables and graphs  
+    -   Creating student-transcript level GPA variable from student-transcript-course level data 
+
+2. **Reshape** your data-- called **tidying** in the R tidyverse world-- by transforming columns (variables) into rows (observations) and vice versa 
+    -   This is the focus of this lecture, where we will look at transforming **untidy** data into **tidy** data.
+
+**Working with tidy data has many benefits:**
 
 -   It is a consistent way of storing data
 -   R is also well-suited for working with tidy data due to its vectorized nature. There's also many packages in `tidyverse` that are designed to work with tidy data, such as `tidyr`.
@@ -163,11 +190,11 @@ In the next section, we'll define some terms to make it easier to describe the s
 
 **unit of analysis** \[my term, not Wickham's\]:
 
--   What each row represents in a dataset (referring to physical layout of dataset).
+-   What each row represents in a dataset (referring to the physical layout of the dataset).
 
 Examples of different units of analysis:
 
--   if each row represents a student, you have student level data
+-   if each row represents a student, you have student-level data
 -   if each row represents a student-course, you have student-course level data
 -   if each row represents an organization-year, you have organization-year level data
 
@@ -189,18 +216,18 @@ structure_b
 
     -   Below we load data on 12-month enrollment headcount for 2015-16 academic year from the Integrated Postsecondary Education Data System (IPEDS)
 
-    ```{r}
-    ipeds_hc_temp <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL) %>% 
-      select(unitid,lstudy,efytotlt) %>% arrange(unitid,lstudy)
+```{r}
+ipeds_hc_temp <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL) %>% 
+  select(unitid,lstudy,efytotlt) %>% arrange(unitid,lstudy)
 
-    ipeds_hc_temp
-    #show variable labels and value labels
-    #ipeds_hc_temp %>% var_label()
-    #ipeds_hc_temp %>% val_labels()
+ipeds_hc_temp
+#show variable labels and value labels
+#ipeds_hc_temp %>% var_label()
+#ipeds_hc_temp %>% val_labels()
 
-    #print a few obs, with value labels rather than variable values
-    ipeds_hc_temp %>% head(n=10) %>% as_factor()
-    ```
+#print a few obs, with value labels rather than variable values
+ipeds_hc_temp %>% head(n=10) %>% as_factor()
+```
 
 ### Which variable(s) uniquely identify rows in a data frame
 
@@ -268,7 +295,7 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 -->
 ````
 
-# Tidy vs. untidy data
+# Tidy vs. untidy data 
 
 ## Defining tidy data
 
@@ -826,7 +853,7 @@ kable(pivot_wider(stocks, names_from = qtr, values_from = return, values_fill = 
 
 ## Student exercise: Real-world example of wide to long
 
-\[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution\]
+\[In the task I present below, you have the option to work through the solution I have created or try doing it on your own before you look at solution\]
 
 The following dataset is drawn from Table 204.10 of the NCES Digest for Education Statistics.
 
@@ -886,7 +913,7 @@ total %>%
 
 ## Student exercise: real-world example of reshaping long to wide
 
-\[In the task I present below, fine to just work through solution I have created or try doing on your own before you look at solution\]
+\[In the task I present below, you have the option to work through the solution I have created or try doing it on your own before you look at solution\]
 
 <br> The Integrated Postsecondary Education Data System (IPEDS) collects data on colleges and universities
 
@@ -1063,7 +1090,7 @@ Now we can introduce the concepts of *explicit* and *implicit* missing values
 
 There are two types of missing values:
 
--   **Explicit missing values**: variable has the value `NA` for a parcitular row
+-   **Explicit missing values**: variable has the value `NA` for a particular row
 -   **Implicit missing values**: the row is simply not present in the data
 
 Let's print data for the first two colleges
