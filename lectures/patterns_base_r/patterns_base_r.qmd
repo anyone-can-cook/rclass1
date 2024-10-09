@@ -507,7 +507,7 @@ Example, print individual elements
 df_event$zip[1:5] # print obs 1-5 of variable for event zip code
 df_event$zip[1] # print obs 1 of variable for event zip code
 df_event$zip[5] # print obs 5 of variable for event zip code
-df_event$zip[c(1,3,5)] # print obs 5 of variable for event zip code
+df_event$zip[c(1,3,5)] # print obs 1, 3, and 5 of variable for event zip code
 ```
 
 **Print specific elements of multiple variables using combine function `c()`**
