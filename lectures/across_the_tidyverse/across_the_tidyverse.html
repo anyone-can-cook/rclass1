@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#combining-group_by-and-summarize" id="toc-combining-group_by-and-summarize" class="nav-link" data-scroll-target="#combining-group_by-and-summarize"><span class="header-section-number">3</span> Combining group_by() and summarize()</a>
   <ul class="collapse">
-  <li><a href="#summarize-and-counts" id="toc-summarize-and-counts" class="nav-link" data-scroll-target="#summarize-and-counts"><span class="header-section-number">3.1</span> summarize() and Counts</a>
+  <li><a href="#sec-sum-count" id="toc-sec-sum-count" class="nav-link" data-scroll-target="#sec-sum-count"><span class="header-section-number">3.1</span> summarize() and Counts</a>
   <ul class="collapse">
   <li><a href="#summarize-count-with-logical-vectors-and-sum" id="toc-summarize-count-with-logical-vectors-and-sum" class="nav-link" data-scroll-target="#summarize-count-with-logical-vectors-and-sum"><span class="header-section-number">3.1.1</span> <code>summarize()</code>: count with logical vectors and <code>sum()</code></a></li>
   <li><a href="#summarize-and-count-student-exercise" id="toc-summarize-and-count-student-exercise" class="nav-link" data-scroll-target="#summarize-and-count-student-exercise"><span class="header-section-number">3.1.2</span> <code>summarize()</code> and <code>count()</code> student exercise</a></li>
@@ -121,6 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#summarize-other-helper-functions" id="toc-summarize-other-helper-functions" class="nav-link" data-scroll-target="#summarize-other-helper-functions"><span class="header-section-number">3.3.2</span> <code>summarize()</code>: Other “helper” functions</a></li>
   <li><a href="#student-exercise-1" id="toc-student-exercise-1" class="nav-link" data-scroll-target="#student-exercise-1"><span class="header-section-number">3.3.3</span> Student exercise</a></li>
   </ul></li>
+  <li><a href="#count-in-place-of-group_by-and-summarise" id="toc-count-in-place-of-group_by-and-summarise" class="nav-link" data-scroll-target="#count-in-place-of-group_by-and-summarise"><span class="header-section-number">3.4</span> count() in place of group_by() and summarise()</a></li>
   </ul></li>
   <li><a href="#summarize-across-multiple-columns" id="toc-summarize-across-multiple-columns" class="nav-link" data-scroll-target="#summarize-across-multiple-columns"><span class="header-section-number">4</span> Summarize across multiple columns</a>
   <ul class="collapse">
@@ -805,8 +806,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span> <span class="fu">count</span>(event_type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="summarize-and-counts" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="summarize-and-counts"><span class="header-section-number">3.1</span> summarize() and Counts</h2>
+<section id="sec-sum-count" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-sum-count"><span class="header-section-number">3.1</span> summarize() and Counts</h2>
 <p>The count function <code>n()</code> takes no arguments and returns the size of the current group</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(event_type, event_inst) <span class="sc">%&gt;%</span> </span>
@@ -1076,7 +1077,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="summarize-other-helper-functions"><span class="header-section-number">3.3.2</span> <code>summarize()</code>: Other “helper” functions</h3>
 <p>Lots of other functions we can use within <code>summarize()</code></p>
 <p>Common functions to use with <code>summarize()</code>:</p>
-<table class="table">
+<table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Function</th>
@@ -1215,6 +1216,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br></p>
 </section>
 </section>
+<section id="count-in-place-of-group_by-and-summarise" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="count-in-place-of-group_by-and-summarise"><span class="header-section-number">3.4</span> count() in place of group_by() and summarise()</h2>
+<p>Recall from <a href="#sec-sum-count" class="quarto-xref">Section&nbsp;3.1</a>, the <code>count()</code> function returns the count of unique values of a particular variable. For example, if we count by event_state, we get the count of visits by state. This is the same if we were to <code>group_by()</code> event_state and <code>summarise()</code> to get the count of events by state.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_state) <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_state =</span> <span class="fu">n</span>())</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 × 2</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    event_state n_state</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;         &lt;int&gt;</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 AL                2</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 AR                3</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 AZ               18</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 CA              468</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 CO                3</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 CT                3</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 DC                9</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 FL               33</span></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 GA               33</span></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 HI                1</span></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(event_state)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 × 2</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    event_state     n</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;int&gt;</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 AL              2</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 AR              3</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 AZ             18</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 CA            468</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 CO              3</span></span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 CT              3</span></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 DC              9</span></span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 FL             33</span></span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 GA             33</span></span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 HI              1</span></span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we want to calculate the percent of UC Berkeley’s visits across states, we can use the <code>count()</code> and <code>mutate()</code> functions instead of <code>group_by()</code> and <code>summarize()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_state) <span class="sc">%&gt;%</span> <span class="co">#group_by event state</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_state =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="co">#summarize and get a count of the # of events by state</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_state =</span> (n_state <span class="sc">/</span> <span class="fu">sum</span>(n_state)) <span class="sc">*</span> <span class="dv">100</span>) <span class="co">#create percent variable of visits by UC Berkeley (e.g., 53% of visits in California)</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 × 3</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    event_state n_state pct_state</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;         &lt;int&gt;     &lt;dbl&gt;</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 AL                2     0.228</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 AR                3     0.341</span></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 AZ               18     2.05 </span></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 CA              468    53.2  </span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 CO                3     0.341</span></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 CT                3     0.341</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 DC                9     1.02 </span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 FL               33     3.75 </span></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 GA               33     3.75 </span></span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 HI                1     0.114</span></span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>event_berk <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(event_state) <span class="sc">%&gt;%</span> <span class="co">#count of visits by UC Berkeley by state</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_state =</span> (n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">*</span> <span class="dv">100</span>) <span class="co">#percent of visits by UC Berkeley across states</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 × 3</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    event_state     n pct_state</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;int&gt;     &lt;dbl&gt;</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 AL              2     0.228</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 AR              3     0.341</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 AZ             18     2.05 </span></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 CA            468    53.2  </span></span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 CO              3     0.341</span></span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 CT              3     0.341</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 DC              9     1.02 </span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 FL             33     3.75 </span></span>
+<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 GA             33     3.75 </span></span>
+<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 HI              1     0.114</span></span>
+<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 <section id="summarize-across-multiple-columns" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Summarize across multiple columns</h1>
@@ -1242,19 +1322,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>For U. Pittsburgh (<code>univ_id = 215293</code>) events at public and private high schools, calculate the <strong>mean</strong> value of <code>med_inc</code> and <code>pct_white_zip</code> for each combination of <code>event_type</code> and <code>event_inst</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Try again, this time applying <code>na.rm = TRUE</code> - this is an example of a purr style lambda <code>~ mean(.x, na.rm = TRUE)</code> argument “for the function calls in <code>.fns</code>.”</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Task</strong>:</p>
 <ul>
@@ -1262,65 +1342,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>You can create a named list of functions to supply into the second argument <code>.fns</code></p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>mean_sd <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>mean_sd <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Use this syntax to control variable name suffixes:</p>
 <ul>
 <li><code>.names = "{.col}_{.fn}"</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd, <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd, <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><code>.names = "{.fn}_{.col}"</code> Change the order of the name to include function first and then the column name</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd, <span class="at">.names =</span> <span class="st">"{.fn}_{.col}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), mean_sd, <span class="at">.names =</span> <span class="st">"{.fn}_{.col}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Task</strong>:</p>
 <ul>
 <li>Same task as before, but now calculate <strong>mean</strong>, <strong>standard deviation</strong>, <strong>min</strong>, and <strong>max</strong> of <code>med_inc</code> and <code>pct_white_zip</code> for each combination of <code>event_type</code> and <code>event_inst</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>desc_stat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="sc">~</span><span class="fu">min</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="sc">~</span><span class="fu">max</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), desc_stat, <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
-<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 10</span></span>
-<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   event_type [2]</span></span>
-<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   event_type event_inst med_inc_mean med_inc_sd med_inc_low med_inc_high</span></span>
-<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 private hs In-State         77115.     36559.      12894.      224163 </span></span>
-<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 private hs Out-State       103915.     44220.      29630.      223556.</span></span>
-<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 public hs  In-State         78408.     25841.      23168.      169036.</span></span>
-<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 public hs  Out-State       114212.     39745.      21581       250001 </span></span>
-<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: pct_white_zip_mean &lt;dbl&gt;, pct_white_zip_sd &lt;dbl&gt;,</span></span>
-<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   pct_white_zip_low &lt;dbl&gt;, pct_white_zip_high &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>desc_stat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="sc">~</span><span class="fu">min</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="sc">~</span><span class="fu">max</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(med_inc, pct_white_zip), desc_stat, <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 10</span></span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   event_type [2]</span></span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   event_type event_inst med_inc_mean med_inc_sd med_inc_low med_inc_high</span></span>
+<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;</span></span>
+<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 private hs In-State         77115.     36559.      12894.      224163 </span></span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 private hs Out-State       103915.     44220.      29630.      223556.</span></span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 public hs  In-State         78408.     25841.      23168.      169036.</span></span>
+<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 public hs  Out-State       114212.     39745.      21581       250001 </span></span>
+<span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: pct_white_zip_mean &lt;dbl&gt;, pct_white_zip_sd &lt;dbl&gt;,</span></span>
+<span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   pct_white_zip_low &lt;dbl&gt;, pct_white_zip_high &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="across-quosure-style-lambdas-func_name.x" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="across-quosure-style-lambdas-func_name.x"><span class="header-section-number">4.2.1</span> across(), quosure style lambdas ~ func_name(.x)</h3>
@@ -1336,16 +1416,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Can exclude <code>n()</code> from the <code>.cols</code> argument in <code>across()</code> function because you only need to calculate once to get the number of observations for each group.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>mean_obs_nmiss <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_non_miss =</span> <span class="sc">~</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.x))</span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pop_total) <span class="sc">%&gt;%</span></span>
-<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nrow =</span> <span class="fu">n</span>(), <span class="fu">across</span>(<span class="fu">c</span>(med_inc, pop_total), mean_obs_nmiss,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>mean_obs_nmiss <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_non_miss =</span> <span class="sc">~</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.x))</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,med_inc,pop_total) <span class="sc">%&gt;%</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nrow =</span> <span class="fu">n</span>(), <span class="fu">across</span>(<span class="fu">c</span>(med_inc, pop_total), mean_obs_nmiss,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="across-and-where-affects-selected-variables-if-they-meet-a-condition" class="level3" data-number="4.2.2">
@@ -1360,33 +1440,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>Task</strong>: For U. Pittsburgh events at public and private high schools, caclulate <strong>mean</strong>, <strong>min</strong>, and <strong>max</strong> of variables <code>med_inc</code> and <code>event_date</code> for each combination of <code>event_type</code> and <code>event_inst</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>mean_min_max <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="sc">~</span><span class="fu">min</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="sc">~</span><span class="fu">max</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst, med_inc, event_date) <span class="sc">%&gt;%</span></span>
-<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.double), mean_min_max))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>mean_min_max <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="sc">~</span><span class="fu">min</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="sc">~</span><span class="fu">max</span>(.x, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst, med_inc, event_date) <span class="sc">%&gt;%</span></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.double), mean_min_max))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Although <code>event_date</code> is a Date class, it is type double and therefore we can apply <code>is.double</code> to the <code>where()</code> function to calculate the mean, min, and max.</li>
 </ul>
 <p><strong>Task</strong>: For events by U. Pittsburgh at public and private high schools, caclulate mean and standard deviation for <strong>numeric variables</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, which vars are numeric</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
-<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
-<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
-<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), mean_sd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, which vars are numeric</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>df_event <span class="sc">%&gt;%</span> </span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(univ_id <span class="sc">==</span> <span class="dv">215293</span>, event_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"private hs"</span>,<span class="st">"public hs"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type,event_inst) <span class="sc">%&gt;%</span></span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), mean_sd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!--
 # Summarize multiple columns
@@ -1710,24 +1790,24 @@ df_event %>%
 <li>Create measure of average income across all events</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="ot">&lt;-</span> event_berk <span class="sc">%&gt;%</span> </span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(event_date) <span class="sc">%&gt;%</span> <span class="co"># sort by event_date (optional)</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_date, event_type,med_inc) <span class="sc">%&gt;%</span> <span class="co"># select vars to be retained (optioanl) </span></span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_inc =</span> <span class="fu">mean</span>(med_inc, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co"># create avg. inc measure</span></span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(event_berk_temp)</span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="ot">&lt;-</span> event_berk <span class="sc">%&gt;%</span> </span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(event_date) <span class="sc">%&gt;%</span> <span class="co"># sort by event_date (optional)</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_date, event_type,med_inc) <span class="sc">%&gt;%</span> <span class="co"># select vars to be retained (optioanl) </span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_inc =</span> <span class="fu">mean</span>(med_inc, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co"># create avg. inc measure</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(event_berk_temp)</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Create measure of average income by event type</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="ot">&lt;-</span> event_berk_temp <span class="sc">%&gt;%</span> </span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type) <span class="sc">%&gt;%</span> <span class="co"># grouping by event type</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_inc_type =</span> <span class="fu">mean</span>(med_inc, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co"># create avg. inc measure</span></span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(event_berk_temp)</span>
-<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="ot">&lt;-</span> event_berk_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type) <span class="sc">%&gt;%</span> <span class="co"># grouping by event type</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_inc_type =</span> <span class="fu">mean</span>(med_inc, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co"># create avg. inc measure</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(event_berk_temp)</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>event_berk_temp <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Task</strong>: Using <code>event_berk_temp</code> from previous question, create a measure that identifies whether <code>med_inc</code> associated with the event is higher/lower than average income for all events of that type</p>
 <p>Steps:</p>
@@ -1736,17 +1816,17 @@ df_event %>%
 <li>Create a 0/1 indicator that identifies whether the median income at the event location is higher than the average median income for events of that type.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># average income at recruiting events across all universities</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="ot">&lt;-</span> event_berk_temp <span class="sc">%&gt;%</span> </span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gt_avg_inc_type =</span> med_inc <span class="sc">&gt;</span> avg_inc_type) <span class="sc">%&gt;%</span> </span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>(avg_inc)) <span class="co"># drop avg_inc (optional)</span></span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="co"># note how med_ic = NA are treated</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># average income at recruiting events across all universities</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="ot">&lt;-</span> event_berk_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gt_avg_inc_type =</span> med_inc <span class="sc">&gt;</span> avg_inc_type) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>(avg_inc)) <span class="co"># drop avg_inc (optional)</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="co"># note how med_ic = NA are treated</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Same as above, but this time create integer indicator rather than logical</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="ot">&lt;-</span> event_berk_tempv2 <span class="sc">%&gt;%</span> </span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gt_avg_inc_type =</span> <span class="fu">as.integer</span>(med_inc <span class="sc">&gt;</span> avg_inc_type)) </span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2  <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2 <span class="ot">&lt;-</span> event_berk_tempv2 <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gt_avg_inc_type =</span> <span class="fu">as.integer</span>(med_inc <span class="sc">&gt;</span> avg_inc_type)) </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>event_berk_tempv2  <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="student-exercise-2" class="level3" data-number="5.0.1">
 <h3 data-number="5.0.1" class="anchored" data-anchor-id="student-exercise-2"><span class="header-section-number">5.0.1</span> Student exercise</h3>
@@ -1766,21 +1846,21 @@ df_event %>%
 </summary>
 <p>Task: is <code>pct_white_zip</code> at a particular event higher or lower than the average pct_white_zip for that <code>event_type</code>?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>event_berk_tempv3 <span class="ot">&lt;-</span> event_berk <span class="sc">%&gt;%</span> </span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(event_date) <span class="sc">%&gt;%</span> <span class="co"># sort by event_date (optional)</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_date, event_type, pct_white_zip) <span class="sc">%&gt;%</span> <span class="co">#optional</span></span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type) <span class="sc">%&gt;%</span> <span class="co"># grouping by event type</span></span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_pct_white =</span> <span class="fu">mean</span>(pct_white_zip, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gt_avg_pctwhite_type =</span> <span class="fu">as.integer</span>(pct_white_zip <span class="sc">&gt;</span> avg_pct_white)) </span>
-<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>event_berk_tempv3 <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">4</span>)</span>
-<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
-<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   event_type [3]</span></span>
-<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   event_date event_type pct_white_zip avg_pct_white gt_avg_pctwhite_type</span></span>
-<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;                &lt;int&gt;</span></span>
-<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2017-04-11 other               37.2          49.7                    0</span></span>
-<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2017-04-14 public hs           78.3          48.9                    1</span></span>
-<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2017-04-23 private hs          84.7          61.0                    1</span></span>
-<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 2017-04-23 other               20.9          49.7                    0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>event_berk_tempv3 <span class="ot">&lt;-</span> event_berk <span class="sc">%&gt;%</span> </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(event_date) <span class="sc">%&gt;%</span> <span class="co"># sort by event_date (optional)</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(event_date, event_type, pct_white_zip) <span class="sc">%&gt;%</span> <span class="co">#optional</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(event_type) <span class="sc">%&gt;%</span> <span class="co"># grouping by event type</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_pct_white =</span> <span class="fu">mean</span>(pct_white_zip, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gt_avg_pctwhite_type =</span> <span class="fu">as.integer</span>(pct_white_zip <span class="sc">&gt;</span> avg_pct_white)) </span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>event_berk_tempv3 <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">4</span>)</span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   event_type [3]</span></span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   event_date event_type pct_white_zip avg_pct_white gt_avg_pctwhite_type</span></span>
+<span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;                &lt;int&gt;</span></span>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2017-04-11 other               37.2          49.7                    0</span></span>
+<span id="cb80-13"><a href="#cb80-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2017-04-14 public hs           78.3          48.9                    1</span></span>
+<span id="cb80-14"><a href="#cb80-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2017-04-23 private hs          84.7          61.0                    1</span></span>
+<span id="cb80-15"><a href="#cb80-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 2017-04-23 other               20.9          49.7                    0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 </section>

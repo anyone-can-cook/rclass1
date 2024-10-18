@@ -607,7 +607,7 @@ event_berk <- df_event %>% filter(univ_id == 110635)
 event_berk %>% count(event_type)
 ```
 
-## summarize() and Counts
+## summarize() and Counts {#sec-sum-count}
 
 The count function `n()` takes no arguments and returns the size of the current group
 
@@ -929,6 +929,32 @@ event_berk %>% arrange(event_type, event_datetime_start) %>%
 </details>
 
 <br>
+
+## count() in place of group_by() and summarise()
+
+Recall from @sec-sum-count, the `count()` function returns the count of unique values of a particular variable. For example, if we count by event_state, we get the count of visits by state. This is the same if we were to `group_by()` event_state and `summarise()` to get the count of events by state.
+
+```{r}
+event_berk %>%
+  group_by(event_state) %>%
+  summarise(n_state = n())
+
+event_berk %>%
+  count(event_state)
+```
+
+If we want to calculate the percent of UC Berkeley's visits across states, we can use the `count()` and `mutate()` functions instead of `group_by()` and `summarize()`. 
+```{r}
+event_berk %>%
+  group_by(event_state) %>% #group_by event state
+  summarise(n_state = n()) %>% #summarize and get a count of the # of events by state
+  mutate(pct_state = (n_state / sum(n_state)) * 100) #create percent variable of visits by UC Berkeley (e.g., 53% of visits in California)
+  
+event_berk %>%
+  count(event_state) %>% #count of visits by UC Berkeley by state
+  mutate(pct_state = (n / sum(n)) * 100) #percent of visits by UC Berkeley across states
+```
+
 
 # Summarize across multiple columns
 
