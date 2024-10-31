@@ -156,6 +156,216 @@ typeof(df_a)
 attributes(df_a)
 ```
 
+## Converting between types
+
+Functions for converting between types:
+
+-   `as.logical()`: Convert to `logical`
+-   `as.numeric()`: Convert to `numeric`
+-   `as.integer()`: Convert to `integer`
+-   `as.character()`: Convert to `character`
+-   `as.list()`: Convert to `list`
+-   `as.data.frame()`: Convert to `data.frame`
+
+_Before converting between vectors types, it is important to know that the most complex type always wins._ 
+
+```{r}
+typeof(c(TRUE, 3L))
+#> [1] "integer"
+typeof(c(2L, 4.5))
+#> [1] "double"
+typeof(c(2.5, "j"))
+#> [1] "character"
+```
+
+_Credit:_ [R for Data Science, section on Coercion](https://r4ds.had.co.nz/vectors.html#coercion)
+
+<br>
+
+**Convert to `logical` using `as.logical()`**
+
+Character vector coerced to logical vector:
+
+```{r}
+# Only "TRUE"/"FALSE", "True"/"False", "T"/"F", "true"/"false" are able to be coerced to logical type
+as.logical(c("TRUE", "FALSE", "True", "False", "true", "false", "T", "F", "t", "f", ""))
+```
+
+Numeric vector coerced to logical vector:
+
+```{r}
+# 0 is treated as FALSE, while all other numeric values are treated as TRUE
+as.logical(c(0, 0.0, 1, -1, 20, 5.5))
+```
+
+<br>
+
+**Convert to `numeric` using `as.numeric()`**
+
+Logical vector coerced to numeric vector:
+
+```{r}
+# FALSE is mapped to 0 and TRUE is mapped to 1
+as.numeric(c(FALSE, TRUE))
+```
+
+Character vector coerced to numeric vector:
+
+```{r, warning = FALSE}
+# Strings containing numeric values can be coerced to numeric (leading 0's are dropped) 
+# All other characters become NA
+as.numeric(c("0", "007", "2.5", "abc", "."))
+```
+
+<br>
+
+**Convert to `integer` using `as.integer()`**
+
+Logical vector coerced to integer vector:
+
+```{r}
+# FALSE is mapped to 0 and TRUE is mapped to 1
+as.integer(c(FALSE, TRUE))
+```
+
+Character vector coerced to integer vector:
+
+```{r, warning = FALSE}
+# Strings containing numeric values can be coerced to integer (leading 0's are dropped, decimals are truncated) 
+# All other characters become NA
+as.integer(c("0", "007", "2.5", "abc", "."))
+```
+
+Numeric vector coerced to integer vector:
+
+```{r, warning = FALSE}
+# All decimal places are truncated
+as.integer(c(0, 2.1, 10.5, 8.8, -1.8))
+```
+
+<br>
+
+**Convert to `character` using `as.character()`**
+
+Logical vector coerced to character vector:
+
+```{r}
+as.character(c(FALSE, TRUE))
+```
+
+Numeric vector coerced to character vector:
+
+```{r, warning = FALSE}
+as.character(c(-5, 0, 2.5))
+```
+
+Integer vector coerced to character vector:
+
+```{r, warning = FALSE}
+as.character(c(-2L, 0L, 10L))
+```
+
+<br>
+
+**Convert to `list` using `as.list()`**
+
+Atomic vectors coerced to list:
+
+```{r}
+# Logical vector
+as.list(c(TRUE, FALSE))
+
+# Character vector
+as.list(c("a", "b", "c"))
+
+# Numeric vector
+as.list(1:3)
+```
+
+<br>
+
+**Convert to `data.frame` using `as.data.frame()`**
+
+Lists coerced to dataframe:
+
+```{r}
+# Create a list
+l <- list(A = c("x", "y", "z"), B = c(1, 2, 3))
+str(l)
+
+# Convert to class `data.frame`
+df <- as.data.frame(l, stringsAsFactors = F)
+str(df)
+```
+
+<details>
+
+<summary>**Example**: Practical example of converting type</summary>
+
+When working with data, it may be helpful to label values for certain variables. Data files often come with a code book that defines how values are coded. Let's look at an example of labeling values and how converting data type may come into play.
+
+We'll look at the `FIPS` variable from the [Integrated Postsecondary Education Data System (IPEDS)](https://nces.ed.gov/ipeds/use-the-data) data. The [state FIPS code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code#FIPS_state_codes) is a numeric code that identifies a state. For example, `1` is the FIPS code for `Alabama`, `2` is the FIPS code for `Alaska`, etc. We'll want to label each numeric value in the `FIPS` column with the corresponding state name.
+
+```{r}
+# Library for labeling variables and values in a dataframe
+library(labelled)
+
+# Read in IPEDS data and codebook
+ipeds_df <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+ipeds_values <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+
+# The codebook defines how variables are coded, such as STABBR, FIPS, and other variables
+head(ipeds_values)
+
+# Filter codebook for just the values for the FIPS variable
+fips_values <- ipeds_values %>% filter(varname == 'FIPS') %>% select(varname, codevalue, valuelabel)
+head(fips_values)
+```
+
+<br> When we read in the data from the CSV files, R automatically tries to determine the data type of each variable. As seen below, the `FIPS` column from the `ipeds_df` that we want to label is of type `integer`, while the `codevalue` column from the codebook is of type `character` (since not all values are numeric):
+
+```{r}
+# Type of `FIPS` column
+str(ipeds_df$FIPS)
+
+# Type of `codevalue` column
+str(fips_values$codevalue)
+```
+
+<br> This discrepancy becomes a problem when we try to label the value using the `labelled` library:
+
+```{r, eval=F}
+# Error: `x` and `labels` must be same type
+val_label(ipeds_df$FIPS, fips_values[1, 'codevalue']) <- fips_values[1, 'valuelabel']
+```
+
+<br> To resolve this, we can use `as.integer()` to convert the `codevalue` from `character` type to `integer` before trying to label the value:
+
+```{r}
+# This now works
+val_label(ipeds_df$FIPS, as.integer(fips_values[1, 'codevalue'])) <- fips_values[1, 'valuelabel']
+
+# Check value labels
+val_labels(ipeds_df$FIPS)
+
+# We can use as.integer() to convert the entire vector (ie. codevalue column) to integer
+fips_values$codevalue <- as.integer(fips_values$codevalue)
+
+# Type of `codevalue` column
+str(fips_values$codevalue)
+
+# Use loop to label the rest of the values
+for (i in 1:nrow(fips_values)) {
+  val_label(ipeds_df$FIPS, fips_values[i, 'codevalue']) <- fips_values[i, 'valuelabel']
+}
+
+# Check value labels
+val_labels(ipeds_df$FIPS)
+```
+
+</details>
+
+
 ## Atomic vectors versus augmented vectors
 
 **Atomic vectors** \[our focus so far\]
@@ -993,7 +1203,7 @@ hsls %>% select(s3classes) %>% val_labels()
 
 Create frequency tables with `labelled` class variables using `count()`
 
--   Default setting is to show variable **values** not **value labels**
+-   when running individual code chunks, default setting is to show variable **values** not **value labels**
 
 ```{r}
 hsls %>% count(s3classes)
@@ -1001,7 +1211,7 @@ hsls %>% count(s3classes)
 
 \medskip
 
-To make frequency table show **value labels** add `%>% as_factor()` to pipe
+when running individual code chunks, to make frequency table show **value labels** add `%>% as_factor()` to pipe
 
 -   `as_factor()` is function from `haven` that converts an object to a factor
 
@@ -1294,8 +1504,8 @@ Say we are interested in the relationship between having an internship or co-op 
 #class(df_els_stu_allobs$f2intern0506) 
 #class(df_els_stu_allobs$f3ern2011)
 #attributes(df_els_stu_allobs$bytxrstd)
-#attributes(df_els_stu_allobs$f1sex)
-#attributes(df_els_stu_allobs$f1race_v2)
+attributes(df_els_stu_allobs$f1sex)
+attributes(df_els_stu_allobs$f1race_v2)
 ```
 
 ```{r}
@@ -1312,8 +1522,8 @@ summary(intern_mod1)
 #class(df_els_stu_allobs_fac$f3ern2011) #labelled + double
 #attributes(df_els_stu_allobs_fac$f2enroll0506)
 #attributes(df_els_stu_allobs_fac$bytxrstd) #labelled + double
-#attributes(df_els_stu_allobs_fac$f1sex)
-#attributes(df_els_stu_allobs_fac$f1race_v2)
+attributes(df_els_stu_allobs_fac$f1sex)
+attributes(df_els_stu_allobs_fac$f1race_v2)
 ```
 
 ```{r}
