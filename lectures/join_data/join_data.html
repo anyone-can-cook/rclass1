@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -84,10 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
   <ul class="collapse">
-  <li><a href="#libraries-and-datasets-we-will-use" id="toc-libraries-and-datasets-we-will-use" class="nav-link" data-scroll-target="#libraries-and-datasets-we-will-use"><span class="header-section-number">1.1</span> Libraries and datasets we will use</a></li>
+  <li><a href="#datasets-we-will-use-nls72-data" id="toc-datasets-we-will-use-nls72-data" class="nav-link" data-scroll-target="#datasets-we-will-use-nls72-data"><span class="header-section-number">1.1</span> Datasets we will use: NLS72 data</a></li>
   <li><a href="#lecture-overview" id="toc-lecture-overview" class="nav-link" data-scroll-target="#lecture-overview"><span class="header-section-number">1.2</span> Lecture overview</a></li>
-  <li><a href="#nls72-data" id="toc-nls72-data" class="nav-link" data-scroll-target="#nls72-data"><span class="header-section-number">1.3</span> NLS72 data</a></li>
-  <li><a href="#relational-databases-and-tables" id="toc-relational-databases-and-tables" class="nav-link" data-scroll-target="#relational-databases-and-tables"><span class="header-section-number">1.4</span> Relational databases and tables</a></li>
+  <li><a href="#relational-databases-and-tables" id="toc-relational-databases-and-tables" class="nav-link" data-scroll-target="#relational-databases-and-tables"><span class="header-section-number">1.3</span> Relational databases and tables</a></li>
   </ul></li>
   <li><a href="#keys" id="toc-keys" class="nav-link" data-scroll-target="#keys"><span class="header-section-number">2</span> Keys</a>
   <ul class="collapse">
@@ -149,15 +148,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<section id="libraries-and-datasets-we-will-use" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="libraries-and-datasets-we-will-use"><span class="header-section-number">1.1</span> Libraries and datasets we will use</h2>
 <p>Load packages:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><br> Load datasets:</p>
+<p><strong>If package not yet installed</strong>, then must install before you load. Install in “console” rather than .Rmd file:</p>
+<ul>
+<li>Generic syntax: <code>install.packages("package")</code></li>
+<li>Install “tidyverse”: <code>install.packages("tidyverse")</code></li>
+</ul>
+<p><strong>Note</strong>: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:</p>
+<ul>
+<li><code>install.packages("tidyverse")</code></li>
+<li><code>library(tidyverse)</code></li>
+</ul>
+<section id="datasets-we-will-use-nls72-data" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="datasets-we-will-use-nls72-data"><span class="header-section-number">1.1</span> Datasets we will use: NLS72 data</h2>
+<p>We will use data from the National Longitudinal Study of 1972 (NLS72)-– a nationally representative longitudinal study of 12th graders in 1972. This dataset includes the postsecondary education transcript file of the NLS72, which contains information on transcripts from NLS72 senior cohort members who reported attending a postsecondary institution after high school.</p>
+<ul>
+<li>Student level data</li>
+<li>Student-transcript level data</li>
+<li>Student-transcript-term level data</li>
+</ul>
+<p>These datasets are good for teaching “joining” because you get practice joining data sources with different “observational levels” (e.g., join student level and student-transcript level data).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NLS student level data, containing variables about student demographics</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">'https://github.com/anyone-can-cook/rclass1/raw/master/data/nls72/nls72stu_percontor_vars.dta'</span>) <span class="sc">%&gt;%</span></span>
@@ -175,53 +191,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>nls_term <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">'https://github.com/ozanj/rclass/raw/master/data/nls72/nls72petstrm_v2.dta'</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, transnum, termnum, courses, termtype, season, sortdate, gradcode, transfer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="lecture-overview" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="lecture-overview"><span class="header-section-number">1.2</span> Lecture overview</h2>
-<p>It is rare for an analysis dataset to consist of data from only one input dataset. For most projects, each analysis dataset contains data from multiple data sources. Therefore, you must become proficient in combining data from multiple data sources.</p>
-<p>Two broad topics:</p>
-<ol type="1">
-<li><strong>Joining</strong> datasets [big topic]
-<ul>
-<li>Combine two datasets so that the resulting dataset has additional variables</li>
-<li>The term “join” comes from the relational databases world; Social science research often uses the term “merge” rather than “join”</li>
-</ul></li>
-<li><strong>Appending</strong> datasets [small topic]
-<ul>
-<li>Stack datasets on top of one another so that resulting dataset has more observations, but (typically) the same number of variables</li>
-<li>Often, longitudinal datasets are created by appending datasets</li>
-</ul></li>
-</ol>
-<p>Wickham differentiates between <em>mutating joins</em> and <em>filtering joins</em>:</p>
-<ul>
-<li><strong>Mutating joins</strong> “add new variables to one data frame from matching observations in another”</li>
-<li><strong>Filtering joins</strong> “filter observations from one data frame based on whether or not they match an observation in the other table”
-<ul>
-<li>Doesn’t add new variables</li>
-<li>Usually, purpose is to check the quality of mutating joins (e.g., which observations didn’t match)</li>
-</ul></li>
-</ul>
-<p>Our main focus today is on <em>mutating joins</em>. But <em>filtering joins</em> are useful for data quality checks of <em>mutating joins</em>.</p>
-</section>
-<section id="nls72-data" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="nls72-data"><span class="header-section-number">1.3</span> NLS72 data</h2>
-<p>The datasets used for this lecture comes from the <strong>National Longitudinal Survey of 1972 (NLS72)</strong>:</p>
-<ul>
-<li>Student level data</li>
-<li>Student-transcript level data</li>
-<li>Student-transcript-term level data</li>
-</ul>
-<p>These datasets are good for teaching “joining” because you get practice joining data sources with different “observational levels” (e.g., join student level and student-transcript level data)</p>
-<p><br></p>
 <details>
 <summary>
 <strong>Investigating student level <code>nls_stu</code> dataframe</strong>
 </summary>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -290,7 +267,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <div class="cell">
@@ -387,16 +363,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </details>
-<p><br></p>
 <details>
 <summary>
 <strong>Investigating student level <code>nls_stu_pets</code> dataframe</strong>
 </summary>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -437,7 +411,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(nls_stu_pets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -464,16 +437,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </details>
-<p><br></p>
 <details>
 <summary>
 <strong>Investigating student-transcript level <code>nls_tran</code> dataframe</strong>
 </summary>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -554,7 +525,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <div class="cell">
@@ -661,16 +631,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </details>
-<p><br></p>
 <details>
 <summary>
 <strong>Investigating student-transcript-term level <code>nls_term</code> dataframe</strong>
 </summary>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -745,7 +713,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <div class="cell">
@@ -837,8 +804,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </details>
 </section>
-<section id="relational-databases-and-tables" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="relational-databases-and-tables"><span class="header-section-number">1.4</span> Relational databases and tables</h2>
+<section id="lecture-overview" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="lecture-overview"><span class="header-section-number">1.2</span> Lecture overview</h2>
+<p>It is rare for an analysis dataset to consist of data from only one input dataset. For most projects, each analysis dataset contains data from multiple data sources. Therefore, you must become proficient in combining data from multiple data sources.</p>
+<p>Two broad topics:</p>
+<ol type="1">
+<li><strong>Joining</strong> datasets [big topic]
+<ul>
+<li>Combine two datasets so that the resulting dataset has additional variables</li>
+<li>The term “join” comes from the relational databases world; Social science research often uses the term “merge” rather than “join”</li>
+</ul></li>
+<li><strong>Appending</strong> datasets [small topic]
+<ul>
+<li>Stack datasets on top of one another so that resulting dataset has more observations, but (typically) the same number of variables</li>
+<li>Often, longitudinal datasets are created by appending datasets</li>
+</ul></li>
+</ol>
+<p>Wickham differentiates between <em>mutating joins</em> and <em>filtering joins</em>:</p>
+<ul>
+<li><strong>Mutating joins</strong> “add new variables to one data frame from matching observations in another”</li>
+<li><strong>Filtering joins</strong> “filter observations from one data frame based on whether or not they match an observation in the other table”
+<ul>
+<li>Doesn’t add new variables</li>
+<li>Usually, the purpose is to check the quality of mutating joins (e.g., which observations didn’t match)</li>
+</ul></li>
+</ul>
+<p>Our main focus today is on <em>mutating joins</em>. But <em>filtering joins</em> are useful for data quality checks of <em>mutating joins</em>.</p>
+</section>
+<section id="relational-databases-and-tables" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="relational-databases-and-tables"><span class="header-section-number">1.3</span> Relational databases and tables</h2>
 <p><strong>Traditionally, social scientists store data in “flat files”</strong></p>
 <ul>
 <li>Flat files are “rectangular” datasets consisting of columns (usually called variables) and rows (usually called observations)</li>
@@ -864,7 +858,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Behind the scenes, there are separate tables for artist, album, song, genre, etc.</li>
 <li>The “library” you see as a user is the result of “on the fly” joins of these tables</li>
 </ul></li>
-<li>Every social media app (e.g., Twitter, FB, Instagram) you use is a relational database
+<li>Every social media app (e.g., X (formerly Twitter), FB, Instagram) you use is a relational database
 <ul>
 <li>What you see as a user is the result of “on the fly” joins of individual tables running in the background</li>
 </ul></li>
@@ -1181,9 +1175,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br> <strong>Example</strong>: Using <code>inner_join()</code> to join <code>x</code> and <code>y</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `x`</caption>
 <thead>
 <tr class="header">
@@ -1210,11 +1203,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `y`</caption>
 <thead>
 <tr class="header">
@@ -1240,7 +1231,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <p>We want to join <code>x</code> and <code>y</code> by the common variable <code>key</code>:</p>
@@ -1273,14 +1263,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>nls_stu</code> contains info on student demographics and <code>nls_stu_pets</code> contains info on student postsecondary education transcripts (PETS). It makes sense that we’ll want to join the tables by student, namely using the student <code>id</code> variable. This will be a one-to-one join because <code>id</code> uniquely identifies the observations in both <code>nls_stu</code> and <code>nls_stu_pets</code>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_id=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_id) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_id=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_id) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 1 × 2
 #&gt;   n_per_id     n
 #&gt;      &lt;int&gt; &lt;int&gt;
 #&gt; 1        1 22652</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>nls_stu_pets <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_id=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_id) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>nls_stu_pets <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_id=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_id) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 1 × 2
 #&gt;   n_per_id     n
@@ -1338,9 +1330,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br> <strong>Example</strong>: Using <code>inner_join()</code> to join <code>x</code> and <code>y</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `x`</caption>
 <thead>
 <tr class="header">
@@ -1371,11 +1362,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `y`</caption>
 <thead>
 <tr class="header">
@@ -1397,7 +1386,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <p>We can confirm that <code>x</code> and <code>y</code> have a <strong>many-to-one</strong> relationship because <code>key</code> does not uniquely identify observations in <code>x</code> but does uniquely identify observations in <code>y</code>:</p>
@@ -1449,7 +1437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Why? if tables can be joined via one-to-one join, then they should already be part of the same table.</li>
 </ul></li>
 </ul></li>
-<li><strong>one-to-many</strong> join: key variable uniquely identifies observatiosn in table <code>x</code> and does not uniquely identify observations in table <code>y</code>
+<li><strong>one-to-many</strong> join: key variable uniquely identifies observations in table <code>x</code> and does not uniquely identify observations in table <code>y</code>
 <ul>
 <li>Each observation from table <code>x</code> may match to multiple observations from table <code>y</code></li>
 <li>E.g., Joining <code>nls_stu</code> and <code>nls_trans</code>: <em>one</em> observation (student) in <code>nls_stu</code> has <em>many</em> observations in <code>nls_trans</code> (transcripts)</li>
@@ -1473,7 +1461,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Recall that <code>nls_stu</code> contains student level demographics data, where the student <code>id</code> variable uniquely identifies each observation in the table. <code>nls_trans</code> on the other hand is student-transcript level data, so <code>id</code> does not uniquely identify each observation. Thus, if we join by <code>id</code>, it would be a one-to-many relationship:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># id uniquely identify obs in nls_stu</span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_key) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_key) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 1 × 2
 #&gt;   n_per_key     n
@@ -1481,7 +1470,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; 1         1 22652</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># id does not uniquely identify obs in nls_tran</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>nls_tran <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_key) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>nls_tran <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_key) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 7 × 2
 #&gt;   n_per_key     n
@@ -1606,14 +1596,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall that id uniquely identifies both nls_stu and nls_stu_pets</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>nls_stu <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 1 × 2
 #&gt;   n_per_key     n
 #&gt;       &lt;int&gt; &lt;int&gt;
 #&gt; 1         1 22652</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>nls_stu_pets <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">count</span>(n_per_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>nls_stu_pets <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n_per_key=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(n_per_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 1 × 2
 #&gt;   n_per_key     n
@@ -1681,9 +1673,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Imagine we have the following tables <code>x</code> and <code>y</code>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `x`</caption>
 <thead>
 <tr class="header">
@@ -1726,11 +1717,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `y`</caption>
 <thead>
 <tr class="header">
@@ -1770,13 +1759,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><strong>Semi join</strong> returns all rows from <code>x</code> where there are matching values in <code>y</code>: <code>semi_join(x, y, by = "key")</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Semi join</caption>
 <thead>
 <tr class="header">
@@ -1812,13 +1799,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><strong>Anti join</strong> returns all rows from <code>x</code> where there are <em>no</em> matching values in <code>y</code>: <code>anti_join(x, y, by = "key")</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Anti join</caption>
 <thead>
 <tr class="header">
@@ -1842,13 +1827,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p>We can see which rows from <code>x</code> have or do not have a match in <code>y</code> from the <strong>left join</strong>: <code>left_join(x, y, by = "key")</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Left join</caption>
 <thead>
 <tr class="header">
@@ -1903,7 +1886,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 <p>Note that the row from <code>x</code> where <code>key == 1</code> and <code>val_x == x1</code> appears twice in the left join because it has a one-to-many relationship with <code>y</code>. However, this row is not duplicated in the semi join.</p>
@@ -2023,9 +2005,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Imagine we have the following tables <code>time1</code> and <code>time2</code>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `time1`</caption>
 <thead>
 <tr class="header">
@@ -2056,11 +2037,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `time2`</caption>
 <thead>
 <tr class="header">
@@ -2092,16 +2071,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><br> Use <code>bind_rows()</code> to stack the dataframes on top of one another:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(time1, time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
@@ -2147,7 +2124,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><br></p>
 <details>
 <summary>
@@ -2168,9 +2144,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit14_15`</caption>
 <thead>
 <tr class="header">
@@ -2225,11 +2200,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit15_16`</caption>
 <thead>
 <tr class="header">
@@ -2284,11 +2257,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit16_17`</caption>
 <thead>
 <tr class="header">
@@ -2344,7 +2315,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><br> Use <code>bind_rows()</code> to stack the dataframes on top of one another:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>admit_append <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(admit14_15, admit15_16, admit16_17)</span>
@@ -2360,9 +2330,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">unitid</th>
@@ -2481,7 +2450,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 </details>
@@ -2500,9 +2468,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit14_15`</caption>
 <thead>
 <tr class="header">
@@ -2545,11 +2512,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit15_16`</caption>
 <thead>
 <tr class="header">
@@ -2592,11 +2557,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
-</div>
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Table `admit16_17`</caption>
 <thead>
 <tr class="header">
@@ -2652,7 +2615,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-</div>
 <p><br> Use <code>bind_rows()</code> to stack the dataframes on top of one another:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>admit_append <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(admit14_15, admit15_16, admit16_17)</span>
@@ -2662,9 +2624,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div class="table-responsive">
-<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">unitid</th>
@@ -2783,7 +2744,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-</div>
 </div>
 </div>
 </details>

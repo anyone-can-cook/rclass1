@@ -24,17 +24,34 @@ knitr::opts_chunk$set(comment = "#>", highlight = TRUE, warning=F, message=F)
 
 # Introduction
 
-## Libraries and datasets we will use
-
 Load packages:
 
 ```{r, message=F}
 library(tidyverse)
 library(haven)
 library(labelled)
+library(kableExtra)
 ```
 
-<br> Load datasets:
+**If package not yet installed**, then must install before you load. Install in "console" rather than .Rmd file:
+
+-   Generic syntax: `install.packages("package")`
+-   Install "tidyverse": `install.packages("tidyverse")`
+
+**Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
+
+-   `install.packages("tidyverse")`
+-   `library(tidyverse)`
+
+## Datasets we will use: NLS72 data
+
+We will use data from the National Longitudinal Study of 1972 (NLS72)-– a nationally representative longitudinal study of 12th graders in 1972. This dataset includes the postsecondary education transcript file of the NLS72, which contains information on transcripts from NLS72 senior cohort members who reported attending a postsecondary institution after high school. 
+
+-   Student level data
+-   Student-transcript level data
+-   Student-transcript-term level data
+
+These datasets are good for teaching "joining" because you get practice joining data sources with different "observational levels" (e.g., join student level and student-transcript level data).
 
 ```{r}
 # NLS student level data, containing variables about student demographics
@@ -54,46 +71,11 @@ nls_term <- read_dta('https://github.com/ozanj/rclass/raw/master/data/nls72/nls7
   select(id, transnum, termnum, courses, termtype, season, sortdate, gradcode, transfer)
 ```
 
-## Lecture overview
-
-It is rare for an analysis dataset to consist of data from only one input dataset. For most projects, each analysis dataset contains data from multiple data sources. Therefore, you must become proficient in combining data from multiple data sources.
-
-Two broad topics:
-
-1.  **Joining** datasets \[big topic\]
-    -   Combine two datasets so that the resulting dataset has additional variables
-    -   The term "join" comes from the relational databases world; Social science research often uses the term "merge" rather than "join"
-2.  **Appending** datasets \[small topic\]
-    -   Stack datasets on top of one another so that resulting dataset has more observations, but (typically) the same number of variables
-    -   Often, longitudinal datasets are created by appending datasets
-
-Wickham differentiates between *mutating joins* and *filtering joins*:
-
--   **Mutating joins** "add new variables to one data frame from matching observations in another"
--   **Filtering joins** "filter observations from one data frame based on whether or not they match an observation in the other table"
-    -   Doesn't add new variables
-    -   Usually, purpose is to check the quality of mutating joins (e.g., which observations didn't match)
-
-Our main focus today is on *mutating joins*. But *filtering joins* are useful for data quality checks of *mutating joins*.
-
-## NLS72 data
-
-The datasets used for this lecture comes from the **National Longitudinal Survey of 1972 (NLS72)**:
-
--   Student level data
--   Student-transcript level data
--   Student-transcript-term level data
-
-These datasets are good for teaching "joining" because you get practice joining data sources with different "observational levels" (e.g., join student level and student-transcript level data)
-
-<br>
-
 <details>
 
 <summary>**Investigating student level `nls_stu` dataframe**</summary>
 
 ```{r, echo=FALSE}
-library(kableExtra)
 
 kable(head(nls_stu, 5)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
@@ -118,7 +100,6 @@ nls_stu %>% count(bysex) %>% as_factor()
 
 </details>
 
-<br>
 
 <details>
 
@@ -137,7 +118,6 @@ nls_stu_pets %>% var_label()
 
 </details>
 
-<br>
 
 <details>
 
@@ -158,7 +138,6 @@ nls_tran %>% val_labels()
 
 </details>
 
-<br>
 
 <details>
 
@@ -179,6 +158,29 @@ nls_term %>% val_labels()
 ```
 
 </details>
+
+## Lecture overview
+
+It is rare for an analysis dataset to consist of data from only one input dataset. For most projects, each analysis dataset contains data from multiple data sources. Therefore, you must become proficient in combining data from multiple data sources.
+
+Two broad topics:
+
+1.  **Joining** datasets \[big topic\]
+    -   Combine two datasets so that the resulting dataset has additional variables
+    -   The term "join" comes from the relational databases world; Social science research often uses the term "merge" rather than "join"
+2.  **Appending** datasets \[small topic\]
+    -   Stack datasets on top of one another so that resulting dataset has more observations, but (typically) the same number of variables
+    -   Often, longitudinal datasets are created by appending datasets
+
+Wickham differentiates between *mutating joins* and *filtering joins*:
+
+-   **Mutating joins** "add new variables to one data frame from matching observations in another"
+-   **Filtering joins** "filter observations from one data frame based on whether or not they match an observation in the other table"
+    -   Doesn't add new variables
+    -   Usually, the purpose is to check the quality of mutating joins (e.g., which observations didn't match)
+
+Our main focus today is on *mutating joins*. But *filtering joins* are useful for data quality checks of *mutating joins*.
+
 
 ## Relational databases and tables
 
@@ -203,7 +205,7 @@ nls_term %>% val_labels()
 -   iTunes
     -   Behind the scenes, there are separate tables for artist, album, song, genre, etc.
     -   The "library" you see as a user is the result of "on the fly" joins of these tables
--   Every social media app (e.g., Twitter, FB, Instagram) you use is a relational database
+-   Every social media app (e.g., X (formerly Twitter), FB, Instagram) you use is a relational database
     -   What you see as a user is the result of "on the fly" joins of individual tables running in the background
 -   Interactive maps typically have relational databases running in the background
     -   Clicking on some part of the map triggers a join of tables and you see the result of some analysis based on that join
@@ -491,8 +493,10 @@ Recall that `nls_stu` and `nls_stu_pets` are both student level data
 -   `nls_stu` contains info on student demographics and `nls_stu_pets` contains info on student postsecondary education transcripts (PETS). It makes sense that we'll want to join the tables by student, namely using the student `id` variable. This will be a one-to-one join because `id` uniquely identifies the observations in both `nls_stu` and `nls_stu_pets`:
 
 ```{r}
-nls_stu %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>% count(n_per_id) 
-nls_stu_pets %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>% count(n_per_id) 
+nls_stu %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>%
+  count(n_per_id) 
+nls_stu_pets %>% group_by(id) %>% summarise(n_per_id=n()) %>% ungroup() %>%
+  count(n_per_id) 
 
 # Join the nls_stu and nls_stu_pets by id variable
 nls_stu_stu <- nls_stu %>% inner_join(nls_stu_pets, by = "id")
@@ -576,7 +580,7 @@ Depending on whether the key variable uniquely identifies observations in table 
     -   The join between `nls_stu` and `nls_stu_pets` was a one-to-one join; the variable `id` uniquely identifies observations in both tables
     -   In the relational database world one-to-one joins are rare and are considered special cases of one-to-many or many-to-one joins
         -   Why? if tables can be joined via one-to-one join, then they should already be part of the same table.
--   **one-to-many** join: key variable uniquely identifies observatiosn in table `x` and does not uniquely identify observations in table `y`
+-   **one-to-many** join: key variable uniquely identifies observations in table `x` and does not uniquely identify observations in table `y`
     -   Each observation from table `x` may match to multiple observations from table `y`
     -   E.g., Joining `nls_stu` and `nls_trans`: *one* observation (student) in `nls_stu` has *many* observations in `nls_trans` (transcripts)
 -   **many-to-one** join: key variable does not uniquely identify observations in table `x` and does uniquely identify observations in table `y`
@@ -597,10 +601,12 @@ Recall that `nls_stu` contains student level demographics data, where the studen
 
 ```{r}
 # id uniquely identify obs in nls_stu
-nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key) 
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>%
+  count(n_per_key) 
 
 # id does not uniquely identify obs in nls_tran
-nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key) 
+nls_tran %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>%
+  count(n_per_key) 
 
 # Join the nls_stu and nls_tran by id variable
 nls_stu_tran <- nls_stu %>% inner_join(nls_tran, by = "id")
@@ -676,8 +682,10 @@ In this example, we will:
 
 ```{r}
 # Recall that id uniquely identifies both nls_stu and nls_stu_pets
-nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
-nls_stu_pets %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>% count(n_per_key)
+nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>%
+  count(n_per_key)
+nls_stu_pets %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup() %>%
+  count(n_per_key)
 
 # Left join nls_stu with nls_stu_pets (one-to-one)
 nls_stu_pets_stu <- nls_stu %>% left_join(nls_stu_pets, by = "id")
