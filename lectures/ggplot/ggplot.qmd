@@ -1585,9 +1585,10 @@ The value of a color is determined by how close the color is to Black or White. 
 -   "Luminance is a measure to describe the perceived brightness of a colour. In other words, how bright is the colour from a reflected surface." ([Mixing Colors of equal Luminance- Part 1 author: Colin Shanley](https://medium.com/sketch-app-sources/mixing-colours-of-equal-luminance-part-1-41f69518d647#:~:text=Luminance%20is%20a%20measure%20to,normalised%20to%20100%25%20for%20white.))
 
 -   Example: The Hue-Chroma-Luminance (HCL) color scheme.
-- PATRICIA FIX THIS
 
-[![](https://hclwizard.org/images//hclscheme_pic0.png)](https://hclwizard.org/color-scheme/)
+[![](https://hclwizard.org/index_files/figure-html/fig_dimension_hue-1.png)](https://hclwizard.org/) 
+[![](https://hclwizard.org/index_files/figure-html/fig_dimension_chroma-1.png)](https://hclwizard.org/) 
+[![](https://hclwizard.org/index_files/figure-html/fig_dimension_luminance-1.png)](https://hclwizard.org/) 
 
 ### RColorBrewer Palettes
 
@@ -1853,10 +1854,11 @@ diamonds %>%
                      name = 'Diamond color')
 ```
 
-We could also create an object assigning variable values with hex color codes. 
+We could also create an object assigning variable values with hex color codes.  
 
--     For example, we want to plot the relationship between diamond carat (x-axis) and price (y-axis) with color of points determined by the variable `color`. 
--     First, let's plot without color. 
+-     For example, we want to plot the relationship between diamond carat (x-axis) and price (y-axis) with color of points determined by the variable `color`.  
+-     First, let's plot without color.  
+
 ```{r}
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price)) + 
@@ -1865,12 +1867,12 @@ diamonds %>%
   xlab('Carat') + ylab('Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) 
 ```
-
+  
 -     Next, we investigate the variable `color` and see that it has seven values, D-J.
 ```{r}
 diamonds %>% count(color)
 ```
-
+  
 -     Then, we create the object `diamond_colors` and assign the values (e.g., D-J) of the variable `color` to any hex color codes of our choosing. 
 ```{r}
 diamond_colors <- c("D" = "#00a866",
@@ -1884,7 +1886,7 @@ diamond_colors <- c("D" = "#00a866",
 diamond_colors
 diamond_colors[1:3] #select the first three values (D,E,F)
 ```
-
+  
 -     Lastly, we add the new object `diamond_colors` to the values argument from the `scale_color_manual` function. 
 
 ```{r}
