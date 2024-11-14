@@ -54,9 +54,9 @@ library(RColorBrewer) #manage colors in R
 -   http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html
 -   https://ggplot2-book.org/
 
-**ggplot cheatsheet**:
+**ggplot cheatsheet** [Print this!]
 
--   https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf
+-   [LINK](https://rstudio.github.io/cheatsheets/data-visualization.pdf)
 
 It may be helpful to familiarize yourself with this cheatsheet and use it as a reference point for review and practice after going through the lecture.
 
@@ -591,7 +591,8 @@ p +
   ggtitle(label = "Cartesian coordinate system")
 ```
 
--   Use `coord_fixed()` to fix the scaling of the coordinate system
+-   Use `coord_fixed()` to fix the "aspect ratio" (i.e., scaling) of the coordinate system. Description:
+  - "A fixed scale coordinate system forces a specified ratio between the physical representation of data units on the axes. The ratio represents the number of units on the y-axis equivalent to one unit on the x-axis. The default, ratio = 1, ensures that one unit on the x-axis is the same length as one unit on the y-axis."
 
 <details>
 
@@ -833,7 +834,7 @@ diam_ggplot + geom_point()
 -   Plot the scatterplot:
 
 ```{r, warning = FALSE}
-ggplot(data= els_parphd, aes(x = hw_time, y = earn2011)) + geom_point()
+ggplot(data= els_parphd, mapping = aes(x = hw_time, y = earn2011)) + geom_point()
 ```
 
 <br>
@@ -942,6 +943,17 @@ ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011))
 -   Use `group` aesthetic to create separate prediction lines by sex (`f1sex`):
 
 ```{r}
+# first, let's get a sense of how much time doing homework for most students
+els_v2 %>%
+  group_by(f1sex) %>%
+  summarize(
+    mean_hw = mean(hw_time, na.rm = TRUE),
+    p25_hw = quantile(hw_time, 0.25, na.rm = TRUE),
+    p50_hw = quantile(hw_time, 0.50, na.rm = TRUE),
+    p75_hw = quantile(hw_time, 0.75, na.rm = TRUE),
+    p90_hw = quantile(hw_time, 0.90, na.rm = TRUE),
+  )
+
 #ggplot(data=els_v2, aes(x = hw_time, y = earn2011, group=as_factor(f1sex))) + geom_smooth()
 ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, group=f1sex))
 ```
@@ -1573,6 +1585,7 @@ The value of a color is determined by how close the color is to Black or White. 
 -   "Luminance is a measure to describe the perceived brightness of a colour. In other words, how bright is the colour from a reflected surface." ([Mixing Colors of equal Luminance- Part 1 author: Colin Shanley](https://medium.com/sketch-app-sources/mixing-colours-of-equal-luminance-part-1-41f69518d647#:~:text=Luminance%20is%20a%20measure%20to,normalised%20to%20100%25%20for%20white.))
 
 -   Example: The Hue-Chroma-Luminance (HCL) color scheme.
+- PATRICIA FIX THIS
 
 [![](https://hclwizard.org/images//hclscheme_pic0.png)](https://hclwizard.org/color-scheme/)
 
@@ -1841,6 +1854,7 @@ diamonds %>%
 ```
 
 We could also create an object assigning variable values with hex color codes. 
+
 -     For example, we want to plot the relationship between diamond carat (x-axis) and price (y-axis) with color of points determined by the variable `color`. 
 -     First, let's plot without color. 
 ```{r}
@@ -1886,7 +1900,7 @@ diamonds %>%
 
 ### Grayscale palette for journal manuscripts
 
-Many journals require grayscale graphs or figures. You can use the `scale_color_grey()` function for continuous or the `scale_fill_grey()` function for discrete color scales. 
+Many journals require grayscale graphs or figures. You can use the `scale_color_grey()` function or the `scale_fill_grey()` function. 
 
 For example, we can plot the relationship between parent income and 2011 student earnings separately by race/ethnicity using the `scale_color_grey()` function. 
 
