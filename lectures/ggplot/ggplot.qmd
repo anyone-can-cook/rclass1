@@ -1635,13 +1635,13 @@ To select a specific color not part of the `RColorBrewer` package or other color
 
 <br>
 
-### `scale_color_brewer()` for discrete variables
+### `scale_color_brewer()` to select a ColorBrewer palette
 
-Bringing it all together to apply the `scale_color_brewer()` and `scale_color_gradient()` functions to our graphs.
+Bringing it all together to apply the `scale_color_brewer()`, `scale_fill_brewer()`, and `scale_color_gradient()` functions to our graphs.
 
-There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color discrete/categorical variables and `scale_color_gradient()` is used when we want to color continuous variables.
+There are several ways to customize the color palettes of the plot. `scale_color_brewer()` is used when we want to color variables using a ColorBrewer palette, `scale_fill_brewer()` is used when we want to fill in the colors for a bar chart, and `scale_color_gradient()` is used when we want to color variables using a color gradient.
 
-<br> **The `scale_color_brewer()` function** for categorical/discrete variables
+<br> **The `scale_color_brewer()` function** 
 
 ```{r, eval = FALSE}
 ?scale_color_brewer
@@ -1663,7 +1663,7 @@ scale_color_brewer(
     -   `direction`: "Sets the order of colours in the scale. If 1, the default, colours are as output by `RColorBrewer::brewer.pal()`. If -1, the order of colours is reversed."
     -   `aesthetics`: which aesthetic mappings the `scale_color_brewer()` function should apply to. Default is `aesthetics = "colour"`
 
-<br> **Example**: Customizing color palette of discrete scale
+<br> **Example**: Customizing color palette of
 
 We'll color the points of the scatterplot by the variable `color`
 
@@ -1710,6 +1710,60 @@ diamonds %>%
   xlab('Carat') + ylab('Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', direction = -1, name = 'Diamond color')
+```
+
+
+### `scale_fill_brewer()` for discrete variables
+
+To fill in the color of discrete variables in a bar chart, we can use the `scale_fill_brewer()` function. 
+
+**The `scale_fill_brewer()` function**:
+
+```{r, eval=FALSE}
+?scale_fill_brewer
+
+# SYNTAX AND DEFAULT VALUES
+scale_fill_brewer(
+  ...,
+  type = "seq",
+  palette = 1,
+  direction = 1,
+  aesthetics = "fill"
+)
+```
+
+-   Arguments
+    -   `...`: "Other arguments passed on to discrete_scale(), continuous_scale(), or binned_scale(), for brewer, distiller, and fermenter variants respectively, to control name, limits, breaks, labels and so forth."
+    - `type`:	One of "seq" (sequential), "div" (diverging) or "qual" (qualitative)
+    - `palette`: 	If a string, will use that named palette. If a number, will index into the list of palettes of appropriate type. The list of available palettes can found in the Palettes section.
+    - `direction`: Sets the order of colours in the scale. If 1, the default, colours are as output by RColorBrewer::brewer.pal(). If -1, the order of colours is reversed.
+    - `aesthetics`: Character string or vector of character strings listing the name(s) of the aesthetic(s) that this scale works with. This can be useful, for example, to apply colour settings to the colour and fill aesthetics at the same time, via aesthetics = c("colour", "fill").
+    
+<br> **Example**: Fill in the colors in a bar chart
+
+Using the `els_v2` data frame from previously, we can use the `scale_fill_brewer()` function to fill in the colors of race/ethnicity in our bar chart below. 
+```{r}
+els_v2 %>%
+  ggplot(mapping = aes(x = f1race_v2)) +
+  geom_bar(mapping = aes(fill = f1race_v2)) +
+  scale_fill_brewer()
+```
+We can reverse the order of the colors by using the `(direction = -1)` argument
+
+```{r}
+els_v2 %>%
+  ggplot(mapping = aes(x = f1race_v2)) +
+  geom_bar(mapping = aes(fill = f1race_v2)) +
+  scale_fill_brewer(direction = -1)
+```
+We can select a specific palette from the ColorBrewer palette
+
+```{r}
+#display.brewer.all(type="qual") #qual color palettes
+els_v2 %>%
+  ggplot(mapping = aes(x = f1race_v2)) +
+  geom_bar(mapping = aes(fill = f1race_v2)) +
+  scale_fill_brewer(palette = 'Accent')
 ```
 
 ### `scale_color_gradient()` for continuous variables

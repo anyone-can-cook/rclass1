@@ -139,10 +139,11 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#hcl-color-space" id="toc-hcl-color-space" class="nav-link" data-scroll-target="#hcl-color-space"><span class="header-section-number">4.3.1</span> HCL Color Space</a></li>
   <li><a href="#rcolorbrewer-palettes" id="toc-rcolorbrewer-palettes" class="nav-link" data-scroll-target="#rcolorbrewer-palettes"><span class="header-section-number">4.3.2</span> RColorBrewer Palettes</a></li>
-  <li><a href="#scale_color_brewer-for-discrete-variables" id="toc-scale_color_brewer-for-discrete-variables" class="nav-link" data-scroll-target="#scale_color_brewer-for-discrete-variables"><span class="header-section-number">4.3.3</span> <code>scale_color_brewer()</code> for discrete variables</a></li>
-  <li><a href="#scale_color_gradient-for-continuous-variables" id="toc-scale_color_gradient-for-continuous-variables" class="nav-link" data-scroll-target="#scale_color_gradient-for-continuous-variables"><span class="header-section-number">4.3.4</span> <code>scale_color_gradient()</code> for continuous variables</a></li>
-  <li><a href="#scale_color_manual-to-select-specific-colors" id="toc-scale_color_manual-to-select-specific-colors" class="nav-link" data-scroll-target="#scale_color_manual-to-select-specific-colors"><span class="header-section-number">4.3.5</span> <code>scale_color_manual()</code> to select specific colors</a></li>
-  <li><a href="#grayscale-palette-for-journal-manuscripts" id="toc-grayscale-palette-for-journal-manuscripts" class="nav-link" data-scroll-target="#grayscale-palette-for-journal-manuscripts"><span class="header-section-number">4.3.6</span> Grayscale palette for journal manuscripts</a></li>
+  <li><a href="#scale_color_brewer-to-select-a-colorbrewer-palette" id="toc-scale_color_brewer-to-select-a-colorbrewer-palette" class="nav-link" data-scroll-target="#scale_color_brewer-to-select-a-colorbrewer-palette"><span class="header-section-number">4.3.3</span> <code>scale_color_brewer()</code> to select a ColorBrewer palette</a></li>
+  <li><a href="#scale_fill_brewer-for-discrete-variables" id="toc-scale_fill_brewer-for-discrete-variables" class="nav-link" data-scroll-target="#scale_fill_brewer-for-discrete-variables"><span class="header-section-number">4.3.4</span> <code>scale_fill_brewer()</code> for discrete variables</a></li>
+  <li><a href="#scale_color_gradient-for-continuous-variables" id="toc-scale_color_gradient-for-continuous-variables" class="nav-link" data-scroll-target="#scale_color_gradient-for-continuous-variables"><span class="header-section-number">4.3.5</span> <code>scale_color_gradient()</code> for continuous variables</a></li>
+  <li><a href="#scale_color_manual-to-select-specific-colors" id="toc-scale_color_manual-to-select-specific-colors" class="nav-link" data-scroll-target="#scale_color_manual-to-select-specific-colors"><span class="header-section-number">4.3.6</span> <code>scale_color_manual()</code> to select specific colors</a></li>
+  <li><a href="#grayscale-palette-for-journal-manuscripts" id="toc-grayscale-palette-for-journal-manuscripts" class="nav-link" data-scroll-target="#grayscale-palette-for-journal-manuscripts"><span class="header-section-number">4.3.7</span> Grayscale palette for journal manuscripts</a></li>
   </ul></li>
   <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes"><span class="header-section-number">4.4</span> Themes</a></li>
   </ul></li>
@@ -2770,11 +2771,11 @@ Solution
 <p><br> <a href="https://r-graph-gallery.com/ggplot2-color.html"><img src="https://r-graph-gallery.com/img/graph/42-colors-names.png" class="img-fluid"></a></p>
 <p><br></p>
 </section>
-<section id="scale_color_brewer-for-discrete-variables" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="scale_color_brewer-for-discrete-variables"><span class="header-section-number">4.3.3</span> <code>scale_color_brewer()</code> for discrete variables</h3>
-<p>Bringing it all together to apply the <code>scale_color_brewer()</code> and <code>scale_color_gradient()</code> functions to our graphs.</p>
-<p>There are several ways to customize the color palettes of the plot. <code>scale_color_brewer()</code> is used when we want to color discrete/categorical variables and <code>scale_color_gradient()</code> is used when we want to color continuous variables.</p>
-<p><br> <strong>The <code>scale_color_brewer()</code> function</strong> for categorical/discrete variables</p>
+<section id="scale_color_brewer-to-select-a-colorbrewer-palette" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="scale_color_brewer-to-select-a-colorbrewer-palette"><span class="header-section-number">4.3.3</span> <code>scale_color_brewer()</code> to select a ColorBrewer palette</h3>
+<p>Bringing it all together to apply the <code>scale_color_brewer()</code>, <code>scale_fill_brewer()</code>, and <code>scale_color_gradient()</code> functions to our graphs.</p>
+<p>There are several ways to customize the color palettes of the plot. <code>scale_color_brewer()</code> is used when we want to color variables using a ColorBrewer palette, <code>scale_fill_brewer()</code> is used when we want to fill in the colors for a bar chart, and <code>scale_color_gradient()</code> is used when we want to color variables using a color gradient.</p>
+<p><br> <strong>The <code>scale_color_brewer()</code> function</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>?scale_color_brewer</span>
 <span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2799,7 +2800,7 @@ Solution
 <li><code>aesthetics</code>: which aesthetic mappings the <code>scale_color_brewer()</code> function should apply to. Default is <code>aesthetics = "colour"</code></li>
 </ul></li>
 </ul>
-<p><br> <strong>Example</strong>: Customizing color palette of discrete scale</p>
+<p><br> <strong>Example</strong>: Customizing color palette of</p>
 <p>We’ll color the points of the scatterplot by the variable <code>color</code></p>
 <ul>
 <li>from <code>?diamonds</code>, the variable <code>color</code> is described as “diamond colour, from D (best) to J (worst)”
@@ -2887,23 +2888,94 @@ $levels
 </div>
 </div>
 </section>
-<section id="scale_color_gradient-for-continuous-variables" class="level3" data-number="4.3.4">
-<h3 data-number="4.3.4" class="anchored" data-anchor-id="scale_color_gradient-for-continuous-variables"><span class="header-section-number">4.3.4</span> <code>scale_color_gradient()</code> for continuous variables</h3>
+<section id="scale_fill_brewer-for-discrete-variables" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="scale_fill_brewer-for-discrete-variables"><span class="header-section-number">4.3.4</span> <code>scale_fill_brewer()</code> for discrete variables</h3>
+<p>To fill in the color of discrete variables in a bar chart, we can use the <code>scale_fill_brewer()</code> function.</p>
+<p><strong>The <code>scale_fill_brewer()</code> function</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a>?scale_fill_brewer</span>
+<span id="cb169-2"><a href="#cb169-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-3"><a href="#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb169-4"><a href="#cb169-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_brewer</span>(</span>
+<span id="cb169-5"><a href="#cb169-5" aria-hidden="true" tabindex="-1"></a>  ...,</span>
+<span id="cb169-6"><a href="#cb169-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"seq"</span>,</span>
+<span id="cb169-7"><a href="#cb169-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="dv">1</span>,</span>
+<span id="cb169-8"><a href="#cb169-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb169-9"><a href="#cb169-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">aesthetics =</span> <span class="st">"fill"</span></span>
+<span id="cb169-10"><a href="#cb169-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Arguments
+<ul>
+<li><code>...</code>: “Other arguments passed on to discrete_scale(), continuous_scale(), or binned_scale(), for brewer, distiller, and fermenter variants respectively, to control name, limits, breaks, labels and so forth.”</li>
+<li><code>type</code>: One of “seq” (sequential), “div” (diverging) or “qual” (qualitative)</li>
+<li><code>palette</code>: If a string, will use that named palette. If a number, will index into the list of palettes of appropriate type. The list of available palettes can found in the Palettes section.</li>
+<li><code>direction</code>: Sets the order of colours in the scale. If 1, the default, colours are as output by RColorBrewer::brewer.pal(). If -1, the order of colours is reversed.</li>
+<li><code>aesthetics</code>: Character string or vector of character strings listing the name(s) of the aesthetic(s) that this scale works with. This can be useful, for example, to apply colour settings to the colour and fill aesthetics at the same time, via aesthetics = c(“colour”, “fill”).</li>
+</ul></li>
+</ul>
+<p><br> <strong>Example</strong>: Fill in the colors in a bar chart</p>
+<p>Using the <code>els_v2</code> data frame from previously, we can use the <code>scale_fill_brewer()</code> function to fill in the colors of race/ethnicity in our bar chart below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb170-3"><a href="#cb170-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb170-4"><a href="#cb170-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ggplot_files/figure-html/unnamed-chunk-240-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can reverse the order of the colors by using the <code>(direction = -1)</code> argument</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb171-4"><a href="#cb171-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ggplot_files/figure-html/unnamed-chunk-242-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can select a specific palette from the ColorBrewer palette</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co">#display.brewer.all(type="qual") #qual color palettes</span></span>
+<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb172-5"><a href="#cb172-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">'Accent'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ggplot_files/figure-html/unnamed-chunk-244-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="scale_color_gradient-for-continuous-variables" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="scale_color_gradient-for-continuous-variables"><span class="header-section-number">4.3.5</span> <code>scale_color_gradient()</code> for continuous variables</h3>
 <p>To color continuous variables, we need a <em>color gradient</em>, which is defined as “a gradual blending from one color to another” (<a href="https://xd.adobe.com/ideas/principles/web-design/gradient-color-definition/">Being Shady: How to Use Gradient Color in UX Design</a>). A <em>two-color gradient</em> transitions from one color to another (e.g., red to blue), where one end is called the <em>low end</em> of the gradient and the other is the <em>high end</em> of the gradient. There can also be other gradients between more than 2 colors (e.g., red to yellow to blue).</p>
 <p><strong>The <code>scale_color_gradient()</code> function</strong>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a>?scale_color_gradient</span>
-<span id="cb169-2"><a href="#cb169-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-3"><a href="#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
-<span id="cb169-4"><a href="#cb169-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_color_gradient</span>(</span>
-<span id="cb169-5"><a href="#cb169-5" aria-hidden="true" tabindex="-1"></a>  ...,</span>
-<span id="cb169-6"><a href="#cb169-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="st">"#132B43"</span>,</span>
-<span id="cb169-7"><a href="#cb169-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="st">"#56B1F7"</span>,</span>
-<span id="cb169-8"><a href="#cb169-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
-<span id="cb169-9"><a href="#cb169-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.value =</span> <span class="st">"grey50"</span>,</span>
-<span id="cb169-10"><a href="#cb169-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">guide =</span> <span class="st">"colourbar"</span>,</span>
-<span id="cb169-11"><a href="#cb169-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">aesthetics =</span> <span class="st">"colour"</span></span>
-<span id="cb169-12"><a href="#cb169-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb173"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true" tabindex="-1"></a>?scale_color_gradient</span>
+<span id="cb173-2"><a href="#cb173-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-3"><a href="#cb173-3" aria-hidden="true" tabindex="-1"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb173-4"><a href="#cb173-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_color_gradient</span>(</span>
+<span id="cb173-5"><a href="#cb173-5" aria-hidden="true" tabindex="-1"></a>  ...,</span>
+<span id="cb173-6"><a href="#cb173-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">low =</span> <span class="st">"#132B43"</span>,</span>
+<span id="cb173-7"><a href="#cb173-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">high =</span> <span class="st">"#56B1F7"</span>,</span>
+<span id="cb173-8"><a href="#cb173-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
+<span id="cb173-9"><a href="#cb173-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.value =</span> <span class="st">"grey50"</span>,</span>
+<span id="cb173-10"><a href="#cb173-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">guide =</span> <span class="st">"colourbar"</span>,</span>
+<span id="cb173-11"><a href="#cb173-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">aesthetics =</span> <span class="st">"colour"</span></span>
+<span id="cb173-12"><a href="#cb173-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Description (from help file)
@@ -2923,8 +2995,8 @@ $levels
 <li>The variable <code>diamonds$depth</code> is a continous variable</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> <span class="fu">select</span>(depth) <span class="sc">%&gt;%</span></span>
-<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_all</span>(<span class="at">.funs =</span> <span class="fu">list</span>(<span class="sc">~</span> <span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">min</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">max</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> <span class="fu">select</span>(depth) <span class="sc">%&gt;%</span></span>
+<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_all</span>(<span class="at">.funs =</span> <span class="fu">list</span>(<span class="sc">~</span> <span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">min</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="sc">~</span> <span class="fu">max</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
    mean    sd   min   max
@@ -2934,71 +3006,71 @@ $levels
 </div>
 <p>First, color scatterplot by <code>depth</code> using the default display palette:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
-<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb172-5"><a href="#cb172-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb172-6"><a href="#cb172-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb176"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb176-1"><a href="#cb176-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb176-2"><a href="#cb176-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
+<span id="cb176-3"><a href="#cb176-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb176-4"><a href="#cb176-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb176-5"><a href="#cb176-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb176-6"><a href="#cb176-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-242-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-250-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Next, let’s add <code>scale_color_gradient()</code> but we’ll manually insert the default values for <code>low</code> and <code>high</code> arguments:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb173"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb173-2"><a href="#cb173-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
-<span id="cb173-3"><a href="#cb173-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb173-4"><a href="#cb173-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb173-5"><a href="#cb173-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb173-6"><a href="#cb173-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb173-7"><a href="#cb173-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="at">low =</span> <span class="st">'#132B43'</span>, <span class="at">high =</span> <span class="st">'#56B1F7'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
+<span id="cb177-3"><a href="#cb177-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb177-4"><a href="#cb177-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb177-5"><a href="#cb177-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb177-6"><a href="#cb177-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb177-7"><a href="#cb177-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="at">low =</span> <span class="st">'#132B43'</span>, <span class="at">high =</span> <span class="st">'#56B1F7'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-244-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-252-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can use <code>scale_color_gradient()</code> to customize the color palette. This also accepts other arguments for labeling including <code>name</code> to specify the legend title and <code>labels</code> to customize the legend values:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
-<span id="cb174-3"><a href="#cb174-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb174-4"><a href="#cb174-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb174-5"><a href="#cb174-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb174-6"><a href="#cb174-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb174-7"><a href="#cb174-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="at">low =</span> <span class="st">'white'</span>, <span class="at">high =</span> <span class="st">'purple'</span>, <span class="at">name =</span> <span class="st">'Depth percentage'</span>, </span>
-<span id="cb174-8"><a href="#cb174-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">'%'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb178"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb178-2"><a href="#cb178-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> depth)) <span class="sc">+</span> </span>
+<span id="cb178-3"><a href="#cb178-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb178-4"><a href="#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb178-5"><a href="#cb178-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb178-6"><a href="#cb178-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb178-7"><a href="#cb178-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="at">low =</span> <span class="st">'white'</span>, <span class="at">high =</span> <span class="st">'purple'</span>, <span class="at">name =</span> <span class="st">'Depth percentage'</span>, </span>
+<span id="cb178-8"><a href="#cb178-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">'%'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-246-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-254-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="scale_color_manual-to-select-specific-colors" class="level3" data-number="4.3.5">
-<h3 data-number="4.3.5" class="anchored" data-anchor-id="scale_color_manual-to-select-specific-colors"><span class="header-section-number">4.3.5</span> <code>scale_color_manual()</code> to select specific colors</h3>
+<section id="scale_color_manual-to-select-specific-colors" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="scale_color_manual-to-select-specific-colors"><span class="header-section-number">4.3.6</span> <code>scale_color_manual()</code> to select specific colors</h3>
 <p>If we want to customize our graph by selecting specific colors we could use <code>scale_color_manual()</code>. We could specify colors by their name (e.g., “red”, “darkgreen”), rgb(), Number, and hex color code (<a href="https://r-graph-gallery.com/ggplot2-color.html">Dealing with colors in ggplot2</a>)</p>
 <p><strong>The <code>scale_color_manual()</code> function</strong>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb175"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a>?scale_color_manual</span>
-<span id="cb175-2"><a href="#cb175-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb175-3"><a href="#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
-<span id="cb175-4"><a href="#cb175-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_colour_manual</span>(</span>
-<span id="cb175-5"><a href="#cb175-5" aria-hidden="true" tabindex="-1"></a>  ...,</span>
-<span id="cb175-6"><a href="#cb175-6" aria-hidden="true" tabindex="-1"></a>  values,</span>
-<span id="cb175-7"><a href="#cb175-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">aesthetics =</span> <span class="st">"colour"</span>,</span>
-<span id="cb175-8"><a href="#cb175-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">waiver</span>(),</span>
-<span id="cb175-9"><a href="#cb175-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.value =</span> <span class="st">"grey50"</span></span>
-<span id="cb175-10"><a href="#cb175-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a>?scale_color_manual</span>
+<span id="cb179-2"><a href="#cb179-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-3"><a href="#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="co"># SYNTAX AND DEFAULT VALUES</span></span>
+<span id="cb179-4"><a href="#cb179-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_colour_manual</span>(</span>
+<span id="cb179-5"><a href="#cb179-5" aria-hidden="true" tabindex="-1"></a>  ...,</span>
+<span id="cb179-6"><a href="#cb179-6" aria-hidden="true" tabindex="-1"></a>  values,</span>
+<span id="cb179-7"><a href="#cb179-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">aesthetics =</span> <span class="st">"colour"</span>,</span>
+<span id="cb179-8"><a href="#cb179-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">waiver</span>(),</span>
+<span id="cb179-9"><a href="#cb179-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.value =</span> <span class="st">"grey50"</span></span>
+<span id="cb179-10"><a href="#cb179-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Description (from help file)
@@ -3014,49 +3086,49 @@ $levels
 <p>Let’s go back to our example scatterplot of the relationship between carat (x-axis) and price (y-axis) with color of points determined by the variable <code>color</code>.</p>
 <p>We can manually select colors by their name (<a href="https://r-graph-gallery.com/42-colors-names.html">An overview of color names in R</a>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb176"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb176-1"><a href="#cb176-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb176-2"><a href="#cb176-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb176-3"><a href="#cb176-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb176-4"><a href="#cb176-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb176-5"><a href="#cb176-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb176-6"><a href="#cb176-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb176-7"><a href="#cb176-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"darkcyan"</span>,</span>
-<span id="cb176-8"><a href="#cb176-8" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"beige"</span>,</span>
-<span id="cb176-9"><a href="#cb176-9" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>,</span>
-<span id="cb176-10"><a href="#cb176-10" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"darkslateblue"</span>,</span>
-<span id="cb176-11"><a href="#cb176-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"darkmagenta"</span>,</span>
-<span id="cb176-12"><a href="#cb176-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"darkslategrey"</span>,</span>
-<span id="cb176-13"><a href="#cb176-13" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"brown4"</span>),</span>
-<span id="cb176-14"><a href="#cb176-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb180"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb180-1"><a href="#cb180-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb180-2"><a href="#cb180-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb180-3"><a href="#cb180-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb180-4"><a href="#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb180-5"><a href="#cb180-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb180-6"><a href="#cb180-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb180-7"><a href="#cb180-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"darkcyan"</span>,</span>
+<span id="cb180-8"><a href="#cb180-8" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"beige"</span>,</span>
+<span id="cb180-9"><a href="#cb180-9" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>,</span>
+<span id="cb180-10"><a href="#cb180-10" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"darkslateblue"</span>,</span>
+<span id="cb180-11"><a href="#cb180-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"darkmagenta"</span>,</span>
+<span id="cb180-12"><a href="#cb180-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"darkslategrey"</span>,</span>
+<span id="cb180-13"><a href="#cb180-13" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"brown4"</span>),</span>
+<span id="cb180-14"><a href="#cb180-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-250-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-258-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>If we want to be more specific, we could manually select colors by their Hex color code (<a href="https://htmlcolorcodes.com/">Hex Code Selector</a>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb177-3"><a href="#cb177-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb177-4"><a href="#cb177-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb177-5"><a href="#cb177-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb177-6"><a href="#cb177-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb177-7"><a href="#cb177-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"#E73813"</span>,</span>
-<span id="cb177-8"><a href="#cb177-8" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"#E7B713"</span>,</span>
-<span id="cb177-9"><a href="#cb177-9" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"#F3EF10"</span>,</span>
-<span id="cb177-10"><a href="#cb177-10" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"#45B39D"</span>,</span>
-<span id="cb177-11"><a href="#cb177-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"#0F85C8"</span>,</span>
-<span id="cb177-12"><a href="#cb177-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"#850FC8"</span>,</span>
-<span id="cb177-13"><a href="#cb177-13" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"#B90FCD"</span></span>
-<span id="cb177-14"><a href="#cb177-14" aria-hidden="true" tabindex="-1"></a>                                ),</span>
-<span id="cb177-15"><a href="#cb177-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb181"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb181-2"><a href="#cb181-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb181-3"><a href="#cb181-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb181-4"><a href="#cb181-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb181-5"><a href="#cb181-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb181-6"><a href="#cb181-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb181-7"><a href="#cb181-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"#E73813"</span>,</span>
+<span id="cb181-8"><a href="#cb181-8" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"#E7B713"</span>,</span>
+<span id="cb181-9"><a href="#cb181-9" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"#F3EF10"</span>,</span>
+<span id="cb181-10"><a href="#cb181-10" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"#45B39D"</span>,</span>
+<span id="cb181-11"><a href="#cb181-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"#0F85C8"</span>,</span>
+<span id="cb181-12"><a href="#cb181-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"#850FC8"</span>,</span>
+<span id="cb181-13"><a href="#cb181-13" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"#B90FCD"</span></span>
+<span id="cb181-14"><a href="#cb181-14" aria-hidden="true" tabindex="-1"></a>                                ),</span>
+<span id="cb181-15"><a href="#cb181-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-252-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-260-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3067,16 +3139,16 @@ $levels
 <li><pre><code>First, let's plot without color.  </code></pre></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb180"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb180-1"><a href="#cb180-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb180-2"><a href="#cb180-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price)) <span class="sc">+</span> </span>
-<span id="cb180-3"><a href="#cb180-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb180-4"><a href="#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb180-5"><a href="#cb180-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb180-6"><a href="#cb180-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb184"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb184-1"><a href="#cb184-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb184-2"><a href="#cb184-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price)) <span class="sc">+</span> </span>
+<span id="cb184-3"><a href="#cb184-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb184-4"><a href="#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb184-5"><a href="#cb184-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb184-6"><a href="#cb184-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-254-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-262-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3085,7 +3157,7 @@ $levels
 <li><pre><code>Next, we investigate the variable `color` and see that it has seven values, D-J.</code></pre></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb182"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb182-1"><a href="#cb182-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> <span class="fu">count</span>(color)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb186"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb186-1"><a href="#cb186-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> <span class="fu">count</span>(color)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 2
   color     n
@@ -3103,20 +3175,20 @@ $levels
 <li><pre><code>Then, we create the object `diamond_colors` and assign the values (e.g., D-J) of the variable `color` to any hex color codes of our choosing. </code></pre></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb185"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb185-1"><a href="#cb185-1" aria-hidden="true" tabindex="-1"></a>diamond_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"#00a866"</span>,</span>
-<span id="cb185-2"><a href="#cb185-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"#c10c79"</span>,</span>
-<span id="cb185-3"><a href="#cb185-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"#ffd859"</span>,</span>
-<span id="cb185-4"><a href="#cb185-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"#fa5b3d"</span>,</span>
-<span id="cb185-5"><a href="#cb185-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"#5083f0"</span>,</span>
-<span id="cb185-6"><a href="#cb185-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"#9370db"</span>,</span>
-<span id="cb185-7"><a href="#cb185-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"#1b6770"</span>)</span>
-<span id="cb185-8"><a href="#cb185-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb185-9"><a href="#cb185-9" aria-hidden="true" tabindex="-1"></a>diamond_colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb189"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb189-1"><a href="#cb189-1" aria-hidden="true" tabindex="-1"></a>diamond_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"#00a866"</span>,</span>
+<span id="cb189-2"><a href="#cb189-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"E"</span> <span class="ot">=</span> <span class="st">"#c10c79"</span>,</span>
+<span id="cb189-3"><a href="#cb189-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"#ffd859"</span>,</span>
+<span id="cb189-4"><a href="#cb189-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"G"</span> <span class="ot">=</span> <span class="st">"#fa5b3d"</span>,</span>
+<span id="cb189-5"><a href="#cb189-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"#5083f0"</span>,</span>
+<span id="cb189-6"><a href="#cb189-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"I"</span> <span class="ot">=</span> <span class="st">"#9370db"</span>,</span>
+<span id="cb189-7"><a href="#cb189-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"J"</span> <span class="ot">=</span> <span class="st">"#1b6770"</span>)</span>
+<span id="cb189-8"><a href="#cb189-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-9"><a href="#cb189-9" aria-hidden="true" tabindex="-1"></a>diamond_colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        D         E         F         G         H         I         J 
 "#00a866" "#c10c79" "#ffd859" "#fa5b3d" "#5083f0" "#9370db" "#1b6770" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb187"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb187-1"><a href="#cb187-1" aria-hidden="true" tabindex="-1"></a>diamond_colors[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co">#select the first three values (D,E,F)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb191"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a>diamond_colors[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co">#select the first three values (D,E,F)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        D         E         F 
 "#00a866" "#c10c79" "#ffd859" </code></pre>
@@ -3126,73 +3198,73 @@ $levels
 <li><pre><code>Lastly, we add the new object `diamond_colors` to the values argument from the `scale_color_manual` function. </code></pre></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb190"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb190-1"><a href="#cb190-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb190-2"><a href="#cb190-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb190-3"><a href="#cb190-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb190-4"><a href="#cb190-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb190-5"><a href="#cb190-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb190-6"><a href="#cb190-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb190-7"><a href="#cb190-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> diamond_colors, <span class="co">#hex color code object we created</span></span>
-<span id="cb190-8"><a href="#cb190-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>) <span class="co">#name of legend</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb194"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb194-2"><a href="#cb194-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb194-3"><a href="#cb194-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb194-4"><a href="#cb194-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb194-5"><a href="#cb194-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb194-6"><a href="#cb194-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb194-7"><a href="#cb194-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> diamond_colors, <span class="co">#hex color code object we created</span></span>
+<span id="cb194-8"><a href="#cb194-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">'Diamond color'</span>) <span class="co">#name of legend</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-260-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-268-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="grayscale-palette-for-journal-manuscripts" class="level3" data-number="4.3.6">
-<h3 data-number="4.3.6" class="anchored" data-anchor-id="grayscale-palette-for-journal-manuscripts"><span class="header-section-number">4.3.6</span> Grayscale palette for journal manuscripts</h3>
+<section id="grayscale-palette-for-journal-manuscripts" class="level3" data-number="4.3.7">
+<h3 data-number="4.3.7" class="anchored" data-anchor-id="grayscale-palette-for-journal-manuscripts"><span class="header-section-number">4.3.7</span> Grayscale palette for journal manuscripts</h3>
 <p>Many journals require grayscale graphs or figures. You can use the <code>scale_color_grey()</code> function or the <code>scale_fill_grey()</code> function.</p>
 <p>For example, we can plot the relationship between parent income and 2011 student earnings separately by race/ethnicity using the <code>scale_color_grey()</code> function.</p>
 <p>The <code>start</code> and <code>end</code> arguments indicate the the starting and ending gray level in the palette where 0 indicates “black” and 1 indicates “white”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb191"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a>els_parphd <span class="sc">%&gt;%</span></span>
-<span id="cb191-2"><a href="#cb191-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> parent_income, <span class="at">y =</span> earn2011)) <span class="sc">+</span></span>
-<span id="cb191-3"><a href="#cb191-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="st">"jitter"</span>, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb191-4"><a href="#cb191-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_grey</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb195"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true" tabindex="-1"></a>els_parphd <span class="sc">%&gt;%</span></span>
+<span id="cb195-2"><a href="#cb195-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> parent_income, <span class="at">y =</span> earn2011)) <span class="sc">+</span></span>
+<span id="cb195-3"><a href="#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="st">"jitter"</span>, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb195-4"><a href="#cb195-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_grey</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-262-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-270-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb192"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a href="#cb192-1" aria-hidden="true" tabindex="-1"></a>els_parphd <span class="sc">%&gt;%</span></span>
-<span id="cb192-2"><a href="#cb192-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> parent_income, <span class="at">y =</span> earn2011)) <span class="sc">+</span></span>
-<span id="cb192-3"><a href="#cb192-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="st">"jitter"</span>, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb192-4"><a href="#cb192-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_grey</span>(<span class="at">start =</span> <span class="fl">0.5</span>, <span class="at">end =</span> <span class="fl">0.75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb196"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb196-1"><a href="#cb196-1" aria-hidden="true" tabindex="-1"></a>els_parphd <span class="sc">%&gt;%</span></span>
+<span id="cb196-2"><a href="#cb196-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> parent_income, <span class="at">y =</span> earn2011)) <span class="sc">+</span></span>
+<span id="cb196-3"><a href="#cb196-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="st">"jitter"</span>, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb196-4"><a href="#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_grey</span>(<span class="at">start =</span> <span class="fl">0.5</span>, <span class="at">end =</span> <span class="fl">0.75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-262-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-270-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>If we want to graph the frequency count of the race/ethnicity of students in our data set, we can use the <code>scale_fill_grey()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb193"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb193-1"><a href="#cb193-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
-<span id="cb193-2"><a href="#cb193-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb193-3"><a href="#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb193-4"><a href="#cb193-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb197-3"><a href="#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb197-4"><a href="#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-264-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-272-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb194"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
-<span id="cb194-2"><a href="#cb194-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb194-3"><a href="#cb194-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
-<span id="cb194-4"><a href="#cb194-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>(<span class="at">start =</span> <span class="fl">0.8</span>, <span class="at">end =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb198"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb198-1"><a href="#cb198-1" aria-hidden="true" tabindex="-1"></a>els_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb198-2"><a href="#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb198-3"><a href="#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> f1race_v2)) <span class="sc">+</span></span>
+<span id="cb198-4"><a href="#cb198-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>(<span class="at">start =</span> <span class="fl">0.8</span>, <span class="at">end =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-264-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-272-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3217,36 +3289,36 @@ $levels
 </ul>
 <p><strong>Example</strong>: Using preset theme <code>theme_minimal()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb195"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb195-2"><a href="#cb195-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb195-3"><a href="#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb195-4"><a href="#cb195-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb195-5"><a href="#cb195-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb195-6"><a href="#cb195-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb195-7"><a href="#cb195-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
-<span id="cb195-8"><a href="#cb195-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb199"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb199-2"><a href="#cb199-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb199-3"><a href="#cb199-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb199-4"><a href="#cb199-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb199-5"><a href="#cb199-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb199-6"><a href="#cb199-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb199-7"><a href="#cb199-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
+<span id="cb199-8"><a href="#cb199-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-266-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-274-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p><strong>Example</strong>: Using preset theme <code>theme_dark()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb196"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb196-1"><a href="#cb196-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb196-2"><a href="#cb196-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb196-3"><a href="#cb196-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb196-4"><a href="#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb196-5"><a href="#cb196-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb196-6"><a href="#cb196-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb196-7"><a href="#cb196-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
-<span id="cb196-8"><a href="#cb196-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dark</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb200"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb200-1"><a href="#cb200-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb200-2"><a href="#cb200-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb200-3"><a href="#cb200-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb200-4"><a href="#cb200-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb200-5"><a href="#cb200-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb200-6"><a href="#cb200-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb200-7"><a href="#cb200-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
+<span id="cb200-8"><a href="#cb200-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dark</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-268-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-276-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3259,27 +3331,27 @@ $levels
 </ul>
 <p><strong>Example</strong>: Using custom theme</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb197-3"><a href="#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb197-4"><a href="#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
-<span id="cb197-5"><a href="#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
-<span id="cb197-6"><a href="#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb197-7"><a href="#cb197-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
-<span id="cb197-8"><a href="#cb197-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb197-9"><a href="#cb197-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb197-10"><a href="#cb197-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb197-11"><a href="#cb197-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">'#444444'</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">'bold'</span>),</span>
-<span id="cb197-12"><a href="#cb197-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb197-13"><a href="#cb197-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'bold'</span>),</span>
-<span id="cb197-14"><a href="#cb197-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'bold'</span>),</span>
-<span id="cb197-15"><a href="#cb197-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb197-16"><a href="#cb197-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">'cm'</span>)</span>
-<span id="cb197-17"><a href="#cb197-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb201-2"><a href="#cb201-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb201-3"><a href="#cb201-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb201-4"><a href="#cb201-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Correlation between diamond carat and price'</span>) <span class="sc">+</span></span>
+<span id="cb201-5"><a href="#cb201-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Carat'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Price'</span>) <span class="sc">+</span></span>
+<span id="cb201-6"><a href="#cb201-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">prefix =</span> <span class="st">'$'</span>, <span class="at">suffix =</span> <span class="st">'K'</span>, <span class="at">scale =</span> <span class="fl">1e-3</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb201-7"><a href="#cb201-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'Spectral'</span>, <span class="at">name =</span> <span class="st">'Color'</span>) <span class="sc">+</span></span>
+<span id="cb201-8"><a href="#cb201-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb201-9"><a href="#cb201-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb201-10"><a href="#cb201-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb201-11"><a href="#cb201-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">'#444444'</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">'bold'</span>),</span>
+<span id="cb201-12"><a href="#cb201-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb201-13"><a href="#cb201-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'bold'</span>),</span>
+<span id="cb201-14"><a href="#cb201-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'bold'</span>),</span>
+<span id="cb201-15"><a href="#cb201-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb201-16"><a href="#cb201-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">'cm'</span>)</span>
+<span id="cb201-17"><a href="#cb201-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ggplot_files/figure-html/unnamed-chunk-270-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-278-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3316,29 +3388,29 @@ $levels
 </ul>
 <p><strong>Example</strong>: Exporting plot using <code>pdf()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb198"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb198-1"><a href="#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file</span></span>
-<span id="cb198-2"><a href="#cb198-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">'Rplot.pdf'</span>) <span class="co">#indicating the file type "pdf" and the name of the file "Rplot.pdf"</span></span>
-<span id="cb198-3"><a href="#cb198-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb198-4"><a href="#cb198-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
-<span id="cb198-5"><a href="#cb198-5" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb198-6"><a href="#cb198-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb198-7"><a href="#cb198-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
-<span id="cb198-8"><a href="#cb198-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb198-9"><a href="#cb198-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Close the file</span></span>
-<span id="cb198-10"><a href="#cb198-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb202"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file</span></span>
+<span id="cb202-2"><a href="#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">'Rplot.pdf'</span>) <span class="co">#indicating the file type "pdf" and the name of the file "Rplot.pdf"</span></span>
+<span id="cb202-3"><a href="#cb202-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-4"><a href="#cb202-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb202-5"><a href="#cb202-5" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb202-6"><a href="#cb202-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb202-7"><a href="#cb202-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb202-8"><a href="#cb202-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-9"><a href="#cb202-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Close the file</span></span>
+<span id="cb202-10"><a href="#cb202-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Example</strong>: Exporting plot using <code>jpeg()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb199"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file</span></span>
-<span id="cb199-2"><a href="#cb199-2" aria-hidden="true" tabindex="-1"></a><span class="fu">jpeg</span>(<span class="st">'Rplot.jpg'</span>, <span class="at">width =</span> <span class="dv">350</span>, <span class="at">height =</span> <span class="dv">350</span>)</span>
-<span id="cb199-3"><a href="#cb199-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb199-4"><a href="#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
-<span id="cb199-5"><a href="#cb199-5" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
-<span id="cb199-6"><a href="#cb199-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
-<span id="cb199-7"><a href="#cb199-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
-<span id="cb199-8"><a href="#cb199-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb199-9"><a href="#cb199-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Close the file</span></span>
-<span id="cb199-10"><a href="#cb199-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb203"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file</span></span>
+<span id="cb203-2"><a href="#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="fu">jpeg</span>(<span class="st">'Rplot.jpg'</span>, <span class="at">width =</span> <span class="dv">350</span>, <span class="at">height =</span> <span class="dv">350</span>)</span>
+<span id="cb203-3"><a href="#cb203-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-4"><a href="#cb203-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb203-5"><a href="#cb203-5" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> </span>
+<span id="cb203-6"><a href="#cb203-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> carat, <span class="at">y =</span> price, <span class="at">color =</span> color)) <span class="sc">+</span> </span>
+<span id="cb203-7"><a href="#cb203-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb203-8"><a href="#cb203-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-9"><a href="#cb203-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Close the file</span></span>
+<span id="cb203-10"><a href="#cb203-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
