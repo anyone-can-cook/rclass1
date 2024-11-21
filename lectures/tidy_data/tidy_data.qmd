@@ -75,11 +75,8 @@ Creating analysis datasets often require **changing the organizational structure
 Two common ways to change the organizational structure of data:
 
 1.  Use `group_by()` to perform calculations separately within groups and then use `summarise()` to create an object with one observation per group.
-
-**Examples:**  
-
-1. Creating objects containing summary statistics that are basis for tables and graphs  
-    -   Creating student-transcript level GPA variable from student-transcript-course level data 
+    - Creating objects containing summary statistics that are basis for tables and graphs
+    - For example, creating student-transcript level GPA variable from student-transcript-course level data 
 
 2. **Reshape** your data-- called **tidying** in the R tidyverse world-- by transforming columns (variables) into rows (observations) and vice versa 
     -   This is the focus of this lecture, where we will look at transforming **untidy** data into **tidy** data.
@@ -87,7 +84,7 @@ Two common ways to change the organizational structure of data:
 **Working with tidy data has many benefits:**
 
 -   It is a consistent way of storing data
--   R is also well-suited for working with tidy data due to its vectorized nature. There's also many packages in `tidyverse` that are designed to work with tidy data, such as `tidyr`.
+-   R is also well-suited for working with tidy data due to its vectorized nature -- that is, each variable is an atomic vector, where each element is an observation for that variable. There's also many packages in `tidyverse` that are designed to work with tidy data, such as `tidyr`.
 
 Show index and example datasets in `tidyr` package:
 
