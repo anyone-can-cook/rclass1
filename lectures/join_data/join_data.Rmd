@@ -309,7 +309,7 @@ nls_stu %>% group_by(id) %>% summarise(n_per_key=n()) %>% ungroup %>% count(n_pe
 
 
 <br>
-<details><summary>**Ozan's way of thinking about foreign key**</summary>
+<details><summary>**Ozan's way of thinking about foreign key** [probably best to ignore because I over-complicate things and get myself confused!!!] </summary>
 
 Personally, I find the concept __foreign key__ a little bit slippery. Here is how I wrap my head around it: 
 
