@@ -1,6 +1,6 @@
 ---
 title: 'EDUC 260A: Introduction to Programming and Data Management'
-format: docx
+format: pdf
 toc: true
 toc-depth: 3
 toc_float: yes
@@ -375,16 +375,16 @@ Below is an overview of course topics. Topics and schedule are subject to change
 - Understand the class and attributes of R objects
 - Investigate R object class and attributes, work with factor variables, label variables and values of a dataframe using the `labelled` package
 
-**Week 7: Strings and dates**
-
-- Work with strings and date/datetime objects
-- Understand string basics, manipulate strings using `stringr` functions, work with dates and times using the `lubridate` package
-    
-**Week 8: Create plots w/ ggplot**
+**Week 7: Create plots w/ ggplot**
 
 - Understand the layered grammar of graphics for visualizing data with ggplot2
 - Make plots with the `ggplot` function (e.g., bar plots, scatter plots)
 - Customize plots through color palettes, labels, legends, etc.
+    
+**Week 8: Strings and dates**
+
+- Work with strings and date/datetime objects
+- Understand string basics, manipulate strings using `stringr` functions, work with dates and times using the `lubridate` package
 
 **Week 9: Tidy data**
 
