@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
  - Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.
 
- - Plug in your name and Github username in the [shared spreadsheet](ADD LINK TO GOOGLE SHEET HERE)
+ - Plug in your name and Github username in the [shared spreadsheet](https://docs.google.com/spreadsheets/d/1TjRvXQEkUzZpYaq5WyraD7IvRFJJ4fkF749W9dCyzMQ/edit?usp=sharing)
 
 # 2. Install R
 
@@ -39,11 +39,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
  - Click "install R for the first time"
 
- - Click "Download R 4.4.1 for Windows"
+ - Click "Download R 4.6.1 for Windows"
 
 \- Select "Download R for macOS"
 
- - Click either "R-4.4.1-arm64.pkg" or "R-4.4.1-x86_64.pkg" depending on the version of your Mac.
+ - Click either "R-4.6.1-arm64.pkg" or "R-4.6.1-x86_64.pkg" depending on the version of your Mac.
 
 # 3. Install RStudio
 
@@ -51,11 +51,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 \- Scroll to the bottom of the page
 
-\- Select "RSTUDIO-2024.04.2-764.EXE" for Windows users
+\- Select "RStudio-2026.08.2-200.exe" for Windows users
 
-\- Select "RSTUDIO-2024.04.2-764.DMG" for Mac users
+\- Select "RStudio-2026.08.2-200.dmg" for Mac users
 
-*Note: The newest Rstudio works on macOS 12 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/).*
+*Note: The newest Rstudio works on macOS 14 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/).*
 
 <!-- # 4. Create a Quarto file that "renders" an HTML document in RStudio
 
