@@ -57,7 +57,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *Note: The newest Rstudio works on macOS 12 or later. If you have issues installing and your Mac has an older operating system, you may need to install an older version of RStudio [here](https://dailies.rstudio.com/version/2022.07.2+576.pro12/).*
 
-# 4. Create a Quarto file that "renders" an HTML document in RStudio
+<!-- # 4. Create a Quarto file that "renders" an HTML document in RStudio
 
 \- What do we mean by this?
 
@@ -95,7 +95,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
  - **We do not expect you to complete the entire first chapter.** Just spend some time with this course to get a better sense of R before the first class. This course assumes no R experience, so it is okay if you do not complete the first chapter.
 
-<!--
+
 # 6. Install tinytex
 
 \- Why are we asking you to do this?
