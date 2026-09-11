@@ -171,4 +171,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 --> 
 
-*Disclaimer: We consist of both Mac and Windows users. Some of us are better at assisting with Mac issues as opposed to Windows issues and vice versa. We will do our best in assisting with any issues regardless if it's a Mac or Windows.*
+*Disclaimer: We will do our best in assisting with any issues regardless if it's a Mac or Windows.*
