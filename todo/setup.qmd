@@ -1,5 +1,5 @@
 ---
-title: "EDUC 260A: Data Management and Manipulation in R"
+title: "EDUC 260A/PUB PLC 276A: Introduction to Programming and Data Management"
 
 subtitle: "Software to install before first class meeting"
 
@@ -7,12 +7,9 @@ format: pdf
 
 urlcolor: blue
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
 ------------------------------------------------------------------------
 
 ### Please skim through all of the instructions before getting start.
@@ -23,11 +20,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 \- Follow these instructions to set up an account.
 
- - Go to https://github.com/ and sign up for GitHub. Please consider including your first and/or last name as part of your username so that we can easily identify your work, questions, and comments.
+ - Go to https://github.com/ and sign up for GitHub. When creating your account, use an email address that you regularly access and expect to retain. GitHub will use this address for account verification, security notifications, and repository invitations. Also, please consider including your first and/or last name as part of your username so that we can easily identify your work, questions, and comments. 
 
  - Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.
 
- - Plug in your name and Github username in this [google form](https://forms.gle/sjLwN4um1mJQKTP89)
+ - Plug in your name and Github username in this [google form](https://forms.gle/sjLwN4um1mJQKTP89).
 
 # 2. Install R
 
