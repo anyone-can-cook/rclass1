@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
  - Once you have successfully created a GitHub account, you will receive an email to verify your account. Follow the instructions on the email.
 
- - Plug in your name and Github username in the [shared spreadsheet](https://forms.gle/sjLwN4um1mJQKTP89)
+ - Plug in your name and Github username in this [google form](https://forms.gle/sjLwN4um1mJQKTP89)
 
 # 2. Install R
 
