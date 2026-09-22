@@ -270,8 +270,8 @@ q3_8b <-
 
 ## Create a GitHub issue ----
   # 2 points
-  # Go to the class repository https://github.com/anyone-can-cook/rclass1_student_issues_f24/issues and create a new issue.
-  # Refer to rclass1 student issues readme https://github.com/anyone-can-cook/rclass1_student_issues_f24/blob/main/README.md 
+  # Go to the class repository https://github.com/anyone-can-cook/rclass1_student_issues_f26 and create a new issue.
+  # Refer to rclass1 student issues readme https://github.com/anyone-can-cook/rclass1_student_issues_f26/blob/main/README.md
   # for instructions on how to post questions or reflections.
   # You are also required to respond to at least one issue posted by another student.
   
