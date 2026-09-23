@@ -1,7 +1,7 @@
 ---
-title: "Software Installation and Knitting Problems"
+title: "Commonly Encountered Issues"
 author: ""
-date: "9/30/2019"
+date: "Fall 2026"
 output: pdf_document
 urlcolor: blue
 ---
@@ -10,34 +10,32 @@ urlcolor: blue
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 1. ly1enc error
+# 1. Data won't load / "cannot open URL"
 
-- Error: __! Package fontenc Error: Encoding file `ly1enc.def' not found.__
+- Error: something like __"cannot open URL '...'"__ or __"cannot open the connection"__ on a line that loads data, e.g. `read.csv(...)`, `load(url(...))`, or `read_dta(...)`.
 
-```{r pressure, echo=FALSE, fig.cap="ly1enc error", out.width = '60%', fig.pos = 'h', fig.align = 'center'}
-knitr::include_graphics("ly1enc_error.png")
-```
+- Cause: the problem sets load their data directly from a web link, so you must be **connected to the internet** when you run them. Occasionally a campus network or VPN will block the data link.
 
-- Solution: run "tinytex::tlmgr_install('ly1')"
+- Solution:
+    - Confirm you have an active internet connection.
+    - If you are on a VPN or a restricted campus network, try disconnecting from it and running the line again.
+    - Double-check that you have not changed the URL in the provided code — it should be left exactly as given.
 
+# 2. "could not find function"
 
-reference: [Link](https://stackoverflow.com/questions/56219404/rmarkdown-does-not-work-with-raleway-latex-package)
+- Error: __"could not find function"__ followed by a function name, e.g. `could not find function "mutate"` or `could not find function "%>%"`.
 
+- Cause: the package that function comes from has not been loaded in your current session. This usually happens when the `library()` lines at the top of the script were not run, or the script was run out of order.
 
-# 2. picture error
+- Solution:
+    - Run the `library()` lines at the **top** of the script first (e.g. `library(tidyverse)`), then run the rest in order.
+    - Remember that restarting R clears all loaded packages, so you must re-run the `library()` lines each session.
+    - If R says the package itself is not installed, install it once with `install.packages("packagename")` (for example `install.packages("tidyverse")`), then load it with `library()`.
 
-- Error: __! Unable to load picture or PDF file 'pane_layout.png'.__
- 
-```{r , echo=FALSE, fig.cap="picture error", out.width = '60%', fig.pos = 'h', fig.align = 'center'}
-knitr::include_graphics("picture_error.png")
-```
-
-- Solution: download "Images" file from [Link](https://ozanj.github.io/rclass/lectures/lecture1/images.zip); unzip and save these files in the same folder you saved the lectures 
- 
 # 3. X11/XQuartz error [Mac users only]
 
 - If you have a newer version of Mac or have recently upgraded to a newer version, you may need to reinstall [XQuartz](https://www.xquartz.org/). See the [R download page for Mac OS X](https://cran.r-project.org/bin/macosx/) for more information.
 
-# 4. Files stored in Desktop/Documents that's backed using iCloud [Mac users only]
+# 4. Files stored in Desktop/Documents that's backed up using iCloud [Mac users only]
 
 - If you are storing your files in the **Desktop** or **Documents** folder, you may run into issues when trying to refer to these paths because these folders are stored on iCloud by default. To resolve this issue, you may want to disable iCloud as described [here](https://support.apple.com/en-us/HT206985).
