@@ -69,7 +69,7 @@ I don't find this definition particularly helpful. I think of *R* as:
 
 **Installing and Loading R packages**
 
-You only need to install a package once. To install an R package use `install.package()` function.
+You only need to install a package once. To install an R package use `install.packages()` function.
 
 ```{r warning=FALSE, message=FALSE}
 #install.packages("tidyverse")
