@@ -1,4 +1,4 @@
-## Problemset Title ----
+## Problem Set Title ----
 ## [ PROJ ] < Problem set 1 >
 ## [ FILE ] < lastname_firstname_problemset1.R >
 ## [ AUTH  ] < Your name / GitHub handle >
@@ -32,7 +32,7 @@
 
   # Warning: Creating a new R project can close any files currently open in R Studio
   # including this R script! Once you create the R project, you should re-open this `problemset1.R` file
-  # inside the ps1 R project. You can check your current open project in the top right corner of Rstudio 
+  # inside the ps1 R project. You can check your current open project in the top right corner of RStudio 
   # (There should be a button with a pull-down menu that says "ps1")
 
   # Q1.2 Save this R script ----  
@@ -46,7 +46,7 @@
 
   # Q1.3 ----
   # 1 point each
-  # Let's look at our files and workding directory.
+  # Let's look at our files and working directory.
   # Run `getwd()` and then run `list.files()` below this comment. You should see a path to
   # the ps1 folder you created, and you should then see the .R script and the ps1.Rproj file.
   # (You might have other files saved here eventually. That's ok.)
@@ -155,12 +155,17 @@ q2_7c <-
 age <- 
 
   # Q3.2. ----
+  # 1 point
   # Apply the `typeof()`, `length()`, and `str()` functions to the object `age`.
   # When you know the type length and structure, assign the three answers to
   # an object named `q3_2` using `c()` in this order:
   # The type of `age` as a character.
   # The length of `age` as a number.
   # The class of `age` as a character.
+
+  # Note: str() abbreviates some class names in its output. When assigning your
+  # answers, write out the full class name. For example, use "numeric" rather
+  # than "num" and "character" rather than "chr".
 
 
 q3_2 <- 
@@ -169,7 +174,7 @@ q3_2 <-
   # 1 point
   # You stored the length of `age` as a number (without quotes) to `q3_2` in the question above. 
   # Now inspect it within the q3_2 object. What type/class is it inside of the `q3_2` object?
-  # Assign your answer in one word to an object named `q3_2a`.
+  # Assign your answer in one (unabbreviated) word to an object named `q3_2a`.
 
 q3_2a <- 
 
@@ -184,7 +189,7 @@ q3_3 <-
   # 1 point
   # This question is in three parts. You will assign those answers, in order, 
   # as character elements in a vector as the final answer. 
-  # Run the `?sum` commnd. 
+  # Run the `?sum` command 
   # 1) What is the one and only "argument" in the sum() function? 
   # 2) What is the default value of this argument?
   # 3) Yes or no: would different values of this argument change the output of `sum(age)`? 
@@ -231,13 +236,13 @@ q3_6 <-
 
   # What numeric value do mathematical calculations in R assign to `TRUE` values? 
   # What do they assign to `FALSE` values? 
-  # Assign answers as a numeric vector to an object named `q3_6`. 
+  # Assign answers as a numeric vector to an object named `q3_7`. 
   
 q3_7 <- 
 
   # Q3.8. ---- 
   # 1 point each
-  # Run the ?mean command and read the help file. In an object named `q3_8` 
+  # Run the ?mean command and read the help file. In an object named `q3_8a` 
   # assign a character vector with the three main argument names of the `mean()` function
   # in the order that they appear. 
   # (do not include the generalized `...` argument)
@@ -286,4 +291,4 @@ issue <-
 reply <- 
 
 ## Submit problem set on Canvas ----
-  # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset2.R).
+  # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset1.R).
