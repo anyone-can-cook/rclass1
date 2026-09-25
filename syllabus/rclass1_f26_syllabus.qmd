@@ -23,7 +23,11 @@ subtitle: Fall 2026
 ---
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
-library(knitr); library(flextable); library(tidyverse); library(officer)
+library(knitr)
+library(flextable)
+library(tidyverse)
+library(officer)
+library(kableExtra)
 ```
 
 
@@ -134,12 +138,13 @@ The instructor's and teaching assistants' weekly office hours are listed below. 
 
 ## Teaching assistant
 
-**Name**  
+**Jada Sims**  
 
-- Pronouns: 
-- Email: 
-- Office hours:
-  - Zoom office hours: 
+- Pronouns: she/her/hers
+- Email: [jadasims@g.ucla.edu](mailto:jadasims@g.ucla.edu)
+- Note: I will try my best to answer emails within 24 hours. However, I will not be available to answer problem set questions after 5pm on Thursday.
+- Office hours: 
+  - Zoom office hours: Mondays & Thursdays, 1:00 pm - 2:00 pm, zoom [link](https://ucla.zoom.us/j/93047249632)
   - And by appointment
 
 # Course learning goals
@@ -229,6 +234,16 @@ A general strategy recommended for completing the problem sets is as follows:
     - e.g., for a problem set submitted at 10AM on Monday, the max grade becomes 98%
     - e.g., for a problem set submitted at 10AM on Tuesday, the max grade becomes 97%
   - For late submissions due to an unexpected emergency, you will not lose points. Please contact the instructor and/or TAs and we will work it out together.  
+  
+**Autograder-assisted grading policies**
+
+Problem-set grading will be assisted by an autograder that checks whether students’ code and required objects meet the specifications provided in each problem set. The autograder promotes consistent grading across submissions, but it will not be the sole basis for assigning grades. The instructional team will review the results and look more closely at submissions when the autograder identifies a possible issue.
+
+Each problem set will provide detailed instructions, including the required object names and the type of value each object should contain. Students are expected to follow these instructions carefully.
+
+We recognize that an autograder may occasionally fail to recognize a correct response or may not capture the full quality of a student’s work. If you believe your problem set was graded incorrectly, email the teaching assistant within four days of receiving your grade. In your email, identify the problem set and specific question you would like reviewed and briefly explain why you believe the answer may have been graded incorrectly. The teaching assistant will review the submitted file and make any appropriate adjustment.
+
+Grade-review requests are intended to correct possible grading or autograder errors. Points generally will not be restored when the submitted file did not follow the stated instructions or used incorrect or missing object names.
 
 ## Grading scale
 
