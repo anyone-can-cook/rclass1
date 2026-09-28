@@ -10,6 +10,8 @@
   # Learning how to work with different object types will be very useful in the coming weeks and will help you 
   # understand the underlying structure of any data you are working with. While this problem set is fairly short, 
   # we want you to become familiar with these concepts -- which are fundamental to data management and working with R.
+  
+rm(list = ls()) # remove all objects from the Global Environment
 
 ## Question 1: Investigating objects, Base R ----
 
@@ -17,56 +19,50 @@
   # 1 point
   # load the data using the following URL: 
   # https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData
-  # remember to use the url() function embedded inside the load() function.
-  # this will create the object 'df_school_all' in your R global environment
-
-rm(list = ls()) # remove all objects
+  # Hint: use the url() function embedded inside the load() function.
+  # loading the file will create an object named df_school_all in your Global Environment.
 
 
 
-  # Answer the following questions about the object `df_school_all` by running the appropriate R commands in the 
-  # space below. Use the the appropriate R functions to investigate the object. 
-  # You must also assign the output of the R command to a new object once you know your code works. 
-  # We will always tell you what to name this object. This is necessary for our grading code to work!
-  # The first question will be answered for you to show how it works.
+  # Now, answer the following questions about the object `df_school_all` by running the appropriate R commands. 
+  # Make sure to store the result in the object specified to receive credit. 
+  # Note: The first question is answered for you and shows two correct options to answer the question.
 
   # What "type" of object is `df_school_all`?
 
 typeof(df_school_all)
-q1_x <- typeof(df_school_all) # assign your code
-q1_x <- "list" # or assign the literal output from typeof()
+q1_x <- typeof(df_school_all) # option 1 is to assign your code to the object
+q1_x <- "list" # option 2 is to assign the literal output from typeof() to the object
 
   # Q1.2 ----
   # 1 points
   # What is the "length" of the object `df_school_all`? 
-  # What does this specific value of length refer to in one word? 
-  # Assign your two answers to objects named `q1_2a` and `g1_2b`, respectively. 
-  # Make sure `q1_2b` is assigned as a string/text data type
 
 q1_2a <- 
+  
+  # When length() is applied to df_school_all, it returns the number of ______ in the object. 
+  # Fill in the blank using one word and make sure `q1_2b` is assigned as a string/text data type.
+
 q1_2b <- 
 
   # Q1.3 ----
   # 1 point
   # How many "rows" are in the object `df_school_all`? 
-  # What does each row represent, in one word? 
-  # Assign your two answers to object named `q1_3a` and `q1_3b`, respectively.
-	# Make sure `q1_3b` is assigned as a string/text data type
 
 q1_3a <- 
+  
+  # Each row represents a ______ in df_school_all.
+  # Fill in the blank using one word and make sure `q1_2b` is assigned as a string/text data type.
+
 q1_3b <- 
 
-##
-## In the space below, use the `str()` function to investigate the contents of `df_school_all` ----
-##
 
+## Use the `str()` function to further investigate the contents of `df_school_all` and 
+## continue with the next set of sub-questions below. For each question assign your 
+## ONE WORD answer as a character object using single or double quotation marks.
+  
+str(df_school_all) # code given to you
 
-  # based on the output of str() above, answer the following questions with a ONE WORD answer 
-  # Assign your answer to an object named `q1_x` like this:
-
-q1_x <- "answer"
-
-  # Do not forget to assign your one word answer as a character object by using single or double quotation marks.
 
   # Q1.4 ----
   # 1 point
@@ -89,9 +85,9 @@ q1_5 <-
 
 q1_6 <- 
 
-### These questions refer to the variable `school_type` within the object `df_school_all`. ----
-  # For the first two questions, write the appropriate R function to investigate this variable,
-  # Then assign that line of code to a named object again so we can grade your answer. 
+## The next set of sub-questions refer to the variable `school_type` within the object `df_school_all`
+## For the first two sub-questions, write the appropriate R function to investigate this variable,
+## then assign that line of code to a named object again so we can grade your answer. 
 
   # Q1.7 ----
   # 1 point
@@ -102,15 +98,16 @@ q1_7 <-
   
   # Q1.8 ----
   # 1 point
-  #   What is the "length" of `school_type`? 
+  # What is the "length" of `school_type`? 
   # Assign your answer to an object named `q1_8`.
 
 q1_8 <- 
 
   # Q1.9 ----
   # 1 point
-  # In one word, what part of the data frame does this specific value of length() refer to?
-  # Assign your answer as a character data type to an object named `q1_9`.
+  # For the variable school_type, the value returned by length() represents the
+  # number of __________ in the variable.
+  # Fill in the blank and assign your one-word answer as a character string to an object named q1_9.
 
 q1_9 <- 
 
@@ -120,6 +117,11 @@ q1_9 <-
   # 1) no `useNA` argument
   # 2) `useNA = "ifany"`
   # 3) `useNA = "always"`
+
+# Hint: run the code below to lean mroe about the `table()` function
+?table()
+
+
 
 
 
@@ -171,10 +173,10 @@ head(df_school_all, n = 5)
 
 
 
-### In this question we will use the `[]` to subset the atomic vector `vec`: ----
+### In this set of sub-questions we will use the `[]` to subset the atomic vector `vec`: ----
   # For your answers, you should test your line of code in the space below the prompt
   # Once you know the right answer, you must assign the line of code to a q2_x object again
-  # like this: q2_x <- vec[x,y] etc. ...
+  # like this: q2_x <- vec[...] etc. ...
 
   # Q2.1 ----
   # 1 point
@@ -205,7 +207,7 @@ q2_3 <-
 
 q2_4 <- 
 
-### In these questions we will use the `[]` (single brackets) to subset a list/data frame: ----
+### In this set of sub-questions we will use the `[]` (single brackets) to subset a list/data frame: ----
   # For your answers, you should test your line of code in the space below the prompt
   # Once you know the right answer, you must assign the line of code to a q2_x object.
 
@@ -246,7 +248,7 @@ q2_8 <-
 q2_9 <- 
 
 
-### In these questions we will use `[]`, `[[]]`, and `$` to subset a list/data frame: ----
+### In In this set of sub-questions we will use `[]`, `[[]]`, and `$` to subset a list/data frame: ----
   # Pay close attention to how we ask you to subset in each question
 
   # Q2.10 ----
@@ -258,7 +260,7 @@ q2_10 <-
 
   # Q2.11 ----
   # 1 point
-  # What is the data type of `list[[1]]? **ANSWER:** It is an integer vector
+  # What is the data type of `list[[1]]? 
   # Assign this character answer to an object named `q2_11`
 
 q2_11 <- 
@@ -295,9 +297,9 @@ q2_15 <-
 
   # Q3.1 - q3.3 ----
   # 3 points
-  # Using the `mean()` function, calculate the mean of `num_free_lunch` three times 
-  # by subsetting with `[]`, `[[]]`, and `$`, respectively. 
-  # remember to assign each of the lines of code to objects named `q3_1`, `q3_2`, and `q3_3`.
+  # Using the `mean()` function, attempt to calculate the mean of `num_fr_lunch` in three ways: 
+  # by subsetting with `[]`, `[[]]`, and `$`, respectively (Use na.rm = TRUE in each calculation).
+  # Assign each of the lines of code to objects named `q3_1`, `q3_2`, and `q3_3`.
 
 q3_1 <- 
 q3_2 <- 
@@ -305,7 +307,7 @@ q3_3 <-
 
   # Q3_4 ----
   # 1 point
-  # Which of the three lines of code above is bugged?
+  # Which of the three lines of code above gave you a Warning message?
   # Choose 1 for q3_1, 2 for q3_2, and 3 for q3_3.
   # Submit your answer as an object named q3_4 with your answer as a numeric value 1, 2, or 3.
 
@@ -321,8 +323,8 @@ q3_5 <-
   # Q3_6 ----
   # 1 point
   # What two types of vectors are actually compatible with the mean function?
-  # Assign your answer to an object named `q3_5 `with your answer as a character vector:
-  # E.g.: q3_5 <- c("type1","type2"). 
+  # Assign your answer to an object named `q3_6 `with your answer as a character vector:
+  # E.g.: q3_6 <- c("type1","type2"). 
   # For our grading code to work, the two types should be entered in alphabetical order :)
 
 q3_6 <- 
@@ -344,5 +346,5 @@ issue <- ""
 
 reply <- ""
 
-## Submit problem set ----
+## Submit problem set on Canvas ----
   # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset2.R).
