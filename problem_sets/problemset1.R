@@ -190,7 +190,7 @@ q3_3 <-
   # This question is in three parts. You will assign those answers, in order, 
   # as character elements in a vector as the final answer. 
   # Run the `?sum` command 
-  # 1) What is the one and only "argument" in the sum() function? 
+  # 1) What is the the only argument aside from the ... argument in the sum() function? 
   # 2) What is the default value of this argument?
   # 3) Yes or no: would different values of this argument change the output of `sum(age)`? 
   # Assign your three answers to an object named `q3_4`.
