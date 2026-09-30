@@ -1,0 +1,438 @@
+---
+title: 'R for Social Sciences: Data Management and Programming for Quantitative Research'
+subtitle: "EDUC [number TBD] — Proposed undergraduate syllabus"
+# To switch output, comment out the pdf block and uncomment the html block.
+format:
+  pdf:
+    pdf-engine: xelatex
+    documentclass: article
+    papersize: letter
+    fontsize: 11pt
+    geometry: margin=1in
+    colorlinks: true
+    urlcolor: blue
+  # html:
+  #   theme: default
+  #   toc-location: left
+  #   grid:
+  #     sidebar-width: 300px
+  #     body-width: 1100px
+  #     margin-width: 100px
+toc: true
+toc-depth: 2
+number-sections: true
+highlight-style: tango
+---
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+library(knitr)
+library(flextable)
+library(tidyverse)
+library(officer)
+```
+
+
+```{r echo=FALSE, out.width="25%", fig.align='right', eval=FALSE}
+knitr::include_graphics("../web/images/anyone_can_cook.png")
+```
+
+\newpage
+
+# Course information
+
+| Item | Details |
+|---|---|
+| Course number | EDUC [number TBD] |
+| Course level | Upper division, undergraduate |
+| Offering term | TBD |
+| Units | 4 (proposed; pending confirmation) |
+| Instructional hours | Two hours per week |
+| Format | Online: asynchronous course materials and weekly synchronous Zoom meetings |
+| Weekly meeting | Day and time TBD (Pacific time) |
+| Grading basis | Letter grades only |
+| Enrollment cap | TBD |
+| Prerequisites | None; no prior programming experience required |
+| Class website | <https://anyone-can-cook.github.io/rclass1/> |
+| Student questions and discussion | Course GitHub issues repository: TBD |
+| Class Zoom link | TBD |
+
+# Course description
+
+## Short description (for registrar)
+
+Data management and programming methods for quantitative research using R. Understanding data as objects and developing programming foundations to investigate, manipulate, and analyze them. Integrating conceptual reasoning and programming to produce transparent, reproducible, analysis-ready datasets. No prior programming experience required.
+
+## Extended description
+
+Lecture, two hours. Most statistics courses teach students to analyze datasets that have already been prepared. In actual research, data are often messy, incomplete, and contain errors. Researchers must investigate their structure and quality, diagnose problems, and transform them into datasets that support statistical analysis. Students learn to reason systematically about how data are currently structured and how they should be structured to answer a particular research question. This includes identifying the unit of analysis, understanding what each row and column represents, examining what kind of information each variable contains and how it is stored, and recognizing relationships across files. Once they understand both the individual pieces and the larger structure, students plan the necessary transformations and write R code to acquire, clean, combine, reshape, and manipulate data, construct variables, and create basic visualizations. Foundational programming concepts—including objects, data types, classes, functions, and conditional operations—serve as tools for understanding how information is represented and for executing and checking transformations. Emphasis on integrating conceptual reasoning, systematic data management, and programming to produce transparent, reproducible, analysis-ready datasets. Weekly problem sets, with opportunities for collaboration. No prior programming experience required. Letter grading only.
+
+**DataX Initiative**
+
+This class was created in collaboration with [UCLA's DataX initiative](https://datax.ucla.edu/) to make data science accessible to the UCLA community. The course encourages students to consider the social and ethical implications of data use and provides a welcoming space for students from across the university.
+
+# Office hours
+
+The instructor's and teaching assistants' weekly office hours are listed below. If you would like to schedule a 1:1 appointment with someone from the instructional team, please email them 48 hours in advance.   
+
+## Instructional team
+
+**Ozan Jaquette**  
+
+- Pronouns: he/him/his
+- Office: Moore Hall, room 3038
+- Email: [ozanj@ucla.edu](mailto:ozanj@ucla.edu)
+- Office hours:
+  - Zoom office hours: Day, time, and link TBD
+  - And by appointment (afternoons)
+
+## Teaching assistant
+
+- Name: TBD
+- Email: TBD
+- Office hours and Zoom link: TBD
+- Additional appointments: By arrangement
+
+# Course learning goals
+
+By the end of the course, students will be able to:
+
+1. Reason about data structure in relation to a research question.
+    - Identify the unit of analysis and what each row and column represents.
+    - Recognize relationships across files and plan transformations needed to create an analysis dataset.
+2. Use foundational R programming concepts to investigate and manipulate data as objects.
+    - Explain and inspect object types, classes, and attributes.
+    - Use functions and conditional operations to execute and check transformations.
+    - Use both Base R and tidyverse approaches to data manipulation.
+3. Investigate data patterns and diagnose data-quality problems.
+    - Sort data and select observations and variables to examine structure and check variable construction.
+    - Create summary statistics to identify potential errors.
+4. Construct variables using calculations across columns and processing across rows.
+5. Visualize data using ggplot2 and customize plots through color palettes, labels, line shapes, and other features.
+6. Combine datasets by joining (merging) and appending (stacking), and check the results.
+7. Change the organizational structure of datasets by summarizing observations by group and reshaping data into tidy form.
+8. Apply systematic checks and document transformations to produce transparent, reproducible, analysis-ready datasets.
+9. Use GitHub issues to ask questions, explain reasoning, and collaborate with classmates.
+
+## Course structure
+
+__Overview__. The course structure consists of weekly __asynchronous course materials__ and weekly __synchronous meetings__. Each week the class focuses on a particular topic (e.g., creating variables; writing functions). For each weekly topic, you will complete a problem set. Problem sets focus on practical applications of concepts/skills from the topic of the week.
+
+__Asynchronous course materials__.  Asynchronous course materials will focus on the topic for that week (e.g., processing across rows). Course materials will consist of three types of resources: 
+
+1. Detailed lecture slides (HTML) with sample code
+1. Pre-recorded video lecture of the instructor working through these slides
+1. The ".qmd" file that created the HTML lecture slides.
+    - The .qmd file will contain all "code chunks" and links to all data utilized in the lecture. Thus, you will  "learn by doing" in that you will run _R_ code on your own computer while you work through lecture materials on your own.
+
+__Synchronous meetings__. Synchronous class meetings will be on Zoom. Synchronous class time will largely be devoted to live lecture of course materials, with students asking questions as they arise. Attendance during the entire period is required, but you may ask the instructor/TAs for exceptions due to scheduling conflicts. 
+
+# Assignments and grading
+
+Course grade will be based on the following components:
+
+-	Weekly problem sets (100% of total grade)
+
+## Problem sets (100% of total grade)
+
+You will complete 10 problem sets (the last one due during finals week). Problem sets are due before the weekly synchronous meeting; the day and time will be announced before the course begins. In general, each problem set will give you practice using the skills and concepts introduced in the course materials for that week.  For example, after the lecture on joining (merging) datasets, the problem set for that week will require that you complete several different tasks involving merging data.  Additionally, the weekly problem sets will require you to use data manipulation skills you learned in previous weeks. Link to problem set expectations and helpful resources [HERE](https://github.com/anyone-can-cook/rclass1/raw/master/lectures/problemset_resources/problemset_resources.pdf).
+
+**Participation**
+
+Broadly, you are expected to participate by being attentive, and supportive of classmates, by asking questions, and by answering questions posed by classmates.
+
+- Weekly required participation on GitHub will be part of your problem set grade.
+- Each week you will be required to post one "question" OR one "reflection" about the problem set (more is great, too!)
+  - A "question" is a question about the problem set that you can't figure out and you want some help from your classmates/TA
+  - A "reflection" is a reflection about what you learned during the problem set, a reflection on the learning process, stuff you figured out, stuff you found challenging, or anything else about the problem set that comes to mind.
+- Each week you are also required to respond to one "question" OR one "reflection" posted by one of your classmates.
+
+**Strategy for completing problem sets**
+
+A general strategy recommended for completing the problem sets is as follows:
+
+1. Work through required lecture material (important: run code chunks from lecture in RStudio!)
+1. Try working through problem set on your own. Start working on the problem set early in the week! This way, you have time to ask questions and receive help on Github. 
+1. For students working in a problem set group: if you are working through the problem set together, and you find that your teammate(s) are usually figuring out the answers first, try working through some of the problem set on your own before you start working with your group.
+
+**Problem set groups**
+
+- Problem sets can be done individually or in a group.
+- First problem set will be done individually.
+- For all subsequent problem sets, we will give students an opportunity to join problem set groups of 2 or 3 students (not 4). We will implement a process to help students create groups.
+- If you are part of a problem set group, keep the same group throughout the quarter. But annulments are possible!
+- Each student must submit their own problem set. Each student's submission will be graded individually, regardless of whether they worked individually or with a group.
+
+
+**Grading policies**
+
+- All problem sets are graded individually.
+- Policy on late assignments
+  - A grace period extends from the stated deadline through 11:59 p.m. Pacific time on the due date, with no late penalty during that period.
+  - After the grace period, the maximum possible grade is reduced by one percentage point (for example, from 100% to 99%).
+  - Beginning at 12:00 a.m. three calendar days after the due date, the maximum possible grade is reduced by one additional percentage point for each weekday the assignment remains unsubmitted.
+  - For example, if an assignment is due Friday, a submission on Saturday or Sunday has a maximum grade of 99%; a submission on Monday has a maximum of 98%, and on Tuesday, 97%.
+  - For late submissions due to an unexpected emergency, you will not lose points. Please contact the instructor and/or TAs so we can work out an arrangement.
+
+**Autograder-assisted grading policies**
+
+Problem-set grading will be assisted by an autograder that checks whether students’ code and required objects meet the specifications provided in each problem set. The autograder promotes consistent grading across submissions, but it will not be the sole basis for assigning grades. The instructional team will review the results and look more closely at submissions when the autograder identifies a possible issue.
+
+Each problem set will provide detailed instructions, including the required object names and the type of value each object should contain. Students are expected to follow these instructions carefully.
+
+We recognize that an autograder may occasionally fail to recognize a correct response or may not capture the full quality of a student’s work. If you believe your problem set was graded incorrectly, email the teaching assistant within four days of receiving your grade. In your email, identify the problem set and specific question you would like reviewed and briefly explain why you believe the answer may have been graded incorrectly. The teaching assistant will review the submitted file and make any appropriate adjustment.
+
+Grade-review requests are intended to correct possible grading or autograder errors. Points generally will not be restored when the submitted file did not follow the stated instructions or used incorrect or missing object names.
+
+## Grading scale
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+lg <- c("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F")
+nv <- c("93%–100%", "90% to less than 93%", "87% to less than 90%", "83% to less than 87%", "80% to less than 83%", "77% to less than 80%", "73% to less than 77%", "70% to less than 73%", "60% to less than 70%", "0% to less than 60%")
+
+grade <- tibble(lg, nv)
+
+gd <- flextable(grade)
+
+gd <- gd %>% 
+  set_header_labels(values = list(lg = "Letter Grade", nv = "Percentage")) %>%
+  align(align = "center") %>%
+  autofit() 
+
+gd
+
+```
+
+# Course Schedule
+
+Below is an overview of course topics. Topics and the schedule are subject to change at the instructor's discretion. Topics may be cut if more time is needed to learn the most central topics. It is unlikely that additional topics will be added. The official course schedule will be posted on the [course website](https://anyone-can-cook.github.io/rclass1/), including weekly required reading and optional reading.
+
+**Week 1: Introduction to R**  
+
+- Introduction to R and R data structures
+- Execute R commands, understand R objects and data structures, use R functions
+- Introduce atomic vectors, lists, and functions for investigating objects (e.g., length, type, str)
+    
+**Week 2: Investigating data patterns in Base R** 
+
+- Data investigation and manipulation using Base R
+- Investigate R object type and structure, isolate elements using Base R subset operators and the `subset()` function, create new variables in Base R
+
+**Week 3: Enter the Tidyverse Part I: Pipes & Dplyr**
+
+- Data investigation and manipulation using tidyverse
+- Select, filter, and sort data using `tidyverse` functions, chain functions together using pipes (`%>%`)
+    
+**Week 4: Enter the Tidyverse Part II: variable creation**
+
+- Create new variables using `mutate()`
+- Create new variables conditionally using `if_else()`, `recode()`, and `case_when()`
+
+**Week 5: Processing across rows**
+
+- Calculate aggregate statistics from multiple rows of data
+- Group rows of data using `group_by()`, create aggregate statistics using `summarize()`
+
+**Week 6: Attributes and class**
+
+- Understand the class and attributes of R objects
+- Investigate R object class and attributes, work with factor variables, label variables and values of a dataframe using the `labelled` package
+
+**Week 7: Create plots w/ ggplot**
+
+- Understand the layered grammar of graphics for visualizing data with ggplot2
+- Make plots with the `ggplot` function (e.g., bar plots, scatter plots)
+- Customize plots through color palettes, labels, legends, etc.
+    
+**Week 8: Strings and dates**
+
+- Work with strings and date/datetime objects
+- Understand string basics, manipulate strings using `stringr` functions, work with dates and times using the `lubridate` package
+
+**Week 9: Tidy data**
+
+- Understand tidy data structure and reshaping data
+- Define tidy data and how to reshape untidy data into tidy form, reshape data from wide to long using `pivot_longer()`, reshape data from long to wide using `pivot_wider()`, handle missing values during reshaping
+
+**Week 10: Joining data**
+
+- Combine data from multiple datasets using joins
+- Merge datasets using mutating joins, check the quality of merge using filtering joins, append datasets by stacking rows
+
+
+# Course policies
+
+## Academic integrity and AI
+
+__UCLA policy__  
+
+  - UCLA is a community of scholars. In this community, all members including faculty, staff and students alike are responsible for maintaining standards of academic honesty. As a student and member of the University community, you are here to get an education and are, therefore, expected to demonstrate integrity in your academic endeavors. You are evaluated on your own merits. Cheating, plagiarism, unauthorized collaboration, multiple submissions without the permission of the professor, or other kinds of academic dishonesty are considered unacceptable behavior and will result in formal disciplinary proceedings.  
+  
+__This class__  
+
+- You are not allowed to copy problem set solutions from classmates. 
+- Enforcing this policy is unclear. 
+  - Most questions are answered by creating and naming an object. If the object is equal to the expected value, the answer is correct. For these problems, everyone who answers the question correctly would likely have the exact same answer.
+  - Some questions ask you to explain something in your own words. If your answer to a lengthy question is exactly the same as that of a classmate, this could raise concerns that we investigate. 
+- If there is compelling evidence that a student merely copied solutions from a classmate, this could be considered a violation of academic integrity. That student will receive a zero for the homework assignment.
+
+  
+__Policy on AI__
+  
+1. Academic integrity in the age of AI
+    - You are allowed to use AI to help explain underlying concepts, help diagnose errors, etc.
+    - You are not allowed to simply paste the problem set or problem set questions into AI and copy the answer provided
+      - We cannot enforce this policy. So adherence depends on the honor system
+
+1. How to use AI in a way that helps you develop a deeper understanding of course material (including becoming a better problem solver)
+
+    - The purposes of this course are to develop strong foundations in:
+      - Data management
+      - R programming
+      - General problem solving and "computational thinking"
+    - People who develop these foundations will be able to do high-quality work with and without use of AI
+      - Using AI to do coding/analysis in the absence of these skills will go very poorly
+      - This is why this class remains valuable even in the age of Claude Code
+    - AI can help you develop these foundations
+      - But AI can also help you get a high grade in the course without developing these strong foundations
+      - Research on how people learn tends to find that embracing cognitive struggle is a good thing for learning how to solve problems and learning how to learn      
+      - Before you ask AI to help you with something you can't figure out, try other avenues to figure out the answer (e.g., by thinking, by breaking the problem into parts, by asking on github, by reading github posts from your classmates, by looking at documentation, etc.)
+    - Good uses of AI: 
+      - Use AI to help you explain concepts you don’t understand
+      - Use AI for installation issues
+        - first try to understand and figure out the problem on your own
+        - but then you can paste your error into AI
+      - Use AI to help diagnose or fix an error you are getting; but try to solve it without AI first; and try asking classmates;
+      - Whenever you use AI for this class, spend a little extra time asking for a deeper explanation, and spend some time trying to understand that explanation
+
+
+## Online collaboration/netiquette
+
+You will communicate with instructors and peers virtually through a variety of tools such as GitHub, email, and Zoom web conferencing. The following guidelines will enable everyone in the course to participate and collaborate in a productive, safe environment.
+
+-	Be professional, courteous, and respectful as you would in a physical classroom.
+-	Online communication lacks the nonverbal cues that provide much of the meaning and nuances in face-to-face conversations. Choose your words carefully, phrase your sentences clearly, and stay on topic.
+-	It is expected that you may disagree with the research presented or the opinions of their fellow classmates. To disagree is fine but to disparage others' views is unacceptable. All comments should be kept civil and thoughtful.
+- It is imperative that we respect one another in this course, and all other spaces. One way to gain/show respect is to actively listen to one another. Please do not text, tweet, email, Facebook, LinkedIn, browse the internet, and such during class.
+- In the unlikely event that Zoom is down, please be sure to check your email often for instructions on how we will complete that class session in an asynchronous manner.
+
+**Class Zoom guidelines**  
+
+All synchronous class sessions will be held online, via Zoom. Below, we have outlined some general guidelines about Zoom learning. As we continue learning together, we can add to and change the below list. I'm open to your feedback and your experiences as we continue to learn how to learn via Zoom.  
+
+- **Video**: You are not required to turn on your video during synchronous lectures, but we encourage you to do so if you feel comfortable.
+- **Audio**: We ask that you mute your microphones when you are not speaking. We encourage the use of earphones or headphones if you are in a space with background noise.  
+- **Zoom outage**: In the unlikely event that Zoom is down, we will email the class with instructions for completing the class section in an asynchronous manner. Therefore, if Zoom is not functioning properly during the class period, be sure to check your email often.  
+- **Internet connectivity**: We understand that having access to a stable internet connection and/or electronic equipment is a privilege. With that in mind, we want to provide a space where everyone has the resources they need to do well in the class. If you have any issues with your internet connection and/or don't have access to electronic equipment, please reach out to us.   
+
+## Academic accommodations
+
+**Center for Accessible Education**  
+
+If you need academic accommodations please contact the Center for Accessible Education (CAE). When possible, you should contact the CAE within the first two weeks of the term as reasonable notice is needed to coordinate accommodations. For more information visit https://www.cae.ucla.edu/.
+
+Located in A255 Murphy Hall: (310) 825-1501, TDD (310) 206-6083; http://www.cae.ucla.edu/
+
+
+# Campus resources 
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+
+Resource <- c("Counseling and Psychological Services (CAPS)","LGBTQ Resource Center", "International Students", "Undocumented Students Program", "Students with Dependents","Be Well Program", "Data Squad", "Student Legal Services", "Discrimination")
+Description <- c("As a student, you may experience a range of issues that can cause barriers to learning, such as strained relationships, increased anxiety, alcohol/drug problems, depression, difficulty concentrating, and/or lack of motivation that may lead to diminished academic performance or reduce your ability to participate in daily activities.",
+                 "The LGBTQ resource center provides a range of education and advocacy services supporting intersectional identity development. It fosters unity; wellness; and an open, safe, inclusive environment for lesbian, gay, bisexual, intersex, transgender, queer, asexual, questioning, and same-gender-loving students, their families, and the entire campus community.",
+                 "The Dashew Center provides a range of programs to promote cross-cultural learning, language improvement, and cultural adjustment. Their programs include trips in the LA area, performances, and on-campus events and workshops.",
+                 "This program provides a safe space for undergraduate and graduate undocumented students. USP supports the UndocuBruin community through personalized services and resources, programs, and workshops.",
+                 "UCLA Students with Dependents provides support to UCLA students who are parents, guardians, and caregivers. Some of their services include: \n Information, referrals, and support to navigate UCLA (childcare, family housing, financial aid, Access to information about resources within the larger community, On-site application and verification for CalFresh (food stamps) & MediCal and assistance with Cal Works/GAIN, A quiet study space, Family friendly graduation celebration in June",
+                 "UCLA Be Well Bruin is committed to increasing students' access and awareness of health and well-being resources on campus. They provide a search tool to find resources related to physical, academic, emotional, financial, social, and basic needs.",
+                 "UCLA Library DataSquad is a team of undergraduate students offering consultations in coding, data cleaning and manipulation, data visualization, and statistical analysis in R, Python, Tableau, and SQL.", 
+                 "UCLA Student Legal Services provides a range of legal support to all registered and enrolled UCLA students. Some of their services include: Landlord/Tenant Relations (Including challenges during COVID), Accident and Injury Problem, Domestic Violence and Harassment, Divorces & Other Family Law matters",
+                 "UCLA is committed to maintaining a campus community that provides the strongest possible support for the intellectual and personal growth of all its members- students, faculty, and staff. Acts intended to create a hostile climate are unacceptable.")
+Contact <- c("To speak directly with a counselor 24/7 at (310) 825-0768, if an emergency call 911 \nLocated in the Wooden Center West \nWebsite: \nhttps://www.caps.ucla.edu",
+             "Email: lgbt@lgbt.ucla.edu \n Located in the Student Activities Center \nWebsite: \nhttps://www.lgbt.ucla.edu/",
+             "Website: \nhttps://www.internationalcenter.ucla.edu/",
+             "Email: usp@saonet.ucla.edu \nWebsite: \nhttps://www.usp.ucla.edu/ ",
+             "Website: \nhttps://www.swd.ucla.edu/",
+             "Website: \nhttps://bewellbruin.ucla.edu/",
+             "Website: \nhttps://www.library.ucla.edu/about/programs/ucla-library-datasquad/", 
+             "Website: \nhttp://www.studentlegal.ucla.edu/index.php",
+             "Website: \nhttps://equity.ucla.edu/report-an-incident/")
+
+resource <- tibble(Resource, Description, Contact)
+
+ft3 <- flextable(resource)
+
+#horizontal lines
+std_b <- fp_border(color="#E4E8EE", style = "dashed")
+#header border
+#head_b <- fp_border(style = "solid", color = "#E4E8EE", width=.5)
+
+ft3 <- ft3 %>% 
+  #width(width = 2) %>%
+  #width(j = "Resource", width = 1, unit = "in") %>%
+  #width(j = "Description", width = 4, unit = "in") %>%
+  #width(j = "Contact", width = 3, unit = "in") %>%
+  #bg(bg = "#D3D2D4", part = "header") %>% #3173C9, #8569B8
+  bold(bold = TRUE, part = "header") %>%
+  #color(color= "white", part = "header") %>%
+  hline(border = std_b) #%>%
+  #hline(border = head_b, part = "header") %>%
+  #hline_top(border = head_b, part = "header")
+
+
+ft3 <- autofit(ft3)
+ft3
+
+
+```
+
+## Campus maps 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+Map <- c("ucla-lactation-map.png", "ucla-gender-inclusive-restroom-map.png", "ucla-accessibility-map.png")
+Resource <- c("Lactation Rooms", "Gender-Inclusive Restrooms", "Campus Accessibility")
+Link <- c("https://chr.ucla.edu/benefits/support-nursing-mothers-at-work", "https://lgbtq.ucla.edu/file/1500b7f1-7c6b-4c1b-9bbe-12674dd23f67", "https://map.ucla.edu/downloads/pdf/Access_Oct_2020.pdf")
+
+resource <- tibble(Map, Resource, Link)
+
+ft4 <- flextable(resource)
+
+#horizontal lines
+std_b <- fp_border(color="#E4E8EE", style = "dashed")
+#header border
+#head_b <- fp_border(style = "solid", color = "#E4E8EE", width=.5)
+
+ft4 <- ft4 %>% 
+  width(width = 2) %>%
+  width(j = "Resource", width = 1, unit = "in") %>%
+  width(j = "Link", width = 3, unit = "in") %>%
+  #bg(bg = "#D3D2D4", part = "header") %>% #3173C9, #8569B8
+  bold(bold = TRUE, part = "header") %>%
+  #color(color= "white", part = "header") %>%
+  hline(border = std_b)# %>%
+  #hline(border = head_b, part = "header") %>%
+ # hline_top(border = head_b, part = "header")
+
+ft4 <- colformat_image(
+  ft4,
+  i = c(1,2,3),
+  j = "Map", width = 1, height = 1.25
+)
+
+
+ft4
+
+```
+
+
+## Title IX Resources
+
+Title IX prohibits gender discrimination, including sexual harassment, domestic and dating violence, sexual assault, and stalking.  If you have experienced sexual harassment or sexual violence, there are a variety of resources to assist you.  
+
+- __CONFIDENTIAL RESOURCES__:You can receive confidential support and advocacy at the CARE Advocacy Office for Sexual and Gender-Based Violence, A233 Murphy Hall, CAREadvocate\@careprogram.ucla.edu, (310) 206-2465. Counseling and Psychological Services (CAPS) also provides confidential counseling to all students and can be reached 24/7 at (310) 825-0768.  
+
+- __NON-CONFIDENTIAL RESOURCES__: You can also report sexual violence or sexual harassment directly to the University's Title IX Coordinator, 2255 Murphy Hall, titleix\@conet.ucla.edu, (310) 206-3417. Reports to law enforcement can be made to UCPD at (310) 825-1491. These offices may be required to pursue an official investigation.
+
+*Faculty and TAs are required under the UC Policy on Sexual Violence and Sexual Harassment to inform the Title IX Coordinator should they become aware that you or any other student has experienced sexual violence or sexual harassment.*  
+
