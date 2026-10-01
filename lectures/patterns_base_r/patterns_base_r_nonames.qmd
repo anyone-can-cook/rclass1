@@ -69,10 +69,12 @@ rm(list = ls()) # remove all objects in current environment
 
 getwd()
 #load dataset with one obs per recruiting event
-load(file = url(description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
+#load("../../data/recruiting/recruit_event_somevars.Rdata")
 
 #load dataset with one obs per high school
-load(file = url(description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData"))
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData"))
+#load("../../data/recruiting/recruit_school_somevars.Rdata")
 ```
 
 ## Functions to describe objects
@@ -134,7 +136,7 @@ Command to remove all objects open in R (I don't run it)
 `typeof()` function determines the the internal storage type of an object (e.g., logical vector, integer vector, list)
 
 -   syntax
-    -   `typeof(x = x)`
+    -   `tyepof(x)`
 -   arguments
     -   `x`: any R object
 -   help:
@@ -148,8 +150,8 @@ Examples
 -   Recall that a data frame is an object where **type** is a list
 
 ```{r}
-typeof(x = c(TRUE,TRUE,FALSE,NA))
-typeof(x = df_event)
+typeof(c(TRUE,TRUE,FALSE,NA))
+typeof(df_event)
 typeof(x = df_event)
 ```
 
@@ -159,7 +161,7 @@ typeof(x = df_event)
 
 -   for atomic vectors and lists, `length()` is the number of elements in the object
 -   syntax
-    -   `length(x = x)`
+    -   `length(x)`
 -   arguments
     -   `x`: any R object
 -   help:
@@ -171,7 +173,7 @@ typeof(x = df_event)
 Example, length of an atomic vector is
 
 ```{r}
-length(x = c(TRUE,TRUE,FALSE,NA))
+length(c(TRUE,TRUE,FALSE,NA))
 ```
 
 Example, length of a list or data frame
@@ -181,7 +183,7 @@ Example, length of a list or data frame
 -   length of a data frame = number of elements = number of variables
 
 ```{r}
-length(x = df_event) # = num elements = num columns
+length(df_event) # = num elements = num columns
 ```
 
 ### Base R functions to describe objects, `str()`
@@ -189,7 +191,7 @@ length(x = df_event) # = num elements = num columns
 `str()` function compactly displays the structure of an R object
 
 -   "structure" includes type, length, and attribute of object and also nested objects
--   syntax: `str(object = object)`
+-   syntax: `str(object)`
 -   arguments (partial)
     -   `object`: any R object
     -   `max.level`: max level of nesting to display nested structures; default `NA` = all levels
@@ -202,7 +204,7 @@ length(x = df_event) # = num elements = num columns
 Example, atomic vectors
 
 ```{r}
-str(object = c(TRUE,TRUE,FALSE,NA))
+str(c(TRUE,TRUE,FALSE,NA))
 str(object = c(TRUE,TRUE,FALSE,NA))
 ```
 
@@ -210,9 +212,9 @@ Example, lists/data frames (output omitted)
 
 ```{r, results = "hide"}
 x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-str(object = x)
+str(x)
 
-str(object = df_event) # data frame
+str(df_event) # data frame
 ```
 
 ### Base R functions to describe objects, `ncol()` and `nrow()`
@@ -221,7 +223,7 @@ str(object = df_event) # data frame
 
 -   Description
     -   `ncol()` = number of columns; `nrow()` = number of rows
--   syntax: `ncol(x = x)` `nrow(x = x)` `dim(x = x)`
+-   syntax: `ncol(x)` `nrow(x)` `dim(x)`
 -   arguments
     -   `x`: a vector, array, data frame, or NULL
 -   value/return:
@@ -232,25 +234,25 @@ str(object = df_event) # data frame
 Example, object is a data frame
 
 ```{r}
-ncol(x = df_event) # num columns = num elements = num variables
-nrow(x = df_event) # num rows = num observations
+ncol(df_event) # num columns = num elements = num variables
+nrow(df_event) # num rows = num observations
 # can wrap ncol() or nrow() within str() to see what functions return
-#str(object = ncol(x = df_event))
+#str(ncol(df_event))
 ```
 
 Example, object is atomic vector or list that is not a data frame (output omitted)
 
 ```{r, results = "hide"}
-ncol(x = c(TRUE,TRUE,FALSE,NA)) # atomic vector
+ncol(c(TRUE,TRUE,FALSE,NA)) # atomic vector
 x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-nrow(x = x)
+nrow(x)
 ```
 
 ### Base R functions to describe objects, `dim()`
 
 `dim()` function returns the dimensions of an object (e.g., number of rows and columns)
 
--   syntax: `dim(x = x)`
+-   syntax: `dim(x)`
 -   arguments
     -   `x`: a vector, array, data frame, or NULL
 -   value/return:
@@ -262,17 +264,17 @@ nrow(x = x)
 Example, object is a data frame
 
 ```{r}
-dim(x = df_event) # shows number rows by columns
+dim(df_event) # shows number rows by columns
 
-str(object = dim(x = df_event)) # can wrap dim() within str() to see what functions return
+str(dim(df_event)) # can wrap dim() within str() to see what functions return
 ```
 
 Example, object is atomic vector or list that is not a data frame (output omitted)
 
 ```{r, results = "hide"}
-dim(x = c(TRUE,TRUE,FALSE,NA)) # atomic vector
+dim(c(TRUE,TRUE,FALSE,NA)) # atomic vector
 x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-dim(x = x)
+dim(x)
 ```
 
 ## Variables names
@@ -282,23 +284,23 @@ dim(x = x)
 `names()` function gets or sets the names of elements of an object
 
 -   syntax:
-    -   get the names of an object: `names(x = x)`
+    -   get the names of an object: `names(x)`
     -   set the names of an object: `names(x) <- value`
 -   arguments (partial)
     -   `x`: an R object
     -   `value`: a character vector with same length as object `x` or `NULL`
 -   value/return
-    -   `names(x = x)` returns a character vector of length = `length(x = x)` in which each element is the name of the element of `x`
+    -   `names(x)` returns a character vector of length = `length(x)` in which each element is the name of the element of `x`
 
 Example, get names (of atomic vector)
 
 ```{r}
 a <- c(v1 = 1,v2 = 2, 3 ,v4 = "hi!") # named atomic vector
 a 
-length(x = a)
-names(x = a)
-length(x = names(x = a)) # investigate length of object names(x = a)
-str(object = names(x = a)) # investigate structure of object names(x = a)
+length(a)
+names(a)
+length(names(a)) # investigate length of object names(a)
+str(names(a)) # investigate structure of object names(a)
 ```
 
 Example, set names (of atomic vector)
@@ -306,11 +308,11 @@ Example, set names (of atomic vector)
 ```{r}
 names(a) <- NULL # set names of vector a to NULL
 a
-names(x = a)
+names(a)
 
 names(a) <- c("var1","var2","var3","var4") # set names of vector a
 a
-names(x = a)
+names(a)
 ```
 
 ### Applying `names()` function to a data frame
@@ -323,24 +325,24 @@ Recall that a data frame is an object where **type** is a **list** and each **el
 Example (output omitted)
 
 ```{r, results = "hide"}
-names(x = df_event)
+names(df_event)
 ```
 
-Investigate the object `names(x = df_event)`
+Investigate the object `names(df_event)`
 
 ```{r}
-typeof(x = names(x = df_event)) # type = character vector
-length(x = names(x = df_event)) # length = number of variables in data frame
-str(object = names(x = df_event)) # structure of names(x = df_event)
+typeof(names(df_event)) # type = character vector
+length(names(df_event)) # length = number of variables in data frame
+str(names(df_event)) # structure of names(df_event)
 ```
 
-We can even assign a new object based on `names(x = df_event)`
+We can even assign a new object based on `names(df_event)`
 
 ```{r}
-names_event <- names(x = df_event)
-typeof(x = names_event) # type = character vector
-length(x = names_event) # length = number of variables in data frame
-str(object = names_event) # structure of names(x = df_event)
+names_event <- names(df_event)
+typeof(names_event) # type = character vector
+length(names_event) # length = number of variables in data frame
+str(names_event) # structure of names(df_event)
 ```
 
 ### Variable names
@@ -356,8 +358,8 @@ When object is data frame, refer to specific variables using this syntax:
 
 ```{r}
 #df_event$instnm
-typeof(x = df_event$instnm)
-typeof(x = df_event$med_inc)
+typeof(df_event$instnm)
+typeof(df_event$med_inc)
 ```
 
 Data frames are lists with the following criteria:
@@ -366,22 +368,22 @@ Data frames are lists with the following criteria:
 -   length of data frame = number of variables
 
 ```{r}
-length(x = df_event)
-nrow(x = df_event)
-#str(object = df_event)
+length(df_event)
+nrow(df_event)
+#str(df_event)
 ```
 
 -   each element of the list (i.e., variable) has the same length
     -   Length of each variable is equal to number of observations in data frame
 
 ```{r}
-typeof(x = df_event$event_state)
-length(x = df_event$event_state)
-str(object = df_event$event_state)
+typeof(df_event$event_state)
+length(df_event$event_state)
+str(df_event$event_state)
 
-typeof(x = df_event$med_inc)
-length(x = df_event$med_inc)
-str(object = df_event$med_inc)
+typeof(df_event$med_inc)
+length(df_event$med_inc)
+str(df_event$med_inc)
 ```
 
 The object `df_school` has one obs per high school
@@ -390,9 +392,9 @@ The object `df_school` has one obs per high school
 -   like all variables in a data frame, the var `visits_by_100751` is just a vector
 
 ```{r}
-typeof(x = df_school$visits_by_100751)
-length(x = df_school$visits_by_100751) # num elements in vector = num obs
-str(object = df_school$visits_by_100751)
+typeof(df_school$visits_by_100751)
+length(df_school$visits_by_100751) # num elements in vector = num obs
+str(df_school$visits_by_100751)
 sum(df_school$visits_by_100751) # sum of values of var across all obs
 ```
 
@@ -400,8 +402,8 @@ We perform calculations on a variable like we would on any vector of same type
 
 ```{r}
 v <- c(2,4,6)
-typeof(x = v)
-length(x = v)
+typeof(v)
+length(v)
 sum(v)
 ```
 
@@ -422,15 +424,15 @@ df_event
 2.  Use the `View()` function to view data in a browser
 
 ```{r eval=FALSE}
-View(x = df_event)
+View(df_event)
 ```
 
 3.  `head()` to show the first *n* rows. The default is 6 rows.
 
 ```{r results="hide"}
 #?head
-#head(x = df_event)
-head(x = df_event, n=5)
+#head(df_event)
+head(df_event, n=5)
 ```
 
 ### Viewing and printing, data frames
@@ -478,8 +480,8 @@ df_event$zip
 -   each element (i.e., variable) of data frame is an **atomic vector** with **length** = number of observations
 
 ```{r}
-typeof(x = df_event$zip)
-length(x = df_event$zip)
+typeof(df_event$zip)
+length(df_event$zip)
 ```
 
 -   each element of a variable is the value of the variable for one observation
@@ -539,7 +541,7 @@ df_school[1:5,1:3]
 2.  Use the `head()` function to print the first 4 observations
 
 ```{r}
-head(x = df_school, n=4)
+head(df_school, n=4)
 ```
 
 3.  Use the `obj_name$var_name[1:10]` syntax to print the first 10 observations of a variable in the `df_school` data frame
@@ -571,17 +573,17 @@ use `is.na()` function to determine if a value is missing
 -   `is.na()` returns a logical vector
 
 ```{r}
-is.na(x = 5)
-is.na(x = NA)
-is.na(x = "NA")
-typeof(x = is.na(x = "NA")) # example of a logical vector
+is.na(5)
+is.na(NA)
+is.na("NA")
+typeof(is.na("NA")) # example of a logical vector
 
 nvector <- c(10,5,NA)
-is.na(x = nvector)
-typeof(x = is.na(x = nvector)) # example of a logical vector
+is.na(nvector)
+typeof(is.na(nvector)) # example of a logical vector
 
 svector <- c("e","f",NA,"NA")
-is.na(x = svector)
+is.na(svector)
 ```
 
 ### Missing values are "contagious"
@@ -604,7 +606,7 @@ NA*c(0,1,2,NA)
 `table()` function is useful for investigating categorical variables
 
 ```{r}
-str(object = df_event$event_type)
+str(df_event$event_type)
 table(df_event$event_type)
 ```
 
@@ -612,7 +614,7 @@ By default `table()` ignores `NA` values
 
 ```{r}
 #?table
-str(object = df_event$school_type_pri)
+str(df_event$school_type_pri)
 table(df_event$school_type_pri)
 ```
 
@@ -623,7 +625,7 @@ table(df_event$school_type_pri)
 -   even for zero counts ("always")"
 
 ```{r}
-nrow(x = df_event)
+nrow(df_event)
 table(df_event$school_type_pri, useNA="always")
 ```
 
@@ -648,7 +650,7 @@ An atomic vector is a 1-dimensional object that contains n elements
 
 ```{r}
 x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
-str(object = x)
+str(x)
 ```
 
 Lists are multi-dimensional objects
@@ -657,7 +659,7 @@ Lists are multi-dimensional objects
 
 ```{r}
 list <- list(c(1,2), list("apple", "orange"))
-str(object = list)
+str(list)
 ```
 
 Data frames are 2-dimensional lists
@@ -666,8 +668,8 @@ Data frames are 2-dimensional lists
 -   within each variable, each element is an observation (dimension=rows)
 
 ```{r}
-ncol(x = df_school)
-nrow(x = df_school)
+ncol(df_school)
+nrow(df_school)
 ```
 
 ## Subset atomic vectors using \[\]
@@ -693,7 +695,7 @@ Create atomic vector `x`
 
 ```{r}
 (x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
-str(object = x)
+str(x)
 ```
 
 `[]` is the subsetting function for vectors
@@ -719,8 +721,8 @@ Before excluding elements based on position, investigate object
 ```{r}
 x
 
-length(x = x)
-str(object = x)
+length(x)
+str(x)
 ```
 
 Use negative integers to exclude elements based on element position
@@ -738,12 +740,12 @@ x[-c(3,1)] # exclude 3rd and 1st element
 x
 ```
 
-When using `x[y]` to subset `x`, good practice to have `length(x = x)==length(x = y)`
+When using `x[y]` to subset `x`, good practice to have `length(x)==length(y)`
 
 ```{r}
-length(x = x) # length of vector x
-length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # length of y
-length(x = x) == length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # condition true
+length(x) # length of vector x
+length(c(TRUE,FALSE,TRUE,FALSE,TRUE)) # length of y
+length(x) == length(c(TRUE,FALSE,TRUE,FALSE,TRUE)) # condition true
 x[c(TRUE,TRUE,FALSE,FALSE,TRUE)]
 ```
 
@@ -752,7 +754,7 @@ Recycling rules:
 -   in `x[y]`, if `x` is different length than `y`, R "recycles" length of shorter to match length of longer
 
 ```{r}
-length(x = c(TRUE,FALSE))
+length(c(TRUE,FALSE))
 x
 x[c(TRUE,FALSE)]
 ```
@@ -772,7 +774,7 @@ Return all elements of object `x` where element is greater than 3:
 ```{r}
 x # print object X
 x>3 # for each element of X, print T/F whether element value > 3
-str(object = x>3)
+str(x>3)
 x[x>3] # prints only the values that had TRUE at that position
 ```
 
@@ -838,14 +840,14 @@ Using `[]` operator to subset lists works the same as subsetting atomic vector
 
 ```{r}
 list_a <- list(list(1,2),3,"apple")
-str(object = list_a)
+str(list_a)
 
 #create new list that consists of elements 3 and 1 of list_a
 list_b <- list_a[c(3, 1)]
-str(object = list_b)
+str(list_b)
 
 #show elements 3 and 1 of object list_a
-#str(object = list_a[c(3, 1)])
+#str(list_a[c(3, 1)])
 ```
 
 Recall that a data frame is just a particular kind of list
@@ -868,13 +870,13 @@ Use "single index" `df_name[<columns>]` to extract columns (variables) based on 
 Examples \[output omitted\]
 
 ```{r, results="hide"}
-names(x = df_event)
+names(df_event)
 
 #extract elements 1 through 4 (elements=columns=variables)
 df_event[1:4]
 df_event[c(1,2,3,4)]
 
-str(object = df_event[1:4])
+str(df_event[1:4])
 #extract columns 13 and 7
 df_event[c(13,7)]
 ```
@@ -947,7 +949,7 @@ Solution to 1
 df_event_br <- df_event[c("instnm", "event_date", "event_type")]
 #double index
 df_event_br <- df_event[, c("instnm", "event_date", "event_type")]
-names(x = df_event_br)
+names(df_event_br)
 ```
 
 Solution to 2
@@ -978,9 +980,9 @@ So far we have used `[]` to extract elements from an object
 ```{r}
 (x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
 
-str(object = x[3]) 
+str(x[3]) 
 
-str(object = x[[3]])
+str(x[[3]])
 ```
 
 -   Caveat: when applying `[[]]` to atomic vector, you can only subset a single element
@@ -1003,7 +1005,7 @@ Below code chunk makes a list named `list_x` that contains 3 elements
 
 ```{r}
 list_x <- list(1:3, "a", 4:6) # create list object list_x
-str(object = list_x)
+str(list_x)
 ```
 
 In our train metaphor, object `list_x` is a train that contains 3 carriages
@@ -1031,8 +1033,8 @@ include_graphics("one_carriage_train_vs_contents.png")
     -   you can think of this as a train with fewer carriages
 
     ```{r}
-    #str(object = list_x)
-    str(object = list_x[1]) # returns a list
+    #str(list_x)
+    str(list_x[1]) # returns a list
     ```
 
 2.  Extracting element using `[[]]` returns ***contents*** of particular carriage
@@ -1040,7 +1042,7 @@ include_graphics("one_carriage_train_vs_contents.png")
     -   I say applying `[[]]` to a list or data frame returns a simpler object that moves up one level of hierarchy
 
     ```{r}
-    str(object = list_x[[1]]) # returns an atomic vector
+    str(list_x[[1]]) # returns an atomic vector
     ```
 
 ### Subset lists using `[]` vs. `[[]]`, deepen understanding of `[]`
@@ -1094,7 +1096,7 @@ Object created by `list_x[1]` is a list with one element (output omitted)
 
 ```{r}
 list_x[1]
-str(object = list_x[1])
+str(list_x[1])
 ```
 
 Object created by `list_x[[1]]` is a vector with 3 elements (output omitted)
@@ -1104,7 +1106,7 @@ Object created by `list_x[[1]]` is a vector with 3 elements (output omitted)
 
 ```{r}
 list_x[[1]]
-str(object = list_x[[1]])
+str(list_x[[1]])
 ```
 
 Rules about applying subset operator `[[]]` to a list
@@ -1137,8 +1139,8 @@ Subset list `list_x` using `[[]]` element names
 
 ```{r}
 list_x[["var1"]] # subset by element position: list_x[[1]]
-str(object = list_x[["var1"]])
-str(object = list_x["var1"]) # note: suggests var name is attribute of list, not atomic vector
+str(list_x[["var1"]])
+str(list_x["var1"]) # note: suggests var name is attribute of list, not atomic vector
 ```
 
 Can do same thing with data frames because data frames are lists (output omitted)
@@ -1148,10 +1150,10 @@ Can do same thing with data frames because data frames are lists (output omitted
 
 ```{r, results='hide'}
 # df_event[["zip"]] # this works but long output
-str(object = df_event[["zip"]]) # character vector of length 18,860
-typeof(x = df_event[["zip"]])
-length(x = df_event[["zip"]])
-str(object = df_event["zip"]) # by contrast, this is a dataframe w/ one variable
+str(df_event[["zip"]]) # character vector of length 18,860
+typeof(df_event[["zip"]])
+length(df_event[["zip"]])
+str(df_event["zip"]) # by contrast, this is a dataframe w/ one variable
 ```
 
 ### General rules of applying `[]` vs `[[]]` to (nested) objects
@@ -1170,10 +1172,10 @@ General rules of applying `[]` vs. `[[]]` to nested objects
 When working w/ data frames, functions that calculate things expect to be working with atomic vectors (think `[[]]`) not lists (think `[]`)
 
 ```{r}
-mean(x = df_event[['med_inc']], na.rm = TRUE)
-# mean(x = df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work
-str(object = df_event['med_inc'])
-str(object = df_event[['med_inc']])
+mean(df_event[['med_inc']], na.rm = TRUE)
+# mean(df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work
+str(df_event['med_inc'])
+str(df_event[['med_inc']])
 ```
 
 ### Subset lists/data frames using \$
@@ -1197,8 +1199,8 @@ list_x$var1
 -   these two lines of code are equivalent
 
 ```{r}
-str(object = df_event[["zip"]])
-str(object = df_event$zip)
+str(df_event[["zip"]])
+str(df_event$zip)
 ```
 
 # Appendix
@@ -1258,9 +1260,9 @@ Decomposing syntax `df_school[df_school$visits_by_110635 >= 1, ]`
 -   `df_school$visits_by_110635 >= 1`: returns a logical (`TRUE`/`FALSE`) atomic vector with length equal to number of obs in `df_school`
 
 ```{r results="hide"}
-typeof(x = df_school$visits_by_110635 >= 1)
-length(x = df_school$visits_by_110635 >= 1)
-str(object = df_school$visits_by_110635 >= 1)
+typeof(df_school$visits_by_110635 >= 1)
+length(df_school$visits_by_110635 >= 1)
+str(df_school$visits_by_110635 >= 1)
 ```
 
 -   `df_school[df_school$visits_by_110635 >= 1, ]`
@@ -1316,17 +1318,17 @@ Syntax:
 -   Count obs where high schools received at least 1 visit by Bama (100751) **and** at least one visit by Berkeley (110635)
 
 ```{r}
-nrow(x = df_school[df_school$visits_by_110635 >= 1 & 
+nrow(df_school[df_school$visits_by_110635 >= 1 & 
                  df_school$visits_by_100751 >= 1, ])
 # Equivalently:
-# nrow(x = df_school[df_school[["visits_by_110635"]] >= 1 & 
+# nrow(df_school[df_school[["visits_by_110635"]] >= 1 & 
 #                df_school[["visits_by_100751"]] >= 1, ])
 ```
 
 -   Count obs where schools received 1+ visit by Bama **or** 1+ visit by Berkeley
 
 ```{r}
-nrow(x = df_school[df_school$visits_by_110635 >= 1 
+nrow(df_school[df_school$visits_by_110635 >= 1 
   | df_school$visits_by_100751 >= 1, ])
 ```
 
@@ -1354,10 +1356,10 @@ nrow(x = df_school[df_school$visits_by_110635 >= 1
 
 ```{r}
 # The `inst_110635` variable contains the home state of UC Berkeley
-unique(x = df_school$inst_110635)
+unique(df_school$inst_110635)
 
 # Filter for schools visited by UC Berkeley AND whose state is not "CA"
-nrow(x = df_school[df_school$visits_by_110635 >= 1 &
+nrow(df_school[df_school$visits_by_110635 >= 1 &
                  df_school$state_code != df_school$inst_110635, ])
 ```
 
@@ -1370,7 +1372,7 @@ nrow(x = df_school[df_school$visits_by_110635 >= 1 &
 northeast_states <- c('CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'NJ', 'NY', 'PA')
 
 # Filter for schools in the Northeast AND visited by any of the 3 univs
-nrow(x = df_school[df_school$state_code %in% northeast_states &
+nrow(df_school[df_school$state_code %in% northeast_states &
                  (df_school$visits_by_110635 >= 1 |
                     df_school$visits_by_100751 >= 1 |
                     df_school$visits_by_126614 >= 1), ])
@@ -1395,18 +1397,18 @@ When sub-setting via `[]` combined with `$`, result will include:
 -   How many events at public HS with at least \$50k median household income?
 
 ```{r}
-sum(is.na(x = df_event$med_inc)) # number of observations (all events) with missing values for med_inc
+sum(is.na(df_event$med_inc)) # number of observations (all events) with missing values for med_inc
 
 #num obs event_type=="public hs" and med_inc is missing
-nrow(x = df_event[df_event$event_type == "public hs" 
-  & is.na(x = df_event$med_inc)==1 , ]) # note TRUE evaluates to 1
+nrow(df_event[df_event$event_type == "public hs" 
+  & is.na(df_event$med_inc)==1 , ]) # note TRUE evaluates to 1
 
 #num obs event_type=="public hs" & med_inc is not NA & med_inc >= $50,000
-nrow(x = df_event[df_event$event_type == "public hs" 
-  & is.na(x = df_event$med_inc)==0 & df_event$med_inc>=50000 , ])  # note FALSE evaluates to 0
+nrow(df_event[df_event$event_type == "public hs" 
+  & is.na(df_event$med_inc)==0 & df_event$med_inc>=50000 , ])  # note FALSE evaluates to 0
 
 #num obs event_type=="public hs" and med_inc >= $50,000
-nrow(x = df_event[df_event$event_type == "public hs" 
+nrow(df_event[df_event$event_type == "public hs" 
   & df_event$med_inc>=50000 , ])
 ```
 
@@ -1418,18 +1420,18 @@ To exclude rows where condition is `NA` if subset using `[]` combined w/ `$`
 ```{r}
 #?which
 c(TRUE,FALSE,NA,TRUE)
-str(object = c(TRUE,FALSE,NA,TRUE))
-which(x = c(TRUE,FALSE,NA,TRUE))
+str(c(TRUE,FALSE,NA,TRUE))
+which(c(TRUE,FALSE,NA,TRUE))
 ```
 
 Task: Count events at public HS with at least \$50k median household income?
 
 ```{r}
 #Base R, `[]` combined with `$`; without which()
-nrow(x = df_event[df_event$event_type == "public hs" & df_event$med_inc>=50000, ])
+nrow(df_event[df_event$event_type == "public hs" & df_event$med_inc>=50000, ])
 
 #Base R, `[]` combined with `$`; with which()
-nrow(x = df_event[which(x = df_event$event_type == "public hs" 
+nrow(df_event[which(df_event$event_type == "public hs" 
   & df_event$med_inc>=50000), ])
 ```
 
@@ -1453,7 +1455,7 @@ Solution to 1
 df_school_br1<- df_school[df_school$school_type == "public" 
                   & df_school$pct_hispanic >= 50 
                   & df_school$state_code == "CA", ]
-nrow(x = df_school_br1)
+nrow(df_school_br1)
 ```
 
 Solution to 2:
@@ -1462,11 +1464,11 @@ Solution to 2:
 
 ```{r}
 # use is.na to exclude NA
-nrow(x = df_event[df_event$event_type == "public hs" & df_event$event_inst =="Out-State" 
-              & df_event$med_inc > 30000 & is.na(x = df_event$med_inc) ==0, ])
+nrow(df_event[df_event$event_type == "public hs" & df_event$event_inst =="Out-State" 
+              & df_event$med_inc > 30000 & is.na(df_event$med_inc) ==0, ])
 
 # use which to exclude NA
-nrow(x = df_event[which(x = df_event$event_type == "public hs" & df_event$event_inst =="Out-State" 
+nrow(df_event[which(df_event$event_type == "public hs" & df_event$event_inst =="Out-State" 
               & df_event$med_inc > 30000 ), ])
 ```
 
@@ -1493,7 +1495,7 @@ The `subset()` is a base R function to "filter" observations from some object `x
 
 \medskip
 
-Syntax \[when object is data frame\]: **subset(x = data, subset = condition, select = columns, drop = FALSE)**
+Syntax \[when object is data frame\]: **subset(x, subset, select, drop = FALSE)**
 
 -   `x` is object to be subset
 -   `subset` is the logical expression(s) (evaluates to `TRUE/FALSE`) indicating elements (rows) to keep
@@ -1508,19 +1510,19 @@ Recall the previous example where we count events at public HS with at least \$5
 
 ```{r}
 #Base R, `[]` combined with `$`, without which(); includes `NA`
-nrow(x = df_event[df_event$event_type == "public hs" 
+nrow(df_event[df_event$event_type == "public hs" 
               & df_event$med_inc>=50000, ])	
 
 #Base R, `[]` combined with `$`, with which(); excludes `NA`
-nrow(x = df_event[which(x = df_event$event_type == "public hs" 
+nrow(df_event[which(df_event$event_type == "public hs" 
                     & df_event$med_inc>=50000), ])
 
 #Base R, `subset()`; excludes `NA`
-nrow(x = subset(x = df_event, subset = event_type == "public hs" 
+nrow(subset(df_event, event_type == "public hs" 
             & med_inc>=50000))
 
 #Base R, `subset()`; excludes `NA`; explicitly name arguments of subset()
-nrow(x = subset(x = df_event, subset = event_type == "public hs" 
+nrow(subset(x = df_event, subset = event_type == "public hs" 
             & med_inc>=50000))
 ```
 
@@ -1537,21 +1539,21 @@ subset(x= df_school, subset = school_type == "public" & pct_hispanic >= 50
 -   Can wrap `subset()` within `nrow()` to count number of observations that satisfy criteria
 
 ```{r}
-nrow(x = subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
+nrow(subset(df_school, school_type == "public" & pct_hispanic >= 50 
      & state_code == "CA"))
 ```
 
 Note that `subset()` identify the number of observations for which the condition is `TRUE`
 
 ```{r}
-nrow(x = subset(x = df_school, subset = TRUE))
-nrow(x = subset(x = df_school, subset = FALSE))
+nrow(subset(x = df_school, subset = TRUE))
+nrow(subset(x = df_school, subset = FALSE))
 ```
 
 Count all CA public high schools that are at least 50% Latinx and received at least 1 visit from UC Berkeley (var=`visits_by_110635`)
 
 ```{r}
-nrow(x = subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
+nrow(subset(df_school, school_type == "public" & pct_hispanic >= 50 
   & state_code == "CA" & visits_by_110635 >= 1))
 ```
 
@@ -1560,7 +1562,7 @@ nrow(x = subset(x = df_school, subset = school_type == "public" & pct_hispanic >
 -   Count number of schools from MA, ME, or VT that received at least one visit from University of Alabama (var=`visits_by_100751`)
 
 ```{r}
-nrow(x = subset(x = df_school, subset = state_code %in% c("MA","ME","VT") 
+nrow(subset(df_school, state_code %in% c("MA","ME","VT") 
   & visits_by_100751 >= 1))
 ```
 
@@ -1571,7 +1573,7 @@ Use the `select` argument within `subset()` to keep selected variables
 Subset all CA public high schools that are at least 50% Latinx **AND** only keep variables `name` and `address`
 
 ```{r}
-nrow(x = subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
+nrow(subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
              & state_code == "CA", select = c(name, address)))
 ```
 
@@ -1580,12 +1582,12 @@ Combine `subset()` with assignment (`<-`) to create a new data frame
 Create a new date frame of all CA public high schools that are at least 50% Latinx **AND** only keep variables `name` and `address`
 
 ```{r}
-df_school_v2 <- subset(x = df_school, subset = school_type == "public" & pct_hispanic >= 50 
+df_school_v2 <- subset(df_school, school_type == "public" & pct_hispanic >= 50 
   & state_code == "CA", select = c(name, address))
 
-head(x = df_school_v2, n=5)
+head(df_school_v2, n=5)
 
-nrow(x = df_school_v2)
+nrow(df_school_v2)
 ```
 
 ### Student Exercises
@@ -1607,29 +1609,29 @@ Using `subset()` from base R:
 Solution to 1
 
 ```{r}
-df_event_br <- subset(x = df_event, select=c(instnm, event_date, event_type))
-names(x = df_event_br)
+df_event_br <- subset(df_event, select=c(instnm, event_date, event_type))
+names(df_event_br)
 ```
 
 Solution to 2
 
 ```{r}
-df_school_br <- subset(x = df_school, subset = state_code != "CA" & school_type == "public" 
+df_school_br <- subset(df_school, state_code != "CA" & school_type == "public" 
                         & pct_hispanic >= 50 & visits_by_110635 >=1 )
-nrow(x = df_school_br)
+nrow(df_school_br)
 ```
 
 Solution to 3
 
 ```{r}
-nrow(x = subset(x = df_school, subset = state_code %in% c("CA", "FL", "MA")  
+nrow(subset(df_school, state_code %in% c("CA", "FL", "MA")  
              & school_type == "public" & visits_by_110635 %in% c(1,2) ))
 ```
 
 Solution to 4
 
 ```{r}
-subset(x = df_school, subset = school_type == "public" & state_code != "CA" 
+subset(df_school, school_type == "public" & state_code != "CA" 
        & visits_by_110635 >= 1 & pct_black >= 50, 
        select = c(state_code, name, zip_code))
 ```
@@ -1645,16 +1647,16 @@ subset(x = df_school, subset = school_type == "public" & state_code != "CA"
 Data frame `df_school_all` has one obs per US high school and then variables identifying number of visits by particular universities
 
 ```{r}
-load(file = url(description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"))
-names(x = df_school_all)
+load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_allvars.RData"))
+names(df_school_all)
 ```
 
 Create new version of data frame, called `school_v2`, which we'll use to introduce how to create new variables
 
 ```{r, results='hide'}
-library(package = tidyverse) # below code use tidyverse functions and pipe operator
+library(tidyverse) # below code use tidyverse functions and pipe operator
 school_v2 <- df_school_all %>% 
-  select(-contains(match = "inst_")) %>% # remove vars that start with "inst_"
+  select(-contains("inst_")) %>% # remove vars that start with "inst_"
   rename( # rename selected variables
     visits_by_berkeley = visits_by_110635,
     visits_by_boulder = visits_by_126614,
@@ -1677,7 +1679,7 @@ school_v2 <- df_school_all %>%
     med_inc = avgmedian_inc_2564
   )
 
-glimpse(x = school_v2)
+glimpse(school_v2)
 ```
 
 ### Base R approach to creating new variables
@@ -1699,7 +1701,7 @@ school_v2_temp$pct_fr_lunch <-
    school_v2_temp$num_fr_lunch/school_v2_temp$total_students
 
 #investigate variable you created
-str(object = school_v2_temp$pct_fr_lunch)
+str(school_v2_temp$pct_fr_lunch)
 school_v2_temp$pct_fr_lunch[1:5] # print first 5 obs
 ```
 
@@ -1721,7 +1723,7 @@ If creating new variable based on the condition/values of input variables, basic
 
 ```{r}
 school_v2_temp %>% select(med_inc) %>% 
-  mutate(inc_gt_100k= if_else(condition = med_inc>100000,true = 1,false = 0)) %>%
+  mutate(inc_gt_100k= if_else(med_inc>100000,1,0)) %>%
   count(inc_gt_100k) # note how NA values of med_inc treated
 ```
 
@@ -1732,7 +1734,7 @@ school_v2_temp$inc_gt_100k<-NA #initialize an empty column with NAs
                               # otherwise you'll get warning
 school_v2_temp$inc_gt_100k[school_v2_temp$med_inc>100000] <- 1
 school_v2_temp$inc_gt_100k[school_v2_temp$med_inc<=100000] <- 0
-count(x = school_v2_temp, inc_gt_100k)
+count(school_v2_temp, inc_gt_100k)
 ```
 
 **Task**: Using data frame `wwlist` and input vars `state` and `firstgen`, create a 4-category var with following categories:
@@ -1742,7 +1744,7 @@ count(x = school_v2_temp, inc_gt_100k)
 **tidyverse approach (using pipes)**
 
 ```{r}
-load(file = url(description = "https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_merged.RData"))
+load(url("https://github.com/ozanj/rclass/raw/master/data/prospect_list/wwlist_merged.RData"))
 wwlist_temp <- wwlist %>% 
   mutate(state_gen = case_when(
     state == "WA" & firstgen =="Y" ~ "instate_firstgen",
@@ -1750,7 +1752,7 @@ wwlist_temp <- wwlist %>%
     state != "WA" & firstgen =="Y" ~ "outstate_firstgen",
     state != "WA" & firstgen =="N" ~ "outstate_nonfirstgen")
   )
-str(object = wwlist_temp$state_gen)
+str(wwlist_temp$state_gen)
 wwlist_temp %>% count(state_gen)
 ```
 
@@ -1771,8 +1773,8 @@ wwlist_temp$state_gen[wwlist_temp$state != "WA"
 wwlist_temp$state_gen[wwlist_temp$state != "WA" 
   & wwlist_temp$firstgen =="N"] <- "outstate_nonfirstgen"
 
-str(object = wwlist_temp$state_gen)
-count(x = wwlist_temp, state_gen)
+str(wwlist_temp$state_gen)
+count(wwlist_temp, state_gen)
 ```
 
 ## Sorting data
@@ -1781,7 +1783,7 @@ count(x = wwlist_temp, state_gen)
 
 `sort()` is a base R function that sorts vectors
 
-Syntax: `sort(x = x, decreasing=FALSE, ...)`
+Syntax: `sort(x, decreasing=FALSE, ...)`
 
 -   where x is object being sorted
 -   By default it sorts in ascending order (low to high)
@@ -1790,8 +1792,8 @@ Syntax: `sort(x = x, decreasing=FALSE, ...)`
 ```{r}
 #?sort()
 x<- c(31, 5, 8, 2, 25)
-sort(x = x)
-sort(x = x, decreasing = TRUE)
+sort(x)
+sort(x, decreasing = TRUE)
 ```
 
 ### Base R `order()` for dataframes
