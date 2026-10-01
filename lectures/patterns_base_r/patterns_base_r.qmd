@@ -227,7 +227,7 @@ str(object = df_event) # data frame
 -   value/return:
     -   if object `x` is an atomic vector: `ncol()` and `nrow()` returns `NULL`
     -   if object `x` is a list but not a data frame: `ncol()` and `nrow()` returns `NULL`
-    -   if object `x` is a data frame: `ncol()` and `nrow()` returns integer of length 1
+    -   if object `x` is a data frame: `ncol()` and `nrow()` returns integer vector of length 1
 
 Example, object is a data frame
 
@@ -254,7 +254,7 @@ nrow(x = x)
 -   arguments
     -   `x`: a vector, array, data frame, or NULL
 -   value/return:
-    -   if object `x` is a data frame: `dim()` returns integer of length 2
+    -   if object `x` is a data frame: `dim()` returns integer vector of length 2
         -   first element = number of rows; second element = number of columns
     -   if object `x` is an atomic vector: `dim()` returns `NULL`
     -   if object `x` is a list but not a data frame: `dim()` returns `NULL`
@@ -284,7 +284,7 @@ dim(x = x)
 -   syntax:
     -   get the names of an object: `names(x = x)`
     -   set the names of an object: `names(x) <- value`
--   arguments (partial)
+-   arguments
     -   `x`: an R object
     -   `value`: a character vector with same length as object `x` or `NULL`
 -   value/return
@@ -315,14 +315,13 @@ names(x = a)
 
 ### Applying `names()` function to a data frame
 
-Recall that a data frame is an object where **type** is a **list** and each **element** is **named**
+Recall that a data frame is an object where **type** is a **list** and each **element** of the list is **named**
 
 -   each element is a variable
 -   each element name is a variable name
 
-Example (output omitted)
-
-```{r, results = "hide"}
+Example
+```{r}
 names(x = df_event)
 ```
 
@@ -371,7 +370,8 @@ nrow(x = df_event)
 #str(object = df_event)
 ```
 
--   each element of the list (i.e., variable) has the same length
+- each element of the list (i.e., variable) is an atomic vector that has all values for that variable
+- each element of the list (i.e., variable) has the same length
     -   Length of each variable is equal to number of observations in data frame
 
 ```{r}
@@ -387,6 +387,7 @@ str(object = df_event$med_inc)
 The object `df_school` has one obs per high school
 
 -   variable `visits_by_100751` shows number the of visits by University of Alabama to each high school
+  - `100751` is the Department of Education "IPEDS" ID for U of Alabama
 -   like all variables in a data frame, the var `visits_by_100751` is just a vector
 
 ```{r}
@@ -495,20 +496,17 @@ df_event$event_state[1:10] # print obs 1-10 of variable "event_state"
 df_event$event_type[6:10] # print obs 6-10 of variable "event_type"
 ```
 
-**Print specific elements (i.e., observations) of variable based on element position**
+Example, print individual elements
 
 -   syntax: `obj_name$var_name[<element position>]`
 
-Example, print individual elements
-
 ```{r}
-df_event$zip[1:5] # print obs 1-5 of variable for event zip code
 df_event$zip[1] # print obs 1 of variable for event zip code
 df_event$zip[5] # print obs 5 of variable for event zip code
 df_event$zip[c(1,3,5)] # print obs 1, 3, and 5 of variable for event zip code
 ```
 
-**Print specific elements of multiple variables using combine function `c()`**
+**Print specific elements of multiple variables using combine function `c()`** [SKIP]
 
 -   syntax: `c(obj_name$var1_name[<element position>], obj_name$var2_name[<element position>],...)`
 -   Example: print first five observations of variables `"event_state"` and `"event_type"`
@@ -577,11 +575,16 @@ is.na(x = "NA")
 typeof(x = is.na(x = "NA")) # example of a logical vector
 
 nvector <- c(10,5,NA)
+nvector
+typeof(nvector)
 is.na(x = nvector)
 typeof(x = is.na(x = nvector)) # example of a logical vector
 
 svector <- c("e","f",NA,"NA")
+svector
+typeof(svector)
 is.na(x = svector)
+typeof(x = is.na(x = nvector))
 ```
 
 ### Missing values are "contagious"
@@ -633,14 +636,26 @@ Broader point: Most functions that create descriptive statistics have options ab
 
 # Subsetting using subset operators
 
-### Subsetting to Extract Elements
+## Subsetting to extract elements
 
-"Subsetting" refers to isolating particular elements of an object
+```{r}
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+x
+```
 
-Subsetting operators can be used to select/exclude elements (e.g., variables, observations)
+"set" = a collection of objects
 
--   there are three subsetting operators: `[]`, `$` , `[[]]`
--   these operators function differently based on vector types (e.g, atomic vectors, lists, data frames)
+- let's say that atomic vector `x` is the set
+
+"subset" [noun] = a collection that contains some of the elements of the (complete) set
+
+- e.g., a subset that contains only the first three elements of vector `x`
+
+"Subsetting" [verb] refers to isolating particular elements of an object
+
+- Subsetting operators can be used to select/exclude elements (e.g., variables, observations)
+    -   there are three subsetting operators: `[]`, `$` , `[[]]`
+    -   these operators function differently based on vector types (e.g, atomic vectors, lists, data frames)
 
 ### Wichham refers to number of "dimensions" in R objects
 
@@ -676,6 +691,8 @@ nrow(x = df_school)
 
 -   I sometimes refer to this as "accessing elements of a vector"
 -   subsetting elements of a vector is similar to "filtering" rows of a data-frame
+    - This is how ["student list" products](https://journals.sagepub.com/doi/full/10.3102/01623737231210894) enable colleges to choose which prospect profiles they purchase
+    - purchased profiles are sent emails/mail/targeted social media
 -   `[]` is the subsetting function for vectors
 
 Six ways to subset an atomic vector using `[]`
@@ -683,11 +700,12 @@ Six ways to subset an atomic vector using `[]`
 1.  Using positive integers to return elements at specified positions
 2.  Using negative integers to exclude elements at specified positions
 3.  Using logicals to return elements where corresponding logical is `TRUE`
+    - practically, this is the most important approach
 4.  Empty `[]` returns original vector (useful for dataframes)
 5.  Zero vector \[0\], useful for testing data
 6.  If vector is "named," use character vectors to return elements with matching names
 
-### 1. Using positive integers to return elements at specified positions (subset atomic vectors using \[\])
+### Using positive integers to return elements at specified positions (subset atomic vectors using \[\])
 
 Create atomic vector `x`
 
@@ -712,7 +730,7 @@ x[c(4,4,4)] #return 4th element, 4th element, and 4th element
 x[3:5]
 ```
 
-### 2. Using negative integers to exclude elements at specified positions (subset atomic vectors using \[\])
+### Using negative integers to exclude elements at specified positions (subset atomic vectors using \[\])
 
 Before excluding elements based on position, investigate object
 
@@ -732,7 +750,7 @@ x[c(3,1)] # 3rd and 1st element
 x[-c(3,1)] # exclude 3rd and 1st element
 ```
 
-### 3. Using logicals to return elements where corresponding logical is `TRUE` (subset atomic vectors using \[\])
+### Using logicals to return elements where corresponding logical is `TRUE` (subset atomic vectors using \[\])
 
 ```{r}
 x
@@ -750,7 +768,8 @@ x[c(TRUE,TRUE,FALSE,FALSE,TRUE)]
 Recycling rules:
 
 -   in `x[y]`, if `x` is different length than `y`, R "recycles" length of shorter to match length of longer
-
+    - (but please never do this in real research!)
+    
 ```{r}
 length(x = c(TRUE,FALSE))
 x
@@ -772,19 +791,31 @@ Return all elements of object `x` where element is greater than 3:
 ```{r}
 x # print object X
 x>3 # for each element of X, print T/F whether element value > 3
-str(object = x>3)
+
+# note that length of x is same as length of x>3!
+length(x)
+length(x>3)
+
 x[x>3] # prints only the values that had TRUE at that position
 ```
 
 The `visits_by_100751` column shows how many visits the University of Alabama made to each school. Let's subset this to only include 2 or more visits:
 
 ```{r}
+# for first 100 high schools, the number of visits from U. Alabama
 df_school$visits_by_100751[1:100]
+length(df_school$visits_by_100751[1:100])
+
+# for first 100 high schools, was the number of visits by Bama greater than 2
 df_school$visits_by_100751[1:100]>2
-df_school$visits_by_100751[df_school$visits_by_100751>2]
+length(df_school$visits_by_100751[1:100]>2)
+
+#for first 100 high schools, subset only schools where number of visits by Bama greater than 2
+df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2]
+length(df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2])
 ```
 
-### 4. Empty `[]` returns original vector (subset atomic vectors using \[\])
+### Empty `[]` returns original vector (subset atomic vectors using \[\])
 
 ```{r}
 x
@@ -794,7 +825,7 @@ x[]
 
 This is useful for sub-setting data frames, as we will show below
 
-### 5. Zero vector \[0\] (subset atomic vectors using \[\])
+### Zero vector \[0\] (subset atomic vectors using \[\])
 
 Zero vector, `x[0]`
 
@@ -808,7 +839,7 @@ Wickham states:
 
 -   "This is not something you usually do on purpose, but it can be helpful for generating test data."
 
-### 6. If vector is named, character vectors to return elements with matching names (subset atomic vectors using \[\])
+### If vector is named, character vectors to return elements with matching names (subset atomic vectors using \[\])
 
 Create vector `y` that has values of vector `x` but each element is named
 
@@ -910,12 +941,14 @@ df_event[, c(1,2,3)]
 
 ### Use \[\] to extract data frame columns based on variable names
 
-Selecting columns from a data frame by subsetting with `[]` and list of element names (i.e., variable names) enclose in quotes
+Selecting columns from a data frame by subsetting with `[]` and a vector of element names (i.e., variable names), with each element name enclose in quotes
+
+- This is more useful than selecting variables by element position number
 
 "single index" approach extracts specific variables, all rows (output omitted)
 
 ```{r, results="hide"}
-df_event[c("instnm", "univ_id", "event_state")] 
+df_event[c("instnm", "univ_id", "event_state")]
 ```
 
 "Double index" approach extracts specific variables and specific rows
@@ -1006,7 +1039,7 @@ list_x <- list(1:3, "a", 4:6) # create list object list_x
 str(object = list_x)
 ```
 
-In our train metaphor, object `list_x` is a train that contains 3 carriages
+In our train metaphor, object `list_x` is a train that contains 3 carriages (Ignore the locomotive!)
 
 [![](three_carriage_train.png)](https://adv-r.hadley.nz/subsetting.html#subset-single)
 
@@ -1090,13 +1123,6 @@ library(knitr)
 include_graphics("one_carriage_train_vs_contents.png")
 ```
 
-Object created by `list_x[1]` is a list with one element (output omitted)
-
-```{r}
-list_x[1]
-str(object = list_x[1])
-```
-
 Object created by `list_x[[1]]` is a vector with 3 elements (output omitted)
 
 -   `list_x[[1]]` gives us "contents" of element 1
@@ -1131,6 +1157,7 @@ Like `[]`, can use `[[]]` to return contents of **named** elements specified usi
 
 ```{r}
 list_x <- list(var1=1:3, var2="a", var3=4:6) # create list with named elements
+str(list_x)
 ```
 
 Subset list `list_x` using `[[]]` element names
@@ -1172,16 +1199,17 @@ When working w/ data frames, functions that calculate things expect to be workin
 ```{r}
 mean(x = df_event[['med_inc']], na.rm = TRUE)
 # mean(x = df_event['med_inc'], na.rm = TRUE) # by contrast, this doesn't work
-str(object = df_event['med_inc'])
-str(object = df_event[['med_inc']])
+str(object = df_event['med_inc']) # because this is a dataframe
+str(object = df_event[['med_inc']]) # this is an atomic vector
 ```
 
 ### Subset lists/data frames using \$
 
 ```{r}
 list_x <- list(var1=1:3, var2="a", var3=4:6)
-```
 
+str(list_x)
+```
 `obj_name$element_name` is shorthand operator for `obj_name[["element_name"]]`
 
 These three lines of code all give the same result
