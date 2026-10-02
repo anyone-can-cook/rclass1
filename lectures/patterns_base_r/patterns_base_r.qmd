@@ -651,7 +651,7 @@ x
 
 - e.g., a subset that contains only the first three elements of vector `x`
 
-"Subsetting" [verb] refers to isolating particular elements of an object
+"Subsetting" [verb] or "to subset" [verb] refers to isolating particular elements of an object
 
 - Subsetting operators can be used to select/exclude elements (e.g., variables, observations)
     -   there are three subsetting operators: `[]`, `$` , `[[]]`
