@@ -23,7 +23,6 @@ rm(list = ls()) # remove all objects from the Global Environment
   # loading the file will create an object named df_school_all in your Global Environment.
 
 
-
   # Now, answer the following questions about the object `df_school_all` by running the appropriate R commands. 
   # Make sure to store the result in the object specified to receive credit. 
   # Note: The first question is answered for you and shows two correct options to answer the question.
@@ -220,7 +219,7 @@ q2_5 <-
 
   # Q2.6 ----
   # 1 point
-  # What is the data type? 
+  # What is the data type of the object returned in Q2.5?
   # Assign the answer as a character data type to an object named `q2_6`.
 
 q2_6 <- 
