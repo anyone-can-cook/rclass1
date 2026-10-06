@@ -109,10 +109,8 @@ list.files()
 
 `ls()` function lists objects currently open in R
 
-`vec_x` is a short name for an example vector. We reuse it when recreating or modifying that vector; distinct vectors used together can be named `vec_x`, `vec_y`, and `vec_z`.
-
 ```{r}
-vec_x <- "hello!"
+x <- "hello!"
 ls() # Objects open in R
 ```
 
@@ -121,7 +119,7 @@ ls() # Objects open in R
 `rm()` function removes specified objects open in R
 
 ```{r}
-rm(vec_x)
+rm(x)
 ls()
 ```
 
@@ -136,8 +134,7 @@ Command to remove all objects open in R (I don't run it)
 `typeof()` function determines the the internal storage type of an object (e.g., logical vector, integer vector, list)
 
 -   syntax
-    -   `typeof(x = obj_name)`
-    -   Here `x` is the fixed argument name; `obj_name` is a placeholder for the object you supply. Syntax templates are not code to run unchanged.
+    -   `typeof(x = x)`
 -   arguments
     -   `x`: any R object
 -   help:
@@ -175,7 +172,7 @@ Example, length of an atomic vector is
 
 ```{r}
 length(x = c(TRUE,TRUE,FALSE,NA))
-length(x = c(TRUE,TRUE,FALSE,NA))
+length(c(TRUE,TRUE,FALSE,NA))
 ```
 
 Example, length of a list or data frame
@@ -193,7 +190,7 @@ length(x = df_event) # = num elements = num columns
 `str()` function compactly displays the structure of an R object
 
 -   "structure" includes type, length, and attribute of object and also nested objects
--   syntax: `str(object = obj_name)`
+-   syntax: `str(object = object)`
 -   arguments (partial)
     -   `object`: any R object
     -   `max.level`: max level of nesting to display nested structures; default `NA` = all levels
@@ -213,8 +210,8 @@ str(object = c(TRUE,TRUE,FALSE,NA))
 Example, lists/data frames (output omitted)
 
 ```{r, results = "hide"}
-list_x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-str(object = list_x)
+x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
+str(object = x)
 
 str(object = df_event) # data frame
 ```
@@ -225,13 +222,13 @@ str(object = df_event) # data frame
 
 -   Description
     -   `ncol()` = number of columns; `nrow()` = number of rows
--   syntax: `ncol(x = obj_name)` `nrow(x = obj_name)` `dim(x = obj_name)`
+-   syntax: `ncol(x = x)` `nrow(x = x)` `dim(x = x)`
 -   arguments
     -   `x`: a vector, array, data frame, or NULL
 -   value/return:
-    -   if object supplied to `x` is an atomic vector: `ncol()` and `nrow()` returns `NULL`
-    -   if object supplied to `x` is a list but not a data frame: `ncol()` and `nrow()` returns `NULL`
-    -   if object supplied to `x` is a data frame: `ncol()` and `nrow()` returns integer vector of length 1
+    -   if object `x` is an atomic vector: `ncol()` and `nrow()` returns `NULL`
+    -   if object `x` is a list but not a data frame: `ncol()` and `nrow()` returns `NULL`
+    -   if object `x` is a data frame: `ncol()` and `nrow()` returns integer vector of length 1
 
 Example, object is a data frame
 
@@ -246,22 +243,22 @@ Example, object is atomic vector or list that is not a data frame (output omitte
 
 ```{r, results = "hide"}
 ncol(x = c(TRUE,TRUE,FALSE,NA)) # atomic vector
-list_x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-nrow(x = list_x)
+x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
+nrow(x = x)
 ```
 
 ### Base R functions to describe objects, `dim()`
 
 `dim()` function returns the dimensions of an object (e.g., number of rows and columns)
 
--   syntax: `dim(x = obj_name)`
+-   syntax: `dim(x = x)`
 -   arguments
     -   `x`: a vector, array, data frame, or NULL
 -   value/return:
-    -   if object supplied to `x` is a data frame: `dim()` returns integer vector of length 2
+    -   if object `x` is a data frame: `dim()` returns integer vector of length 2
         -   first element = number of rows; second element = number of columns
-    -   if object supplied to `x` is an atomic vector: `dim()` returns `NULL`
-    -   if object supplied to `x` is a list but not a data frame: `dim()` returns `NULL`
+    -   if object `x` is an atomic vector: `dim()` returns `NULL`
+    -   if object `x` is a list but not a data frame: `dim()` returns `NULL`
 
 Example, object is a data frame
 
@@ -275,8 +272,8 @@ Example, object is atomic vector or list that is not a data frame (output omitte
 
 ```{r, results = "hide"}
 dim(x = c(TRUE,TRUE,FALSE,NA)) # atomic vector
-list_x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
-dim(x = list_x)
+x <- list(c(1,2), list("apple", "orange"), list(2, 3)) # list
+dim(x = x)
 ```
 
 ## Variables names
@@ -286,35 +283,35 @@ dim(x = list_x)
 `names()` function gets or sets the names of elements of an object
 
 -   syntax:
-    -   get the names of an object: `names(x = obj_name)`
-    -   set the names of an object: `names(obj_name) <- new_names`
+    -   get the names of an object: `names(x = x)`
+    -   set the names of an object: `names(x) <- value`
 -   arguments
     -   `x`: an R object
-    -   `value`: the replacement value; `new_names` is its placeholder in the template. Supply a character vector with the same length as `obj_name`, or `NULL`.
+    -   `value`: a character vector with same length as object `x` or `NULL`
 -   value/return
-    -   `names(x = obj_name)` returns a character vector of length = `length(x = obj_name)` in which each element is the name of the element of `obj_name`
+    -   `names(x = x)` returns a character vector of length = `length(x = x)` in which each element is the name of the element of `x`
 
 Example, get names (of atomic vector)
 
 ```{r}
-vec_x <- c(v1 = 1,v2 = 2, 3 ,v4 = "hi!") # named atomic vector
-vec_x 
-length(x = vec_x)
-names(x = vec_x)
-length(x = names(x = vec_x)) # investigate length of object names(x = vec_x)
-str(object = names(x = vec_x)) # investigate structure of object names(x = vec_x)
+a <- c(v1 = 1,v2 = 2, 3 ,v4 = "hi!") # named atomic vector
+a 
+length(x = a)
+names(x = a)
+length(x = names(x = a)) # investigate length of object names(x = a)
+str(object = names(x = a)) # investigate structure of object names(x = a)
 ```
 
 Example, set names (of atomic vector)
 
 ```{r}
-names(vec_x) <- NULL # set names of vector vec_x to NULL
-vec_x
-names(x = vec_x)
+names(a) <- NULL # set names of vector a to NULL
+a
+names(x = a)
 
-names(vec_x) <- c("var1","var2","var3","var4") # set names of vector vec_x
-vec_x
-names(x = vec_x)
+names(a) <- c("var1","var2","var3","var4") # set names of vector a
+a
+names(x = a)
 ```
 
 ### Applying `names()` function to a data frame
@@ -404,10 +401,10 @@ sum(df_school$visits_by_100751) # sum of values of var across all obs
 We perform calculations on a variable like we would on any vector of same type
 
 ```{r}
-vec_x <- c(2,4,6)
-typeof(x = vec_x)
-length(x = vec_x)
-sum(vec_x)
+v <- c(2,4,6)
+typeof(x = v)
+length(x = v)
+sum(v)
 ```
 
 ## View and print data
@@ -580,13 +577,13 @@ typeof(x = is.na(x = "NA")) # example of a logical vector
 
 nvector <- c(10,5,NA)
 nvector
-typeof(x = nvector)
+typeof(nvector)
 is.na(x = nvector)
 typeof(x = is.na(x = nvector)) # example of a logical vector
 
 svector <- c("e","f",NA,"NA")
 svector
-typeof(x = svector)
+typeof(svector)
 is.na(x = svector)
 typeof(x = is.na(x = nvector))
 ```
@@ -643,17 +640,17 @@ Broader point: Most functions that create descriptive statistics have options ab
 ## Subsetting to extract elements
 
 ```{r}
-vec_x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
-vec_x
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+x
 ```
 
 "set" = a collection of objects
 
-- let's say that atomic vector `vec_x` is the set
+- let's say that atomic vector `x` is the set
 
 "subset" [noun] = a collection that contains some of the elements of the (complete) set
 
-- e.g., a subset that contains only the first three elements of vector `vec_x`
+- e.g., a subset that contains only the first three elements of vector `x`
 
 "Subsetting" [verb] or "to subset" [verb] refers to isolating particular elements of an object
 
@@ -666,8 +663,8 @@ vec_x
 An atomic vector is a 1-dimensional object that contains n elements
 
 ```{r}
-vec_x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
-str(object = vec_x)
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+str(object = x)
 ```
 
 Lists are multi-dimensional objects
@@ -675,8 +672,8 @@ Lists are multi-dimensional objects
 -   Contains n elements; each element may contain a 1-dimensional atomic vector or a multi-dimensional list. Below list contains 3 dimensions
 
 ```{r}
-list_x <- list(c(1,2), list("apple", "orange"))
-str(object = list_x)
+list <- list(c(1,2), list("apple", "orange"))
+str(object = list)
 ```
 
 Data frames are 2-dimensional lists
@@ -711,11 +708,11 @@ Six ways to subset an atomic vector using `[]`
 
 ### Using positive integers to return elements at specified positions (subset atomic vectors using \[\])
 
-Create atomic vector `vec_x`
+Create atomic vector `x`
 
 ```{r}
-(vec_x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
-str(object = vec_x)
+(x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
+str(object = x)
 ```
 
 `[]` is the subsetting function for vectors
@@ -724,14 +721,14 @@ str(object = vec_x)
     -   e.g., `[3]` refers to contents of 3rd element (or position 3)
 
 ```{r}
-vec_x[c(5)] #return 5th element
+x[c(5)] #return 5th element
 
-vec_x[c(3, 1)] #return 3rd and 1st element
+x[c(3, 1)] #return 3rd and 1st element
 
-vec_x[c(4,4,4)] #return 4th element, 4th element, and 4th element
+x[c(4,4,4)] #return 4th element, 4th element, and 4th element
 
 #Return 3rd through 5th element
-vec_x[3:5]
+x[3:5]
 ```
 
 ### Using negative integers to exclude elements at specified positions (subset atomic vectors using \[\])
@@ -739,68 +736,68 @@ vec_x[3:5]
 Before excluding elements based on position, investigate object
 
 ```{r}
-vec_x
+x
 
-length(x = vec_x)
-str(object = vec_x)
+length(x = x)
+str(object = x)
 ```
 
 Use negative integers to exclude elements based on element position
 
 ```{r}
-vec_x[-1] # exclude 1st element
+x[-1] # exclude 1st element
 
-vec_x[c(3,1)] # 3rd and 1st element
-vec_x[-c(3,1)] # exclude 3rd and 1st element
+x[c(3,1)] # 3rd and 1st element
+x[-c(3,1)] # exclude 3rd and 1st element
 ```
 
 ### Using logicals to return elements where corresponding logical is `TRUE` (subset atomic vectors using \[\])
 
 ```{r}
-vec_x
+x
 ```
 
-In the syntax template `vec_name[logical_index]`, `vec_name` represents the vector and `logical_index` represents a logical vector selecting its elements. Good practice is to have `length(x = vec_name) == length(x = logical_index)`.
+When using `x[y]` to subset `x`, good practice to have `length(x = x)==length(x = y)`
 
 ```{r}
-length(x = vec_x) # length of vector vec_x
-length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # length of the logical index
-length(x = vec_x) == length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # condition true
-vec_x[c(TRUE,FALSE,TRUE,FALSE,TRUE)]
+length(x = x) # length of vector x
+length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # length of y
+length(x = x) == length(x = c(TRUE,FALSE,TRUE,FALSE,TRUE)) # condition true
+x[c(TRUE,FALSE,TRUE,FALSE,TRUE)]
 ```
 
 Recycling rules:
 
--   in the template `vec_name[logical_index]`, if `vec_name` is different length than `logical_index`, R "recycles" length of shorter to match length of longer
+-   in `x[y]`, if `x` is different length than `y`, R "recycles" length of shorter to match length of longer
     - (but please never do this in real research!)
     
 ```{r}
 length(x = c(TRUE,FALSE))
-vec_x
-vec_x[c(TRUE,FALSE)]
+x
+x[c(TRUE,FALSE)]
 ```
 
 ```{r}
-vec_x
+x
 ```
 
 Note that a missing value (`NA`) in the index always yields a missing value in the output:
 
 ```{r}
-vec_x[c(TRUE, FALSE, NA, TRUE, NA)]
+x[c(TRUE, FALSE, NA, TRUE, NA)]
 ```
 
-Return all elements of object `vec_x` where element is greater than 3:
+Return all elements of object `x` where element is greater than 3:
 
 ```{r}
-vec_x # print object vec_x
-vec_x>3 # for each element of vec_x, print T/F whether element value > 3
+x # print object X
+x>3 # for each element of X, print T/F whether element value > 3
 
-# note that length of vec_x is same as length of vec_x>3!
-length(x = vec_x)
-length(x = vec_x>3)
+# note that length of x is same as length of x>3!
+length(x)
+length(x>3)
 
-vec_x[vec_x>3] # prints only the values that had TRUE at that position
+x[x>3] # prints only the values that had TRUE at that position
 ```
 
 The `visits_by_100751` column shows how many visits the University of Alabama made to each school. Let's subset this to only include 2 or more visits:
@@ -808,35 +805,35 @@ The `visits_by_100751` column shows how many visits the University of Alabama ma
 ```{r}
 # for first 100 high schools, the number of visits from U. Alabama
 df_school$visits_by_100751[1:100]
-length(x = df_school$visits_by_100751[1:100])
+length(df_school$visits_by_100751[1:100])
 
 # for first 100 high schools, was the number of visits by Bama greater than 2
 df_school$visits_by_100751[1:100]>2
-length(x = df_school$visits_by_100751[1:100]>2)
+length(df_school$visits_by_100751[1:100]>2)
 
 #for first 100 high schools, subset only schools where number of visits by Bama greater than 2
 df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2]
-length(x = df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2])
+length(df_school$visits_by_100751[1:100][df_school$visits_by_100751[1:100]>2])
 ```
 
 ### Empty `[]` returns original vector (subset atomic vectors using \[\])
 
 ```{r}
-vec_x
+x
 
-vec_x[]
+x[]
 ```
 
 This is useful for sub-setting data frames, as we will show below
 
 ### Zero vector \[0\] (subset atomic vectors using \[\])
 
-Zero vector, `vec_x[0]`
+Zero vector, `x[0]`
 
 -   R interprets this as returning element 0
 
 ```{r}
-vec_x[0]
+x[0]
 ```
 
 Wickham states:
@@ -845,12 +842,12 @@ Wickham states:
 
 ### If vector is named, character vectors to return elements with matching names (subset atomic vectors using \[\])
 
-Create vector `vec_y` that has values of vector `vec_x` but each element is named
+Create vector `y` that has values of vector `x` but each element is named
 
 ```{r}
-vec_x
+x
 
-(vec_y <- c(a=1.1, b=2.2, c=3.3, d=4.4, e=5.5))
+(y <- c(a=1.1, b=2.2, c=3.3, d=4.4, e=5.5))
 ```
 
 Return elements of vector based on name of element
@@ -859,10 +856,10 @@ Return elements of vector based on name of element
 
 ```{r}
 #show element named "a"
-vec_y["a"]
+y["a"]
 
 #show elements "a", "b", and "d"
-vec_y[c("a", "b", "d" )]
+y[c("a", "b", "d" )]
 ```
 
 ## Subsetting lists/data frames using \[\]
@@ -1013,19 +1010,19 @@ So far we have used `[]` to extract elements from an object
 -   Applying `[[]]` to atomic vector gives same result as `[]`; that is, an atomic vector with element you request
 
 ```{r}
-(vec_x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
+(x <- c(1.1, 2.2, 3.3, 4.4, 5.5))
 
-str(object = vec_x[3]) 
+str(object = x[3]) 
 
-str(object = vec_x[[3]])
+str(object = x[[3]])
 ```
 
 -   Caveat: when applying `[[]]` to atomic vector, you can only subset a single element
 
 ```{r}
-vec_x[c(3,4)] # single bracket; this works
+x[c(3,4)] # single bracket; this works
 
-#vec_x[[c(3,4)]] # double bracket; this won't work
+#x[[c(3,4)]] # double bracket; this won't work
 ```
 
 ### Subsetting lists using `[]` vs. `[[]]`, introduce "train metaphor"
@@ -1161,7 +1158,7 @@ Like `[]`, can use `[[]]` to return contents of **named** elements specified usi
 
 ```{r}
 list_x <- list(var1=1:3, var2="a", var3=4:6) # create list with named elements
-str(object = list_x)
+str(list_x)
 ```
 
 Subset list `list_x` using `[[]]` element names
@@ -1193,10 +1190,10 @@ What we just learned about applying `[]` vs `[[]]` to lists applies more general
 
 General rules of applying `[]` vs. `[[]]` to nested objects
 
--   subset any object `obj_name` using `[]` will return object with same data structure as `obj_name`
--   subset any object `obj_name` using `[[]]` will return an object thay may or may not have same data structure of `obj_name`
-    -   if object `obj_name` is not a nested object, then applying `[[]]` to a single element of `obj_name` will return object with same data structure as `obj_name`
-    -   if object `obj_name` has a nested data structure, then then applying `[[]]` to a single element of `obj_name` will "move up one level of hierarchy" to extract the **contents** of an element within the object `obj_name`
+-   subset any object `x` using `[]` will return object with same data structure as `x`
+-   subset any object `x` using `[[]]` will return an object thay may or may not have same data structure of `x`
+    -   if object `x` is not a nested object, then applying `[[]]` to a single element of `x` will return object with same data structure as `x`
+    -   if object `x` has a nested data structure, then then applying `[[]]` to a single element of `x` will "move up one level of hierarchy" to extract the **contents** of an element within the object `x`
 
 When working w/ data frames, functions that calculate things expect to be working with atomic vectors (think `[[]]`) not lists (think `[]`)
 
@@ -1212,7 +1209,7 @@ str(object = df_event[['med_inc']]) # this is an atomic vector
 ```{r}
 list_x <- list(var1=1:3, var2="a", var3=4:6)
 
-str(object = list_x)
+str(list_x)
 ```
 `obj_name$element_name` is shorthand operator for `obj_name[["element_name"]]`
 
@@ -1306,8 +1303,8 @@ str(object = df_school$visits_by_110635 >= 1)
 -   example using atomic vectors (output omitted)
 
 ```{r results="hide"}
-vec_x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
-vec_x[vec_x>3]
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+x[x>3]
 ```
 
 ### Subset Data Frames by combining `[]` and `$`, keep desired columns
@@ -1508,9 +1505,9 @@ nrow(x = df_event[which(x = df_event$event_type == "public hs" & df_event$event_
 
 ## Subset using subset() function
 
-The `subset()` is a base R function to "filter" observations from an object supplied to argument `x`
+The `subset()` is a base R function to "filter" observations from some object `x`
 
--   The object supplied to `x` can be a matrix, data frame, list
+-   object `x` can be a matrix, data frame, list
 -   `subset()` automatically excludes elements/rows with `NA` for condition
 -   Can also use `subset()` to select variables
 -   what `subset()` function returns:
@@ -1525,9 +1522,9 @@ The `subset()` is a base R function to "filter" observations from an object supp
 
 \medskip
 
-Syntax \[when object is data frame\]: `subset(x = df_name, subset = logical_condition, select = column_names, drop = FALSE)`
+Syntax \[when object is data frame\]: **subset(x = data, subset = condition, select = columns, drop = FALSE)**
 
--   `x` is the argument receiving the object to be subset (`df_name` in the template)
+-   `x` is object to be subset
 -   `subset` is the logical expression(s) (evaluates to `TRUE/FALSE`) indicating elements (rows) to keep
 -   `select` indicates columns to select from data frame (if argument is not used default will keep all columns)
 -   `drop` to preserve original **dimensions** \[SKIP\]
@@ -1716,9 +1713,9 @@ glimpse(x = school_v2)
 
 Create new variables using assignment operator `<-` and subsetting operators `[]` and `$` to create new variables and set conditions of the input variables
 
-Pseudo syntax: `df_name$newvar <- ...`
+Pseudo syntax: `df$newvar <- ...`
 
--   where `...` is a placeholder for the expression or calculation assigned to the new variable
+-   where `...` argument is expression(s)/calculation(s) used to create new variables
     -   expressions can include subsetting operators and/or other base R functions
 
 **Task**: Create measure of percent of students on free-reduced lunch
@@ -1744,7 +1741,7 @@ school_v2_temp <- school_v2 %>%
 
 If creating new variable based on the condition/values of input variables, basically the tidyverse equivalent of `mutate()` **with** `if_else()` or `recode()`
 
--   Pseudo syntax: `df_name$newvar[logical condition]<- new value`
+-   Pseudo syntax: `df$newvar[logical condition]<- new value`
 -   `logical condition`: a condition that evaluates to `TRUE` or `FALSE`
 
 **Task**: Create 0/1 indicator if school has median income greater than \$100k
@@ -1813,17 +1810,17 @@ count(x = wwlist_temp, state_gen)
 
 `sort()` is a base R function that sorts vectors
 
-Syntax: `sort(x = vec_name, decreasing=FALSE, ...)`
+Syntax: `sort(x = x, decreasing=FALSE, ...)`
 
--   where `x` is the argument name and `vec_name` is a placeholder for the vector being sorted
+-   where x is object being sorted
 -   By default it sorts in ascending order (low to high)
 -   Need to set decreasing argument to `TRUE` to sort from high to low
 
 ```{r}
 #?sort()
-vec_x<- c(31, 5, 8, 2, 25)
-sort(x = vec_x)
-sort(x = vec_x, decreasing = TRUE)
+x<- c(31, 5, 8, 2, 25)
+sort(x = x)
+sort(x = x, decreasing = TRUE)
 ```
 
 ### Base R `order()` for dataframes
