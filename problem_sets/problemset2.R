@@ -321,10 +321,10 @@ q3_5 <-
 
   # Q3_6 ----
   # 1 point
-  # What two types of vectors are actually compatible with the mean function?
-  # Assign your answer to an object named `q3_6 `with your answer as a character vector:
+  # What two categories of vectors are compatible with the mean function?
+  # Assign your answer to an object named `q3_6 `with your answer as a character vector
+  # entered in alphabetical order 
   # E.g.: q3_6 <- c("type1","type2"). 
-  # For our grading code to work, the two types should be entered in alphabetical order :)
 
 q3_6 <- 
 
