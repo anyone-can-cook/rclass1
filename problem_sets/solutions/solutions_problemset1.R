@@ -282,7 +282,7 @@ q3_7 <- c(1,0)
 
   # Q3.8. ---- 
   # 1 point each
-  # Run the ?mean command and read the help file. In an object named `q3_8` 
+  # Run the ?mean command and read the help file. In an object named `q3_8a` 
   # assign a character vector with the three main argument names of the `mean()` function
   # in the order that they appear. 
   # (do not include the generalized `...` argument)
