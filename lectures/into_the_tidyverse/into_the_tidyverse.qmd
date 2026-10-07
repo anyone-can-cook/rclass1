@@ -575,6 +575,156 @@ count(x = filter(.data = df_school, visits_by_100751 %in% 2:3, school_type == "p
 count(x = filter(.data = df_school, visits_by_100751 %in% c(2,3), school_type == "private"))
 ```
 
+### Parentheses and operator precedence for complex conditions
+
+#### Simplified operator precedence
+
+**Operator precedence** determines how R groups an expression when we do not supply parentheses.
+
+Let `A`, `B`, and `C` stand for complete conditions, such as `school_type == "public"`. These letters are placeholders for explaining the logic, not column names to type into `filter()`.
+
+For the comparisons and logical operators we are using here:
+
+1. Comparisons such as `==`, `!=`, `>=`, and `%in%` form the individual conditions.
+2. AND (`&`) groups conditions before OR (`|`).
+
+| Expression | How R groups it | Meaning in words |
+|------------|-----------------|------------------|
+| `A & B | C` | `(A & B) | C` | Both A and B must be true, OR C must be true. |
+| `A | B & C` | `A | (B & C)` | A must be true, OR both B and C must be true. |
+
+OR allows either alternative **or both** to be true.
+
+#### Use parentheses to specify the groups you want
+
+Parentheses let us specify which conditions belong together.
+
+| Expression | Meaning in words |
+|------------|------------------|
+| `A & (B | C)` | A must be true, AND at least one of B or C must be true. |
+| `(A & B) | C` | Both A and B must be true, OR C must be true. |
+
+These expressions ask different questions. In `A & (B | C)`, **every observation must satisfy A**. In `(A & B) | C`, satisfying C is enough, even if A is false.
+
+When combining AND and OR, write parentheses to make the intended groups clear, even when R's precedence would give the same grouping.
+
+#### From words to grouped conditions to code
+
+Build a complex filter in steps:
+
+1. **Write what you want in words.** Identify requirements that apply to every observation and the alternative ways an observation can qualify.
+2. **Rewrite the request using AND, OR, and parentheses.**
+3. **Translate the individual conditions into R.** Get one condition working, then add another. Add the remaining conditions and groups one step at a time.
+4. **Check to see if the observations you selected are the ones you wanted.**
+
+#### Example: public schools in California or Nevada
+
+**In words:** Keep public schools located in either California or Nevada.
+
+**With grouped conditions:** `(public school) AND ((California) OR (Nevada))`.
+
+Every school must be public. California and Nevada are alternative ways to satisfy the location requirement.
+
+**Build the code:** Start with one condition: public schools.
+
+```{r results="hide"}
+filter(.data = df_school, school_type == "public")
+```
+
+Add a second condition: public schools in California.
+
+```{r results="hide"}
+filter(
+  .data = df_school,
+  school_type == "public" & state_code == "CA"
+)
+```
+
+Expand the location requirement to California **or** Nevada. Keep the two location alternatives together with parentheses.
+
+```{r results="hide"}
+# Correct for our request: public AND (California OR Nevada)
+filter(
+  .data = df_school,
+  school_type == "public" &
+    (state_code == "CA" | state_code == "NV")
+)
+```
+
+Check the school types and states in the result:
+
+```{r}
+count(
+  x = filter(
+    .data = df_school,
+    school_type == "public" &
+      (state_code == "CA" | state_code == "NV")
+  ),
+  school_type, state_code
+)
+```
+
+**Wrong for this request:** Leave out the grouping parentheses.
+
+```{r results="hide"}
+# Wrong for our request: R reads this as (public AND California) OR Nevada
+filter(
+  .data = df_school,
+  school_type == "public" & state_code == "CA" | state_code == "NV"
+)
+```
+
+This code runs, but it keeps public schools in California **and any school in Nevada**, including private schools. The public-school requirement applies only to the California alternative.
+
+#### Example: visits by Bama in a group of states
+
+**In words:** Keep schools with at least one visit by Bama that are located in Massachusetts, Vermont, or Maine.
+
+**With grouped conditions:** `(at least one Bama visit) AND ((MA) OR (VT) OR (ME))`.
+
+Start with the visit requirement, then add the grouped location requirement:
+
+```{r results="hide"}
+filter(.data = df_school, visits_by_100751 >= 1)
+
+# Correct: Bama visit AND (MA OR VT OR ME)
+filter(
+  .data = df_school,
+  visits_by_100751 >= 1 &
+    (state_code == "MA" | state_code == "VT" | state_code == "ME")
+)
+```
+
+Without the parentheses, the following code also includes schools in Vermont or Maine with no Bama visit:
+
+```{r results="hide"}
+# Wrong for our request: (Bama visit AND MA) OR VT OR ME
+filter(
+  .data = df_school,
+  visits_by_100751 >= 1 & state_code == "MA" |
+    state_code == "VT" | state_code == "ME"
+)
+```
+
+**Connection to commas in `filter()`:** Separate conditions supplied to `filter()` are combined with AND. We can write the same correct filter using a comma, or simplify the state alternatives using `%in%`:
+
+```{r results="hide"}
+# The comma combines the visit requirement AND the entire state expression
+filter(
+  .data = df_school,
+  visits_by_100751 >= 1,
+  (state_code == "MA" | state_code == "VT" | state_code == "ME")
+)
+
+# Same requirements, using %in% for the state alternatives
+filter(
+  .data = df_school,
+  visits_by_100751 >= 1,
+  state_code %in% c("MA", "VT", "ME")
+)
+```
+
+
 ### Identifying data type and possible values helpful for filtering
 
 -   `typeof()` and `str()` shows internal data type of a variable
