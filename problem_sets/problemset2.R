@@ -324,6 +324,7 @@ q3_5 <-
   # What two categories of vectors are compatible with the mean function?
   # Assign your answer to an object named `q3_6 `with your answer as a character vector
   # entered in alphabetical order 
+  # Hint: for this question you can also consider both 'integer and double' to count as one type called 'numeric' 
   # E.g.: q3_6 <- c("type1","type2"). 
 
 q3_6 <- 
