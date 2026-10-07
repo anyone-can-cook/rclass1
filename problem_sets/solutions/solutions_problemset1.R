@@ -118,6 +118,7 @@ length(df_recruiting)
 
 #answering the question
 q2_4 <- 6
+#or
 q2_4 <- length(df_recruiting)
 
   # Q2.4a 
@@ -223,7 +224,7 @@ q3_3 <- sum(age)
   # This question is in three parts. You will assign those answers, in order, 
   # as character elements in a vector as the final answer. 
   # Run the `?sum` commnd. 
-  # 1) What is the one and only "argument" in the sum() function? 
+  # 1) # Aside from `...`, what is the named argument in the sum() function?
   # 2) What is the default value of this argument?
   # 3) Yes or no: would different values of this argument change the output of `sum(age)`? 
   # Assign your three answers to an object named `q3_4`.
@@ -275,7 +276,7 @@ sum(tf, na.rm= TRUE)
 
   # What numeric value do mathematical calculations in R assign to `TRUE` values? 
   # What do they assign to `FALSE` values? 
-  # Assign answers as a numeric vector to an object named `q3_6`. 
+  # Assign answers as a numeric vector to an object named `q3_7`. 
   
 q3_7 <- c(1,0)
 
@@ -293,7 +294,7 @@ q3_8a <- c("x", "trim","na.rm")
   # default argument values? Assign your answers as a character vector to an object named 
   # `q3_8b`.
 
-q3_8b <- c("0", "False")
+q3_8b <- c("0", "FALSE")
 
   # When using a function, R requires you to type the values you assign to each 
   # argument (unless you choose the default value). However, the argument names 
@@ -309,6 +310,7 @@ q3_8b <- c("0", "False")
 mean(tf)
 mean(x=tf, trim = 0, na.rm = FALSE)
 mean(tf,trim=0.5, na.rm = TRUE)
+mean(tf, 0, FALSE)
 
   # Then run the `mean` function again but without typing any argument names (e.g. `x = `), 
   # only argument values.
