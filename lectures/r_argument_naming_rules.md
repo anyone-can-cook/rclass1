@@ -1,12 +1,12 @@
 # R argument-naming rules for lecture revisions
 
-Reference for revising `patterns_base_r.qmd` and similar introductory lectures.
+Reference for revising `patterns_base_r.qmd`, `into_the_tidyverse.qmd`, and similar introductory lectures using base R and tidyverse functions.
 
 ## Purpose and scope
 
 Students are new to both R and programming. Explicit argument names reinforce the pattern `function_name(argument_name = argument_value)` and connect examples to help documentation. These lectures render as HTML rather than PDF slides, so slide-width constraints no longer justify omitting names.
 
-Apply this convention consistently to all student-visible R example code and solutions, including nested calls. Ignore non-visible setup chunks.
+Apply this convention consistently to all student-visible R example code and solutions, including nested calls, inline code, syntax explanations, and visible commented alternatives. Code remains in scope when its output is hidden (`results="hide"`) or it is displayed without execution (`eval=FALSE`). Ignore non-visible setup chunks and material inside HTML comments. Preserve deliberately incorrect examples and clearly label their intended error; do not accidentally repair the behavior being demonstrated.
 
 ## Core rule
 
@@ -34,7 +34,7 @@ Use the named form of `subset()` throughout, replacing the lecture's mixture of 
 
 ## Systematic exceptions
 
-1. **Values supplied through `...`:** Do not invent argument names. Preserve existing intentional names, such as names assigned to vector or list elements; adding such names can change the object. Name genuine additional arguments when supplied.
+1. **Values and expressions supplied through `...`:** Do not invent argument names. Preserve existing intentional names, such as vector or list element names, column definitions, and recoding mappings; adding or removing such names can change the result. Name genuine documented options when supplied, including options forwarded to a method through `...` (see below).
 
    ```r
    c(1, 2, 3)
@@ -55,7 +55,7 @@ Use the named form of `subset()` throughout, replacing the lecture's mixture of 
    vec_x + vec_y
    ```
 
-3. **Inputs supplied by pipes:** Preserve pipes. Do not rewrite a pipe solely to expose the implicit input's argument name. Apply the rule to arguments explicitly written inside calls, subject to the other exceptions.
+3. **Inputs supplied by pipes:** Preserve the existing pipe operator and let the pipe supply its implicit input. Do not add a second data argument or introduce a placeholder solely to expose that input's argument name. Apply the rule to explicitly written arguments, including nested calls, using the argument positions after the pipe supplies its input. Preserve any existing purposeful placeholder or brace syntax.
 
 ## Specific cases and limits
 
@@ -64,6 +64,81 @@ Use the named form of `subset()` throughout, replacing the lecture's mixture of 
 - Preserve replacement syntax, such as `names(vec_a) <- c("var1", "var2", "var3", "var4")`. Do not force argument names onto the replacement expression on the left.
 - Do not expand function signatures or add unused optional arguments or defaults. For example, use `sort(x = vec_x)` when only the input was originally supplied.
 - Preserve the code's behavior, meaningful existing object names, and intentional element names. Rename generic example objects according to the conventions below.
+
+## Tidyverse functions and expression syntax
+
+### Use each function's actual data argument name
+
+Do not assume all tidyverse functions use `.data`, or that all base R functions use `x`. Verify the documented function and relevant method for the package version used in the course. Use complete names rather than partial matching.
+
+| Functions used in this lecture | Explicit input argument |
+| --- | --- |
+| `select()`, `filter()`, `arrange()`, `rename()`, `mutate()`, `summarize()` / `summarise()`, `group_by()` | `.data` |
+| `count()`, `glimpse()`, `desc()`, `as_factor()` | `x` |
+| `recode()` | `.x` |
+| `if_else()` | `condition`, `true`, `false` |
+| `starts_with()`, `contains()`, `ends_with()` | `match` |
+| `ggplot()` | `data` for a data frame; `mapping` for `aes()` |
+
+Examples (using lecture data):
+
+```r
+select(.data = df_event, instnm, starts_with(match = "event"))
+filter(.data = df_school, school_type == "public", is.na(x = med_inc))
+count(x = df_school, school_type)
+arrange(.data = df_event, desc(x = event_date))
+
+# The pipe supplies .data; the column expression is supplied through ...
+df_school %>% filter(school_type == "public")
+
+# The pipe supplies x to count()
+df_school %>% count(school_type)
+
+# Explicit arguments in nested helpers still receive their formal names
+school_v2 %>%
+  mutate(public = if_else(condition = school_type == "public", true = 1, false = 0))
+
+# The pipe supplies data to ggplot(); aes() is the mapping argument
+df_school %>%
+  count(school_type) %>%
+  ggplot(mapping = aes(x = school_type, y = n)) +
+  geom_col()
+```
+
+The leading dot is part of `.data` and `.x`; do not remove it. Explain `.data = df_school` as passing the object `df_school` to a fixed argument named `.data`. This does not require rewriting column references using the separate `.data$column_name` notation.
+
+### Preserve column expressions and meaningful names in `...`
+
+- Leave unquoted column selections, filtering conditions, sorting expressions, and grouping variables unnamed when they were originally unnamed. For example, keep `school_type` in `select(.data = df_school, school_type)`; adding `x = school_type` would rename that column to `x`.
+- Preserve names that intentionally create, overwrite, remove, or rename columns: `mutate(public = ...)`, `mutate(public = NULL)`, `summarize(avg_inc_zip = ...)`, and `rename(new_name = old_name)`. These names are chosen output column names, not fixed formal argument names. Do not apply the generic object naming convention to them.
+- Preserve `recode()` mappings such as `"public" = 1`. The left side identifies an existing value, not a formal argument or an object to rename. Name the explicit input `.x`; keep documented options such as `.default` and `.missing` when already supplied.
+- Preserve formulas, including the `condition ~ value` expressions in `case_when()` and `~ out_state` in `facet_wrap()`. Do not turn formulas into `=` expressions or invent names for the cases. Name the surrounding function's formal argument when appropriate, for example `facet_wrap(facets = ~ out_state)`.
+- Keep dataset column names unquoted in the lecture's ordinary dplyr expressions, and keep character values quoted: `filter(.data = df_school, school_type == "public")`. Selection helper patterns are character strings, for example `contains(match = "inst_")`. Do not add quotes or `$` to bare column references as part of argument naming.
+
+In prose, distinguish four roles: fixed formal argument names, data frame objects, column names, and literal values. Explain that `=` in `mutate(public = ...)` specifies a column in the returned data frame; `<-` saves that returned data frame to an object.
+
+### Documented method arguments forwarded through `...`
+
+The `...` exception means do not invent labels for variadic data or expressions. It does not prohibit naming a documented option merely because a generic forwards that option through `...`. Check the method appropriate to the example rather than relying only on the generic's formal arguments.
+
+For example, `head()` has a generic input `x`, and its data frame method has a documented `n` argument:
+
+```r
+head(x = df_school, n = 10)
+df_school %>% head(n = 10)
+```
+
+## Readability, behavior, and verification
+
+- Break long nested calls across lines and indent them consistently. Keep the pipe operator at the end of a continued line in working examples. Do not change an intentionally broken line-break example that teaches this rule.
+- Preserve existing meaningful object names, including `wwlist`, `wwlist_temp`, `school_v2`, and `school_sml`. A descriptive name does not need a `df_` prefix. A tibble is a data frame for the generic `df_x` naming convention.
+- Do not add defaults or change data types, units, thresholds, missing-value handling, column names, column order, row order, grouping, or assignment behavior as part of a naming-only revision. Examples that explicitly teach an optional default should retain it.
+- Keep function replacements and package modernization separate from argument naming. For example, flag the status of `recode()` for a teaching decision rather than automatically replacing it during this pass.
+- Check that revised syntax explanations match the runnable code. Use named placeholders, for example `filter(.data = df_name, logical_condition)` and `if_else(condition = logical_condition, true = value_if_true, false = value_if_false)`. Identify these as templates, not runnable examples or complete function signatures.
+- Verify representative named and unnamed calls produce equivalent results, especially piped and nested calls. Render the complete lecture in a fresh R session and inspect the HTML, including exercises, expandable solutions, and long code blocks. Check displayed but unexecuted examples separately. Preserve expected-error examples rather than evaluating them during rendering. Report any check that cannot be completed.
+- Record pre-existing teaching or logic problems separately. For example, check whether code described as a percent produces a percent or a proportion, whether each pipe step accepts the preceding output, and whether a missing-value claim is specific to the displayed conditions or true of the function generally. Do not silently fold substantive corrections into a naming-only change.
+
+Documentation references: [dplyr select](https://dplyr.tidyverse.org/reference/select.html), [dplyr count](https://dplyr.tidyverse.org/reference/count.html), [tidyselect helpers](https://tidyselect.r-lib.org/reference/starts_with.html), [magrittr pipes](https://magrittr.tidyverse.org/reference/pipe.html), and [ggplot](https://ggplot2.tidyverse.org/reference/ggplot.html). Confirm these against the installed course package versions when revising examples.
 
 ## Distinguish argument names, object names, and values
 
@@ -131,6 +206,6 @@ Describe `x = vec_x` inside this call as supplying an object to an argument, not
 
 ## Mechanical revision instruction
 
-> For all student-visible R code and solutions, add the formal argument name to every explicitly supplied function argument that has a meaningful formal argument name. Apply this to nested calls as well. Do not name values supplied through `...`; do not alter operators or subsetting syntax; do not alter replacement-function syntax; do not add optional arguments that were previously omitted; and do not rewrite pipes merely to expose an implicit input argument. Ignore non-visible setup chunks.
+> For all student-visible R code and solutions, add the formal argument name to every explicitly supplied function argument that has a meaningful formal argument name. Apply this to nested calls as well. Do not invent names for values or expressions supplied through `...`; preserve intentional column definitions, renaming and recoding mappings, and formulas; name documented options forwarded to the relevant method; do not alter operators or subsetting syntax; do not alter replacement-function syntax; do not add optional arguments that were previously omitted; and do not rewrite pipes merely to expose an implicit input argument or add a second data input. Use the actual argument names for each function, including `.data`, `x`, `.x`, and `condition` where appropriate. Keep displayed but unexecuted code and visible commented alternatives consistent, while preserving deliberately incorrect examples and their intended errors. Ignore non-visible setup chunks.
 
 > In syntax explanations, distinguish fixed argument names from descriptive placeholders such as `obj_name`, `vec_name`, and `df_name`. In runnable examples, rename generic objects using `vec_x`, `list_x`, and `df_x` and the corresponding letter sequence for distinct coexisting objects. Keep the same name when recreating or modifying an object; reuse names across independent examples when safe; preserve meaningful existing names. Update all related code and prose consistently without changing behavior, function argument names, or dataset column and element names. Clearly distinguish argument passing from assignment.
