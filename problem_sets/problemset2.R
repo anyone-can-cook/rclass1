@@ -50,7 +50,7 @@ q1_2b <-
 
 q1_3a <- 
   
-  # Each row represents a ______ in df_school_all.
+  # Each row represents an ______ in df_school_all.
   # Fill in the blank using one word and make sure `q1_2b` is assigned as a string/text data type.
 
 q1_3b <- 
@@ -119,8 +119,6 @@ q1_9 <-
 
 # Hint: run the code below to lean mroe about the `table()` function
 ?table()
-
-
 
 
 
