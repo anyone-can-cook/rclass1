@@ -51,7 +51,7 @@ q1_2b <-
 q1_3a <- 
   
   # Each row represents an ______ in df_school_all.
-  # Fill in the blank using one word and make sure `q1_2b` is assigned as a string/text data type.
+  # Fill in the blank using one word and make sure `q1_3b` is assigned as a string/text data type.
 
 q1_3b <- 
 
