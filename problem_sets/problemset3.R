@@ -44,6 +44,8 @@
   # b. Use `typeof()` to show the data type of the `event_state` column
   # c. Use `str()` to show the structure of the `med_inc` column
   # d. Use `table()` to show the categorical values of the `event_type` column
+      # Hint: Parts b-d ask about a single column. Use `$` to pull out a column from a
+      # dataframe, e.g. df_event$column_name (df_event[["column_name"]] also works).
 
   # Assign each of the four lines of code above to its own object, named `q1_2a`, `q1_2b`, 
   # `q1_2c`, and `q1_2d` (matching letters a-d above). 
