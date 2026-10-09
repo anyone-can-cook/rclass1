@@ -479,12 +479,14 @@ logical operators useful for: filter obs w/ `filter()`; create variables w/ `mut
 
 ### Filters and comparisons, Demonstration
 
-Schools visited by Bama (100751) and/or Berkeley (110635)\bigskip
+Schools visited by Bama (100751) and Berkeley (110635)\bigskip
 
 ```{r results="hide"}
 # Berkeley AND Bama
 filter(.data = df_school,visits_by_100751 >= 1, visits_by_110635 >= 1)
 filter(.data = df_school,visits_by_100751 >= 1 & visits_by_110635 >= 1) # same same
+
+filter(.data = df_school,(visits_by_100751 >= 1) | (visits_by_110635 >= 1)) # same same
 ```
 
 \bigskip
@@ -559,6 +561,12 @@ What if you wanted to count the number of schools visited by Bama (100751) in a 
 ```{r}
 count(x = filter(.data = df_school,visits_by_100751 >= 1, state_code == "MA" |
                state_code == "VT" | state_code == "ME"))
+
+count(x = filter(
+  .data = df_school,
+  (visits_by_100751 >= 1) & 
+  (state_code == "MA" | state_code == "VT" | state_code == "ME"))
+)
 ```
 
 Easier way to do this is with `%in%` operator
