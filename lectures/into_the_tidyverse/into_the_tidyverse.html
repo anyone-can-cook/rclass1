@@ -709,11 +709,13 @@ One or more <em>logical expressions</em> that determine which observations to ke
 </section>
 <section id="filters-and-comparisons-demonstration" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="filters-and-comparisons-demonstration"><span class="header-section-number">2.4.2</span> Filters and comparisons, Demonstration</h3>
-<p>Schools visited by Bama (100751) and/or Berkeley (110635)</p>
+<p>Schools visited by Bama (100751) and Berkeley (110635)</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Berkeley AND Bama</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="at">.data =</span> df_school,visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>, visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="at">.data =</span> df_school,visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>) <span class="co"># same same</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="at">.data =</span> df_school,visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>) <span class="co"># same same</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="at">.data =</span> df_school,(visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>) <span class="sc">|</span> (visits_by_110635 <span class="sc">&gt;=</span> <span class="dv">1</span>)) <span class="co"># same same</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Berkeley OR Bama</span></span>
@@ -815,7 +817,17 @@ One or more <em>logical expressions</em> that determine which observations to ke
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 1</span></span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       n</span></span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   108</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   108</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="at">x =</span> <span class="fu">filter</span>(</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">.data =</span> df_school,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  (visits_by_100751 <span class="sc">&gt;=</span> <span class="dv">1</span>) <span class="sc">&amp;</span> </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  (state_code <span class="sc">==</span> <span class="st">"MA"</span> <span class="sc">|</span> state_code <span class="sc">==</span> <span class="st">"VT"</span> <span class="sc">|</span> state_code <span class="sc">==</span> <span class="st">"ME"</span>))</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       n</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   108</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Easier way to do this is with <code>%in%</code> operator</p>
 <div class="cell">
