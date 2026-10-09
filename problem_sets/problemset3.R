@@ -9,8 +9,8 @@
 
   # The aim of this problem set is to give you practice completing data management tasks associated 
   # with filtering/isolating observations, sorting observations, and selecting variables. This can 
-  # be done using the `filter()`, `arrange()`, and `select()` functions from the `tidyverse` package.
-
+  # be done using the `filter()`, `arrange()`, and `select()` functions from the `dplyr` package, 
+  # which is part of the `tidyverse`.
   # For the following questions, you'll be asked to complete the same task using `dplyr` functions 
   # in multiple ways, with and without pipes. We want you to understand that there are several ways 
   # to complete the same task, and we want you to practice completing it in different ways.
