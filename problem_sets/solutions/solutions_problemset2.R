@@ -3,11 +3,9 @@
 ## [ FILE ] < problemset2_solutions.R >
 ## [ AUTH ] < Teaching team >
 
-## Notes for the teaching team ----
+## Notes ----
   # - Where there is more than one correct way to answer, the options are separated by `# or`.
-  #   Every option is runnable and produces an answer the test script accepts, so this whole
-  #   script can be sourced and run against the test script.
-  # - Expected values are given in comments so you can check student work quickly.
+  # - Expected values are given in comments
 
 rm(list = ls()) # remove all objects from the Global Environment
 
@@ -290,8 +288,8 @@ q3_5 <- "list"
 
 q3_6 <- c("logical", "numeric")
 
-  # From ?mean, x must be a numeric or logical vector. "numeric" covers both integer and
-  # double. The test also accepts c("double", "integer", "logical").
+  # From ?mean, x must be a numeric or logical vector. "numeric" includes both integer and
+  # double. Also accepts c("double", "integer", "logical").
   # Logical works because TRUE counts as 1 and FALSE as 0, so the mean of a logical vector
   # is the proportion of TRUEs.
 
