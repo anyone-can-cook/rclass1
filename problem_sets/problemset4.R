@@ -239,10 +239,13 @@ q4_3 <-
   # One more state of your choice, e.g. 'Texas' if state_code is 'TX'
   #   (pick any state that appears in the data; all 50 states plus DC are included)
   # 'Other' for any other state (use `.default`)
-
   # You may use either `case_when()` or `recode()`; both accept a `.default` argument.
   # Do not change `state_code` itself. Create `state_name` as a new variable and assign the 
   # result back to `df_schools`.
+
+  # HINT: `.default` goes inside case_when() after your last condition, and uses `=` (not `~`):
+  #   case_when(state_code == "CA" ~ "California", ..., .default = "Other")
+.
 
 df_schools <- 
 
