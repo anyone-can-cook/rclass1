@@ -31,23 +31,20 @@ rm(list=ls()) # clears environment so script runs from a clean slate
   # Q1.2 ----
   # 1 point
   # Use the functions `arrange()`, `select()`, and `head()` to do the following:
+  # !!!! Complete the tasks using 1 line of code by using pipes `%>%` !!!!
   # 1. Sort `df_school_all` descending by `med_inc`
   # 2. Select these variables, in this order: 
-  # `name`, `state_code`, `city`, `school_type`, `total_visits`, `med_inc`, `pct_white`, 
-  # `pct_black`, `pct_hispanic`, `pct_asian`, `pct_amerindian`
-  # 3. Show the first 10 rows of the dataframe, which represents the schools that have students 
-  # with the top 10 median income
-  # Complete the tasks using 1 line of code by using pipes `%>%`
-  # Assign this to a new object named `q1_2`
-  # HINT: sort by `med_inc` only (no secondary sort variable). Several schools are tied at the
-  # highest value, and adding another sort variable will change which schools appear first.
+      # `name`, `state_code`, `city`, `school_type`, `total_visits`, `med_inc`, `pct_white`, 
+      # `pct_black`, `pct_hispanic`, `pct_asian`, `pct_amerindian`
+  # 3. Show the first 10 rows of the dataframe, which represents the schools that have students with the top 10 median income
+  # 4. Assign this to a new object named `q1_2`
 
 q1_2 <- 
 
   # Q1.3 ----
   # 1 point
   # Building upon the previous question, use the functions `arrange()`, `select()`, `filter()`, 
-  # and `head()` to obtain observations on _public_ high schools in New York with the top 10 
+  # and `head()` to obtain observations on public high schools in New York with the top 10 
   # median income. Select the same variables, in the same order, as in Q1.2.
   # Assign this data to a new object named `q1_3`
   # HINT: Before filtering, check how the values are spelled, e.g.
@@ -58,7 +55,7 @@ q1_3 <-
 
   # Q1.4 ----
   # 1 point
-  # Now obtain the top 10 observations of _private_ high schools in New York 
+  # Now obtain the top 10 observations of private high schools in New York 
   # according to highest median income. Select the same variables, in the same order, as in Q1.2.
   # Assign this data to a new object named `q1_4`
 
@@ -84,7 +81,6 @@ df_school_all %>% count(school_type)
   # Create a 0/1 indicator called `ca_school` for whether the high school is in California. 
   # Start from `df_school_all` and assign the full dataframe (all original columns plus your new 
   # `ca_school` column) to a new object named `q2_1`.
-  # Do not overwrite `df_school_all`.
 
 q2_1 <- 
  
@@ -185,7 +181,7 @@ q3_7 <-
 df_schools <- 
 
   # Q4.2 ----
-  # 2 points
+  # 2 points 
   # Use `case_when()` to create a new variable in `df_schools` called `region`, with values:
   # 'Northeast' if state_code in c('CT','ME','MA','NH','RI','VT','NJ','NY','PA')
   # 'Midwest'   if state_code in c('IN','IL','MI','OH','WI','IA','KS','MN','MO',
@@ -193,16 +189,21 @@ df_schools <-
   # 'West'      if state_code in c('AZ','CO','ID','NM','MT','UT','NV','WY','AK',
   #                              'CA','HI','OR','WA')
   # 'South'     if state_code is not any of the above states (use `.default`)
-  # Remember to assign the new variable creation back into the `df_schools` data frame
-  # HINT: use `%in%` to check whether a value is in a vector, e.g. state_code %in% c('CT','ME')
-  # HINT: the `.default` argument goes inside `case_when()` after your conditions, e.g.
-  #   case_when(condition ~ "value", .default = "other value")
-  #   (You may see older code that uses `TRUE ~ "other value"` instead; that also works.)
-  # NOTE: DC is not in any of the lists, so it is counted as South. That is expected.
+  # Assign the new variable creation back into the `df_schools` data frame
+  
 
-df_schools <- 
+  # We did the above for you :) so just run it.
+    # NOTE: DC is not in any of the lists, so it is counted as South. That is expected.
 
-  # Check your work. Generate a frequency table of the new `region` variable 
+df_schools <- df_schools %>% 
+  mutate(region = case_when(
+    state_code %in% c('CT','ME','MA','NH','RI','VT','NJ','NY','PA') ~ 'Northeast',
+    state_code %in% c('IN','IL','MI','OH','WI','IA','KS','MN','MO','NE','ND','SD') ~ 'Midwest',
+    state_code %in% c('AZ','CO','ID','NM','MT','UT','NV','WY','AK','CA','HI','OR','WA') ~ 'West',
+    .default = 'South'
+  ))
+
+  # YOUR TURN: check the work above. Generate a frequency table of the new `region` variable 
   # using the `count()` function. Assign this frequency table to an object named `q4_2`.
 
 q4_2 <- 
@@ -219,6 +220,7 @@ q4_2 <-
   # West      -> W
   # South     -> S
   # Remember to use assignment on `df_schools` to affect changes to the `region` variable.
+  
   # HINT: in `recode()` the syntax is old_value = "new_value", e.g. recode(region, Northeast = "NE", ...)
   # This is the opposite order from `rename()`, which uses new_name = old_name.
 
@@ -237,12 +239,12 @@ q4_3 <-
   # One more state of your choice, e.g. 'Texas' if state_code is 'TX'
   #   (pick any state that appears in the data; all 50 states plus DC are included)
   # 'Other' for any other state (use `.default`)
+
   # You may use either `case_when()` or `recode()`; both accept a `.default` argument.
   # Do not change `state_code` itself. Create `state_name` as a new variable and assign the 
   # result back to `df_schools`.
 
 df_schools <- 
-
 
 ## Create a GitHub issue ----
   # 2 points
