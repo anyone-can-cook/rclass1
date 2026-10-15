@@ -192,6 +192,7 @@ q2_7 <- df_school_all[c(2, 4, 6)]
 # or
 q2_7 <- df_school_all[, c(2, 4, 6)]
 
+
   # The columns school_type, name, and city. With one index and no comma, `[]` treats the
   # data frame as a list and returns columns. With a comma, it is [rows, columns], and leaving
   # the rows blank means "all rows." Both return a data frame with 3 columns.

@@ -3,12 +3,6 @@
 ## [ FILE ] < problemset3_solutions.R >
 ## [ AUTH ] < Teaching team >
 
-## Notes for the teaching team ----
-  # - Where there is more than one correct way to answer, the options are separated by `# or`.
-  #   Every option is runnable and produces the same object, so this whole script can be
-  #   sourced and run against the test script.
-  # - Expected row counts / values are given in comments so you can check student work quickly.
-  #   They match the expected values in problemset3_tests_revised.R.
 
 ## Question 1: Load and inspect `df_event` dataset ----
   # Q1.1 ----
@@ -30,7 +24,7 @@ q1_2d <- table(df_event$event_type)   # 2yr college, 4yr college, other, private
 
   # Note: `names()` takes the whole dataframe, while the other three take one column (df$column).
   # `str()` only prints to the console and returns NULL, so `q1_2c` will show as NULL. That is
-  # expected, and the test checks for NULL.
+  # expected.
   # The table in q1_2d shows the exact spelling of the event types needed later:
   #   "2yr college"  "4yr college"  "other"  "private hs"  "public hs"
 
@@ -76,7 +70,7 @@ q2_1e <- filter(df_event, univ_id == 166629, event_state != instst, event_type =
 q2_1e <- filter(df_event, univ_id == 166629 & event_state != instst & event_type == "public hs" & med_inc >= 100000)
 
   # 264 rows, same as q2_1d. Inside `filter()`, separating conditions with a comma is the same
-  # as joining them with `&`: a row is kept only if ALL conditions are TRUE.
+  # as joining them with `&`... a row is kept only if ALL conditions are TRUE.
 
   # Q2.2 ----
 
@@ -90,10 +84,9 @@ q2_2 <- df_event %>%
   filter(event_type == "public hs") %>%
   filter(med_inc >= 100000)
 
-  # 264 rows, identical to q2_1e. The pipe `%>%` passes the object on its left in as the
+  # 264 rows, same as q2_1e. The pipe `%>%` passes the object on its left in as the
   # first argument of the function on its right, so `df_event %>% filter(...)` is the same as
   # `filter(df_event, ...)`. The second version shows the step-by-step logic of Q2.1 in one chain.
-  # Common mistake: ending the chain with `nrow()`. The question asks for the dataframe.
 
   # Q2.3a ----
 
@@ -129,8 +122,7 @@ q2_3c <- filter(q2_3a, event_state == instst & event_type == "2yr college" | pop
   #   filter(q2_3a, event_state == instst, event_type == "2yr college" | pop_total > 10000)
   # The comma splits it into two separate conditions that BOTH must be TRUE, which is a
   # different filter.
-  # Grading note: the original solution used `pop_total < 10000`, which gives 543 rows.
-  # The test script accepts 5171 or 543 this term.
+  # The grading accepts 5171 or 543.
 
   # Q2.4 ----
 
@@ -164,8 +156,6 @@ q3 <- df_event %>%
   # Common mistake: separate arrange() calls, e.g. arrange(arrange(df, med_inc), univ_id).
   # Each new arrange() re-sorts the whole dataframe, so the variables would end up prioritized
   # in the wrong order.
-  # Check: first row is univ_id 100751, pid 2667, school_id "X1328481"
-
 
 ## Question 4: Selecting variables ----
   # Q4.1 ----
@@ -209,7 +199,7 @@ load(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/recruiting/
 q5_2 <- table(df_school_all$school_type)
 
   # private: 3822   public: 17479
-  # Note the values are lowercase "public" and "private". Students need this for Q5.7/5.8.
+  # Note the values are lowercase "public" and "private". 
 
   # Q5.3 ----
 
@@ -225,7 +215,6 @@ q5_3 <- arrange(select(df_school_all, name, state_code, city, school_type, total
   # the inner function first, and its result becomes the first argument of the outer function.
   # Either order works here because `total_visits` is one of the selected columns. If it were
   # not selected, you would have to arrange first.
-  # Check: first row is "EPISCOPAL HIGH SCHOOL" with 26 visits
 
   # Q5.4 ----
 
@@ -234,7 +223,6 @@ q5_4 <- head(q5_3, n = 10)
 q5_4 <- head(q5_3, 10)
 
   # 10 rows x 11 columns. `head()` returns 6 rows by default, so `n = 10` is needed.
-  # Check: row 10 is "TRINITY CHRISTIAN ACADEMY"
 
   # Q5.5 ----
 
@@ -243,8 +231,8 @@ q5_5 <- df_school_all %>%
   select(name, state_code, city, school_type, total_visits, med_inc,
          pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian)
 
-  # Identical to q5_3. With pipes the steps read top to bottom in the order they happen,
-  # which is easier to follow than nested functions.
+  # Same as q5_3. With pipes the steps read top to bottom in the order they happen,
+  # which is sometime easier to follow than nested functions.
 
   # Q5.6 ----
 
@@ -252,7 +240,7 @@ q5_6 <- head(q5_5, n = 10)
 # or
 q5_6 <- q5_5 %>% head(n = 10)
 
-  # Identical to q5_4.
+  # Same as q5_4.
 
   # Q5.7 ----
 
@@ -271,7 +259,6 @@ q5_7 <- head(select(arrange(filter(df_school_all, state_code == "CA", school_typ
 
   # 10 rows x 11 columns. Order matters for `head()`: it must come last, after filtering and
   # sorting, or you would get the first 10 rows of the wrong set of schools.
-  # Check: row 1 "Corona del Mar High", row 6 "Calabasas High"
 
   # Q5.8 ----
 
@@ -283,7 +270,6 @@ q5_8 <- df_school_all %>%
   head(n = 10)
 
   # 10 rows x 11 columns. Same as Q5.7 with "private" instead of "public".
-  # Check: row 1 "SANTA MARGARITA CATHOLIC HIGH SCHOOL", row 6 "CHAMINADE COLLEGE PREPARATORY HIGH SCHOOL"
 
 
 ## Create a GitHub issue ----

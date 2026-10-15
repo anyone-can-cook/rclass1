@@ -210,7 +210,8 @@ age2 <-
   # (i.e. wrap your answers in quotes) in the order of the questions:
   # Are the two outputs of `sum(age2)` different?
   # What was the sum of values when `na.rm = FALSE`?
-  # Does `na.rm` drop NA values before operating, or ignore NA values while operating? (choose "drop", or "ignore")
+  # Does sum() first modify the original vector by dropping its NA values, or does it ignore NA values while performing the calculation? 
+      #Choose "drop" or "ignore". (choose "drop", or "ignore")
  
 q3_5 <- 
 
