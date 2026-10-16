@@ -64,13 +64,11 @@ getwd()
 load(
   file = url(description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData")
 )
-#load(file = "../../data/recruiting/recruit_event_somevars.Rdata")
 
 #load dataset with one obs per high school
 load(
   file = url(description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_school_somevars.RData")
 )
-#load(file = "../../data/recruiting/recruit_school_somevars.Rdata")
 ```
 
 ## Data for sections on pipes `%>%` and `mutate()` function
@@ -1192,17 +1190,18 @@ wwlist %>%  filter(is.na(x = state)==0) %>% # drop obs where variable state miss
         false = "in-state"
       )
     ),
-    ethn_race = recode(.x = ethn_code,
-      "american indian or alaska native" = "nativeam",
-      "asian or native hawaiian or other pacific islander" = "api",
-      "black or african american" = "black",
-      "cuban" = "latinx",
-      "mexican/mexican american" = "latinx",
-      "not reported" = "not_reported",
-      "other-2 or more" = "multirace",
-      "other spanish/hispanic" = "latinx",
-      "puerto rican" = "latinx",
-      "white" = "white")
+    ethn_race = recode_values(x = ethn_code,
+      "american indian or alaska native" ~ "nativeam",
+      "asian or native hawaiian or other pacific islander" ~ "api",
+      "black or african american" ~ "black",
+      "cuban" ~ "latinx",
+      "mexican/mexican american" ~ "latinx",
+      "not reported" ~ "not_reported",
+      "other-2 or more" ~ "multirace",
+      "other spanish/hispanic" ~ "latinx",
+      "puerto rican" ~ "latinx",
+      "white" ~ "white",
+      default = ethn_code)
   ) %>%
     group_by(out_state) %>% # group_by "in-state" vs. "out-of-state"
     count(ethn_race) %>%  # count of number of prospects purchased by race
@@ -1226,17 +1225,18 @@ wwlist %>%  filter(is.na(x = state)==0) %>% # drop obs where variable state miss
         false = "in-state"
       )
     ),
-    ethn_race = recode(.x = ethn_code,
-      "american indian or alaska native" = "nativeam",
-      "asian or native hawaiian or other pacific islander" = "api",
-      "black or african american" = "black",
-      "cuban" = "latinx",
-      "mexican/mexican american" = "latinx",
-      "not reported" = "not_reported",
-      "other-2 or more" = "multirace",
-      "other spanish/hispanic" = "latinx",
-      "puerto rican" = "latinx",
-      "white" = "white")
+    ethn_race = recode_values(x = ethn_code,
+      "american indian or alaska native" ~ "nativeam",
+      "asian or native hawaiian or other pacific islander" ~ "api",
+      "black or african american" ~ "black",
+      "cuban" ~ "latinx",
+      "mexican/mexican american" ~ "latinx",
+      "not reported" ~ "not_reported",
+      "other-2 or more" ~ "multirace",
+      "other spanish/hispanic" ~ "latinx",
+      "puerto rican" ~ "latinx",
+      "white" ~ "white",
+      default = ethn_code)
   ) %>%
     group_by(out_state, ethn_race) %>% # group_by "out-state" and ethnicity
     summarize(avg_inc_zip = mean(x = med_inc_zip, na.rm = TRUE)) %>% # calculate avg. inc
@@ -1538,7 +1538,7 @@ school_v2 %>%
 **Can create variables using "helper functions" called within `mutate()`** \[output omitted\]
 
 -   These are standalone functions can be called *within* `mutate()`
-    -   e.g., `if_else()`, `recode()`, `case_when()`
+    -   e.g., `if_else()`, `recode_values()`, `case_when()`
 -   will walk through helper functions in more detail in subsequent sections of lecture
 
 ```{r, results="hide"}
@@ -1697,34 +1697,76 @@ school_v2 %>%
 ?if_else
 ```
 
-**Description**
+**Description**: `if_else()` assigns values to a new vector according to whether each element of `condition` is `TRUE`, `FALSE`, or `NA`. 
 
--   if `<condition>` `TRUE`, assign value; if `<condition>` `FALSE` assign value
+- The returned vector has the same length as `condition`. 
+    - Within `mutate()`, this means one value per row of the input data frame.
+
+**When to use it**: Use `if_else()` to assign one value when a logical condition is TRUE and another when it is FALSE, with an explicit choice for when the condition is NA. 
+
+- The condition can involve one or more input variables.
 
 **Usage (i.e., syntax)**
 
--   `if_else(condition = logical_condition, true = value_if_true, false = value_if_false, missing = NULL)`
+Simplified usage showing the arguments we will discuss. This is a syntax template, not code to run:
+
+```{r, eval=FALSE}
+if_else(
+  condition = logical_condition, # something that evaluates to TRUE, FALSE OR NA
+  true = value_if_true,
+  false = value_if_false,
+  missing = NULL # value to assign if condition evaluates to NA
+)
+```
 
 **Arguments**
 
--   `condition`: a logical condition that evaluates to `TRUE`, `FALSE`, or `NA`
--   `true`: value to assign if condition `TRUE`
--   `false`: value to assign if condition `FALSE`
--   `missing`: value to assign to rows that have value `NA` for condition
-    -   default is `missing = NULL`; means that if condition is `NA`, then new_var == `NA`
-    -   But can assign different values to `NA`s, e.g., `missing = -9`
+| Argument | Description |
+|----------|-------------|
+| `condition` | A logical vector containing TRUE, FALSE, or NA, usually produced by an expression involving input variables.<br>For example, `condition = med_inc > 100000` evaluates whether each school's median income is greater than 100,000. |
+| `true` | The value assigned to the new vector for observations where `condition` is TRUE. |
+| `false` | The value assigned to the new vector for observations where `condition` is FALSE. |
+| `missing` | The value assigned to the new vector for observations where `condition` is NA.<br>If omitted or set to `NULL`, those observations receive NA. For example, `missing = -9` assigns -9 to observations whose condition is NA. |
 
-**Value**
+: {tbl-colwidths="[15,85]"}
 
--   "Where condition is TRUE, the matching value from true, where it's FALSE, the matching value from false, otherwise NA."
--   Unless otherwise specified, `NA`s in "input" var(s) assigned `NA` in "output var"
+Arguments we do not discuss: `...`, `ptype`, `size`.
 
-**Example**: Create 0/1 indicator of whether got at least one visit from Berkeley
+<br>
+
+**What does `if_else()` return?**
+
+-   A vector with the same length as `condition`; within `mutate()`, one value per row.
+-   The supplied `true`, `false`, and `missing` values determine the output type and must have compatible types. 
+  - Numeric values such as 1, 0, and -9 produce a numeric vector
+  - character labels produce a character vector when all supplied values are compatible.
+-   When `condition` evaluates to NA, the new vector receives the value specified by `missing`. With `missing = NULL`, that value is NA. 
+- A missing input does not necessarily make the condition NA; we will see this in the `nonmiss_math` example below.
+-   `mutate()` places the returned vector in a column; `<-` saves the resulting data frame when we use assignment.
+
+**Example**: Create a 0/1 indicator of whether the school got at least one visit from Berkeley.
 
 ```{r, results="hide"}
-school_v2 %>% 
-  mutate(got_visit_berkeley = if_else(condition = visits_by_berkeley>0,true = 1,false = 0)) %>%
-  count(got_visit_berkeley)
+# always start by checking the input variable!
+school_v2 %>% select(visits_by_berkeley) %>% glimpse()
+school_v2 %>% count(visits_by_berkeley) 
+
+school_v2_temp <- school_v2 %>%
+  mutate(
+    got_visit_berkeley = if_else(
+      condition = visits_by_berkeley > 0,
+      true = 1,
+      false = 0,
+      missing = NULL
+    )
+  ) 
+
+# always check values of new variable, and values of new variable against values of input
+school_v2_temp %>% count(got_visit_berkeley)
+
+school_v2_temp %>% count(visits_by_berkeley,got_visit_berkeley)
+
+rm(school_v2_temp)
 ```
 
 ### `if_else()` within `mutate()` to create 0/1 indicator variables
@@ -1736,12 +1778,11 @@ We often create dichotomous (0/1) indicator variables of whether something happe
 -   Variables that help you investigate data, check quality
     -   e.g., indicator of whether an observation is missing/non-missing for a particular variable
 
-
 **Task**
 
--   Create 0/1 indicator if school has median income greater than \$100,000
+-   Create a 0/1 indicator if a school has median income greater than \$100,000.
 
-Usually a good idea to investigate "input" variables **before** creating analysis vars
+Always a good idea to investigate "input" variables **before** creating analysis vars
 
 ```{r, results="hide"}
 str(object = school_v2$med_inc) # investigate variable type
@@ -1751,63 +1792,56 @@ school_v2 %>% filter(is.na(x = med_inc)) %>% count()
 # shows number of obs w/ missing med_inc
 ```
 
-Create variable
+First, distinguish the input value, the result of the condition, and the value assigned to the new vector. These illustrative values show all three possibilities:
+
+| Input: `med_inc` | Condition: `med_inc > 100000` | Output with `true = 1`, `false = 0`, `missing = NULL` |
+|-----------------|-----------------------------|----------------------------------------------------|
+| 150000 | TRUE | 1 |
+| 90000 | FALSE | 0 |
+| NA | NA | NA |
+
+For this comparison, FALSE means median income is known to be 100,000 or less. When median income is missing, the comparison returns NA: we do not know whether the income exceeds 100,000. NA is a separate result from FALSE.
+
+Create the variable using the default behavior, explicitly written as `missing = NULL`:
 
 ```{r}
-school_v2 %>% select(med_inc) %>% 
-  mutate(inc_gt_100k= if_else(condition = med_inc>100000,true = 1,false = 0)) %>%
-  count(inc_gt_100k) # note how NA values of med_inc treated
-```
-
-**Task**:
-
--   Create 0/1 indicator if school has median income greater than \$100,000.
-
-This time, let's experiment with the `missing` argument of `if_else()`
-
-```{r, eval=FALSE}
-#what we wrote before
-school_v2 %>% select(med_inc) %>% 
-  mutate(inc_gt_100k= if_else(condition = med_inc>100000,true = 1,false = 0)) %>%
-  count(inc_gt_100k)
-
-#manually write out the default value for `missing`
-school_v2 %>% select(med_inc) %>% 
+school_v2 %>%
+  select(med_inc) %>%
   mutate(
-    inc_gt_100k= if_else(
-      condition = med_inc>100000,
+    inc_gt_100k = if_else(
+      condition = med_inc > 100000,
       true = 1,
       false = 0,
       missing = NULL
     )
   ) %>%
-  count(inc_gt_100k) # note how NA values of med_inc treated
+  count(inc_gt_100k)
+```
 
-school_v2 %>% select(med_inc) %>% 
+Now change only `missing` to -9. Observations whose condition is TRUE or FALSE keep the same output values. Observations whose condition is NA receive -9 instead of NA:
+
+```{r}
+school_v2 %>%
+  select(med_inc) %>%
   mutate(
-    inc_gt_100k= if_else(
-      condition = med_inc>100000,
+    inc_gt_100k = if_else(
+      condition = med_inc > 100000,
       true = 1,
       false = 0,
-      missing = NA_real_
+      missing = -9
     )
   ) %>%
-  count(inc_gt_100k) # note how NA values of med_inc treated
-# NA can be coerced to any other vector type except raw: 
-# NA_integer_, NA_real_, NA_complex_ and NA_character_
-
-# Here we give missing values in condition the value of -9 in new variable
-school_v2 %>% select(med_inc) %>% 
-  mutate(inc_gt_100k= if_else(condition = med_inc>100000,true = 1,false = 0, missing = -9)) %>%
-  count(inc_gt_100k) 
+  count(inc_gt_100k)
 ```
+
+Here, -9 is a missing-value code. R treats -9 as an ordinary numeric value, not as NA. The output now contains 0, 1, and -9. Omitting `missing` would give the same result as `missing = NULL`, not `missing = -9`.
 
 **Task**
 
 -   Create 0/1 indicator variable `nonmiss_math` which indicates whether school has non-missing values for the variable `num_took_math`
     -   note: `num_took_math` refers to number of students at a school that took state math proficiency test
 
-Usually a good to investigate "input" variables before creating analysis vars
+Always a good to investigate "input" variables before creating analysis vars
 
 ```{r, results="hide"}
 school_v2 %>% count(num_took_math) # this isn't very helpful
@@ -1821,16 +1855,38 @@ school_v2 %>% filter(
 Create variable
 
 ```{r}
-school_v2 %>% select(num_took_math) %>% 
-  mutate(nonmiss_math= if_else(condition = !is.na(x = num_took_math),true = 1,false = 0)) %>%
-  count(nonmiss_math) # note how NA values treated
+school_v2 %>%
+  select(num_took_math) %>%
+  mutate(
+    nonmiss_math = if_else(
+      condition = !is.na(x = num_took_math),
+      true = 1,
+      false = 0,
+      missing = NULL
+    )
+  ) %>%
+  count(nonmiss_math)
 ```
+
+When `num_took_math` is missing, `is.na(x = num_took_math)` is TRUE, so `!is.na(x = num_took_math)` is FALSE. The new vector therefore receives 0 from `false`. The `missing` argument is used only when the condition itself is NA; it is not used for these observations.
+
+**Take-away**: First determine whether the whole condition evaluates to TRUE, FALSE, or NA. That determines whether the new vector receives a value from `true`, `false`, or `missing`.
 
 ### Student exercises `if_else()`
 
 1.  Using the object `school_v2`, create 0/1 indicator variable `in_state_berkeley` that equals `1` if the high school is in the same state as UC Berkeley (i.e., `state_code=="CA"`).\
 2.  Create 0/1 indicator `berkeley_and_irvine` of whether a school got at least one visit from UC Berkeley **AND** from UC Irvine.\
 3.  Create 0/1 indicator `berkeley_or_irvine` of whether a school got at least one visit from UC Berkeley **OR** from UC Irvine.
+
+For the AND/OR conditions, evaluate the whole condition before deciding which argument supplies the output. A compound condition can sometimes be determined even when one input is missing:
+
+```{r, eval=FALSE}
+# Toy examples (not run)
+FALSE & NA # FALSE: one part is FALSE
+TRUE | NA  # TRUE: at least one part is TRUE
+```
+
+In the first example, `if_else()` would use `false`; in the second, it would use `true`. It uses `missing` only when the whole condition is NA.
 
 <details>
 
@@ -1842,41 +1898,50 @@ school_v2 %>% select(num_took_math) %>%
 str(object = school_v2$state_code) # investigate input variable
 school_v2 %>% filter(is.na(x = state_code)) %>% count() # investigate input var
 
-#Create var
-school_v2 %>% mutate(
-  in_state_berkeley=if_else(
-    condition = state_code=="CA",
-    true = 1,
-    false = 0
-  )
-) %>%
+# Create var
+school_v2 %>%
+  mutate(
+    in_state_berkeley = if_else(
+      condition = state_code == "CA",
+      true = 1,
+      false = 0,
+      missing = NULL
+    )
+  ) %>%
   count(in_state_berkeley)
 ```
 
 2.  Create 0/1 indicator `berkeley_and_irvine` of whether a school got at least one visit from UC Berkeley **AND** from UC Irvine.
 
 ```{r, results="hide"}
-#investigate input vars
-school_v2 %>% select(visits_by_berkeley, visits_by_irvine) %>% str() 
+# Investigate input vars
+school_v2 %>% select(visits_by_berkeley, visits_by_irvine) %>% str()
 school_v2 %>% filter(is.na(x = visits_by_berkeley)) %>% count()
 school_v2 %>% filter(is.na(x = visits_by_irvine)) %>% count()
 
-#create variable
-school_v2 %>% 
-  mutate(berkeley_and_irvine=if_else(condition = visits_by_berkeley>0
-    & visits_by_irvine>0,true = 1,false = 0)) %>%
+# Create variable
+school_v2 %>%
+  mutate(
+    berkeley_and_irvine = if_else(
+      condition = visits_by_berkeley > 0 & visits_by_irvine > 0,
+      true = 1,
+      false = 0,
+      missing = NULL
+    )
+  ) %>%
   count(berkeley_and_irvine)
 ```
 
 3.  Create 0/1 indicator `berkeley_or_irvine` of whether a school got at least one visit from UC Berkeley **OR** from UC Irvine.
 
 ```{r, results="hide"}
-school_v2 %>% 
+school_v2 %>%
   mutate(
-    berkeley_or_irvine=if_else(
-      condition = visits_by_berkeley>0 | visits_by_irvine>0,
+    berkeley_or_irvine = if_else(
+      condition = visits_by_berkeley > 0 | visits_by_irvine > 0,
       true = 1,
-      false = 0
+      false = 0,
+      missing = NULL
     )
   ) %>%
   count(berkeley_or_irvine)
@@ -1886,142 +1951,312 @@ school_v2 %>%
 
 <br>
 
-## Using recode() function within mutate()
+
+## Using recode_values() function within mutate()
 
 ```{r, eval=FALSE, echo=FALSE}
-?recode
+?recode_values
 ```
 
-**Description**: Recodes values of a variable
+**Description**: Creates a vector by mapping existing values of a variable to new values. Within `mutate()`, we use this vector to create or update a column.
+
+**When to use it**: Use `recode_values()` when you are creating a new variable based on one input variable (`input_var_name`) and the new variable can be created by mapping values of the input variable to values of the new variable. Several input values can map to the same new value.
+
+-   `if_else()` assigns values based on whether a logical condition is TRUE or FALSE.
+-   `recode_values()` assigns values by matching existing values of one input variable. It can produce two categories or more than two categories.
 
 **Usage (i.e., syntax)**
 
--   `recode(.x = vec_name, ..., .default = NULL, .missing = NULL)`
+Simplified usage from the help file, showing the arguments we will discuss. This is a syntax template, not code to run:
 
-**Arguments** \[see help file for further details\]
+```{r, eval=FALSE}
+recode_values(
+  x = input_var_name,
+  ...,
+  default = NULL
+)
+```
 
--   `.x` A vector (e.g., variable) to modify
--   `...` Specifications for recode, of form `current_value = new_recoded_value`
--   `.default`: If supplied, all values not otherwise matched given this value.
--   `.missing`: If supplied, any missing values in .x replaced by this value.
+**Arguments**
 
-**Example**: Using data frame `wwlist`, create new 0/1 indicator `public_school` from variable `school_type`
+| Argument | Description |
+|----------|-------------|
+| `x` | A vector to recode, such as a column of a data frame. Specify the original variable with `x = input_var_name`. |
+| `...` | A sequence of two-sided formulas, written as `input_var_value ~ replacement_value`. The left hand side (LHS) specifies the existing value to match. The right hand side (RHS) specifies its replacement. Separate mappings with commas.<br>For example, `"public" ~ 1` means: replace the character value "public" with the number 1. |
+| `default` | The value used for inputs that do not match any mapping. If omitted, or set to `NULL`, unmatched inputs receive a missing value (`NA`). <br> Supply a value such as `default = "other"` to give unmatched inputs that value, or use `default = input_var_name` to retain their original values when the output types are compatible. |
 
-```{r, results="hide"}
+: {tbl-colwidths="[15,85]"}
+
+Arguments we do not discuss: `from`, `to`, `unmatched`, `ptype`.
+
+<br>
+
+**What type of variable is returned?**
+
+- `recode_values()` returns a vector with the same length as `x`. 
+- Its data type is determined by the replacement values on the RHS and any supplied `default`, rather than by the type of the original variable.
+-   `mutate()` places the returned vector in a column; `<-` saves the resulting data frame.
+
+
+<br>
+
+| Replacement values and default | Output type |
+|-------------------------------|-------------|
+| Numbers such as `1` and `0`, with no default or a compatible numeric default | Numeric |
+| Text such as `"regular"` and `"alternative"`, with no default or a character default | Character |
+
+-   Character inputs can therefore produce numeric outputs, or character outputs.
+-   Replacement values and a supplied `default` must have compatible types. For example, numeric replacements combined with `default = "Other"` produce an error.
+-   For a character input variable, keeping unmatched original values with `default = input_var_name` is appropriate when the replacements are also character. It would not work when converting that character variable to numeric codes.
+
+<br>
+
+**Example**: Using data frame `wwlist`, create new 0/1 indicator `public_school` from variable `school_type`.
+
+Inspect the input values, specify the mappings, then check the new variable:
+
+```{r}
 str(object = wwlist$school_type)
+
 wwlist %>% count(school_type)
 
-wwlist_temp <- wwlist %>% select(school_type) %>% 
-  mutate(public_school = recode(.x = school_type,"public" = 1, "private" = 0))
+wwlist_temp <- wwlist %>%
+  select(school_type) %>%
+  mutate(
+    public_school = recode_values(
+      x = school_type,
+      "public" ~ 1,
+      "private" ~ 0,
+      default = NULL # here we explicitly request the default value
+    )
+  )
 
-wwlist_temp %>% head(n=10)
-str(object = wwlist_temp$public_school) # note: numeric variable
-wwlist_temp %>% count(public_school) # note the NAs
+wwlist_temp %>% head(n = 5)
+
+str(object = wwlist_temp$public_school) # numeric replacements produce numeric output
+
+wwlist_temp %>% count(school_type, public_school)
+
+rm(wwlist_temp)
+```
+
+We `default = NULL`, so inputs with no matching mapping receive `NA`. We would get the same result if we just didn't specify the `default` argument at all. Here, missing `school_type` values have no mapping and produce missing `public_school` values. 
+
+But we could assign value of `-1` to values that do not match any mapping
+```{r}
+wwlist_temp <- wwlist %>%
+  select(school_type) %>%
+  mutate(
+    public_school = recode_values(
+      x = school_type,
+      "public" ~ 1,
+      "private" ~ 0,
+      default = -1 # values of input var that are not explicitly matched above are assigned value -1
+    )
+  )
+
+wwlist_temp %>% head(n = 5)
+
+wwlist_temp %>% count(school_type, public_school)
+
 rm(wwlist_temp)
 ```
 
 <br/>
 
-Recoding `school_type` could have been accomplished using `if_else()`
-
--   Use `recode()` when new variable has more than two categories
-
 **Task**: Create `school_catv2` based on `school_category` with these categories:
 
 -   "regular"; "alternative"; "special"; "vocational"
 
-Investigate input var
+Investigate input var:
 
 ```{r, results="hide"}
 str(object = wwlist$school_category) # character variable
-wwlist %>% count(school_category) 
+wwlist %>% count(school_category)
 ```
 
-**Recode**
+**Recode**: Map each of the observed nonmissing input values to a category. Both regular-school labels map to "regular"; other pairs of labels also share an output category.
 
-```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(school_category) %>% 
-  mutate(school_catv2 = recode(.x = school_category,
-    "Alternative Education School" = "alternative",
-    "Alternative/other" = "alternative",
-    "Regular elementary or secondary" = "regular",
-    "Regular School" = "regular",
-    "Special Education School" = "special",
-    "Special program emphasis" = "special",
-    "Vocational Education School" = "vocational")
+```{r}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Regular elementary or secondary" ~ "regular",
+      "Regular School" ~ "regular",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational",
+      default = NULL
+    )
   )
-str(object = wwlist_temp$school_catv2) # character variable created
-wwlist_temp %>% count(school_catv2)
+
+str(object = wwlist_temp$school_catv2) # character replacements produce character output
+
+wwlist_temp %>% count(school_category, school_catv2)
+
 rm(wwlist_temp)
 ```
 
-**Task**: Create `school_catv2` based on `school_category` with these categories:
+**Task**: Create the same four categories, but map missing inputs to "unknown". Two ways to do this:
 
--   "regular"; "alternative"; "special"; "vocational"
--   This time use the `.missing` argument to recode `NAs` to "unknown"
+1.  Include `NA ~ "unknown"` among the `LHS ~ RHS` mappings. Use unquoted `NA` to match a missing input.
+1.  set `default = "unknown"` so that unmapped values of input var (here `NA`) are assigned value "unknown" 
+
+<br>
+approach 1: Include `NA ~ "unknown"` among the `LHS ~ RHS` mappings. Use unquoted `NA` to match a missing input.
+```{r, results="hide"}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Regular elementary or secondary" ~ "regular",
+      "Regular School" ~ "regular",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational",
+      NA ~ "unknown"
+    )
+  )
+str(object = wwlist_temp$school_catv2)
+wwlist_temp %>% count(school_category, school_catv2)
+rm(wwlist_temp)
+```
+
+Approach 2: set `default = "unknown"` so that unmapped values of input var (here `NA`) are assigned value "unknown"
+```{r, results="hide"}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Regular elementary or secondary" ~ "regular",
+      "Regular School" ~ "regular",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational",
+      default = "unknown"
+    )
+  )
+str(object = wwlist_temp$school_catv2)
+wwlist_temp %>% count(school_category, school_catv2)
+rm(wwlist_temp)
+```
+
+### Using default: build the school-category example step by step
+
+**Task**: Create the same four categories, this time using `default = "regular"` for the regular-school labels. Keep missing inputs missing in the final result.
+
+**Step 1: Leave out the mappings for the two regular-school labels. [just to see what happens. not recommended in practice!**
+
+We map alternative, special, and vocational schools, but have not yet supplied a default. Both regular-school labels and missing inputs are unmatched, so they receive `NA`.
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational"
+    )
+  )
+wwlist_temp %>% count(school_category, school_catv2)
+```
+
+**Step 2: Add `default = "regular"`.**
+
+Every input with no matching mapping now receives "regular". This includes the two regular-school labels **and missing inputs**. The table shows why we still need to handle missing inputs explicitly. **Not recomended in practice!!**
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational",
+      default = "regular"
+    )
+  )
+wwlist_temp %>% count(school_category, school_catv2)
+```
+
+**Step 3: Add `NA ~ NA` to keep missing inputs missing.**
+
+Missing inputs now have an explicit mapping. The two regular-school labels still use `default = "regular"`. This gives us the four requested categories while preserving missing values.
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ "alternative",
+      "Alternative/other" ~ "alternative",
+      "Special Education School" ~ "special",
+      "Special program emphasis" ~ "special",
+      "Vocational Education School" ~ "vocational",
+      NA ~ NA,
+      default = "regular"
+    )
+  )
+wwlist_temp %>% count(school_category, school_catv2)
+```
 
 ```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(school_category) %>% 
-  mutate(school_catv2 = recode(.x = school_category,
-    "Alternative Education School" = "alternative",
-    "Alternative/other" = "alternative",
-    "Regular elementary or secondary" = "regular",
-    "Regular School" = "regular",
-    "Special Education School" = "special",
-    "Special program emphasis" = "special",
-    "Vocational Education School" = "vocational",
-    .missing = "unknown")
-  )
 str(object = wwlist_temp$school_catv2)
 wwlist_temp %>% count(school_catv2)
 wwlist %>% count(school_category)
 rm(wwlist_temp)
 ```
 
-**Task**: Create `school_catv2` based on `school_category` with these categories:
+`default` applies to **every unmatched input**, not to a particular category name. If another nonmissing label appeared in the input, it would also become "regular" in this example. Inspect the original values and compare them with the recoded values to check that this is what you want.
 
--   "regular"; "alternative"; "special"; "vocational"
--   This time use the `.default` argument to assign the value "regular"
+To retain unmatched original values instead, use `default = school_category`. The already matched labels would still receive their mapped values; other inputs would retain their original values.
+
+**Task**: Create `school_catv2` based on `school_category`, this time as a numeric variable:
+
+-   `1` for "regular"; `2` for "alternative"; `3` for "special"; `4` for "vocational"
+
+The input values are still character, so the LHS values stay quoted. The RHS values are now unquoted numbers, so the output is numeric. No default is supplied, so unmatched inputs, including missing inputs, receive `NA`.
 
 ```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(school_category) %>% 
-  mutate(school_catv2 = recode(.x = school_category,
-    "Alternative Education School" = "alternative",
-    "Alternative/other" = "alternative",
-    "Special Education School" = "special",
-    "Special program emphasis" = "special",
-    "Vocational Education School" = "vocational",
-    .default = "regular")
+wwlist_temp <- wwlist %>%
+  select(school_category) %>%
+  mutate(
+    school_catv2 = recode_values(
+      x = school_category,
+      "Alternative Education School" ~ 2,
+      "Alternative/other" ~ 2,
+      "Regular elementary or secondary" ~ 1,
+      "Regular School" ~ 1,
+      "Special Education School" ~ 3,
+      "Special program emphasis" ~ 3,
+      "Vocational Education School" ~ 4
+    )
   )
-str(object = wwlist_temp$school_catv2)
-wwlist_temp %>% count(school_catv2)
+str(object = wwlist_temp$school_catv2) # numeric variable now
+wwlist_temp %>% count(school_category, school_catv2)
 wwlist %>% count(school_category)
 rm(wwlist_temp)
 ```
 
-**Task**: Create `school_catv2` based on `school_category` with these categories:
-
--   This time create a numeric variable rather than character:
-    -   `1` for "regular"; `2` for "alternative"; `3` for "special"; `4` for "vocational"
-
-```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(school_category) %>% 
-  mutate(school_catv2 = recode(.x = school_category,
-    "Alternative Education School" = 2,
-    "Alternative/other" = 2,
-    "Regular elementary or secondary" = 1,
-    "Regular School" = 1,
-    "Special Education School" = 3,
-    "Special program emphasis" = 3,
-    "Vocational Education School" = 4)
-  )
-str(object = wwlist_temp$school_catv2) # note: numeric variable now
-wwlist_temp %>% count(school_catv2)
-wwlist %>% count(school_category)
-rm(wwlist_temp)
-```
-
-### Student exercise using `recode()` within `mutate()`
+### Student exercise using `recode_values()` within `mutate()`
 
 ```{r, results="hide"}
 load(
@@ -2030,15 +2265,15 @@ load(
 names(x = df_event)
 ```
 
-1.  Using object `df_event`, assign new object `df_event_temp` and a numeric variable create `event_typev2` based on `event_type` with these categories:
+1.  Using object `df_event`, assign new object `df_event_temp` and create a numeric variable `event_typev2` based on `event_type` with these categories:
     -   `1` for "2yr college"; `2` for "4yr college"; `3` for "other"; `4` for "private hs"; `5` for "public hs"
-2.  This time use the `.default` argument to assign the value `5` for "public hs"
+2.  Create the same numeric codes, this time leaving out the mapping for "public hs" and using `default = 5`. Keep missing inputs missing with `NA ~ NA`. Compare the original and recoded values to check the result.
 
 <details>
 
-<summary><strong>Solutions using `recode()` within `mutate()`</strong></summary>
+<summary><strong>Solutions using `recode_values()` within `mutate()`</strong></summary>
 
-Check input variable
+Check input variable:
 
 ```{r, results="hide"}
 names(x = df_event)
@@ -2046,43 +2281,53 @@ str(object = df_event$event_type)
 df_event %>% count(event_type)
 ```
 
-1.  Using object `df_event`, assign new object `df_event_temp` and create a numeric variable `event_typev2` based on `event_type` with these categories:
-    -   `1` for "2yr college"; `2` for "4yr college"; `3` for "other"; `4` for "private hs"; `5` for "public hs"
-
-```{r results="hide"}
-df_event_temp <- df_event %>% 
-  select(event_type) %>%
-  mutate(event_typev2 = recode(.x = event_type,
-                              "2yr college" = 1,
-                              "4yr college" = 2,
-                              "other" = 3,
-                              "private hs" = 4,
-                              "public hs" = 5)
-         )
-str(object = df_event_temp$event_typev2)
-df_event_temp %>% count(event_typev2)
-df_event %>% count(event_type)
-```
-
-2.  This time assign the value use the `.default` argument to assign the value `5` for "public hs"
+1.  Map all five event types explicitly:
 
 ```{r, results="hide"}
-df_event_temp <- df_event %>% select(event_type) %>% 
-  mutate(event_typev2 = recode(.x = event_type,
-    "2yr college" = 1,
-    "4yr college" = 2,
-    "other" = 3,
-    "private hs" = 4,
-    .default = 5)
+df_event_temp <- df_event %>%
+  select(event_type) %>%
+  mutate(
+    event_typev2 = recode_values(
+      x = event_type,
+      "2yr college" ~ 1,
+      "4yr college" ~ 2,
+      "other" ~ 3,
+      "private hs" ~ 4,
+      "public hs" ~ 5
+    )
   )
 str(object = df_event_temp$event_typev2)
-df_event_temp %>% count(event_typev2)
+df_event_temp %>% count(event_type, event_typev2)
 df_event %>% count(event_type)
 ```
+
+2.  Use `default = 5` for unmatched nonmissing inputs:
+
+```{r, results="hide"}
+df_event_temp <- df_event %>%
+  select(event_type) %>%
+  mutate(
+    event_typev2 = recode_values(
+      x = event_type,
+      "2yr college" ~ 1,
+      "4yr college" ~ 2,
+      "other" ~ 3,
+      "private hs" ~ 4,
+      NA ~ NA,
+      default = 5
+    )
+  )
+str(object = df_event_temp$event_typev2)
+df_event_temp %>% count(event_type, event_typev2)
+df_event %>% count(event_type)
+```
+
+The two solutions produce the same codes for the event types in these data. `default = 5` would also assign 5 to any other unmatched nonmissing input, so always check the input values before using a default.
 
 </details>
 
 <br>
+
 
 ## Using case_when() function within mutate()
 
@@ -2090,101 +2335,304 @@ df_event %>% count(event_type)
 ?case_when
 ```
 
-`case_when()` useful for creating variable that is a function of multiple "input" variables
+**Description**: Returns a vector with one value per row in these `mutate()` examples. Each value is taken from the RHS of the first TRUE condition, or from `.default` when no condition is TRUE. `mutate()` uses the returned vector to create or update a column.
 
-**Usage (i.e., syntax)**: `case_when(...)`
+**When to use it**: Use `case_when()` when you can describe the new variable using a series of logical conditions involving **one or more input variables**.
 
-**Arguments** \[from help file; see help file for more details\]
+-   `recode_values()` matches values of one input variable to replacement values.
+-   `case_when()` matches logical conditions to replacement values. Conditions can use comparisons, `&`, `|`, `%in%`, and `is.na()`.
+-   For each row, the **first condition that is TRUE** supplies the result. If no condition is TRUE, the row receives `.default`.
 
--   `...`: A sequence of two-sided formulas.
-    -   The left hand side (LHS) determines which values match this case.
-        -   LHS must evaluate to a logical vector.\
-    -   The right hand side (RHS) provides the replacement value.
+**Usage (i.e., syntax)**
 
-**Task**: Using data frame `wwlist` and input vars `state` and `firstgen`, create a 4-category var with following categories:
+Simplified usage from the help file, showing the arguments we will discuss. This is a syntax template, not code to run:
+
+```{r, eval=FALSE}
+case_when(
+  ...,
+  .default = NULL
+)
+```
+
+**Arguments**
+
+| Argument | Description |
+|----------|-------------|
+| `...` | A sequence of two-sided formulas, written as `logical_condition ~ replacement_value`. <br> The left hand side (LHS) must evaluate to a logical vector. <br> The right hand side (RHS) supplies the result for rows matched by that condition. <br> Separate conditions with commas.<br>For example, `state == "WA" & firstgen == "Y" ~ "instate_firstgen"` assigns "instate_firstgen" to rows where both conditions are TRUE. |
+| `.default` | The value assigned to the new vector for rows where no LHS condition is TRUE (that is, all LHS conditions are FALSE or NA). <br> If omitted, or set to `NULL`, unmatched rows receive a missing value (`NA`).<br>For example, `.default = "unknown"` assigns "unknown" to every unmatched row. <br> We explicitly write `.default` in our examples so that we always consider what happens to unmatched rows. |
+
+: {tbl-colwidths="[15,85]"}
+
+Arguments we do not discuss: `.unmatched`, `.ptype`, `.size`.
+
+Note: use `default` in `recode_values()`, but `.default` in `case_when()`.
+
+<br>
+**What does `case_when()` return?**
+
+-   `case_when()` returns a vector with the same length as the LHS condition vectors
+-   Within `mutate()`, this means one value per row of the input data frame.
+-   The RHS replacement values and any supplied `.default` determine the output type. 
+    - Character labels produce a character variable; numeric replacements produce a numeric variable when the default is compatible.
+-   All replacements and `.default` must have compatible types. 
+    - For example, numeric replacements combined with `.default = "unknown"` produce an error.
+-   `mutate()` places the returned vector in a column; `<-` saves the resulting data frame.
+
+<br>
+**How does a row match a condition?**
+
+1.  A LHS condition that is TRUE matches the row. 
+    - (If it is the first matching condition) its RHS value is assigned to the new vector for that row.
+2.  A LHS condition that is FALSE or NA does not match the row. 
+    - Another condition can still be TRUE for that row.
+3.  If more than one condition is TRUE, the first one listed determines the value assigned to the new vector for that row.
+4.  If no condition is TRUE, the value of `.default` is assigned to the new vector for that row. 
+    - When you specify `.default = NULL` (this is the default value for the argument), value `NA` is assigned to new vector for that row.
+
+You can assign a nonmissing value to the new vector for rows where an input variable is missing. Use `is.na()` on the LHS to identify those rows.
+
+Toy example (not run):
+
+```{r, eval=FALSE}
+case_when(
+  is.na(x = firstgen) ~ "missing_firstgen",
+  .default = "not_missing"
+)
+```
+
+Here, rows where `firstgen` is NA receive "missing_firstgen" in the new vector. All other rows receive "not_missing".
+
+
+### State and first-generation status: matching and defaults
+
+**Task**: Using data frame `wwlist` and input variables `state` and `firstgen`, create a four-category variable `state_gen`:
 
 -   "instate_firstgen"; "instate_nonfirstgen"; "outstate_firstgen"; "outstate_nonfirstgen"
+-   Washington ("WA") is in-state. First-generation status is coded "Y" or "N".
 
-```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(state,firstgen) %>%
-  mutate(state_gen = case_when(
-    state == "WA" & firstgen =="Y" ~ "instate_firstgen",
-    state == "WA" & firstgen =="N" ~ "instate_nonfirstgen",
-    state != "WA" & firstgen =="Y" ~ "outstate_firstgen",
-    state != "WA" & firstgen =="N" ~ "outstate_nonfirstgen")
+Investigate the input variables before creating the new variable:
+
+```{r, results = "hide"}
+wwlist %>% select(state, firstgen) %>% str()
+
+wwlist %>% count(firstgen)
+
+
+wwlist %>% count(state)
+
+wwlist %>% filter(is.na(x = state)) %>% count() # how many observations are NA
+```
+
+**Step 1: Specify all four categories and explicitly use `.default = NULL`.**
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(state, firstgen) %>%
+  mutate(
+    state_gen = case_when(
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      state == "WA" & firstgen == "N" ~ "instate_nonfirstgen",
+      state != "WA" & firstgen == "Y" ~ "outstate_firstgen",
+      state != "WA" & firstgen == "N" ~ "outstate_nonfirstgen",
+      .default = NULL
+    )
   )
+
 str(object = wwlist_temp$state_gen)
 wwlist_temp %>% count(state_gen)
 ```
+In this example, a missing `state` or `firstgen` prevents all four conditions from being TRUE. Those rows receive `.default`, which we set to `NULL`, so their output is NA. Omitting `.default` would give the same result.
 
-Let's take a closer look at how values of inputs are coded into values of outputs
+Compare the input and output values, including rows with missing inputs:
 
-```{r, results="hide"}
-wwlist %>% select(state,firstgen) %>% str()
-count(x = wwlist,state)
-count(x = wwlist,firstgen)
+```{r, results = "hide"}
+# when state is NA
+wwlist_temp %>% filter(is.na(x = state)) %>% count(state_gen)
+
+# when firstgen is NA
+wwlist_temp %>% filter(is.na(x = firstgen)) %>% count(state_gen)
+
+# when state is NA OR firstgen is NA
+wwlist_temp %>% filter(is.na(x = state) | is.na(x = firstgen)) %>% count(state_gen)
+
+wwlist_temp %>%
+  filter(is.na(x = state) | is.na(x = firstgen)) %>%
+  count(state, firstgen, state_gen)
+
+# when state is not NA and firstgen is not NA
+wwlist_temp %>%
+  filter(!is.na(x = state) & !is.na(x = firstgen)) %>%
+  count(state_gen)
+
+wwlist_temp %>%
+  filter(!is.na(x = state) & !is.na(x = firstgen)) %>%
+  count(state, firstgen, state_gen)
 ```
 
-Create variable
 
-```{r, results="hide"}
-wwlist_temp <- wwlist %>% select(state,firstgen) %>%
-  mutate(state_gen = case_when(
-    state == "WA" & firstgen =="Y" ~ "instate_firstgen",
-    state == "WA" & firstgen =="N" ~ "instate_nonfirstgen",
-    state != "WA" & firstgen =="Y" ~ "outstate_firstgen",
-    state != "WA" & firstgen =="N" ~ "outstate_nonfirstgen")
+
+**Step 2: Change `.default` to "unknown".**
+
+The four conditions stay the same. Only the result for unmatched rows changes:
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(state, firstgen) %>%
+  mutate(
+    state_gen = case_when(
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      state == "WA" & firstgen == "N" ~ "instate_nonfirstgen",
+      state != "WA" & firstgen == "Y" ~ "outstate_firstgen",
+      state != "WA" & firstgen == "N" ~ "outstate_nonfirstgen",
+      .default = "unknown"
+    )
+  )
+
+wwlist_temp %>% count(state_gen)
+```
+
+Here, the unmatched rows have missing inputs, so they become "unknown". However, `.default` is not specifically a missing-value argument: it applies whenever no condition is TRUE.
+
+**Step 3: Temporarily leave out one condition to see what happens.**
+
+For this demonstration, omit the condition for out-of-state students who are not first-generation. We still want that category in the final variable; this step shows the consequence of forgetting it.
+
+```{r}
+wwlist_temp <- wwlist %>%
+  select(state, firstgen) %>%
+  mutate(
+    state_gen = case_when(
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      state == "WA" & firstgen == "N" ~ "instate_nonfirstgen",
+      state != "WA" & firstgen == "Y" ~ "outstate_firstgen",
+      .default = "unknown"
+    )
+  )
+
+wwlist_temp %>% count(state_gen)
+
+wwlist_temp %>%
+  filter(state != "WA", firstgen == "N") %>%
+  count(state_gen)
+```
+
+These out-of-state, non-first-generation students have nonmissing inputs, but none of the three conditions matches them. They therefore receive "unknown" too. With `.default = NULL`, they would receive NA.
+
+**Step 4: Restore all four categories and handle missing inputs explicitly.**
+
+Add a condition using `is.na()` to label rows with missing inputs. Use `.default = "unmatched"` for any other row that does not match a condition.
+
+```{r, results = "hide"}
+wwlist_temp <- wwlist %>%
+  select(state, firstgen) %>%
+  mutate(
+    state_gen = case_when(
+      is.na(x = state) | is.na(x = firstgen) ~ "missing_input",
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      state == "WA" & firstgen == "N" ~ "instate_nonfirstgen",
+      state != "WA" & firstgen == "Y" ~ "outstate_firstgen",
+      state != "WA" & firstgen == "N" ~ "outstate_nonfirstgen",
+      .default = "unmatched"
+    )
+  )
+
+wwlist_temp %>% count(state_gen)
+
+wwlist_temp %>%
+  filter(is.na(x = state) | is.na(x = firstgen)) %>%
+  count(state, firstgen, state_gen)
+```
+
+The four substantive categories are restored. Rows with missing inputs now match the first condition and receive "missing_input". Any other unmatched row would receive "unmatched"; for example, this could happen if `firstgen` contained a nonmissing value other than "Y" or "N". There are no such unmatched rows in these data.
+
+Whether to leave these outputs missing or give them labels depends on the purpose of the analysis. The steps above demonstrate the choices; they do not mean that "missing_input" must always become a category.
+
+**Take-aways**: 
+
+- For each row, `case_when()` uses the result from the first TRUE condition. 
+- If no condition is TRUE, it uses `.default`. 
+  - With `.default = NULL`, unmatched rows receive NA. 
+- A missing input does not automatically force a missing output, and a nonmissing input does not guarantee a match.
+
+```{r, echo=FALSE}
+rm(wwlist_temp)
+```
+
+<br>
+
+### Why the order of conditions matters
+
+Our four original state/first-generation conditions do not overlap. To see why order can matter, use two Washington students and compare a broad condition with a more specific one:
+
+```{r}
+df_x <- tibble(
+  state = c("WA", "WA"),
+  firstgen = c("Y", "N")
+)
+
+df_x %>%
+  mutate(
+    broad_first = case_when(
+      state == "WA" ~ "instate",
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      .default = "other"
+    ),
+    specific_first = case_when(
+      state == "WA" & firstgen == "Y" ~ "instate_firstgen",
+      state == "WA" ~ "instate",
+      .default = "other"
+    )
   )
 ```
 
-Compare values of input vars to value of output var
+For the student with `firstgen == "Y"`, both conditions are TRUE. `broad_first` returns "instate" because that condition is listed first. `specific_first` returns "instate_firstgen". When conditions overlap, put the more specific condition first if it should take priority.
 
-```{r, results="hide"}
-wwlist_temp %>% count(state_gen)
-wwlist_temp %>% filter(is.na(x = state)) %>% count(state_gen)
-wwlist_temp %>% filter(is.na(x = firstgen)) %>% count(state_gen)
-wwlist_temp %>% filter(is.na(x = firstgen) | is.na(x = state)) %>% count(state_gen)
-```
-
-**Take-away**: by default var created by `case_when()` equals `NA` for obs where one of the inputs equals `NA`
+<br>
 
 ### Student exercise using `case_when()` within `mutate()`
 
-1.  Using the object `school_v2` and input vars `school_type`, and `state_code` , create a 4-category var `state_type` with following categories:
+1.  Using object `school_v2` and input variables `school_type` and `state_code`, create a four-category variable `state_type` in a new object `school_v2_temp`:
     -   "instate_public"; "instate_private"; "outstate_public"; "outstate_private"
-    -   Note: We are referring to CA as in-state for this example
+    -   California ("CA") is in-state for this example.
+    -   Explicitly use `.default = NULL`. Check the input values and whether any rows receive a missing output.
+2.  What would change if you used `.default = "unknown"` instead? Explain when an unmatched row could occur, even if the current data have none.
 
 <details>
 
 <summary><strong>Solutions using `case_when()` within `mutate()`</strong></summary>
 
-Investigate
+Investigate the input variables:
 
 ```{r, results="hide"}
-school_v2 %>% select(state_code,school_type) %>% str()
-count(x = school_v2,state_code)
+school_v2 %>% select(state_code, school_type) %>% str()
+school_v2 %>% count(state_code)
 school_v2 %>% filter(is.na(x = state_code)) %>% count()
 
-count(x = school_v2,school_type)
+school_v2 %>% count(school_type)
 school_v2 %>% filter(is.na(x = school_type)) %>% count()
 ```
 
-1.  Using the object `school_v2` and input vars `school_type`, and `state_code` , create a 4-category var `state_type` with following categories:
-
-    -   "instate_public"; "instate_private"; "outstate_public"; "outstate_private"
+1.  Create `state_type` and compare input and output values:
 
 ```{r}
-school_v2_temp <- school_v2 %>% select(state_code,school_type) %>%
-  mutate(state_type = case_when(
-    state_code == "CA" & school_type == "public"  ~ "instate_public",
-    state_code == "CA" & school_type == "private" ~ "instate_private",
-    state_code != "CA" & school_type == "public" ~ "outstate_public",
-    state_code != "CA" & school_type == "private" ~ "outstate_private")
+school_v2_temp <- school_v2 %>%
+  select(state_code, school_type) %>%
+  mutate(
+    state_type = case_when(
+      state_code == "CA" & school_type == "public" ~ "instate_public",
+      state_code == "CA" & school_type == "private" ~ "instate_private",
+      state_code != "CA" & school_type == "public" ~ "outstate_public",
+      state_code != "CA" & school_type == "private" ~ "outstate_private",
+      .default = NULL
+    )
   )
 
 school_v2_temp %>% count(state_type)
-#school_v2_temp %>% filter(is.na(x = state_code)) %>% count(state_type) #no missing
-#school_v2_temp %>% filter(is.na(x = school_type)) %>% count(state_type) #no missing
+school_v2_temp %>% count(state_code, school_type, state_type)
+school_v2_temp %>% filter(is.na(x = state_type)) %>% count()
 ```
 
+2.  Changing `.default` to "unknown" would change only unmatched rows. There are no unmatched rows in these data, so the result would stay the same. A missing `state_code`, a missing `school_type`, or an unexpected school-type label could prevent all four conditions from matching. In those cases, `.default = NULL` would return NA and `.default = "unknown"` would return "unknown".
+
 </details>
+
