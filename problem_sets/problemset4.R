@@ -12,7 +12,7 @@ rm(list=ls()) # clears environment so script runs from a clean slate
   # In last week's problemset, you used `dplyr` functions such as `filter()`, 
   # `arrange()`, and `select()` and the pipe operator `%>%` to perform data manipulations. In this 
   # problemset, you'll practice creating variables using `mutate()` in combination with 
-  # `if_else()`, `case_when()`, and `recode()`.
+  # `if_else()`, `case_when()`, and `recode_values()`.
 
 ## Question 1: Data manipulation using pipes ----
   # Q1.1 ----
@@ -192,7 +192,7 @@ df_schools <-
   # Assign the new variable creation back into the `df_schools` data frame
   
 
-  # We did the above for you :) so just run it.
+  # We did the above for you :) so just run these lines below. 
     # NOTE: DC is not in any of the lists, so it is counted as South. That is expected.
 
 df_schools <- df_schools %>% 
@@ -208,9 +208,7 @@ df_schools <- df_schools %>%
 
 q4_2 <- 
 
-## Complete the following steps to recode variables using `mutate()` and `recode()`:
-  # NOTE: If you look at the help page for `recode()`, you will see it is labeled "superseded."
-  # That means newer alternatives exist, but `recode()` still works and is fine to use here.
+## Complete the following steps to recode variables using `mutate()` and `recode_values()`:
 
   # Q4.3 ----
   # 2 points
@@ -221,8 +219,11 @@ q4_2 <-
   # South     -> S
   # Remember to use assignment on `df_schools` to affect changes to the `region` variable.
   
-  # HINT: in `recode()` the syntax is old_value = "new_value", e.g. recode(region, Northeast = "NE", ...)
-  # This is the opposite order from `rename()`, which uses new_name = old_name.
+  # Example code structure using `school_type` from `df_school_all`:
+  #   df_school_all %>% 
+  #     mutate(school_type = recode_values(school_type, "public" ~ "PUB", "private" ~ "PRIV")) %>% 
+  #     count(school_type)
+  # Now do the same thing for `region` in `df_schools`, and assign the result back to `df_schools`!
 
 df_schools <- 
 
@@ -234,18 +235,20 @@ q4_3 <-
   # Q4.4 ----
   # 2 points
   # In the `df_schools` dataframe, create a new variable `state_name` whose value is:
-  # 'California' if state_code is 'CA'
-  # 'New York'   if state_code is 'NY'
-  # One more state of your choice, e.g. 'Texas' if state_code is 'TX'
-  #   (pick any state that appears in the data; all 50 states plus DC are included)
-  # 'Other' for any other state (use `.default`)
-  # You may use either `case_when()` or `recode()`; both accept a `.default` argument.
+  # 1. 'California' if state_code is 'CA'
+  # 2. 'New York'   if state_code is 'NY'
+  # 3. One more state of your choice, e.g. 'Texas' if state_code is 'TX' (all 50 states plus DC are included)
+  # 4. 'Other' for every school NOT in California, New York, or your chosen state (this is the "default" value -- see the hint below)
+
+  # You may use either `case_when()` or `recode_values()`.
   # Do not change `state_code` itself. Create `state_name` as a new variable and assign the 
   # result back to `df_schools`.
 
-  # HINT: `.default` goes inside case_when() after your last condition, and uses `=` (not `~`):
-  #   case_when(state_code == "CA" ~ "California", ..., .default = "Other")
-.
+  # HINT: Both functions need a default for "any other state", but it is spelled differently:
+  #   case_when(..., .default = "Other")      <- WITH a dot
+  #   recode_values(..., default = "Other")   <- NO dot
+  # The default goes after your last line and uses `=` (not `~`).
+
 
 df_schools <- 
 
