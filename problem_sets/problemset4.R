@@ -78,7 +78,7 @@ df_school_all %>% count(school_type)
 ### The following questions will ask you to use `mutate()` with `if_else()` 
   # to create a 0/1 indicator and then use `count()` to generate frequency tables.
   # HINT: the general pattern is
-  #   df %>% mutate(new_var = if_else(condition, 1, 0))
+  #   df %>% mutate(new_var = if_else(condition, 1, 0, missing = NULL))
   # where `condition` is something that is TRUE or FALSE for each row (e.g., state_code == "XX").
   # Use 1 and 0 (not TRUE/FALSE) for your indicator values.
 
