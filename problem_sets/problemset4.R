@@ -9,10 +9,16 @@ rm(list=ls()) # clears environment so script runs from a clean slate
 ## Overview ----
   # 26 points
 
-  # In last week's problemset, you used dplyr functions such as filter(), 
-  # arrange(), and select() and the pipe operator `%>%` to perform data manipulations. In this 
+  # In last week's problemset, you used `dplyr` functions such as `filter()`, 
+  # `arrange()`, and `select()` and the pipe operator `%>%` to perform data manipulations. In this 
   # problemset, you'll practice creating variables using `mutate()` in combination with 
-  # if_else(), case_when(), and recode_values().
+  # `if_else()`, `case_when()`, and `recode_values()`.
+
+  # NOTE ON BACKTICKS: In these instructions, function and variable names are wrapped in backticks (a common practice in R)
+  # (e.g., `mutate()`, `df_schools`) just to show they are code. Do NOT type the backticks in your
+  # own code. Write  mutate(...)  and  df_schools,  not  `mutate()`  and  `df_schools`.
+  # Backticks are not the same as quotes: "text in quotes" is a character value, which you'll still
+  # use for things like state_code == "CA".
 
 ## Question 1: Data manipulation using pipes ----
   # Q1.1 ----
