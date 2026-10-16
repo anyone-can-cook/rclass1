@@ -9,10 +9,10 @@ rm(list=ls()) # clears environment so script runs from a clean slate
 ## Overview ----
   # 26 points
 
-  # In last week's problemset, you used `dplyr` functions such as `filter()`, 
-  # `arrange()`, and `select()` and the pipe operator `%>%` to perform data manipulations. In this 
+  # In last week's problemset, you used dplyr functions such as filter(), 
+  # arrange(), and select() and the pipe operator `%>%` to perform data manipulations. In this 
   # problemset, you'll practice creating variables using `mutate()` in combination with 
-  # `if_else()`, `case_when()`, and `recode_values()`.
+  # if_else(), case_when(), and recode_values().
 
 ## Question 1: Data manipulation using pipes ----
   # Q1.1 ----
