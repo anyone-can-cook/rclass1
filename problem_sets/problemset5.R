@@ -4,7 +4,7 @@
 ## [ AUTH ] < Your Name / GitHub handle >
 ## [ INIT ] < Date you started the file >
 
-## 39 points
+## 31 points (+1 bonus)
 
 ## Overview ----
   # In this problem set, we will be working with the student list data that University of Illinois-Chicago
@@ -60,16 +60,15 @@ list_native_df %>% glimpse()
   # `stu_non_hispanic`
   # `stu_ethnicity_no_response`
 
-  # In an object named `Q1_1` assign a numeric vector with the values for `Y` for each count of the 6 variables above. 
-  # Like this: `q1_1 <- c(1,2,3,4,5,6)`
-  #   Note: the order of each count in the vector does not matter.
+  # In an object named `q1_1`, assign a numeric vector with the number of students who answered `Y` 
+  # for each of the 6 variables above (the `n` value in the `Y` row of each count).  # Like this: `q1_1 <- c(1,2,3,4,5,6)`
+  # Note: the order of each count in the vector does not matter.
 
 q1_1 <- 
 
   # Q1.2 ----
   # 1 point
   # For each of the following race variables, use the `count()` function to count its unique values:
-  # 1 point
 
   # `stu_american_indian`
   # `stu_asian`
@@ -78,9 +77,9 @@ q1_1 <-
   # `stu_white`
   # `stu_race_no_response`
 
-  # In an object named `Q1_2` assign a numeric vector with the values for `Y` for each count of the 6 variables above. 
-  # Like this: `q1_2 <- c(1,2,3,4,5,6)`
-  #   Note: the order of each count in the vector does not matter.
+  # In an object named `q1_1`, assign a numeric vector with the number of students who answered `Y` 
+  # for each of the 6 variables above (the `n` value in the `Y` row of each count).  # Like this: `q1_1 <- c(1,2,3,4,5,6)`
+  # Note: the order of each count in the vector does not matter.
 
 list_native_df %>% count(stu_american_indian)
 list_native_df %>% count(stu_asian)
@@ -90,8 +89,6 @@ list_native_df %>% count(stu_white)
 list_native_df %>% count(stu_race_no_response)
 
 q1_2 <- 
-
-# 8 points
 
 ## Question 2: Recreating College Board's aggregate race/ethnicity variable ----
   # In the questionnaire that students fill out during the College Board exams, they are allowed to select
@@ -206,6 +203,8 @@ str(race_cb_freq)
   # What type of object is this, and how many elements does it have?
   # Assign your answers to an object named `q2_2` and give it a one word character answer in quotes to the first element, 
   # and a single numeric value to the second element. Like so: `q2_2 <- c("answer", 123)`
+  #   HINT: A dataframe is a list where each column is one element, so the number of elements
+  #   is the number of columns. You can check with length(race_cb_freq).
 
 q2_2 <- 
 
@@ -216,6 +215,8 @@ q2_2 <-
   # What are the names of the variables? 
   # Assign your answer to an object named `q2_3` with four character elements like this:
   # `q2_3 <- c("answer", 123, "name1", "name2")`
+  #   HINT: typeof() shows how R stores the object. To check whether it is a dataframe,
+  #   use class(race_cb_freq) or is.data.frame(race_cb_freq).
 
 q2_3 <- 
 
@@ -224,7 +225,8 @@ q2_3 <-
   # Now, using `race_cb_freq`, add a column for the percentage of students in each `race_cb` category.
   # Use `mutate()` to create a new variable that is the percent of students in each category. 
   # Name this new column `pct`, and remember to assign this new variable back to the `race_cb_freq` object.
-  #   (Hint: Calculate the percent by dividing the count (`n`) by the sum of all counts, then multiply by 100)
+  #   HINT: Calculate the percent by dividing the count (`n`) by the sum of all counts, then multiply by 100.
+  #   Your code should look like: race_cb_freq <- race_cb_freq %>% mutate(pct = ...)
 
 race_cb_freq <- 
 
@@ -235,50 +237,61 @@ race_cb_freq <-
   # Now, let's investigate the 0/1 indicator variables we created earlier for each race/ethnicity
   # variable. First, we'll take a look at `stu_hispanic_01`. 
   # Use `summarise()` on `list_native_df` to create three summary variables: 
-  #   (Hint: Refer to the lecture to figure out which helper functions to use):
 
   # The total number of students (name this `n_obs`)
   # The total number of students where `stu_hispanic_01` is missing (name this `n_miss_hispanic`)
   # The percentage of students who identify as hispanic (name this `pct_hispanic`)
   # Assign the new summary table to an object named `q3_1`. 
 
+  #   HINT: Your code should follow this structure:
+  #   summarise(n_obs = n(),
+  #             n_miss_hispanic = sum(is.na(...)),
+  #             pct_hispanic = mean(..., na.rm = TRUE) * 100)
+  #   Because stu_hispanic_01 is 0/1, its mean is the share of students who identify as hispanic.
+  #   na.rm = TRUE leaves out students with a missing value.
+
 q3_1 <- 
 
   # Q3.2 ----
   # 2 points
-  # Next, use `summarise()` to calculate the percentage of students who identify as each of the following
-  # category of race and ethnicity, and assign the result to an object named `race_ethnicity_pct`:
-
-  # `stu_cuban_01`
-  # `stu_mexican_01`
-  # `stu_puerto_rican_01`
-  # `stu_other_hispanic_01`
-  # `stu_hispanic_01`
-  # `stu_american_indian_01`
-  # `stu_black_01`
-  # `stu_native_hawaiian_01`
-  # `stu_white_01`
-
+  # Next, use `summarise()` on `list_native_df` to calculate the total number of students and the 
+  # percentage of students who identify as each of the following categories of race and ethnicity. 
+  # Assign the result to an object named `race_ethnicity_pct`:
+  
+  # The total number of students (name this `n`)
+  # The percentage of students for each of these variables:
+  #   `stu_cuban_01`
+  #   `stu_mexican_01`
+  #   `stu_puerto_rican_01`
+  #   `stu_other_hispanic_01`
+  #   `stu_hispanic_01`
+  #   `stu_american_indian_01`
+  #   `stu_black_01`
+  #   `stu_native_hawaiian_01`
+  #   `stu_white_01`
+  
   # Please name each new race and ethnicity percentage variable as `pct_ethnicity`; basically replacing the `stu`  
-  # and removing the `_01` from the variable names above. I.e.: The percentage drawn from  
-  # `stu_native_hawaiian_01` would be `pct_native_hawaiian`
-
-  # How do these percentages differ from the aggregated `race_cb` variable in which each student can only be
-  # in one group?
-  # ANSWER:
+  # with `pct` and removing the `_01` from the variable names above. For example, the percentage drawn from  
+  # `stu_native_hawaiian_01` would be `pct_native_hawaiian`.
+  # HINT: Use the same approach you used for `pct_hispanic` in Q3.1: mean(..., na.rm = TRUE) * 100
 
 race_ethnicity_pct <- 
-
-  # Investigate the `race_ethnicity_pct` object you created in the previous question by using the
-  # `typeof()` and `str()` functions. Run your code below and answer the following
-  # questions:
-
+  
+  # REFLECTION: How do these percentages differ from the aggregated `race_cb` variable
+  # in which each student can only be in one group? Write your answer as a comment below.
+  # ANSWER in the commented lines below:
+  #
+  #
+  #
+  #
+  
+  # Next, run typeof() and str() below to help you answer Q3.3 and Q3.4:
 race_ethnicity_pct %>% typeof()
 race_ethnicity_pct %>% str()
 
   # Q3.3 ----
   # 1 point
-  # What type of object is this, and how many elements does it have?
+  # What type of object is `race_ethnicity_pct`, and how many elements does it have?
   # Assign your answer to an object named `q3_3` as a character vector with a single word and a single number.
   # Like this: `q3_3 <- c("answer", 12345)`
 
@@ -290,6 +303,7 @@ q3_3 <-
   # variables?
   # Assign your answer to an object named `q3_4` as a character vector with one word/number per item.
   # Like this: `q3_4 <- c("answer", 12345, "name1", "name2", ... )`
+  #   Note: Include the names of ALL variables in race_ethnicity_pct (including `n`).
 
 q3_4 <- 
 
@@ -303,7 +317,7 @@ q3_4 <-
 
   # First, group by core-based statistical area (`zip_cbsatitle`)
   # and calculate the following statistics for each CBSA:
-  # The total number of students
+  # The total number of students (name this `n_obs`)
   # The percentage of students who identify as each of the following race/ethnicity category:
   #   `stu_cuban_01`
   #   `stu_mexican_01`
@@ -314,11 +328,13 @@ q3_4 <-
   #   `stu_black_01`
   #   `stu_native_hawaiian_01`
   #   `stu_white_01`
-  #   Remember to name your percentage variables as `pct_ethnicity`, the same as Q3.2.
+  #   Remember to name your percentage variables as `pct_ethnicity`, the same as Q3.2, and to use the 
+  #   same approach: mean(..., na.rm = TRUE) * 100 
 
   # Lastly, in the same line of code, sort by the number of students per CBSA in descending order. 
   # Note that a core-based statistical area by definition only includes urban areas. Observations where
   # `zip_cbsatitle` is `NA` indicates that the student does not live in a CBSA (i.e., rural location).
+  #   HINT: This is the Q3.2 summarise() code with group_by() added before it and arrange() added after it.
 
 zip_cbsa_group <- 
 
@@ -335,8 +351,12 @@ zip_cbsa_group <-
   # The maximum median household income of students (`max_inc`)
   # The minimum median household income of students (`min_inc`)
 
-  # Lastly, sort by the number of students per state in descending order. Ignore any warnings from R; 
-  # the `stu_state_group` object should have been created in your environment despite the warnings.
+  # Lastly, sort by the number of students per state in descending order. 
+  #   HINT: Use na.rm = TRUE inside mean(), max(), and min(). Otherwise, any state with a 
+  #   missing income will show NA.
+  #   Note: R WILL GIVE YOU WARNINGS, and a few rows (GU, VI, and the NA state row) will show NaN, Inf, 
+  #   and -Inf. This is expected: every student in those rows is missing income, so there is nothing 
+  #   to average. Your `stu_state_group` object will still be created correctly.
 
 stu_state_group <- 
 
@@ -354,7 +374,7 @@ major_group_freq <-
   # `stu_major_1_group_text` category. Name the new percentage variable `pct`
   # Assign this new dataframe to an object named `q4_4`.
   #   Hint: use the variable you created in the previous question for the
-  #   number of students per major.
+  #   number of students per major. This works like Q2.4.
 
 q4_4 <- 
 
@@ -375,6 +395,7 @@ q4_5 <-
   # summarize to get the number of students per state and major (name this `n_obs`). 
   # Sort ascending by state, then the number of students in descending order. 
   # Assign the result to an object named `major_by_state_freq`.
+  #   HINT: You can sort by two variables in one arrange(), e.g. arrange(var1, desc(var2))
 
 major_by_state_freq <- 
 
@@ -391,7 +412,7 @@ q4_7 <-
   # 1 point
   # What two variables does each row/observation represent?
   # Assign two single, unique, words as your answers (each one in quotation marks!) to an object named `q4_8`.
-  # Like this: `q4_8 <- c("anwer1","answer2")`
+  # Like this: `q4_8 <- c("answer1","answer2")`
 
 q4_8 <- 
 
@@ -399,7 +420,8 @@ q4_8 <-
   # 1 point
   # If we were to group/summarize only by state, how many observations would the resulting object have?
   # Assign the numeric value to an object named `q4_9`
-  #   Hint: You will do this in the next question, so draw your answer from that object.
+  #   Hint: The `top_3_majors` object you create in Q4.10 is grouped/summarized only by state. 
+  #   Complete Q4.10 first, then come back and use the number of observations in `top_3_majors`.
 
 q4_9 <- 
 
@@ -412,6 +434,13 @@ q4_9 <-
   # The top choice major by students per state (`top_major`)
   # The second choice major by students per state (`second_major`)
   # The third choice major by students per state (`third_major`)
+
+  # HINT: Because `major_by_state_freq` is already sorted by number of students within each state,
+  # the 1st row for each state is the top major, the 2nd row is the second, and so on.
+  # Use first() and nth() inside summarise(), e.g.:
+  # summarise(top_major = first(stu_major_1_group_text),
+  #           second_major = nth(stu_major_1_group_text, 2),
+  #           ...)
 
 top_3_majors <- 
 
@@ -437,5 +466,5 @@ issue <-
 
 reply <- 
 
-## Submit problem set on Canvas ----.
+## Submit problem set on Canvas ----
   # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset5.R).
