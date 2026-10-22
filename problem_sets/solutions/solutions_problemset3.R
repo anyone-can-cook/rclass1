@@ -303,6 +303,8 @@ q5_2   # private: 3822   public: 17479
 
 # Note: the values are lowercase "public" and "private". You'll need to use that exact spelling
 # in Q5.7 and Q5.8.
+# You can also write table(df_school_all$school_type, useNA = "always"). This adds a
+# count of missing values (NA), which is a good habit when checking a new variable.
 
 
 # Q5.3 ----
