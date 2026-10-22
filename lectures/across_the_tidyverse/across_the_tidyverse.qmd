@@ -31,18 +31,18 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE, message
 -   **you must run this code chunk**
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(package = tidyverse)
 ```
 
 If package not yet installed, then must install before you load. Install in "console" rather than .Rmd file
 
--   Generic syntax: `install.packages("package_name")`
--   Install "tidyverse": `install.packages("tidyverse")`
+-   Generic syntax: `install.packages(pkgs = "package_name")`
+-   Install "tidyverse": `install.packages(pkgs = "tidyverse")`
 
 Note: when we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
 
--   `install.packages("tidyverse")`
--   `library(tidyverse)`
+-   `install.packages(pkgs = "tidyverse")`
+-   `library(package = tidyverse)`
 
 ## Data we will use today
 
@@ -55,8 +55,11 @@ Data on off-campus recruiting events by public universities
 rm(list = ls()) # remove all objects
 
 #load dataset with one obs per recruiting event
-load(url("https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"))
-#load("../../data/recruiting/recruit_event_allvars.Rdata")
+load(
+  file = url(
+    description = "https://github.com/ozanj/rclass/raw/master/data/recruiting/recruit_event_somevars.RData"
+  )
+)
 ```
 
 ## What we are doing today
@@ -133,10 +136,10 @@ In `tidyverse` the `group_by()` and `summarize()` functions are the primary mean
 -   part of **dplyr** package within **tidyverse**; not part of **Base R**
 -   works best with pipes `%>%` and `summarize()` function \[described below\]
 
-**Basic syntax**: `group_by(.data, ...)`
+**Basic syntax template**: `group_by(.data = df_name, grouping_variables)`
 
--   `.data` argument refers to name of data frame
--   `...` argument refers to names of "group_by" variables, separated by commas
+-   `.data` is the fixed argument that receives the data frame object; `df_name` is a placeholder for that object
+-   Grouping variables are supplied through `...`, separated by commas, so they remain unnamed
     -   Can "group by" one or many variables
     -   Typically, "group_by" variables are character, factor, or integer variables
 
@@ -149,7 +152,7 @@ Possible "group by" variables in `df_event` data:
 **Example**: in `df_event`, create frequency count of `event_type` \[output omitted\]
 
 ```{r, results='hide'}
-names(df_event)
+names(x = df_event)
 #without group_by()
 df_event %>% count(event_type)
 df_event %>% count(instnm)
@@ -163,7 +166,7 @@ By itself `group_by()` doesn't do much; it just prints data
 
 ```{r, results='hide'}
 #group_by (without pipes)
-group_by(df_event, univ_id, event_type, event_state)
+group_by(.data = df_event, univ_id, event_type, event_state)
 #group_by (with pipes)
 df_event %>% group_by(univ_id, event_type, event_state) 
 df_event %>% group_by(univ_id, event_type, event_state) %>% glimpse()
@@ -198,7 +201,7 @@ Below, we'll use `class()` function to show whether data frame is grouped
 Grouping is not retained unless you **assign** it
 
 ```{r}
-class(df_event)
+class(x = df_event)
 ```
 
 ```{r results='hide'}
@@ -207,19 +210,24 @@ df_event_grp <- df_event %>% group_by(univ_id, event_type, event_state) # using 
 ```
 
 ```{r}
-class(df_event_grp)
+class(x = df_event_grp)
 ```
 
 ### Un-grouping an object
 
-Use `ungroup(object)` to un-group grouped data
+Use `ungroup(x = df_name)` to un-group grouped data. Here, `x` is the fixed argument name and `df_name` is a placeholder for the grouped data frame object.
 
 ```{r}
-class(df_event_grp)
-df_event_grp <- ungroup(df_event_grp)
-class(df_event_grp)
+class(x = df_event_grp)
+df_event_grp <- ungroup(x = df_event_grp)
+class(x = df_event_grp)
 rm(df_event_grp)
 ```
+
+Why ungroup
+
+- use `ungroup()` once grouping has served its purpose. This prevents the grouping from unexpectedly affecting later uses of `mutate()`, `filter()` or related functions. 
+- Also communicates to readers: "From this point onward, treat the data as one complete table."
 
 ### Student exercise `group_by()`
 
@@ -276,16 +284,17 @@ df_event %>%
 
 **Description**: `summarize()` calculates across rows; then collapses into single row
 
--   `summarize()` create scalar vars summarizing variables of existing data frame
+-   `summarize()` creates variables that contain summary statistics based on the input data frame. 
+    - Sometimes, these summary statistics variables are called "scalar variables"
 -   if you first group data frame using `group_by()`, `summarize()` creates summary vars separately for each group, returning object with one row per group
 -   if data frame not grouped, `summarize()` will result in one row.
 
-**Syntax**: `summarize(.data, ...)`
+**Syntax template**: `summarize(.data = df_name, summary_name = summary_expression)`
 
--   `.data`: a data frame; omit if using `summarize()` after pipe `%>%`
--   `...`: Name-value pairs of summary functions separated by commas
-    -   "name" will be the name of new variable you will create
-    -   "value" should be expression that returns a single value like `min(x)`, `n()`
+-   `.data` is the fixed argument that receives a data frame object; omit it when the pipe `%>%` supplies the data
+-   `...` receives name-value pairs of summary expressions separated by commas
+    -   `summary_name` is the name of a new variable in the returned data frame, not a fixed argument name
+    -   `summary_expression` should return a single value, such as `min(vec_name)` or `n()`
     -   variable names do not need to be placed within quotes
 
 **Value** (what `summarize()` returns/creates)
@@ -305,7 +314,7 @@ df_event %>%
 
 ```{r}
 #?n # dplyr function n() gives current group size
-summarize(df_event, num_events=n()) # without pipes
+summarize(.data = df_event, num_events=n()) # without pipes
 
 df_event %>% summarize(num_events=n()) # with pipes
 df_event %>% summarize(num_events=n()) %>% str() # use str to see what pipe returned
@@ -366,12 +375,12 @@ df_event %>%
 -   most "helper" functions (e.g., `max()`, `mean()` have option `na.rm` to keep/remove missing obs before performing calculations)
     -   `na.rm = FALSE` (default); don't remove `NAs` prior to calculation
         -   if any obs missing, then result of calculation is `NA`
-    -   `na.rm = TRUE` (default); remove `NAs` prior to calculation
+    -   `na.rm = TRUE` (not default); remove `NAs` prior to calculation
 -   Object created by `summarize()` not retained unless you **assign** it (output omitted)
 
 ```{r, results = "hide"}
 event_temp <- df_event %>% summarize(num_events=n(), 
-  mean_inc=mean(med_inc, na.rm = TRUE))
+  mean_inc=mean(x = med_inc, na.rm = TRUE))
 
 event_temp
 rm(event_temp)
@@ -391,23 +400,34 @@ df_event %>% filter(event_state != instst) %>% count() #out state
 
 Task: calculate mean income for: all events; in-state events; out-of-state events
 
+- (**Note**: we can also complete the below task using `group_by()` and `summarize()` together; we show how below)
+
 ```{r}
 df_event %>%
   summarize(
-    avg_inc = mean(med_inc, na.rm = TRUE), # all events
-    avg_inc_inst = mean(med_inc[event_state == instst], na.rm = TRUE), # in-state
-    avg_inc_outst = mean(med_inc[event_state != instst], na.rm = TRUE) # out-state
+    avg_inc = mean(x = med_inc, na.rm = TRUE), # all events
+    avg_inc_inst = mean(x = med_inc[event_state == instst], na.rm = TRUE), # in-state
+    avg_inc_outst = mean(x = med_inc[event_state != instst], na.rm = TRUE) # out-state
   )
 ```
 
-Understanding code: `mean(med_inc[event_state == instst], na.rm = TRUE)`
+Understanding code: `mean(x = med_inc[event_state == instst], na.rm = TRUE)`
 
 -   `mean()` function takes atomic vector as first argument
 -   the variable `med_inc` is an numeric atomic vector
 -   `event_state == instst` is condition that yields a logical atomic vector
 -   From Base R lecture, `med_inc[event_state == instst]` is:
-    -   "subset atomic vectors using `[]`" approach 3: "Using logicals to return elements where corresponding logical is `TRUE`"
-    -   isolates observations of `med_inc` where `event_state` is same as state the university is located in (`instst`)
+    -   this is "subset atomic vectors using `[]`" approach 3: "Using logicals to return elements where corresponding logical is `TRUE`"
+    -   numeric atomic vector `med_inc` has the same length (number of elements) as logical atomic vector created by `med_inc[event_state == instst]`
+    -   `med_inc[event_state == instst]` isolates observations of `med_inc` where `event_state` is same as state the university is located in (`instst`)
+
+```{r}
+(df_event$event_state == df_event$instst)[1:10] # show first 10 elements of logical atomic vector created by this condition
+
+length(df_event$med_inc)
+length(df_event$event_state == df_event$instst)
+# one caveat, this code removes NAs prior to subsetting and calculating the mean: mean(x = med_inc[event_state == instst], na.rm = TRUE)
+```
 
 ### Using `summarize()` to create descriptive statistics table
 
@@ -418,28 +438,30 @@ Often helpful to use `summarize()` to calculate summary statistics that are the 
 -   want these measures: number of non-missing obs; mean; standard deviation
 
 ```{r}
-df_event %>% mutate(non_miss_inc = is.na(med_inc)==0) %>%
+df_event %>% mutate(non_miss_inc = is.na(x = med_inc)==0) %>%
   summarize(
     n = sum(non_miss_inc, na.rm = TRUE), #SAMPLE SIZE all
-    avg_inc = mean(med_inc, na.rm = TRUE), # MEAN
-    std_inc = sd(med_inc, na.rm = TRUE) # STANDARD DEVIATION all events
+    avg_inc = mean(x = med_inc, na.rm = TRUE), # MEAN
+    std_inc = sd(x = med_inc, na.rm = TRUE) # STANDARD DEVIATION all events
   )
 ```
 
 **Task**: same as above but separate measures for: all events; in-state; out-of-state
 
+- (**Note**: we can also complete the below task using `group_by()` and `summarize()` together; we show how below)
+
 ```{r}
-df_event %>% mutate(non_miss_inc = is.na(med_inc)==0) %>%
+df_event %>% mutate(non_miss_inc = is.na(x = med_inc)==0) %>%
   summarize(
     n = sum(non_miss_inc, na.rm = TRUE), #SAMPLE SIZE 
     n_inst = sum(non_miss_inc[event_state == instst], na.rm = TRUE), 
     n_outst = sum(non_miss_inc[event_state != instst], na.rm = TRUE), 
-    avg_inc = mean(med_inc, na.rm = TRUE), # MEAN
-    avg_inc_inst = mean(med_inc[event_state == instst], na.rm = TRUE), 
-    avg_inc_outst = mean(med_inc[event_state != instst], na.rm = TRUE),
-    std_inc = sd(med_inc, na.rm = TRUE), # STANDARD DEVIATION 
-    std_inc_inst = sd(med_inc[event_state == instst], na.rm = TRUE), 
-    std_inc_outst = sd(med_inc[event_state != instst], na.rm = TRUE) 
+    avg_inc = mean(x = med_inc, na.rm = TRUE), # MEAN
+    avg_inc_inst = mean(x = med_inc[event_state == instst], na.rm = TRUE),
+    avg_inc_outst = mean(x = med_inc[event_state != instst], na.rm = TRUE),
+    std_inc = sd(x = med_inc, na.rm = TRUE), # STANDARD DEVIATION
+    std_inc_inst = sd(x = med_inc[event_state == instst], na.rm = TRUE),
+    std_inc_outst = sd(x = med_inc[event_state != instst], na.rm = TRUE)
   )
 ```
 
@@ -467,7 +489,7 @@ df_event %>%
 
     ```{r}
     df_event %>%
-      summarize(mean_fr_lunch = mean(fr_lunch, na.rm = TRUE))
+      summarize(mean_fr_lunch = mean(x = fr_lunch, na.rm = TRUE))
     ```
 
 </details>
@@ -503,7 +525,7 @@ df_event %>% group_by(instnm) %>% summarize(num_events=n()) %>% str()
 
 ```{r}
 event_by_univ <- df_event %>% group_by(instnm) %>% summarize(num_events=n())
-str(event_by_univ)
+str(object = event_by_univ)
 event_by_univ # print
 rm(event_by_univ)
 ```
@@ -524,30 +546,26 @@ rm(event_by_univ)
       #df_event %>% group_by(instnm, event_type) %>% summarize(num_events=n()) %>% View()
     ```
 
-**Task**
-
--   Count number of recruiting events by institution and event_type
-
 Note that data frame object created by `group_by()` and `summarize()` can be input to graph
 
 ```{r, eval=FALSE}
 #bar chart of number of events, all universities combined
 df_event %>% group_by(instnm, event_type) %>% 
   summarize(num_events=n()) %>%
-    ggplot(aes(x=event_type, y=num_events)) +  # plot
-    ylab("Number of events") + xlab("Event type") +geom_col()
+    ggplot(mapping = aes(x=event_type, y=num_events)) +  # plot
+    ylab(label = "Number of events") + xlab(label = "Event type") +geom_col()
 
 #bar chart of number of events, separete chart for each university
 df_event %>% group_by(instnm, event_type) %>% 
   summarize(num_events=n()) %>%
-    ggplot(aes(x=event_type, y=num_events)) +  # plot
-    ylab("Number of events") + xlab("Event type") + geom_col() +
-    coord_flip() + facet_wrap(~ instnm) 
+    ggplot(mapping = aes(x=event_type, y=num_events)) +  # plot
+    ylab(label = "Number of events") + xlab(label = "Event type") + geom_col() +
+    coord_flip() + facet_wrap(facets = ~ instnm)
 ```
 
 **Task**. Count number of recruiting events by institution, event_type, and whether event is in- or out-of-state (var=`event_inst`)
 
--   Note: in `group_by()`, the optional `drop` argument controls whether empty groups dropped. default is `drop = TRUE`
+-   Note: in `group_by()`, the optional `.drop` argument controls whether empty groups are dropped. The default is `.drop = TRUE`.
 
 ```{r}
 
@@ -558,7 +576,7 @@ df_event %>% group_by(instnm, event_type, event_inst, .drop = TRUE) %>%
   summarize(num_events=n()) 
 
 df_event %>% 
-  group_by(as.factor(instnm), as.factor(event_type), as.factor(event_inst),
+  group_by(as.factor(x = instnm), as.factor(x = event_type), as.factor(x = event_inst),
            .drop = FALSE) %>% summarize(num_events=n()) %>% arrange(num_events)
 # .drop=FALSE affects only grouping columns that are coded as factors
 # combinations that include non-factor grouping variables are still 
@@ -570,9 +588,9 @@ Make a graph, showing in/out state as fill color of bar
 ```{r, eval=FALSE}
 df_event %>% group_by(instnm, event_type, event_inst) %>% 
   summarize(num_events=n()) %>%
-    ggplot(aes(x=event_type, y=num_events, fill = event_inst)) +  # plot
-    ylab("Number of events") + xlab("Event type") + geom_col() +
-    coord_flip() + facet_wrap(~ instnm) 
+    ggplot(mapping = aes(x=event_type, y=num_events, fill = event_inst)) +  # plot
+    ylab(label = "Number of events") + xlab(label = "Event type") + geom_col() +
+    coord_flip() + facet_wrap(facets = ~ instnm)
 ```
 
 **Task**
@@ -582,13 +600,13 @@ df_event %>% group_by(instnm, event_type, event_inst) %>%
 ```{r}
 df_event %>% group_by(instnm, event_type, event_inst) %>% 
   summarize(num_events=n(),
-    mean_pct_white=mean(pct_white_zip, na.rm = TRUE)
+    mean_pct_white=mean(x = pct_white_zip, na.rm = TRUE)
   )
 
 #investigate object you created
 df_event %>% group_by(instnm, event_type, event_inst) %>% 
   summarize(num_events=n(),
-    mean_pct_white=mean(pct_white_zip, na.rm = FALSE)
+    mean_pct_white=mean(x = pct_white_zip, na.rm = FALSE)
   ) %>% glimpse()
 ```
 
@@ -638,9 +656,9 @@ sum(c(TRUE,TRUE,FALSE,FALSE))
 `is.na()` returns `TRUE` if value is `NA` and otherwise returns `FALSE`
 
 ```{r}
-is.na(c(5,NA,4,NA))
-sum(is.na(c(5,NA,4,NA,5)))
-sum(!is.na(c(5,NA,4,NA,5)))
+is.na(x = c(5,NA,4,NA))
+sum(is.na(x = c(5,NA,4,NA,5)))
+sum(!is.na(x = c(5,NA,4,NA,5)))
 ```
 
 Application: How many missing/non-missing obs in variable \[**very important**\]
@@ -649,9 +667,9 @@ Application: How many missing/non-missing obs in variable \[**very important**\]
 event_berk %>% group_by(event_type) %>% 
   summarize(
     n_events = n(),
-    n_miss_inc = sum(is.na(med_inc)),
-    n_nonmiss_inc = sum(!is.na(med_inc)),
-    n_nonmiss_fr_lunch = sum(!is.na(fr_lunch))
+    n_miss_inc = sum(is.na(x = med_inc)),
+    n_nonmiss_inc = sum(!is.na(x = med_inc)),
+    n_nonmiss_fr_lunch = sum(!is.na(x = fr_lunch))
   )
 ```
 
@@ -680,9 +698,9 @@ event_berk %>%
   group_by(event_type) %>%
   summarize(
     n_events = n(),
-    n_miss_inc = sum(is.na(med_inc)),
-    n_nonmiss_inc = sum(!is.na(med_inc))) %>%
-  arrange(desc(n_events))
+    n_miss_inc = sum(is.na(x = med_inc)),
+    n_nonmiss_inc = sum(!is.na(x = med_inc))) %>%
+  arrange(desc(x = n_events))
 ```
 
 </details>
@@ -698,8 +716,8 @@ The `mean()` function within `summarize()` calculates means, separately for each
 ```{r}
 event_berk %>% group_by(event_inst, event_type) %>% summarize(
   n_events=n(),
-  mean_inc=mean(med_inc, na.rm = TRUE),
-  mean_pct_white=mean(pct_white_zip, na.rm = TRUE))
+  mean_inc=mean(x = med_inc, na.rm = TRUE),
+  mean_pct_white=mean(x = pct_white_zip, na.rm = TRUE))
 ```
 
 ### `summarize()`: means and `na.rm` argument
@@ -721,17 +739,18 @@ Many functions have argument `na.rm` (means "remove `NAs`")
 #na.rm = FALSE; the default setting
 event_berk %>% group_by(event_inst, event_type) %>% summarize(
   n_events=n(),
-  n_miss_inc = sum(is.na(med_inc)),
-  mean_inc=mean(med_inc, na.rm = FALSE),
-  n_miss_frlunch = sum(is.na(fr_lunch)),
-  mean_fr_lunch=mean(fr_lunch, na.rm = FALSE))
+  n_miss_inc = sum(is.na(x = med_inc)),
+  mean_inc=mean(x = med_inc, na.rm = FALSE),
+  n_miss_frlunch = sum(is.na(x = fr_lunch)),
+  mean_fr_lunch=mean(x = fr_lunch, na.rm = FALSE))
+
 # na.rm = TRUE
 event_berk %>% group_by(event_inst, event_type) %>% summarize(
   n_events=n(),
-  n_miss_inc = sum(is.na(med_inc)),
-  mean_inc=mean(med_inc, na.rm = TRUE),
-  n_miss_frlunch = sum(is.na(fr_lunch)),
-  mean_fr_lunch=mean(fr_lunch, na.rm = TRUE))
+  n_miss_inc = sum(is.na(x = med_inc)),
+  mean_inc=mean(x = med_inc, na.rm = TRUE),
+  n_miss_frlunch = sum(is.na(x = fr_lunch)),
+  mean_fr_lunch=mean(x = fr_lunch, na.rm = TRUE))
 ```
 
 ### Student exercise
@@ -748,19 +767,19 @@ event_berk %>% group_by(event_inst, event_type) %>% summarize(
 event_berk %>% group_by(instnm, event_inst, event_type) %>%
   summarize(
   n_events=n(),
-  n_miss_white = sum(!is.na(pct_white_zip)),
-  mean_white = mean(pct_white_zip, na.rm = TRUE),
-  n_miss_black = sum(!is.na(pct_black_zip)),
-  mean_black = mean(pct_black_zip, na.rm = TRUE),
-  n_miss_asian = sum(!is.na(pct_asian_zip)),
-  mean_asian = mean(pct_asian_zip, na.rm = TRUE),
-  n_miss_lat = sum(!is.na(pct_hispanic_zip)),
-  mean_lat = mean(pct_hispanic_zip, na.rm = TRUE),
-  n_miss_na = sum(!is.na(pct_amerindian_zip)),
-  mean_na = mean(pct_amerindian_zip, na.rm = TRUE),
-  n_miss_nh = sum(!is.na(pct_nativehawaii_zip)),
-  mean_nh = mean(pct_nativehawaii_zip, na.rm = TRUE)) %>%
-  head(6)
+  n_miss_white = sum(!is.na(x = pct_white_zip)),
+  mean_white = mean(x = pct_white_zip, na.rm = TRUE),
+  n_miss_black = sum(!is.na(x = pct_black_zip)),
+  mean_black = mean(x = pct_black_zip, na.rm = TRUE),
+  n_miss_asian = sum(!is.na(x = pct_asian_zip)),
+  mean_asian = mean(x = pct_asian_zip, na.rm = TRUE),
+  n_miss_lat = sum(!is.na(x = pct_hispanic_zip)),
+  mean_lat = mean(x = pct_hispanic_zip, na.rm = TRUE),
+  n_miss_na = sum(!is.na(x = pct_amerindian_zip)),
+  mean_na = mean(x = pct_amerindian_zip, na.rm = TRUE),
+  n_miss_nh = sum(!is.na(x = pct_nativehawaii_zip)),
+  mean_nh = mean(x = pct_nativehawaii_zip, na.rm = TRUE)) %>%
+  head(n = 6)
 ```
 
 </details>
@@ -772,9 +791,9 @@ event_berk %>% group_by(instnm, event_inst, event_type) %>%
 Logical vectors (e.g., `is.na()`) useful for counting obs that satisfy some condition
 
 ```{r}
-is.na(c(5,NA,4,NA))
-typeof(is.na(c(5,NA,4,NA)))
-sum(is.na(c(5,NA,4,NA)))
+is.na(x = c(5,NA,4,NA))
+typeof(x = is.na(x = c(5,NA,4,NA)))
+sum(is.na(x = c(5,NA,4,NA)))
 ```
 
 **Task**: Using object `event_berk`, calculate the following measures for each combination of `event_type` and `event_inst`:
@@ -786,18 +805,18 @@ sum(is.na(c(5,NA,4,NA)))
 ```{r}
 event_berk %>% group_by (event_inst, event_type) %>% summarize(
     n_events=n(),
-    n_nonmiss_latbl = sum(!is.na(pct_black_zip) & !is.na(pct_hispanic_zip)),
+    n_nonmiss_latbl = sum(!is.na(x = pct_black_zip) & !is.na(x = pct_hispanic_zip)),
     n_majority_latbl= sum(pct_black_zip+ pct_hispanic_zip>50, na.rm = TRUE)
   )
 ```
 
-`(!is.na(pct_black_zip) & !is.na(pct_hispanic_zip))` is a logical condition
+`(!is.na(x = pct_black_zip) & !is.na(x = pct_hispanic_zip))` is a logical condition
 
 -   condition is `TRUE` (evaluates to `1`) or `FALSE` (evaluates to `0`) for each obs
 
 ### `summarize()`: logical vectors to count *proportions*
 
-Synatx: `group_by(vars) %>% summarize(prop = mean(TRUE/FALSE conditon))`
+Synatx: `group_by(grouping_variables) %>% summarize(prop = mean(x = logical_condition))`
 
 **Task**: separately for in-state/out-of-state, what proportion of visits to public high schools are to communities with median income greater than \$100,000?
 
@@ -812,8 +831,8 @@ event_berk %>% filter(event_type == "public hs") %>% # filter public hs visits
   group_by (event_inst) %>% # group by in-state vs. out-of-state
   summarize(
     n_events=n(), # number of events by group
-    n_nonmiss_inc = sum(!is.na(med_inc)), # w/ nonmissings values median inc,
-    p_incgt100k = mean(med_inc>100000, na.rm=TRUE)) # proportion visits to $100K+ commmunities 
+    n_nonmiss_inc = sum(!is.na(x = med_inc)), # w/ nonmissings values median inc,
+    p_incgt100k = mean(x = med_inc>100000, na.rm=TRUE)) # proportion visits to $100K+ commmunities
 ```
 
 **What if we forgot to put `na.rm=TRUE` in the above task?**
@@ -825,8 +844,8 @@ event_berk %>% filter(event_type == "public hs") %>% # filter public hs visits
   group_by (event_inst) %>% # group by in-state vs. out-of-state
   summarize(
     n_events=n(), # number of events by group
-    n_nonmiss_inc = sum(!is.na(med_inc)), # w/ nonmissings values median inc,
-    p_incgt100k = mean(med_inc>100000, na.rm=FALSE)) # proportion visits to $100K+ commmunities 
+    n_nonmiss_inc = sum(!is.na(x = med_inc)), # w/ nonmissings values median inc,
+    p_incgt100k = mean(x = med_inc>100000, na.rm=FALSE)) # proportion visits to $100K+ commmunities
 ```
 
 ### `summarize()`: Other "helper" functions
@@ -871,12 +890,12 @@ event_berk %>% group_by(event_type, event_inst) %>%
 **Isolate first/last/nth observation in a group**
 
 ```{r}
-x <- c(10,15,20,25,30)
-first(x)
-last(x)
-nth(x,1)
-nth(x,3)
-nth(x,10)
+vec_x <- c(10,15,20,25,30)
+first(x = vec_x)
+last(x = vec_x)
+nth(x = vec_x, n = 1)
+nth(x = vec_x, n = 3)
+nth(x = vec_x, n = 10)
 ```
 
 **Task**: after sorting object `event_berk` by `event_type` and `event_datetime_start`, what is the value of `event_date` for:
@@ -890,9 +909,9 @@ event_berk %>% arrange(event_type, event_datetime_start) %>%
   group_by(event_type) %>%
   summarize(
     n_events = n(),
-    date_first= first(event_date),
-    date_last= last(event_date),
-    date_50th= nth(event_date, 50)
+    date_first= first(x = event_date),
+    date_last= last(x = event_date),
+    date_50th= nth(x = event_date, n = 50)
   )
 ```
 
@@ -918,11 +937,11 @@ event_berk %>% arrange(event_type, event_datetime_start) %>%
   group_by(event_type) %>%
   summarize(
     n_events = n(),
-    date_1st= first(event_date),
-    date_2nd= nth(event_date,2),
-    date_3rd= nth(event_date,3),
-    date_4th= nth(event_date,4),
-    date_5th= nth(event_date,5))
+    date_1st= first(x = event_date),
+    date_2nd= nth(x = event_date, n = 2),
+    date_3rd= nth(x = event_date, n = 3),
+    date_4th= nth(x = event_date, n = 4),
+    date_5th= nth(x = event_date, n = 5))
 
 ```
 
@@ -949,7 +968,11 @@ event_berk %>%
   group_by(event_state) %>% #group_by event state
   summarise(n_state = n()) %>% #summarize and get a count of the # of events by state
   mutate(pct_state = (n_state / sum(n_state)) * 100) #create percent variable of visits by UC Berkeley (e.g., 53% of visits in California)
-  
+
+# could do it with less code using count function
+
+event_berk %>% count(event_state) # first check this; 
+
 event_berk %>%
   count(event_state) %>% #count of visits by UC Berkeley by state
   mutate(pct_state = (n / sum(n)) * 100) #percent of visits by UC Berkeley across states
@@ -970,16 +993,18 @@ event_berk %>%
 
 **Description** - `across()` apply the same transformation to multiple columns.
 
-**Syntax** - `across(.cols, .fns, .names)`
+**Syntax template** - `across(.cols = column_selection, .fns = function_or_list, .names = naming_pattern)`
 
 **Arguments**
 
--   `.cols` Columns to transform
--   `.fns` Function to apply to each of the selected columns. Some values include:
+-   `.cols = column_selection` identifies the columns to transform
+-   `.fns = function_or_list` supplies the function or functions to apply to each selected column. Some values include:
     -   A function, e.g. `mean()`
-    -   A purr-style lambda, e.g. \~ mean(.x, na.rm = TRUE)
-    -   A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
--   `.names` A glue specification that describes how to name the output columns. Use `{.col}` to stand for the selected column name and `{.fn}` to stand for the name of the function being applied, e.g. "`{.col}_{.fn}`"
+    -   A purrr-style lambda, e.g. `~ mean(x = .x, na.rm = TRUE)`
+        -   A purrr-style lambda is a compact, unnamed function: `~` introduces the function, and `.x` represents its input—here, the current column supplied by `across()`.
+        -   The term comes from the `purrr` package, but `across()` supports this syntax directly; you do not need to learn `purrr` or load it separately to use this syntax here.
+    -   A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(x = .x)))`
+-   `.names = naming_pattern` supplies a glue specification for the output column names. Use `{.col}` to stand for the selected column name and `{.fn}` to stand for the name of the function being applied, e.g. "`{.col}_{.fn}`"
 
 ## across() affects every variable
 
@@ -996,19 +1021,29 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), mean))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = mean
+    )
+  )
 ```
 
 \medskip
 
-Try again, this time applying `na.rm = TRUE` - this is an example of a purr style lambda `~ mean(.x, na.rm = TRUE)` argument "for the function calls in `.fns`."
+Try again, this time applying `na.rm = TRUE`. Because we need to pass an additional argument to `mean()`, we use a purrr-style lambda: `~ mean(x = .x, na.rm = TRUE)`.
 
 ```{r}
 df_event %>% 
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), ~mean(.x, na.rm = TRUE)))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = ~mean(x = .x, na.rm = TRUE)
+    )
+  )
 ```
 
 **Task**:
@@ -1016,18 +1051,27 @@ df_event %>%
 -   For U. Pittsburgh (`univ_id = 215293`) events at public and private high schools, calculate **mean** and **standard deviation** of `med_inc` and `pct_white_zip` for each combination of `event_type` and `event_inst`
 
 -   You can create a named list of functions to supply into the second argument `.fns`
+    -   In `mean = ~mean(x = .x, na.rm = TRUE)`, `x` names the function’s input argument, while `.x` represents the current column supplied by `across()`.
 
 ```{r}
+# here we create a named list. the element values contain the specifications we want for the helper functions we will use
 mean_sd <- list(
-  mean = ~mean(.x, na.rm = TRUE), 
-  sd = ~sd(.x, na.rm = TRUE)
+  mean = ~mean(x = .x, na.rm = TRUE),
+  sd = ~sd(x = .x, na.rm = TRUE)
 )
+mean_sd
+mean_sd %>% str()
 
 df_event %>% 
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), mean_sd))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = mean_sd
+    )
+  )
 ```
 
 Use this syntax to control variable name suffixes:
@@ -1039,7 +1083,13 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), mean_sd, .names = "{.col}_{.fn}"))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = mean_sd,
+      .names = "{.col}_{.fn}"
+    )
+  )
 ```
 
 -   `.names = "{.fn}_{.col}"` Change the order of the name to include function first and then the column name
@@ -1049,7 +1099,13 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), mean_sd, .names = "{.fn}_{.col}"))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = mean_sd,
+      .names = "{.fn}_{.col}"
+    )
+  )
 ```
 
 **Task**:
@@ -1060,8 +1116,8 @@ df_event %>%
 
 ```{r}
 desc_stat <- list(
-  mean = ~mean(.x, na.rm = TRUE), 
-  sd = ~sd(.x, na.rm = TRUE),
+  mean = ~mean(x = .x, na.rm = TRUE),
+  sd = ~sd(x = .x, na.rm = TRUE),
   low = ~min(.x, na.rm = TRUE),
   high = ~max(.x, na.rm=TRUE)
 )
@@ -1070,42 +1126,58 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(c(med_inc, pct_white_zip), desc_stat, .names = "{.col}_{.fn}"))
+  summarize(
+    across(
+      .cols = c(med_inc, pct_white_zip),
+      .fns = desc_stat,
+      .names = "{.col}_{.fn}"
+    )
+  )
 ```
 
-### across(), quosure style lambdas \~ func_name(.x)
+### Combining group-level and column-level summaries
 
-Syntax: `across(.cols, .fns, .names)`
+Syntax template: `across(.cols = column_selection, .fns = function_or_list, .names = naming_pattern)`
 
 -   `.fns` Function to apply to each of the selected columns. Some values include:
-    -   A function, e.g. `mean()`; A purr-style lambda, e.g. \~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+    -   A function, e.g. `mean()`; A purrr-style lambda, e.g. `~ mean(x = .x, na.rm = TRUE)`; A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(x = .x)))`
+
+Unlike the previous examples, not every summary in this task should be applied to every selected column.
 
 **Task**: Calculate mean, number of obs, and number of non-missing obs for variables
 
--   Can exclude `n()` from the `.cols` argument in `across()` function because you only need to calculate once to get the number of observations for each group.
+-   `n()` describes the entire group, so calculate it once outside `across()` to get the number of observations in each group.
+-   The mean and number of non-missing observations depend on each variable, so calculate them for each selected column inside `across()`.
 
 \medskip
 
 ```{r}
 mean_obs_nmiss <- list(
-  mean = ~mean(.x, na.rm = TRUE), 
-  n_non_miss = ~sum(!is.na(.x))
+  mean = ~mean(x = .x, na.rm = TRUE),
+  n_non_miss = ~sum(!is.na(x = .x))
 )
 
 df_event %>% 
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,med_inc,pop_total) %>%
   group_by(event_type,event_inst) %>%
-  summarize(nrow = n(), across(c(med_inc, pop_total), mean_obs_nmiss,.names = "{.col}_{.fn}"))
+  summarize(
+    nrow = n(),
+    across(
+      .cols = c(med_inc, pop_total),
+      .fns = mean_obs_nmiss,
+      .names = "{.col}_{.fn}"
+    )
+  )
 ```
 
 ### across() and where() affects selected variables if they meet a condition
 
-Syntax: `across(where(fn)), .fns, .names)`
+Syntax template: `across(.cols = where(fn = predicate_function), .fns = function_or_list, .names = naming_pattern)`
 
--   `fn` A function that returns TRUE or FALSE
+-   `fn = predicate_function` supplies `where()` with a function that returns `TRUE` or `FALSE`
 -   `.fns` Function to apply to each of the selected columns. Some values include:
-    -   A function, e.g. `mean()`; A purr-style lambda, e.g. \~ mean(.x, na.rm = TRUE); A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(.x)))`
+    -   A function, e.g. `mean()`; A purrr-style lambda, e.g. `~ mean(x = .x, na.rm = TRUE)`; A named list of functions or lambdas, e.g. `list(mean = mean, n_miss = ~sum(is.na(x = .x)))`
 
 \medskip
 
@@ -1113,7 +1185,7 @@ Syntax: `across(where(fn)), .fns, .names)`
 
 ```{r}
 mean_min_max <- list(
-  mean = ~mean(.x, na.rm = TRUE),
+  mean = ~mean(x = .x, na.rm = TRUE),
   low = ~min(.x, na.rm=TRUE),
   high = ~max(.x, na.rm=TRUE)
 )
@@ -1122,7 +1194,7 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst, med_inc, event_date) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(where(is.double), mean_min_max))
+  summarize(across(.cols = where(fn = is.double), .fns = mean_min_max))
 
 ```
 
@@ -1149,7 +1221,7 @@ df_event %>%
   filter(univ_id == 215293, event_type %in% c("private hs","public hs")) %>%
   select(event_type, event_inst,instnm,school_id,med_inc,pct_white_zip) %>%
   group_by(event_type,event_inst) %>%
-  summarize(across(where(is.numeric), mean_sd))
+  summarize(across(.cols = where(fn = is.numeric), .fns = mean_sd))
 ```
 
 ````{=html}
@@ -1448,10 +1520,10 @@ Steps:
 event_berk_temp <- event_berk %>% 
   arrange(event_date) %>% # sort by event_date (optional)
   select(event_date, event_type,med_inc) %>% # select vars to be retained (optioanl) 
-  mutate(avg_inc = mean(med_inc, na.rm=TRUE)) # create avg. inc measure
+  mutate(avg_inc = mean(x = med_inc, na.rm=TRUE)) # create avg. inc measure
 
-dim(event_berk_temp)
-event_berk_temp %>% head(5)
+dim(x = event_berk_temp)
+event_berk_temp %>% head(n = 5)
 ```
 
 2.  Create measure of average income by event type
@@ -1459,10 +1531,10 @@ event_berk_temp %>% head(5)
 ```{r}
 event_berk_temp <- event_berk_temp %>% 
   group_by(event_type) %>% # grouping by event type
-  mutate(avg_inc_type = mean(med_inc, na.rm=TRUE)) # create avg. inc measure
+  mutate(avg_inc_type = mean(x = med_inc, na.rm=TRUE)) # create avg. inc measure
   
-str(event_berk_temp)
-event_berk_temp %>% head(5)
+str(object = event_berk_temp)
+event_berk_temp %>% head(n = 5)
 ```
 
 **Task**: Using `event_berk_temp` from previous question, create a measure that identifies whether `med_inc` associated with the event is higher/lower than average income for all events of that type
@@ -1484,8 +1556,8 @@ Same as above, but this time create integer indicator rather than logical
 
 ```{r}
 event_berk_tempv2 <- event_berk_tempv2 %>% 
-  mutate(gt_avg_inc_type = as.integer(med_inc > avg_inc_type)) 
-event_berk_tempv2  %>% head(4)
+  mutate(gt_avg_inc_type = as.integer(x = med_inc > avg_inc_type))
+event_berk_tempv2  %>% head(n = 4)
 ```
 
 ### Student exercise
@@ -1511,9 +1583,9 @@ event_berk_tempv3 <- event_berk %>%
   arrange(event_date) %>% # sort by event_date (optional)
   select(event_date, event_type, pct_white_zip) %>% #optional
   group_by(event_type) %>% # grouping by event type
-  mutate(avg_pct_white = mean(pct_white_zip, na.rm=TRUE),
-         gt_avg_pctwhite_type = as.integer(pct_white_zip > avg_pct_white)) 
-event_berk_tempv3 %>% head(4)
+  mutate(avg_pct_white = mean(x = pct_white_zip, na.rm=TRUE),
+         gt_avg_pctwhite_type = as.integer(x = pct_white_zip > avg_pct_white))
+event_berk_tempv3 %>% head(n = 4)
 ```
 
 </details>
