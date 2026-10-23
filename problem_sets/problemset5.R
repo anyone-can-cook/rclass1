@@ -421,8 +421,6 @@ q4_8 <-
   # 1 point
   # If we were to group/summarize only by state, how many observations would the resulting object have?
   # Assign the numeric value to an object named `q4_9`
-  #   Hint: The `top_3_majors` object you create in Q4.10 is grouped/summarized only by state. 
-  #   Complete Q4.10 first, then come back and use the number of observations in `top_3_majors`.
 
 q4_9 <- 
 
@@ -436,12 +434,8 @@ q4_9 <-
   # The second choice major by students per state (`second_major`)
   # The third choice major by students per state (`third_major`)
 
-  # HINT: Because `major_by_state_freq` is already sorted by number of students within each state,
-  # the 1st row for each state is the top major, the 2nd row is the second, and so on.
-  # Use first() and nth() inside summarise(), e.g.:
-  # summarise(top_major = first(stu_major_1_group_text),
-  #           second_major = nth(stu_major_1_group_text, 2),
-  #           ...)
+  # HINT: You can use [ ] to pick the 1st, 2nd, and 3rd values within each state 
+  # OR use first() and nth() inside summarise()
 
 top_3_majors <- 
 
