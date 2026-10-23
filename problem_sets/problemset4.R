@@ -37,7 +37,7 @@ rm(list=ls()) # clears environment so script runs from a clean slate
   # Q1.2 ----
   # 1 point
   # Use the functions `arrange()`, `select()`, and `head()` to do the following:
-  # !!!! Complete the tasks using 1 line of code by using pipes `%>%` !!!!
+  # !!!! Complete the tasks using pipes `%>%` !!!!
   # 1. Sort `df_school_all` descending by `med_inc`
   # 2. Select these variables, in this order: 
       # `name`, `state_code`, `city`, `school_type`, `total_visits`, `med_inc`, `pct_white`, 
