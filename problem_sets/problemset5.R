@@ -443,9 +443,17 @@ q4_9 <-
 top_3_majors <- 
 
 ## Question 5: Bonus (1 point extra credit) ----
-  # Perform an analysis of your choosing. Feel free to be creative!
+  # Perform an analysis of your choosing using `list_native_df`. Feel free to be creative!
+  # Assign your result to an object named `q5`, and write 1-2 sentences as a comment
+  # explaining what your analysis shows.
 
+q5 <- 
 
+  # ANSWER:
+  #
+  #
+  #
+  #
 
 ## Create a GitHub issue ----
   # 2 points
