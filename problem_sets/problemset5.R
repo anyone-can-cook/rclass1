@@ -244,7 +244,7 @@ race_cb_freq <-
   # The percentage of students who identify as hispanic (name this `pct_hispanic`)
   # Assign the new summary table to an object named `q3_1`. 
 
-  #   HINT: Your code should follow this structure:
+  #   HINT: Your code can follow this structure:
   #   summarise(n_obs = n(),
   #             n_miss_hispanic = sum(is.na(...)),
   #             pct_hispanic = mean(..., na.rm = TRUE) * 100)
@@ -274,7 +274,8 @@ q3_1 <-
   # Please name each new race and ethnicity percentage variable as `pct_ethnicity`; basically replacing the `stu`  
   # with `pct` and removing the `_01` from the variable names above. For example, the percentage drawn from  
   # `stu_native_hawaiian_01` would be `pct_native_hawaiian`.
-  # HINT: Use the same approach you used for `pct_hispanic` in Q3.1: mean(..., na.rm = TRUE) * 100
+  # HINT: You can use the same approach you used for `pct_hispanic` in Q3.1: mean(..., na.rm = TRUE) * 100
+  # You can also use across() for this question
 
 race_ethnicity_pct <- 
   
@@ -335,7 +336,9 @@ q3_4 <-
   # Lastly, in the same line of code, sort by the number of students per CBSA in descending order. 
   # Note that a core-based statistical area by definition only includes urban areas. Observations where
   # `zip_cbsatitle` is `NA` indicates that the student does not live in a CBSA (i.e., rural location).
-  #   HINT: This is the Q3.2 summarise() code with group_by() added before it and arrange() added after it.
+  # HINT: This is similar to the Q3.2 summarise() code with group_by() added before it and arrange() added after it.
+  # You can also use across() for this question
+
 
 zip_cbsa_group <- 
 
