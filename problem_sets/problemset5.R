@@ -184,8 +184,9 @@ list_native_df %>% glimpse()
 
   # Q2.1 ----
   # 1 point
-  # Now, let's take a look at the derived aggregate race/ethnicity variable `race_cb` we created. Create
-  # a new object `race_cb_freq` that stores the count for each race/ethnicity category as follows:
+  # Now let's look at the `race_cb` variable we just created, which puts each student into one
+  # race/ethnicity category. Create a new object `race_cb_freq` that shows how many students
+  # are in each `race_cb` category:
 
   # Use `count()` to get the count for each `race_cb` category
   # Use `arrange()` to sort by the count in descending order
