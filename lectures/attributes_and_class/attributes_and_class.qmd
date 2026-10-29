@@ -37,21 +37,21 @@ for (i in imgs) {
 **Load the packages** we will use by running this code chunk:
 
 ```{r, message=FALSE}
-library(tidyverse)
-library(haven)
-library(labelled)
-library(lubridate)
+library(package = tidyverse)
+library(package = haven)
+library(package = labelled)
+library(package = lubridate)
 ```
 
 **If package not yet installed**, then must install before you load. Install in "console" rather than .Rmd file:
 
--   Generic syntax: `install.packages("package_name")`
--   Install "tidyverse": `install.packages("tidyverse")`
+-   Generic syntax: `install.packages(pkgs = "package_name")`
+-   Install "tidyverse": `install.packages(pkgs = "tidyverse")`
 
 **Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
 
--   `install.packages("tidyverse")`
--   `library(tidyverse)`
+-   `install.packages(pkgs = "tidyverse")`
+-   `library(package = tidyverse)`
 
 ## Dataset we will use
 
@@ -64,7 +64,11 @@ Recall from Into the tidyverse lecture, we used the data set `wwlist`. This data
 ```{r}
 rm(list = ls()) # remove all objects
 
-load(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/prospect_list/wwlist_merged.RData"))
+load(
+  file = url(
+    description = "https://github.com/anyone-can-cook/rclass1/raw/master/data/prospect_list/wwlist_merged.RData"
+  )
+)
 ```
 
 # Attributes and augmented vectors
@@ -90,19 +94,19 @@ load(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/prospect_li
 -   All elements within vector must have the same **data type**
 
 ```{r}
-(a <- c(1,2,3)) # parentheses () assign and print object in one step
-length(a) # length = number of elements
-typeof(a) # numeric atomic vector, type=double
-str(a) # investigate structure of object
+(vec_x <- c(1,2,3)) # parentheses () assign and print object in one step
+length(x = vec_x) # length = number of elements
+typeof(x = vec_x) # numeric atomic vector, type=double
+str(object = vec_x) # investigate structure of object
 ```
 
 Can assign **names** to vector elements, creating a **named atomic vector**
 
 ```{r}
-(b <- c(v1=1,v2=2,v3=3))
-length(b) 
-typeof(b) 
-str(b) 
+(vec_x <- c(v1=1,v2=2,v3=3))
+length(x = vec_x)
+typeof(x = vec_x)
+str(object = vec_x)
 ```
 
 ### Lists
@@ -114,25 +118,25 @@ str(b)
     -   E.g., an element of a list can be another list
 
 ```{r}
-list_a <- list(1,2,"apple")
-typeof(list_a)
-length(list_a)
-str(list_a)
+list_x <- list(1,2,"apple")
+typeof(x = list_x)
+length(x = list_x)
+str(object = list_x)
 
-list_b <- list(1, c("apple", "orange"), list(1, 2))
-length(list_b)
-str(list_b)
+list_y <- list(1, c("apple", "orange"), list(1, 2))
+length(x = list_y)
+str(object = list_y)
 ```
 
 Like atomic vectors, elements within a list can be named, thereby creating a **named list**
 
 ```{r}
 # not named
-str(list_b) 
+str(object = list_y)
 
 # named
-list_c <- list(v1=1, v2=c("apple", "orange"), v3=list(1, 2, 3))
-str(list_c) 
+list_z <- list(v1=1, v2=c("apple", "orange"), v3=list(1, 2, 3))
+str(object = list_z)
 ```
 
 ### Data frames
@@ -144,16 +148,16 @@ str(list_c)
 
 ```{r}
 # a regular list
-(list_d <- list(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
-typeof(list_d)
-attributes(list_d)
+(list_x <- list(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
+typeof(x = list_x)
+attributes(x = list_x)
 ```
 
 ```{r}
 # a data frame
-(df_a <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
-typeof(df_a)
-attributes(df_a)
+(df_x <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6), col_c = c(7,8,9)))
+typeof(x = df_x)
+attributes(x = df_x)
 ```
 
 ## Converting between types
@@ -170,11 +174,11 @@ Functions for converting between types:
 _Before converting between vectors types, it is important to know that the most complex type always wins._ 
 
 ```{r}
-typeof(c(TRUE, 3L))
+typeof(x = c(TRUE, 3L))
 #> [1] "integer"
-typeof(c(2L, 4.5))
+typeof(x = c(2L, 4.5))
 #> [1] "double"
-typeof(c(2.5, "j"))
+typeof(x = c(2.5, "j"))
 #> [1] "character"
 ```
 
@@ -188,14 +192,14 @@ Character vector coerced to logical vector:
 
 ```{r}
 # Only "TRUE"/"FALSE", "True"/"False", "T"/"F", "true"/"false" are able to be coerced to logical type
-as.logical(c("TRUE", "FALSE", "True", "False", "true", "false", "T", "F", "t", "f", ""))
+as.logical(x = c("TRUE", "FALSE", "True", "False", "true", "false", "T", "F", "t", "f", ""))
 ```
 
 Numeric vector coerced to logical vector:
 
 ```{r}
 # 0 is treated as FALSE, while all other numeric values are treated as TRUE
-as.logical(c(0, 0.0, 1, -1, 20, 5.5))
+as.logical(x = c(0, 0.0, 1, -1, 20, 5.5))
 ```
 
 <br>
@@ -206,7 +210,7 @@ Logical vector coerced to numeric vector:
 
 ```{r}
 # FALSE is mapped to 0 and TRUE is mapped to 1
-as.numeric(c(FALSE, TRUE))
+as.numeric(x = c(FALSE, TRUE))
 ```
 
 Character vector coerced to numeric vector:
@@ -214,7 +218,7 @@ Character vector coerced to numeric vector:
 ```{r, warning = FALSE}
 # Strings containing numeric values can be coerced to numeric (leading 0's are dropped) 
 # All other characters become NA
-as.numeric(c("0", "007", "2.5", "abc", "."))
+as.numeric(x = c("0", "007", "2.5", "abc", "."))
 ```
 
 <br>
@@ -225,7 +229,7 @@ Logical vector coerced to integer vector:
 
 ```{r}
 # FALSE is mapped to 0 and TRUE is mapped to 1
-as.integer(c(FALSE, TRUE))
+as.integer(x = c(FALSE, TRUE))
 ```
 
 Character vector coerced to integer vector:
@@ -233,14 +237,14 @@ Character vector coerced to integer vector:
 ```{r, warning = FALSE}
 # Strings containing numeric values can be coerced to integer (leading 0's are dropped, decimals are truncated) 
 # All other characters become NA
-as.integer(c("0", "007", "2.5", "abc", "."))
+as.integer(x = c("0", "007", "2.5", "abc", "."))
 ```
 
 Numeric vector coerced to integer vector:
 
 ```{r, warning = FALSE}
 # All decimal places are truncated
-as.integer(c(0, 2.1, 10.5, 8.8, -1.8))
+as.integer(x = c(0, 2.1, 10.5, 8.8, -1.8))
 ```
 
 <br>
@@ -250,19 +254,19 @@ as.integer(c(0, 2.1, 10.5, 8.8, -1.8))
 Logical vector coerced to character vector:
 
 ```{r}
-as.character(c(FALSE, TRUE))
+as.character(x = c(FALSE, TRUE))
 ```
 
 Numeric vector coerced to character vector:
 
 ```{r, warning = FALSE}
-as.character(c(-5, 0, 2.5))
+as.character(x = c(-5, 0, 2.5))
 ```
 
 Integer vector coerced to character vector:
 
 ```{r, warning = FALSE}
-as.character(c(-2L, 0L, 10L))
+as.character(x = c(-2L, 0L, 10L))
 ```
 
 <br>
@@ -273,13 +277,13 @@ Atomic vectors coerced to list:
 
 ```{r}
 # Logical vector
-as.list(c(TRUE, FALSE))
+as.list(x = c(TRUE, FALSE))
 
 # Character vector
-as.list(c("a", "b", "c"))
+as.list(x = c("a", "b", "c"))
 
 # Numeric vector
-as.list(1:3)
+as.list(x = 1:3)
 ```
 
 <br>
@@ -290,12 +294,12 @@ Lists coerced to dataframe:
 
 ```{r}
 # Create a list
-l <- list(A = c("x", "y", "z"), B = c(1, 2, 3))
-str(l)
+list_x <- list(A = c("x", "y", "z"), B = c(1, 2, 3))
+str(object = list_x)
 
 # Convert to class `data.frame`
-df <- as.data.frame(l, stringsAsFactors = F)
-str(df)
+df_x <- as.data.frame(x = list_x, stringsAsFactors = F)
+str(object = df_x)
 ```
 
 <details>
@@ -308,28 +312,38 @@ We'll look at the `FIPS` variable from the [Integrated Postsecondary Education D
 
 ```{r}
 # Library for labeling variables and values in a dataframe
-library(labelled)
+library(package = labelled)
 
 # Read in IPEDS data and codebook
-ipeds_df <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
-ipeds_values <- read.csv('https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+ipeds_df <- read.csv(
+  file = 'https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017.csv',
+  header = TRUE,
+  na.strings = c('', 'NA'),
+  stringsAsFactors = F
+)
+ipeds_values <- read.csv(
+  file = 'https://raw.githubusercontent.com/cyouh95/recruiting-chapter/master/data/ipeds_hd2017_values.csv',
+  header = TRUE,
+  na.strings = c('', 'NA'),
+  stringsAsFactors = F
+)
 
 # The codebook defines how variables are coded, such as STABBR, FIPS, and other variables
-head(ipeds_values)
+head(x = ipeds_values)
 
 # Filter codebook for just the values for the FIPS variable
 fips_values <- ipeds_values %>% filter(varname == 'FIPS') %>% select(varname, codevalue, valuelabel)
-head(fips_values)
+head(x = fips_values)
 ```
 
 <br> When we read in the data from the CSV files, R automatically tries to determine the data type of each variable. As seen below, the `FIPS` column from the `ipeds_df` that we want to label is of type `integer`, while the `codevalue` column from the codebook is of type `character` (since not all values are numeric):
 
 ```{r}
 # Type of `FIPS` column
-str(ipeds_df$FIPS)
+str(object = ipeds_df$FIPS)
 
 # Type of `codevalue` column
-str(fips_values$codevalue)
+str(object = fips_values$codevalue)
 ```
 
 <br> This discrepancy becomes a problem when we try to label the value using the `labelled` library:
@@ -343,24 +357,24 @@ val_label(ipeds_df$FIPS, fips_values[1, 'codevalue']) <- fips_values[1, 'valuela
 
 ```{r}
 # This now works
-val_label(ipeds_df$FIPS, as.integer(fips_values[1, 'codevalue'])) <- fips_values[1, 'valuelabel']
+val_label(ipeds_df$FIPS, as.integer(x = fips_values[1, 'codevalue'])) <- fips_values[1, 'valuelabel']
 
 # Check value labels
-val_labels(ipeds_df$FIPS)
+val_labels(x = ipeds_df$FIPS)
 
 # We can use as.integer() to convert the entire vector (ie. codevalue column) to integer
-fips_values$codevalue <- as.integer(fips_values$codevalue)
+fips_values$codevalue <- as.integer(x = fips_values$codevalue)
 
 # Type of `codevalue` column
-str(fips_values$codevalue)
+str(object = fips_values$codevalue)
 
 # Use loop to label the rest of the values
-for (i in 1:nrow(fips_values)) {
+for (i in 1:nrow(x = fips_values)) {
   val_label(ipeds_df$FIPS, fips_values[i, 'codevalue']) <- fips_values[i, 'valuelabel']
 }
 
 # Check value labels
-val_labels(ipeds_df$FIPS)
+val_labels(x = ipeds_df$FIPS)
 ```
 
 </details>
@@ -423,15 +437,15 @@ Attributes of a **named atomic vector**:
 
 ```{r}
 # create named atomic vector
-(vector1 <- c(a = 1, b = 2, c = 3, d = 4))
-attributes(vector1)
+(vec_x <- c(a = 1, b = 2, c = 3, d = 4))
+attributes(x = vec_x)
 
-attributes(vector1) %>% str() # a named list of vectors!
+attributes(x = vec_x) %>% str() # a named list of vectors!
 
 # remove all attributes from the object
-attributes(vector1) <- NULL
-vector1
-attributes(vector1)
+attributes(vec_x) <- NULL
+vec_x
+attributes(x = vec_x)
 ```
 
 ### Attributes of a variable in a data frame
@@ -446,11 +460,11 @@ attributes(vector1)
 -   Shorthand syntax for `df_name[["var_name"]]` is `df_name$var_name`
 
 ```{r}
-str(wwlist[["firstgen"]])
-attributes(wwlist[["firstgen"]])
+str(object = wwlist[["firstgen"]])
+attributes(x = wwlist[["firstgen"]])
 
-str(wwlist$firstgen) # same same
-attributes(wwlist$firstgen)
+str(object = wwlist$firstgen) # same same
+attributes(x = wwlist$firstgen)
 ```
 
 **Accessing variable using `[]` subset operator**
@@ -459,8 +473,8 @@ attributes(wwlist$firstgen)
 -   If object is a data frame, `df_name["var_name"]` returns a data frame containing just the `var_name` column
 
 ```{r, results="hide"}
-str(wwlist["firstgen"])
-attributes(wwlist["firstgen"])
+str(object = wwlist["firstgen"])
+attributes(x = wwlist["firstgen"])
 ```
 
 ### Attributes of lists and data frames
@@ -470,25 +484,25 @@ attributes(wwlist["firstgen"])
 Attributes of a **named list**:
 
 ```{r}
-list2 <- list(col_a = c(1,2,3), col_b = c(4,5,6))
-str(list2)
-attributes(list2)
+list_x <- list(col_a = c(1,2,3), col_b = c(4,5,6))
+str(object = list_x)
+attributes(x = list_x)
 ```
 
 Note that the `names` attribute is an attribute of the list, not an attribute of the elements within the list (which are atomic vectors)
 
 ```{r}
-list2[['col_a']] # the element named 'col_a'
-str(list2[['col_a']]) # structure of the element named 'col_a'
-attributes(list2[['col_a']]) # attributes of element named 'col_a'
+list_x[['col_a']] # the element named 'col_a'
+str(object = list_x[['col_a']]) # structure of the element named 'col_a'
+attributes(x = list_x[['col_a']]) # attributes of element named 'col_a'
 ```
 
 Attributes of a **data frame**:
 
 ```{r}
-list3 <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6))
-str(list3)
-attributes(list3)
+df_x <- data.frame(col_a = c(1,2,3), col_b = c(4,5,6))
+str(object = df_x)
+attributes(x = df_x)
 ```
 
 Note: attributes `names`, `class` and `row.names` are attributes of the data frame
@@ -496,8 +510,8 @@ Note: attributes `names`, `class` and `row.names` are attributes of the data fra
 -   they are not attributes of the elements (variables) within the data frame, which are atomic vectors (i.e., just the data)
 
 ```{r}
-str(list3[['col_a']]) # structure of the element named 'col_a'
-attributes(list3[['col_a']]) # attributes of element named 'col_a'
+str(object = df_x[['col_a']]) # structure of the element named 'col_a'
+attributes(x = df_x[['col_a']]) # attributes of element named 'col_a'
 ```
 
 ### attr() function to get or set specific attributes of an object
@@ -508,8 +522,8 @@ attributes(list3[['col_a']]) # attributes of element named 'col_a'
 
 Syntax
 
--   Get: `attr(x, which, exact = FALSE)`
--   Set: `attr(x, which) <- value`
+-   Get: `attr(x = obj_name, which = attribute_name, exact = FALSE)`
+-   Set: `attr(obj_name, attribute_name) <- value`
 
 Arguments
 
@@ -523,29 +537,29 @@ Arguments
 **Using `attr()` to get specific attribute of an object**
 
 ```{r}
-vector1 <- c(a = 1, b= 2, c= 3, d = 4)
-attributes(vector1)
-attr(x=vector1, which = "names", exact = FALSE)
-attr(vector1, "names")
-attr(vector1, "name") # we don't provide exact name of attribute
-attr(vector1, "name", exact = TRUE) # don't provide exact name of attribute
+vec_x <- c(a = 1, b= 2, c= 3, d = 4)
+attributes(x = vec_x)
+attr(x = vec_x, which = "names", exact = FALSE)
+attr(x = vec_x, which = "names")
+attr(x = vec_x, which = "name") # we don't provide exact name of attribute
+attr(x = vec_x, which = "name", exact = TRUE) # don't provide exact name of attribute
 ```
 
 **Using `attr()` to set specific attribute of an object** (output omitted)
 
 ```{r, results = "hide"}
-(vector1 <- c(a = 1, b= 2, c= 3, d = 4))
-attributes(vector1) # see all attributes
+(vec_x <- c(a = 1, b= 2, c= 3, d = 4))
+attributes(x = vec_x) # see all attributes
 
-attr(x=vector1, which = "greeting") <- "Hi!" # create new attribute
-attr(x=vector1, which = "greeting") # see attribute
+attr(x = vec_x, which = "greeting") <- "Hi!" # create new attribute
+attr(x = vec_x, which = "greeting") # see attribute
 
-attr(vector1, "farewell") <- "Bye!" # create attribute
+attr(vec_x, "farewell") <- "Bye!" # create attribute
 
-attr(x=vector1, which = "names") # see names attribute
-attr(x=vector1, which = "names") <- NULL # delete names attribute
+attr(x = vec_x, which = "names") # see names attribute
+attr(x = vec_x, which = "names") <- NULL # delete names attribute
 
-attributes(vector1) # see all attributes
+attributes(x = vec_x) # see all attributes
 ```
 
 ### attr() function on data frames
@@ -556,33 +570,33 @@ attributes(vector1) # see all attributes
 
 ```{r, results = "hide"}
 wwlist_small <- wwlist[1:25, ] %>% select(hs_state,firstgen,med_inc_zip)
-str(wwlist_small)
-attributes(wwlist_small)
-attributes(wwlist_small) %>% str()
+str(object = wwlist_small)
+attributes(x = wwlist_small)
+attributes(x = wwlist_small) %>% str()
 ```
 
 **Get/set attribute of a data frame**
 
 ```{r, results = "hide"}
 #get/examine names attribute
-attr(x=wwlist_small, which = "names") 
-str(attr(x=wwlist_small, which = "names")) # names attribute is character atomic vector, length=3
+attr(x = wwlist_small, which = "names")
+str(object = attr(x = wwlist_small, which = "names")) # names attribute is character atomic vector, length=3
 #add new attribute to data frame
-attr(x=wwlist_small, which = "new_attribute") <- "contents of new attribute"
-attributes(wwlist_small)
+attr(x = wwlist_small, which = "new_attribute") <- "contents of new attribute"
+attributes(x = wwlist_small)
 ```
 
 **Get/set attribute of a variable in data frame**
 
 ```{r, results = "hide"}
-str(wwlist_small$med_inc_zip)
-attributes(wwlist_small$med_inc_zip)
+str(object = wwlist_small$med_inc_zip)
+attributes(x = wwlist_small$med_inc_zip)
 #create attribute for variable med_inc_zip
 attr(wwlist_small$med_inc_zip, "inc attribute") <- "inc attribute contents"
 #investigate attribute for variable med_inc_zip
-attributes(wwlist_small$med_inc_zip)
-str(wwlist_small$med_inc_zip)
-attr(wwlist_small$med_inc_zip, "inc attribute")
+attributes(x = wwlist_small$med_inc_zip)
+str(object = wwlist_small$med_inc_zip)
+attr(x = wwlist_small$med_inc_zip, which = "inc attribute")
 ```
 
 ### Why add attributes to data frame or variables of data frame?
@@ -621,23 +635,23 @@ Example practical application: interactive dashboards
 wwlist_exercise <- wwlist[1:30, ] %>% select(state, zip5, pop_total_zip)
 
 # Part 2
-attributes(wwlist_exercise)
-attr(x=wwlist_exercise, which = "names") 
+attributes(x = wwlist_exercise)
+attr(x = wwlist_exercise, which = "names")
 
 # Part 3
-attr(x=wwlist_exercise, which = "attribute_data") <- "new attribute of data"
+attr(x = wwlist_exercise, which = "attribute_data") <- "new attribute of data"
 
-attributes(wwlist_exercise)
-attr(wwlist_exercise, which ="attribute_data")
+attributes(x = wwlist_exercise)
+attr(x = wwlist_exercise, which = "attribute_data")
 
 # Part 4
-attributes(wwlist_exercise$pop_total_zip)
+attributes(x = wwlist_exercise$pop_total_zip)
 
 # Part 5
 attr(wwlist_exercise$pop_total_zip, "attribute_variable") <- "new attribute of variable"
 
-attributes(wwlist_exercise$pop_total_zip)
-attr(wwlist_exercise$pop_total_zip, "attribute_variable")
+attributes(x = wwlist_exercise$pop_total_zip)
+attr(x = wwlist_exercise$pop_total_zip, which = "attribute_variable")
 ```
 
 </details>
@@ -658,17 +672,17 @@ Every object in R has a **class**
 You can use the `class()` function to identify object class:
 
 ```{r}
-(vector2 <- c(a = 1, b= 2, c= 3, d = 4))
-typeof(vector2)
-class(vector2)
+(vec_x <- c(a = 1, b= 2, c= 3, d = 4))
+typeof(x = vec_x)
+class(x = vec_x)
 ```
 
 When I encounter a new object I often investigate object by applying `typeof()`, `class()`, and `attributes()` functions:
 
 ```{r}
-typeof(vector2)
-class(vector2)
-attributes(vector2)
+typeof(x = vec_x)
+class(x = vec_x)
+attributes(x = vec_x)
 ```
 
 ## Why is object class important?
@@ -726,17 +740,17 @@ Many different object classes exist in R
 Apply `sum()` to object with class = **logical**:
 
 ```{r}
-x <- c(TRUE, FALSE, NA, TRUE)
-typeof(x)
-class(x)
-sum(x, na.rm = TRUE)
+vec_x <- c(TRUE, FALSE, NA, TRUE)
+typeof(x = vec_x)
+class(x = vec_x)
+sum(vec_x, na.rm = TRUE)
 ```
 
 Apply `sum()` to object with class = **numeric**:
 
 ```{r}
-typeof(wwlist$med_inc_zip) 
-class(wwlist$med_inc_zip) 
+typeof(x = wwlist$med_inc_zip)
+class(x = wwlist$med_inc_zip)
 wwlist$med_inc_zip[1:5]
 sum(wwlist$med_inc_zip[1:5], na.rm = TRUE) 
 ```
@@ -744,8 +758,8 @@ sum(wwlist$med_inc_zip[1:5], na.rm = TRUE)
 What happens when we try to apply `sum()` to an object with class = **character**?
 
 ```{r, eval=FALSE}
-typeof(wwlist$hs_city)
-class(wwlist$hs_city)
+typeof(x = wwlist$hs_city)
+class(x = wwlist$hs_city)
 wwlist$hs_city[1:5]
 sum(wwlist$hs_city[1:5], na.rm = TRUE) 
 ```
@@ -764,22 +778,22 @@ Apply `year()` to object with class = **Date**:
 
 ```{r}
 wwlist$receive_date[1:5]
-typeof(wwlist$receive_date)
-class(wwlist$receive_date) 
-year(wwlist$receive_date[1:5])
+typeof(x = wwlist$receive_date)
+class(x = wwlist$receive_date)
+year(x = wwlist$receive_date[1:5])
 ```
 
 What happens when we try to apply `year()` to an object with class = **numeric**?
 
 ```{r, eval=FALSE}
-typeof(wwlist$med_inc_zip) 
-class(wwlist$med_inc_zip) 
-year(wwlist$med_inc_zip[1:10]) 
+typeof(x = wwlist$med_inc_zip)
+class(x = wwlist$med_inc_zip)
+year(x = wwlist$med_inc_zip[1:10])
 ```
 
 **Example**: `tolower()` applies to **character** class objects
 
--   Syntax: `tolower(x)`
+-   Syntax: `tolower(x = vec_name)`
 -   `x` is "a character vector, or an object that can be coerced to character by `as.character()`"
 
 Most string functions are intended to apply to objects with a **character** class
@@ -794,12 +808,12 @@ Most string functions are intended to apply to objects with a **character** clas
 Apply `tolower()` to object with class = **character**:
 
 ```{r}
-str(wwlist$hs_city)
-typeof(wwlist$hs_city)
-class(wwlist$hs_city)
+str(object = wwlist$hs_city)
+typeof(x = wwlist$hs_city)
+class(x = wwlist$hs_city)
 
 wwlist$hs_city[1:6]
-tolower(wwlist$hs_city[1:6])
+tolower(x = wwlist$hs_city[1:6])
 ```
 
 
@@ -809,24 +823,27 @@ tolower(wwlist$hs_city[1:6])
 
 Let's first recode the `ethn_code` variable:
 
+As introduced in the mutate lecture, `recode_values()` maps each existing value on the left-hand side of `~` to its new value on the right-hand side.
+
 ```{r, results= "hide"}
 wwlist <- wwlist %>%  
   mutate(ethn_code = 
-    recode(ethn_code,
-      "american indian or alaska native" = "nativeam",
-      "asian or native hawaiian or other pacific islander" = "api",
-      "black or african american" = "black",
-      "cuban" = "latinx",
-      "mexican/mexican american" = "latinx",
-      "not reported" = "not_reported",
-      "other-2 or more" = "multirace",
-      "other spanish/hispanic" = "latinx",
-      "puerto rican" = "latinx",
-      "white" = "white"          
+    recode_values(x = ethn_code,
+      "american indian or alaska native" ~ "nativeam",
+      "asian or native hawaiian or other pacific islander" ~ "api",
+      "black or african american" ~ "black",
+      "cuban" ~ "latinx",
+      "mexican/mexican american" ~ "latinx",
+      "not reported" ~ "not_reported",
+      "other-2 or more" ~ "multirace",
+      "other spanish/hispanic" ~ "latinx",
+      "puerto rican" ~ "latinx",
+      "white" ~ "white",
+      default = ethn_code
     )
   )
 
-str(wwlist$ethn_code)
+str(object = wwlist$ethn_code)
 wwlist %>% count(ethn_code)
 ```
 
@@ -843,33 +860,33 @@ Usually, we would prefer a categorical variable (e.g., race, school type) to be 
 **Create factor version of character variable `ethn_code` using base R `factor()` function**:
 
 ```{r}
-str(wwlist$ethn_code)
-class(wwlist$ethn_code)
+str(object = wwlist$ethn_code)
+class(x = wwlist$ethn_code)
 
 # create factor var; tidyverse approach
-wwlist <- wwlist %>% mutate(ethn_code_fac = factor(ethn_code)) 
-#wwlist$ethn_code_fac <- factor(wwlist$ethn_code) # base r approach
+wwlist <- wwlist %>% mutate(ethn_code_fac = factor(x = ethn_code))
+#wwlist$ethn_code_fac <- factor(x = wwlist$ethn_code) # base r approach
 
-str(wwlist$ethn_code)
-str(wwlist$ethn_code_fac)
+str(object = wwlist$ethn_code)
+str(object = wwlist$ethn_code_fac)
 ```
 
 **Character variable `ethn_code`**:
 
 ```{r}
-typeof(wwlist$ethn_code)
-class(wwlist$ethn_code)
-attributes(wwlist$ethn_code)
-str(wwlist$ethn_code)
+typeof(x = wwlist$ethn_code)
+class(x = wwlist$ethn_code)
+attributes(x = wwlist$ethn_code)
+str(object = wwlist$ethn_code)
 ```
 
 **Factor variable `ethn_code_fac`**:
 
 ```{r}
-typeof(wwlist$ethn_code_fac)
-class(wwlist$ethn_code_fac)
-attributes(wwlist$ethn_code_fac)
-str(wwlist$ethn_code_fac)
+typeof(x = wwlist$ethn_code_fac)
+class(x = wwlist$ethn_code_fac)
+attributes(x = wwlist$ethn_code_fac)
+str(object = wwlist$ethn_code_fac)
 ```
 
 ## Working with factor variables
@@ -897,17 +914,17 @@ Apply `as.integer()` to display underlying integer values of factor the variable
 Investigate `as.integer()` function:
 
 ```{r}
-typeof(wwlist$ethn_code_fac)
-class(wwlist$ethn_code_fac)
+typeof(x = wwlist$ethn_code_fac)
+class(x = wwlist$ethn_code_fac)
 
-typeof(as.integer(wwlist$ethn_code_fac))
-class(as.integer(wwlist$ethn_code_fac))
+typeof(x = as.integer(x = wwlist$ethn_code_fac))
+class(x = as.integer(x = wwlist$ethn_code_fac))
 ```
 
 Display underlying integer values of variable `ethn_code_fac`:
 
 ```{r}
-wwlist %>% count(as.integer(ethn_code_fac))
+wwlist %>% count(as.integer(x = ethn_code_fac))
 ```
 
 \medskip
@@ -917,7 +934,7 @@ Refer to categories of a factor (e.g., when filtering obs) using values of **lev
 -   Values of **levels** attribute for `ethn_code_fac` (output omitted)
 
 ```{r, results='hide'}
-attributes(wwlist$ethn_code_fac)
+attributes(x = wwlist$ethn_code_fac)
 ```
 
 \medskip
@@ -937,8 +954,8 @@ wwlist %>% filter(ethn_code_fac=="white") %>% count()
 -   To refer to underlying integer values, apply `as.integer()` function to factor variable
 
 ```{r}
-attributes(wwlist$ethn_code_fac)
-wwlist %>% filter(as.integer(ethn_code_fac)==7) %>% count
+attributes(x = wwlist$ethn_code_fac)
+wwlist %>% filter(as.integer(x = ethn_code_fac)==7) %>% count
 ```
 
 ## How to identify the variable values associated with factor levels
@@ -947,17 +964,17 @@ Create a factor version of the character variable `psat_range`
 
 ```{r, results="hide", warning = FALSE}
 wwlist %>% count(psat_range)
-wwlist <- wwlist %>% mutate(psat_range_fac = factor(psat_range))
+wwlist <- wwlist %>% mutate(psat_range_fac = factor(x = psat_range))
 wwlist %>% count(psat_range_fac)
-attributes(wwlist$psat_range_fac)
+attributes(x = wwlist$psat_range_fac)
 ```
 
 Investigate values associated with factor levels using `levels()` and `nlevels()`
 
 ```{r, results="hide"}
-levels(wwlist$psat_range_fac) #starts at 1
-nlevels(wwlist$psat_range_fac) #7 levels total
-levels(wwlist$psat_range_fac)[1:3] #prints levels 1-3
+levels(x = wwlist$psat_range_fac) #starts at 1
+nlevels(x = wwlist$psat_range_fac) #7 levels total
+levels(x = wwlist$psat_range_fac)[1:3] #prints levels 1-3
 ```
 
 Once values associated with factor levels are known:
@@ -965,7 +982,7 @@ Once values associated with factor levels are known:
 -   Can filter based on underlying integer values using `as.integer()`
 
 ```{r}
-wwlist %>% filter(as.integer(psat_range_fac)==4) %>% count()
+wwlist %>% filter(as.integer(x = psat_range_fac)==4) %>% count()
 ```
 
 -   Or filter based on value of factor **levels**
@@ -987,9 +1004,9 @@ Run this code to create a year variable from the input variable `receive_date`:
 ```{r, results="hide", message=FALSE}
 # wwlist %>% glimpse()
 
-library(lubridate) # load library if you haven't already
+library(package = lubridate) # load library if you haven't already
 wwlist <- wwlist %>%
-  mutate(receive_year = year(receive_date)) # create year variable with lubridate
+  mutate(receive_year = year(x = receive_date)) # create year variable with lubridate
 
 # Check variable
 wwlist %>% 
@@ -1008,10 +1025,10 @@ wwlist %>%
 1.  After running the code below, use `typeof()`, `class()`, `str()`, and `attributes()` functions to check the new variable `receive_year`
 
 ```{r}
-typeof(wwlist$receive_year)
-class(wwlist$receive_year)
-str(wwlist$receive_year)
-attributes(wwlist$receive_year) 
+typeof(x = wwlist$receive_year)
+class(x = wwlist$receive_year)
+str(object = wwlist$receive_year)
+attributes(x = wwlist$receive_year)
 ```
 
 2.  Create a factor variable from the input variable `receive_year` and name it `receive_year_fac`\
@@ -1019,17 +1036,17 @@ attributes(wwlist$receive_year)
 ```{r}
 # create factor var; tidyverse approach
 wwlist <- wwlist %>%
-  mutate(receive_year_fac = factor(receive_year))  
+  mutate(receive_year_fac = factor(x = receive_year))
 
 ```
 
 3.  Run the same functions (`typeof()`, `class()`, etc.) from the first question using the new variable you created\
 
 ```{r}
-typeof(wwlist$receive_year_fac)
-class(wwlist$receive_year_fac)
-str(wwlist$receive_year_fac)
-attributes(wwlist$receive_year_fac)   
+typeof(x = wwlist$receive_year_fac)
+class(x = wwlist$receive_year_fac)
+str(object = wwlist$receive_year_fac)
+attributes(x = wwlist$receive_year_fac)
 ```
 
 4.  Get a count of `receive_year_fac`. (**hint:** you could also run this in the console to see values associated with each factor)
@@ -1075,10 +1092,10 @@ We will be working with [High School Longitudinal Study of 2009 (HSLS:09)](https
 
 If you haven't installed `haven` run the following code in your console.
 
--   Generic syntax: `install.packages("package_name")`
--   Install "haven": `install.packages("haven")`
+-   Generic syntax: `install.packages(pkgs = "package_name")`
+-   Install "haven": `install.packages(pkgs = "haven")`
 
-Make sure to load `haven` (e.g., `library(haven)`)
+Make sure to load `haven` (e.g., `library(package = haven)`)
 
 When using `haven` to read data, resulting R objects have these characteristics:
 
@@ -1094,17 +1111,17 @@ When using `haven` to read data, resulting R objects have these characteristics:
 Use `read_dta()` function from `haven` package to import Stata dataset into R
 
 ```{r, results="hide"}
-hsls <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/hsls/hsls_stu_small.dta")
+hsls <- read_dta(file = "https://github.com/ozanj/rclass/raw/master/data/hsls/hsls_stu_small.dta")
 ```
 
 **Must** run this code chunk; permanently changes uppercase variable names to lowercase
 
 ```{r, results="hide"}
-names(hsls)
-names(hsls) <- tolower(names(hsls)) # convert names to lowercase
-names(hsls) # names now lowercase
+names(x = hsls)
+names(hsls) <- tolower(x = names(x = hsls)) # convert names to lowercase
+names(x = hsls) # names now lowercase
 
-str(hsls) # ugh
+str(object = hsls) # ugh
 ```
 
 **Investigate variable `s3classes` from data frame `hsls`**
@@ -1112,19 +1129,19 @@ str(hsls) # ugh
 -   Identifies whether respondent taking postsecondary classes as of 11/1/2013
 
 ```{r, results="hide"}
-typeof(hsls$s3classes)
-class(hsls$s3classes)
-str(hsls$s3classes)
+typeof(x = hsls$s3classes)
+class(x = hsls$s3classes)
+str(object = hsls$s3classes)
 ```
 
 **Investigate attributes of `s3classes`**
 
 ```{r, results="hide"}
-attributes(hsls$s3classes) # all attributes
+attributes(x = hsls$s3classes) # all attributes
 
-#specific attributes: using syntax: attr(x, which, exact = FALSE)
-attr(x=hsls$s3classes, which = "label") # label attribute
-attr(x=hsls$s3classes, which = "labels") # labels attribute
+#specific attributes: using syntax: attr(x = obj_name, which = attribute_name, exact = FALSE)
+attr(x = hsls$s3classes, which = "label") # label attribute
+attr(x = hsls$s3classes, which = "labels") # labels attribute
 ```
 
 ## What is object class = `labelled`?
@@ -1143,25 +1160,25 @@ attr(x=hsls$s3classes, which = "labels") # labels attribute
 -   Characteristics of variables in R data frame with `class==labelled`:
     -   Data `type` can be numeric(double) or character
     -   To see `value labels` associated with each value:
-        -   `attr(df_name$var_name,"labels")`
-        -   E.g., `attr(hsls$s3classes,"labels")`
+        -   `attr(x = df_name$var_name, which = "labels")`
+        -   E.g., `attr(x = hsls$s3classes, which = "labels")`
 
 Investigate the attributes of `hsls$s3classes`
 
 ```{r, results="hide"}
-typeof(hsls$s3classes)
-class(hsls$s3classes)
-str(hsls$s3classes)
-attributes(hsls$s3classes)
+typeof(x = hsls$s3classes)
+class(x = hsls$s3classes)
+str(object = hsls$s3classes)
+attributes(x = hsls$s3classes)
 ```
 
-Use `attr(object_name,"attribute_name")` to refer to each attribute
+Use `attr(x = obj_name, which = "attribute_name")` to refer to each attribute
 
 ```{r, results="hide"}
-attr(hsls$s3classes,"label")
-attr(hsls$s3classes,"format.stata")
-attr(hsls$s3classes,"class")
-attr(hsls$s3classes,"labels")
+attr(x = hsls$s3classes, which = "label")
+attr(x = hsls$s3classes, which = "format.stata")
+attr(x = hsls$s3classes, which = "class")
+attr(x = hsls$s3classes, which = "labels")
 ```
 
 ## `labelled` package
@@ -1236,7 +1253,7 @@ General steps to follow:
 Investigate object
 
 ```{r, results="hide"}
-class(hsls$s3classes)
+class(x = hsls$s3classes)
 hsls %>% select(s3classes) %>% var_label() #show variable label
 hsls %>% select(s3classes) %>% val_labels() #show value label
 
@@ -1291,7 +1308,7 @@ df_name <- df_name %>%
 ### Create example data frame
 
 ```{r}
-df <- tribble(
+df_x <- tribble(
   ~id, ~edu, ~sch,
   #--|--|----
   1, 2, 2,
@@ -1300,8 +1317,8 @@ df <- tribble(
   4, 4, 2,
   5, 1, 2
 )
-df
-str(df)
+df_x
+str(object = df_x)
 ```
 
 ### Set variable labels
@@ -1309,21 +1326,21 @@ str(df)
 Use `set_variable_labels()` or `var_label()` to manually set variable labels
 
 ```{r}
-str(df$sch)
-var_label(df$sch)
+str(object = df_x$sch)
+var_label(x = df_x$sch)
 
 # Using set_variable_labels()
-df <- df %>%
+df_x <- df_x %>%
   set_variable_labels(
     id = "Unique identification number",
     edu = "Education level"
   )
 
 # Using var_label()
-var_label(df$sch) <- 'Type of school attending'
+var_label(df_x$sch) <- 'Type of school attending'
 
-str(df$sch)
-var_label(df$sch)
+str(object = df_x$sch)
+var_label(x = df_x$sch)
 ```
 
 ### Set value labels
@@ -1331,10 +1348,10 @@ var_label(df$sch)
 Use `set_value_labels()` or `val_label()` to manually set value labels
 
 ```{r}
-val_labels(df$sch)
+val_labels(x = df_x$sch)
 
 # Using set_value_labels()
-df <- df %>%
+df_x <- df_x %>%
   set_value_labels(
     edu = c('High School' = 1,
             'AA degree' = 2,
@@ -1343,25 +1360,25 @@ df <- df %>%
     sch = c('Private' = 1))
 
 # Using val_label()
-val_label(df$sch, 2) <- 'Public'
+val_label(df_x$sch, 2) <- 'Public'
 
-str(df$sch)
-val_labels(df$sch)
+str(object = df_x$sch)
+val_labels(x = df_x$sch)
 ```
 
 ### View the set variable and value labels
 
 ```{r}
 # View variable and value labels using attributes()
-attributes(df$sch)
+attributes(x = df_x$sch)
 
 # View variable label
-var_label(df$sch)
-attr(df$sch, 'label')
+var_label(x = df_x$sch)
+attr(x = df_x$sch, which = 'label')
 
 # View value labels
-val_labels(df$sch)
-attr(df$sch, 'labels')
+val_labels(x = df_x$sch)
+attr(x = df_x$sch, which = 'labels')
 ```
 
 ### `labelled` student exercise
@@ -1431,8 +1448,8 @@ wwlist <- wwlist %>%
   )
 
 # attribute of variable
-attributes(wwlist$pop_asian_zip)
-attributes(wwlist$pop_asian_state)
+attributes(x = wwlist$pop_asian_zip)
+attributes(x = wwlist$pop_asian_state)
 ```
 
 6.  Add value labels for `ethn_code` in data frame `wwlist`
@@ -1511,7 +1528,7 @@ attributes(df_els_stu_allobs$f1race_v2)
 ```{r}
 intern_mod1 <- lm(formula = f3ern2011 ~ f2intern0506 + bytxrstd + f1sex + f1race_v2, data = df_els_stu_allobs %>% filter(f2enroll0506==1))
 
-summary(intern_mod1)
+summary(object = intern_mod1)
 ```
 
 <br>
@@ -1529,7 +1546,7 @@ attributes(df_els_stu_allobs_fac$f1race_v2)
 ```{r}
 intern_mod2 <- lm(formula = f3ern2011 ~ f2intern0506 + bytxrstd + f1sex + f1race_v2, data = df_els_stu_allobs_fac %>% filter(f2enroll0506=="yes"))
 
-summary(intern_mod2)
+summary(object = intern_mod2)
 ```
 
 **Why does this matter?** 
@@ -1551,17 +1568,17 @@ hsls %>% select(s3classes) %>% count(s3classes) %>% as_factor()
 -   Can create object with some or all `labelled` vars converted to `factor`
 
 ```{r}
-hsls_f <- as_factor(hsls, only_labelled = TRUE)
+hsls_f <- as_factor(x = hsls, only_labelled = TRUE)
 ```
 
 Let's examine this object
 
 ```{r, results="hide"}
-glimpse(hsls_f)
+glimpse(x = hsls_f)
 hsls_f %>% select(s3classes,s3clglvl) %>% str()
-typeof(hsls_f$s3classes)
-class(hsls_f$s3classes)
-attributes(hsls_f$s3classes)
+typeof(x = hsls_f$s3classes)
+class(x = hsls_f$s3classes)
+attributes(x = hsls_f$s3classes)
 
 hsls_f %>% select(s3classes) %>% var_label()
 hsls_f %>% select(s3classes) %>% val_labels()
@@ -1578,7 +1595,7 @@ hsls_f %>% count(s3classes)
 Showing variable values associated with a factor variable
 
 ```{r}
-hsls_f %>% count(as.integer(s3classes))
+hsls_f %>% count(as.integer(x = s3classes))
 ```
 
 When sub-setting observations (e.g., filtering), refer to the `level` attribute, not the underlying variable integer value.
@@ -1599,26 +1616,26 @@ To create a factor variable from string variable:
 
 ```{r}
 # Underlying data: months my fam is born
-x1 <- c("Jan", "Aug", "Apr", "Mar")
+vec_x <- c("Jan", "Aug", "Apr", "Mar")
 # Create vector with valid levels
 month_levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 # Attach levels to data
-x2 <- factor(x1, levels = month_levels)
+vec_y <- factor(x = vec_x, levels = month_levels)
 ```
 
 Note how attributes differ:
 
 ```{r}
-str(x1)
-str(x2)
+str(object = vec_x)
+str(object = vec_y)
 ```
 
 Sorting also differs:
 
 ```{r}
-sort(x1)
-sort(x2)
+sort(x = vec_x)
+sort(x = vec_y)
 ```
 
 Let's create a character version of variable `hs_state` and then turn it into a factor:
@@ -1631,16 +1648,16 @@ wwlist_temp <- wwlist %>%
   filter(hs_state %in% c("CA", "OR", "WA"))
 
 # Create character version of high school state for West Coast states only
-wwlist_temp$hs_state_char <- as.character(wwlist_temp$hs_state)
+wwlist_temp$hs_state_char <- as.character(x = wwlist_temp$hs_state)
 
 # Investigate character variable
-str(wwlist_temp$hs_state_char)
+str(object = wwlist_temp$hs_state_char)
 table(wwlist_temp$hs_state_char)
 
 # Create new variable that assigns levels
-wwlist_temp$hs_state_fac <- factor(wwlist_temp$hs_state_char, levels = c("CA","OR","WA"))
-str(wwlist_temp$hs_state_fac)
-attributes(wwlist_temp$hs_state_fac)
+wwlist_temp$hs_state_fac <- factor(x = wwlist_temp$hs_state_char, levels = c("CA","OR","WA"))
+str(object = wwlist_temp$hs_state_fac)
+attributes(x = wwlist_temp$hs_state_fac)
 
 #wwlist_temp %>%
 #  count(hs_state_fac)
@@ -1664,37 +1681,37 @@ Factors are just integer vectors with level attributes attached to them. So, to 
 3.  Attach levels to the data using the `factor()` function
 
 ```{r}
-a1 <- c(1,1,1,0,1,1,0) # A vector of data
-a2 <- c("zero","one") # A vector of labels
+vec_x <- c(1,1,1,0,1,1,0) # A vector of data
+vec_y <- c("zero","one") # A vector of labels
 
 # Attach labels to values
-a3 <- factor(a1, labels = a2)
-a3
-str(a3)
+vec_z <- factor(x = vec_x, labels = vec_y)
+vec_z
+str(object = vec_z)
 
 ```
 
-Note: By default, `factor()` function attached "zero" to the lowest value of vector `a1` because "zero" was the first element of vector `a2`
+Note: By default, `factor()` function attached "zero" to the lowest value of vector `vec_x` because "zero" was the first element of vector `vec_y`
 
 Let's turn an integer variable into a factor variable in the `wwlist` data frame
 
 Create integer version of `receive_year`:
 
 ```{r}
-#typeof(wwlist_temp$receive_year)
-wwlist$receive_year_int <- as.integer(wwlist$receive_year)
-str(wwlist$receive_year_int)
-typeof(wwlist$receive_year_int)
+#typeof(x = wwlist_temp$receive_year)
+wwlist$receive_year_int <- as.integer(x = wwlist$receive_year)
+str(object = wwlist$receive_year_int)
+typeof(x = wwlist$receive_year_int)
 
 ```
 
 Assign levels to values of integer variable:
 
 ```{r, eval=FALSE}
-wwlist$receive_year_fac <- factor(wwlist$receive_year_int, 
-      labels=c("Twenty-sixteen","Twenty-seventeen","Twenty-eighteen"))
-str(wwlist$receive_year_fac)
-str(wwlist$receive_year)
+wwlist$receive_year_fac <- factor(x = wwlist$receive_year_int,
+      labels = c("Twenty-sixteen","Twenty-seventeen","Twenty-eighteen"))
+str(object = wwlist$receive_year_fac)
+str(object = wwlist$receive_year)
 
 #Check variable
 wwlist %>%

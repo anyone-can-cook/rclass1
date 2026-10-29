@@ -8,6 +8,10 @@ Students are new to both R and programming. Explicit argument names reinforce th
 
 Apply this convention consistently to all student-visible R example code and solutions, including nested calls, inline code, syntax explanations, and visible commented alternatives. Code remains in scope when its output is hidden (`results="hide"`) or it is displayed without execution (`eval=FALSE`). Ignore non-visible setup chunks and material inside HTML comments. Preserve deliberately incorrect examples and clearly label their intended error; do not accidentally repair the behavior being demonstrated.
 
+## Preserve instructor-written teaching tips
+
+**Instructor note:** When revising lectures, avoid deleting tips I write for students, whether they appear in prose or in code comments. As someone who is not a native programmer, I have developed a sixth sense for the small explanations, cautions, and reminders that help students who are new to coding or anxious about coding. Treat these tips as intentional pedagogical content rather than expendable text. If a tip seems inaccurate, outdated, or redundant, flag it for review instead of silently deleting it.
+
 ## Core rule
 
 **Name every explicitly supplied argument that has a meaningful formal argument name. Do not add arguments that the call does not otherwise need.**
