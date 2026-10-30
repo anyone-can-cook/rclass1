@@ -1222,6 +1222,8 @@ We will be working with [High School Longitudinal Study of 2009 (HSLS:09)](https
     -   2013 Update (2013)
     -   High School Transcripts (2013-2014)
     -   Second Follow-up (2016)
+    
+HSLS is one of the data sources we used for article, [A Sociological Analysis of Structural Racism in 'Student List' Lead Generation Products](https://journals.sagepub.com/doi/full/10.3102/01623737231210894)
 
 ## Using `haven` package to read SAS/SPSS/Stata datasets into R
 
