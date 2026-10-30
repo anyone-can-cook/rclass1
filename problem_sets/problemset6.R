@@ -24,8 +24,10 @@
   # Whenever you create a new variable, run checks to make sure the variable was created correctly (e.g.,
   # counts, cross-tabulations, assertions)
 
-  # As you work towards creating the GPA variable(s) you may make new "input" variables; drop these variables
-  # when you no longer need them
+  # As you work towards creating the GPA variable(s) you may make new "input" variables of your own; drop these
+  # variables when you no longer need them. 
+  # BUT do not drop any variable that a question asks you to create (e.g., `crsgrada_fac`, `numgrade_1`,
+  # `numgrade_2`, `crsecred_2`, `numgrade_3`, `crsecred_3`). These need to stay in `nls_crs` for grading.
 
   # This data set is messy. We want you to get experience manipulating unwieldy data into the shapes
   # and structures that will let you perform the analyses that you are interested in doing. At the same time, 
@@ -50,14 +52,13 @@ library(labelled)
 rm(list=ls())
 nls_crs <- read_dta(file="https://github.com/anyone-can-cook/rclass1/raw/master/data/nls72/nls72petscrs_v2.dta")
 
-
   # Below you will be asked a number of questions regarding the shapes and frequencies of variables
   # in the `nls_crs` data set. Become familiar with the data variable by variable; the questions below 
   # are intended to make you more familiar with how the variables relate, and for you to get more exercise 
   # subsetting and making data tables.
 
   # 1.1 ----
-  # 1 point each
+  # 1 point each (3 points)
 
   # Investigate (e.g., typeof(), class(), and str()) the following course-level variables in the nls_crs
   # dataframe:
@@ -68,42 +69,27 @@ nls_crs <- read_dta(file="https://github.com/anyone-can-cook/rclass1/raw/master/
   # Answer the following questions in a character vector named `q1_1` in order.
   # What type of variable is `crsgrada`?
   # Does `crsgrada` contain letter or number grades?
-  # What does the value "3" represent in the `gradtype` variable?
-
-typeof(nls_crs$crsgrada)
-class(nls_crs$crsgrada)
-str(nls_crs$crsgrada)
-
-typeof(nls_crs$crsgradb)
-class(nls_crs$crsgradb)
-str(nls_crs$crsgradb)
-
-typeof(nls_crs$gradtype)
-class(nls_crs$gradtype)
-str(nls_crs$gradtype)
-
-typeof(nls_crs$crsecred)
-class(nls_crs$crsecred)
-str(nls_crs$crsecred)
+  # What does the value "9" represent in the `gradtype` variable?
 
 q1_1 <- 
 
   # 1.2 ----
+  # 1 point
   # Make a frequency table of `gradtype` using count(). How many values are missing?
   # How many are letter grades? And how many are numeric grades?
   # Assign your three answers in the order asked to a numeric vector named `q1_2`
 
-nls_crs %>% count(gradtype)
 q1_2 <- 
 
   # 1.3 ----
+  # 1 point
   # How many institution types are in the `itype` variable? Careful counting! 
   # Assign this number to an object named `q1_3`
 
-nls_crs %>% select(itype) %>% val_labels()
 q1_3 <- 
 
   # 1.4 ----
+  # 1 point
   # Answer these questions about `crsecred` in a numeric vector named `q1_4`, assign your answers in the order asked. 
   # How many courses offered exactly ZERO credits?
   # What was the highest number of credits given by any class (ignoring values of 999 or greater)
@@ -112,41 +98,37 @@ q1_3 <-
   #   Note: A quirk in the data has missing values "999", while others are "999.999". 
   #   In your answer you should consider both of these values as missing.
 
-nls_crs %>% filter(crsecred>900) %>% nrow()
-nls_crs %>% count(crsecred) %>% arrange(desc(crsecred))
-nls_crs %>% count(crsecred) %>% arrange(desc(n))
-
 q1_4 <- 
 
   # 1.5 ----
+  # 1 point
   # Now investigate the `crsgradb` variable.
   # How many courses had missing grade values? 
   # Assign this number to an object named `q1_5`
   #   Note: A quirk in the data has missing values "999", while others are "999.999". 
   #   In your answer you should consider both of these values as missing.
 
-nls_crs %>% filter(crsgradb>900) %>% nrow()
-nls_crs %>% count(crsgradb) %>% arrange(desc(crsgradb))
 q1_5 <- 
 
   # 1.6 ----
+  # 1 point
   # Make a frequency table of `crsgrada`. How many letter grades had missing (99) values? 
   # Assign this number to an object named `q1_6`
 
-nls_crs %>% count(crsgrada)
 q1_6 <- 
 
   # 1.7 ----
+  # 1 point
   # Filter for any values of `crsgradb` greater than 900 (i.e.: missing), then make a frequency table 
   # of counts for values of `crsgrada`. This table represents alphanumeric grade counts 
   # whose corresponding numeric values are missing. 
   # How many grades are missing (99) in `crsgrada` that were also missing in `crsgradb`?
   # Assign this number to an object named `q1_7`
 
-nls_crs %>% filter(crsgradb>=900) %>% count(crsgrada) %>% print(n=40)
 q1_7 <- 
 
   # 1.8 ----
+  # 1 point
   # Filter for any values of `crsgradb` greater than 900,
   # and values of `crsgrada` equal to 99, 
   # and values of `gradtype` that are _not_ missing.
@@ -155,9 +137,7 @@ q1_7 <-
   # supposedly have a letter or numeric grade type assigned to them?
   # Assign this number to an object named `q1_8`
 
-nls_crs %>% filter(gradtype %in% c(1,2), crsgrada=='99', crsgradb>900) %>% count(crsgrada,crsgradb)
 q1_8 <- 
-
 
   # Question 2: Creating new grade variables ----
 
@@ -180,10 +160,13 @@ attributes(nls_crs$crsgrada_fac)
   # Q2.2 ----
   # 2 points
 
-  # Recode the `crsgrada_fac` variable into a new numeric factor variable called `numgrade_1` with 
+  # Recode the `crsgrada_fac` variable into a new numeric variable called `numgrade_1` with 
   # numeric values based on the attribute levels from `crsgrada_fac.` 
   # Recode A+=4, A=4, A-=3.7, B+=3.3, B=3, B-=2.7, C+=2.3, C=2, C-=1.7, D+=1.3, D=1, D-=0.7, F=0, 
-  # E=0, WF=0. All other letter grades should have missing values (use `.default=NA_real_.`)
+  # E=0, WF=0. All other letter grades should have missing values.
+  # You can use either case_when() or recode_values():
+  #   With case_when(), use `.default = NA_real_` (with a dot)
+  #   With recode_values(), use `default = NA_real_` (no dot)
   # Assign this new variable back into the `nls_crs` dataframe. 
 
 nls_crs <- 
@@ -193,10 +176,10 @@ nls_crs <-
   # Make a frequency table for the new `numgrade_1` variable. How many missing values are left?
   # Assign your answer to an object named `q2_2a`
 
-nls_crs %>% count(numgrade_1)
 q2_2a <- 
 
   # Q2.3a ----
+  # 1 point
   # Let's take an even closer look at `crsgradb`. Above, we created a numeric grade variable from 
   # letter grades and its maximum value was 4 (an A and an A+). How many observations of `crsgradb` 
   # are greater than 4 (but not 900 or more)? Assign your answer to an object named `q2_3a`.
@@ -206,8 +189,9 @@ nls_crs %>% filter(crsgradb>4&crsgradb<900) %>% nrow()
 q2_3a <- 
 
   # Q2.3b ----
+  # 1 point
   # This number seems acceptably low. Create a new version of `crsgradb` called `numgrade_2` 
-  # that enters NA for any values greater than 4, and uses the original values from `crsgrab` otherwise.
+  # that enters NA for any values greater than 4, and uses the original values from `crsgradb` otherwise.
   # Assign this new variable back into `nls_crs`.
 
 nls_crs <- 
@@ -233,7 +217,9 @@ nls_crs %>% count(crsecred_2)%>% arrange(desc(crsecred_2))
   # Create a new merged `numgrade_3` variable that uses: 
   #   Values from `numgrade_1` when `gradtype==1` (letter) and `crsecred_2` is not missing.
   #   Values from `numgrade_2` when `gradtype==2` (numeric) and `crsecred_2` is not missing.
+  # All other rows should be NA.
   # Assign it back to `nls_crs`.
+  #   Hint: In case_when(), any row that doesn't match one of your conditions becomes NA.
 
 # check how numgrade 1 and 2 look when you switch grade types.
 nls_crs %>%
@@ -254,10 +240,10 @@ nls_crs <-
   # Count the number of observations that have missing values in `numgrade_3` and no missing values
   # in `crsecred_2`. Assign that number of rows to an object named `q2_6`.
 
-nls_crs %>% filter(!is.na(crsecred_2),is.na(numgrade_3)) %>% nrow()
 q2_6 <- 
 
   # Q2.7 ----
+  # 1 point
   # Create `crsecred_3` from values of `crsecred_2`, but set any values to NA if a value for 
   # `numgrade_3` is missing. Remember to assign it to `nls_crs`.
 
@@ -325,10 +311,10 @@ nls_crs_v2 %>%
 
 ## Question 3: Calculate GPA ----
   # The formula for GPA is to multiply each observation of course credit by numerical grade 
-  # (that is quality points). Then then divide the total summed quality points by the total 
+  # (that is quality points). Then divide the total summed quality points by the total 
   # summed credits available to a given unit of analysis (students, universities, terms ...). 
   # Therefore there are two steps to this with the data we have. First comes calculating quality 
-  # points first. Then we have to aggregate the nls data by some unit of analysis and create sums of
+  # points. Then we have to aggregate the nls data by some unit of analysis and create sums of
   # both credits and quality points. 
 
   # Q3.1 ----
@@ -364,9 +350,8 @@ nls_crs_trans %>% filter(is.na(gpa_trans)&cred_trans!=0)
 nls_crs_trans %>% arrange(desc(gpa_trans))
 
   # Q3.2a ----
-  # 1 point
-
-  # 2. Investigate gpa_trans to see if it looks reasonable.
+  # Not graded, but we recommend running these checks.
+  # Investigate gpa_trans to see if it looks reasonable.
 
 nls_crs_trans %>% count(gpa_trans)
 nls_crs_trans %>% filter(is.na(gpa_trans))
@@ -379,16 +364,16 @@ nls_crs_trans %>% count(gpa_trans) %>% filter(n>1)
   # 2 points
   # Create term-level GPA variable and save as a new object named `nls_crs_term`. 
   # Similar to Q3.2, summarize credit and quality points totals across `id`, `transnum`, 
-  # and `termnum`. Then calculate a new gpa variable named `gpa_term`.
+  # and `termnum`. Name these `cred_term` and `qualpts_term`. Then calculate a new gpa 
+  # variable named `gpa_term`.
 
 nls_crs_term <- 
 
 nls_crs_term %>% head()
 
   # Q3.3a
-  # 1 point
-
-  # 4. Investigate gpa_term to see if it looks reasonable.
+  # Not graded, but we recommend running these checks.
+  # Investigate gpa_term to see if it looks reasonable.
 
 nls_crs_term %>% count(gpa_term)
 nls_crs_term %>% filter(is.na(gpa_term))
