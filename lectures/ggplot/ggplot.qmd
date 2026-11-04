@@ -27,24 +27,24 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 Load packages:
 
 ```{r, message=FALSE}
-library(tidyverse)
-library(ggplot2) # superfluous because ggplot2 is part of tidyverse
-library(scales) # for formatting labels for axes and legends
+library(package = tidyverse)
+library(package = ggplot2) # superfluous because ggplot2 is part of tidyverse
+library(package = scales) # for formatting labels for axes and legends
 
-library(haven) #read in spss, stata, sas files
-library(labelled) #work with metadata e.g., variable and value labels
-library(RColorBrewer) #manage colors in R
+library(package = haven) #read in spss, stata, sas files
+library(package = labelled) #work with metadata e.g., variable and value labels
+library(package = RColorBrewer) #manage colors in R
 ```
 
 **If package not yet installed**, then must install before you load. Install in "console" rather than .Rmd file:
 
--   Generic syntax: `install.packages("package_name")`
--   Install "tidyverse": `install.packages("tidyverse")`
+-   Generic syntax: `install.packages(pkgs = "package_name")`
+-   Install "tidyverse": `install.packages(pkgs = "tidyverse")`
 
 **Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
 
--   `install.packages("scales")`
--   `library(scales)`
+-   `install.packages(pkgs = "scales")`
+-   `library(package = scales)`
 
 **Resources used to create this lecture:**
 
@@ -69,7 +69,7 @@ We will use one dataset that is part of the `ggplot2` package:
 
 ```{r}
 #?diamonds
-glimpse(diamonds)
+glimpse(x = diamonds)
 ```
 
 <br> 
@@ -82,7 +82,7 @@ We will use public-use data from the *National Center for Education Statistics (
 The following RData file contains 2 dataframes, `df_els_stu_allobs` (variables are mostly haven labelled) and `df_els_stu_allobs_fac` (variables are mostly factors). We will be using the `df_els_stu_allobs_fac` because `ggplot` generally expects categorical variables to be factor variables.
 
 ```{r}
-load(file = url('https://github.com/anyone-can-cook/educ152/raw/main/data/els/output_data/els_stu.RData'))
+load(file = url(description = 'https://github.com/anyone-can-cook/educ152/raw/main/data/els/output_data/els_stu.RData'))
 els <- df_els_stu_allobs_fac
 ```
 
@@ -117,12 +117,12 @@ els <- els %>%
     #f3evratt = unclass(f3evratt),
     f1mothed = unclass(f1mothed),
     f1fathed = unclass(f1fathed),
-    f3tzpostern = unclass(f3tzpostern),
-    f1sex = recode_factor(f1sex, `1` = 'Male', `2` = 'Female'))
+    f3tzpostern = unclass(f3tzpostern)
+  )
 
 ```
 
-## Type/class of variables ggplot expects
+## Why variable class matters for ggplot
 
 `ggplot` often doesn't work well with variables whose class is haven labelled. For categorical variables, `ggplot` works best with factor class because there is an ordering to the categorical values. We can convert variables to factor class as part of the data manipulation step prior to plotting.
 
@@ -133,13 +133,13 @@ The `f1race` variable has a class of haven labelled in the `df_els_stu_allobs` d
 ```{r}
 # Haven labelled
 df_els_stu_allobs$f1race %>% str()
-df_els_stu_allobs %>% ggplot() + geom_bar(aes(y=f1race))
+df_els_stu_allobs %>% ggplot() + geom_bar(mapping = aes(y = f1race))
 ```
 
 ```{r}
 # Factor
 df_els_stu_allobs_fac$f1race %>% str()
-df_els_stu_allobs_fac %>% ggplot() + geom_bar(aes(y=f1race))
+df_els_stu_allobs_fac %>% ggplot() + geom_bar(mapping = aes(y = f1race))
 ```
 
 <br> If we try using `f1race` from `df_els_stu_allobs` (haven labelled) to specify the color of the points in the following scatterplot, we will get an error:
@@ -147,7 +147,7 @@ df_els_stu_allobs_fac %>% ggplot() + geom_bar(aes(y=f1race))
 ```{r, eval = F}
 # Haven labelled (does not work)
 df_els_stu_allobs %>% 
-  filter(unclass(bys34a) > 0) %>%
+  filter(unclass(x = bys34a) > 0) %>%
   ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
   geom_point()
 ```
@@ -157,30 +157,212 @@ But using `f1race` from `df_els_stu_allobs_fac` (factor) works:
 ```{r}
 # Factor
 df_els_stu_allobs_fac %>% 
-  filter(unclass(bys34a) > 0) %>%
+  filter(unclass(x = bys34a) > 0) %>%
   ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
   geom_point()
 ```
 
-We can also specify the *levels* of a factor variable to control the order in which the values are displayed:
+## Preparing factor variables for graphing
+
+### Specifying factor level order
+
+The order of a factor's levels determines the order in which its categories usually appear on graph axes, in legends, and in facets. Here, `f1race` is already a factor variable, but we want to change its level order before graphing it.
+
+Consistent with our other lectures, we use `factor()` within `mutate()`:
+
+-   `mutate()` updates the `f1race` column in the data frame
+-   `x = f1race` supplies the existing values of `f1race` to `factor()`
+-   `levels = c(...)` lists the valid category values in the exact order we want
+
+Before modifying a factor, inspect its existing levels and category counts. After modifying it, check them again. This helps catch misspellings or accidentally omitted values.
 
 ```{r}
-df_els_stu_allobs_fac$f1race <- factor(
-  df_els_stu_allobs_fac$f1race, 
-  levels = c('Amer. Indian/Alaska Native, non-Hispanic',
-             'Black or African American, non-Hispanic', 
-             'Asian, Hawaii/Pac. Islander,non-Hispanic', 
-             'More than one race, non-Hispanic', 
-             'Hispanic, race specified', 
-             'Hispanic, no race specified',
-             'White, non-Hispanic')
-)
+# Before: inspect the existing factor level order and category counts
+levels(x = df_els_stu_allobs_fac$f1race)
 
+df_els_stu_allobs_fac %>%
+  count(f1race, .drop = FALSE)
+
+# Re-create f1race as a factor and specify the desired level order
+df_els_stu_allobs_fac <- df_els_stu_allobs_fac %>%
+  mutate(
+    f1race = factor(
+      # Supply the existing variable values
+      x = f1race,
+      # List all valid values in the order we want them displayed
+      levels = c(
+        "Amer. Indian/Alaska Native, non-Hispanic",
+        "Black or African American, non-Hispanic",
+        "Asian, Hawaii/Pac. Islander,non-Hispanic",
+        "More than one race, non-Hispanic",
+        "Hispanic, race specified",
+        "Hispanic, no race specified",
+        "White, non-Hispanic"
+      )
+    )
+  )
+
+# After: verify the new level order and confirm the counts
+levels(x = df_els_stu_allobs_fac$f1race)
+
+df_els_stu_allobs_fac %>%
+  count(f1race, .drop = FALSE)
+
+# Use the reordered factor variable in a graph
 df_els_stu_allobs_fac %>% 
-  filter(unclass(bys34a) > 0) %>%
+  filter(unclass(x = bys34a) > 0) %>%
   ggplot(mapping = aes(x = bys34a, y = f3ern2011, color = f1race)) +
   geom_point()
 ```
+
+**What happened?**
+
+-   The category values and their counts did not change; we changed their factor level order
+-   The level order is the order in which the values are written inside `levels = c(...)`
+-   A specified level that does not appear in the data is retained as an unused level with zero observations
+-   An observed value that is not included in `levels` is converted to `NA`
+
+Therefore, values in `levels = c(...)` must be spelled exactly as they appear in the variable. Checking `levels()` and `count()` before and after is a useful habit.
+
+We can use this same `mutate()` plus `factor()` pattern to:
+
+-   Turn an ordinary character variable into a factor
+-   Modify the level order of an existing factor
+
+For a haven-labelled variable whose value labels should become factor levels, first use `haven::as_factor()`, as discussed in the attributes and class lecture.
+
+### Recoding values and specifying factor level order
+
+Let's recode some variables we will use later to make them easier to work with.
+
+The input variables `f3evratt` and `bystexp` are already factors. We will:
+
+1.  Inspect their existing levels and counts
+2.  Use `recode_values()` to create shorter, easier-to-read category labels
+3.  Use `factor()` to turn the recoded variables back into factors and specify their level order
+4.  Check the new variables before using them in graphs
+
+We prepare these variables in `els`. Data frames we create from `els` later in the lecture will then contain the prepared variables.
+
+**Step 1: Inspect the input variables**
+
+When the input is a factor, `recode_values()` matches the factor level labels—not the underlying integer storage codes. Therefore, first use `count()` and `attributes()` to identify the exact level labels we need to recode.
+
+```{r}
+# Inspect educational aspirations
+els %>%
+  count(bystexp, .drop = FALSE)
+
+attributes(x = els$bystexp)
+
+# Inspect whether the student ever attended a postsecondary institution
+els %>%
+  count(f3evratt, .drop = FALSE)
+
+attributes(x = els$f3evratt)
+```
+
+**Step 2: Recode the values, then create the factors**
+
+The first `mutate()` uses `recode_values()` to create shorter category labels. Because our replacement values are text, `recode_values()` returns character variables.
+
+The second `mutate()` uses `factor()` to:
+
+-   Convert those character variables to factors
+-   List all valid category values
+-   Specify the order in which the categories should appear in graphs
+
+```{r}
+els <- els %>%
+  # First, create character variables with shorter category labels
+  mutate(
+    ever_college = recode_values(
+      x = f3evratt,
+      # Match each existing factor level to its new label
+      "Missing" ~ "Missing",
+      "Survey component legitimate skip/NA" ~ "Skip",
+      "Nonrespondent" ~ "Nonrespondent",
+      "No postsecondary enrollment" ~ "No college",
+      "Has some postsecondary enrollment" ~ "Some college"
+    ),
+    ed_aspiration = recode_values(
+      x = bystexp,
+      # Match each existing factor level to its new label
+      "Survey component legitimate skip/NA" ~ "Skip",
+      "Nonrespondent" ~ "Nonresponse",
+      "Don't know" ~ "Don't know",
+      "Less than high school graduation" ~ "No HS diploma",
+      "High school graduation or GED only" ~ "HS diploma or GED",
+      "Attend or complete 2-year college/school" ~ "2-year",
+      "Attend college, 4-year degree incomplete" ~ "Attend college, no Bachelor's",
+      "Graduate from college" ~ "Bachelor's",
+      "Obtain Master's degree or equivalent" ~ "Master's",
+      "Obtain PhD, MD, or other advanced degree" ~ "Doctorate"
+    )
+  ) %>%
+  # Next, convert the recoded variables to factors and set their level order
+  mutate(
+    ever_college = factor(
+      x = ever_college,
+      # Categories will appear in graphs in the order listed below
+      levels = c(
+        "Missing",
+        "Skip",
+        "Nonrespondent",
+        "No college",
+        "Some college"
+      )
+    ),
+    ed_aspiration = factor(
+      x = ed_aspiration,
+      # Categories will appear in graphs in the order listed below
+      levels = c(
+        "Skip",
+        "Nonresponse",
+        "Don't know",
+        "No HS diploma",
+        "HS diploma or GED",
+        "2-year",
+        "Attend college, no Bachelor's",
+        "Bachelor's",
+        "Master's",
+        "Doctorate"
+      )
+    )
+  )
+```
+
+**Step 3: Check the new variables**
+
+Use `class()` and `levels()` to verify the class and level order. Use `count(.drop = FALSE)` to check the category counts, including factor levels with zero observations. Finally, compare the original and recoded variables side by side.
+
+```{r}
+# Verify factor class and level order
+class(x = els$ever_college)
+levels(x = els$ever_college)
+
+class(x = els$ed_aspiration)
+levels(x = els$ed_aspiration)
+
+# Verify category counts, including unused factor levels
+els %>%
+  count(ever_college, .drop = FALSE)
+
+els %>%
+  count(ed_aspiration, .drop = FALSE)
+
+# Compare the original and recoded variables
+els %>%
+  select(f3evratt, ever_college, bystexp, ed_aspiration) %>%
+  head(n = 10)
+```
+
+**Remember**:
+
+-   Values on the left side of `~` must exactly match the existing factor level labels
+-   `recode_values()` changes the category labels; it does not determine their plotting order
+-   The order supplied to `levels = c(...)` determines the factor level order
+-   An observed value omitted from `levels` becomes `NA`, so always check the result
 
 # Concepts
 
@@ -222,7 +404,7 @@ What does Wickham mean by **layers**? (from "[Telling Stories with Data Using th
 Syntax conveying the seven parameters of the layered grammar of graphics:
 
 ```{r, eval = FALSE}
-ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) + 
+ggplot(data = <DATA>, mapping = aes(x = <X_VARIABLE>, y = <Y_VARIABLE>, ...)) +
   <GEOM_FUNCTION>(
      stat = <STAT>, 
      position = <POSITION>
@@ -241,14 +423,14 @@ ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +
 -   The variables of interest are hours per week spent on homework in high school (`bys34a`), earnings in 2011 (`f3ern2011`), and student sex (`f1sex`)
 
 ```{r}
-els %>% select(stu_id, bys34a, f3ern2011, f1sex) %>% head(10)
+els %>% select(stu_id, bys34a, f3ern2011, f1sex) %>% head(n = 10)
 ```
 
 -   First, let's investigate the underlying variables:
 
 ```{r}
 els %>% select(bys34a,f3ern2011) %>%
-  summarize_all(.funs = list(~ mean(., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
+  summarize_all(.funs = list(~ mean(x = ., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
 ```
 
 -   Investigate values less than zero:
@@ -264,8 +446,16 @@ els %>% select(f3ern2011) %>% filter(f3ern2011<0) %>% count(f3ern2011)
 ```{r}
 els_v2 <- els %>% 
   mutate(
-    hw_time = if_else(bys34a<0,NA_real_,as.numeric(bys34a)),
-    earn2011 = if_else(f3ern2011<0,NA_real_,as.numeric(f3ern2011)),
+    hw_time = if_else(
+      condition = bys34a < 0,
+      true = NA_real_,
+      false = as.numeric(x = bys34a)
+    ),
+    earn2011 = if_else(
+      condition = f3ern2011 < 0,
+      true = NA_real_,
+      false = as.numeric(x = f3ern2011)
+    ),
     totloan = f3totloan
   )
 
@@ -288,43 +478,6 @@ els_parphd <- els_v2 %>% filter(f1pared=="Completed PhD, MD, other advanced degr
 
 ```
 
-<details>
-
-<summary>Let's recode some variables we will use later to make them easier to work with.</summary>
-
-```{r}
-
-#recode some values for later
-els_parphd %>% count(bystexp) #how far student thinks they will get 
-#attributes(els_parphd$bystexp)
-els_parphd %>% count(f3evratt)
-attributes(els_parphd$f3evratt) #ever attended a postsecondary institution
-
-
-els_parphd <- els_parphd %>%
-  mutate(ever_college = recode(f3evratt, "Missing" = "Missing",
-                               "Survey component legitimate skip/NA" = "Skip",
-                               "Nonrespondent" = "Nonrespondent",
-                               "No postsecondary enrollment" = "No college",
-                               "Has some postsecondary enrollment" = "Some college"),
-         ed_aspiration = recode(bystexp, "Survey component legitimate skip/NA" = "Skip",
-                                "Nonrespondent" = "Nonresponse",
-                                "Don't know" = "Don't know",
-                                "Less than high school graduation" = "No HS diploma",
-                                "High school graduation or GED only" = "HS diploma or GED",
-                                "Attend or complete 2-year college/school" = "2-year",
-                                "Attend college, 4-year degree incomplete" = "Attend college, no Bachelor's",
-                                "Graduate from college" = "Bachelor's",
-                                "Obtain Master's degree or equivalent" = "Master's",
-                                "Obtain PhD, MD, or other advanced degree" = "Doctorate")) 
-  
-#check
-els_parphd %>%
-  select(f3evratt, ever_college, bystexp, ed_aspiration)
-```
-
-</details>
-
 ## Set of aesthetic mappings (**mappings**) {#set-of-aesthetic-mappings-mappings}
 
 **Mapping** defines how variables in a dataset are applied (mapped) to a graphic.
@@ -338,7 +491,7 @@ els_parphd %>%
 ```{r}
 els_v2 %>% select(stu_id, bys34a, earn2011, f1sex) %>%
   rename(x = bys34a, y = earn2011, color = f1sex) %>% 
-  head(10)
+  head(n = 10)
 ```
 
 <details>
@@ -366,7 +519,7 @@ els_v2 %>%
 ```{r}
 els_v2 %>% select(stu_id, f1sex) %>% 
   rename(x = f1sex) %>% 
-  head(10)
+  head(n = 10)
 ```
 
 <details>
@@ -397,8 +550,8 @@ A **statistical transformation** transforms the underlying data before plotting 
 -   This is the "identity" transformation (*default for plots like scatterplots*)
 
 ```{r}
-els_v2 %>% select(stu_id, bys34a, earn2011) %>% rename(x=bys34a, y=earn2011) %>% 
-  head(10)
+els_v2 %>% select(stu_id, bys34a, earn2011) %>% rename(x = bys34a, y = earn2011) %>%
+  head(n = 10)
 ```
 
 <details>
@@ -521,7 +674,7 @@ els_v2 %>% select(f3tzhighdeg) %>% summary()
 #total amount borrowed in loans on 2011 earnings 
 els_v2 %>%
   filter(totloan < 30000 & earn2011 < 150000) %>%
-  ggplot(aes(x = totloan, y = earn2011)) +
+  ggplot(mapping = aes(x = totloan, y = earn2011)) +
   geom_point()
 
 ```
@@ -531,7 +684,7 @@ els_v2 %>%
 #total amount borrowed in loans on 2011 earnings 
 els_v2 %>%
   filter(totloan < 30000 & earn2011 < 150000) %>%
-  ggplot(aes(x = totloan, y = earn2011)) +
+  ggplot(mapping = aes(x = totloan, y = earn2011)) +
   geom_point()
 
 ```
@@ -545,7 +698,7 @@ els_v2 %>%
 #total amount borrowed in loans on 2011 earnings 
 els_v2 %>%
   filter(totloan < 30000 & earn2011 < 150000) %>%
-  ggplot(aes(x = totloan, y = earn2011)) +
+  ggplot(mapping = aes(x = totloan, y = earn2011)) +
   geom_point(position = "jitter")
 ```
 </details>
@@ -554,7 +707,7 @@ els_v2 %>%
 #total amount borrowed in loans on 2011 earnings 
 els_v2 %>%
   filter(totloan < 30000 & earn2011 < 150000) %>%
-  ggplot(aes(x = totloan, y = earn2011)) +
+  ggplot(mapping = aes(x = totloan, y = earn2011)) +
   geom_point(position = "jitter")
 ```
 
@@ -571,23 +724,23 @@ els_v2 %>%
 
 <summary>**Code**</summary>
 ```{r eval=FALSE}
-x1 <- c(1, 10)
-y1 <- c(1, 5)
-p <- qplot(x = x1, y = y1, geom = "blank", xlab = NULL, ylab = NULL) +
+vec_x <- c(1, 10)
+vec_y <- c(1, 5)
+coord_plot <- qplot(x = vec_x, y = vec_y, geom = "blank", xlab = NULL, ylab = NULL) +
   theme_bw()
 
-p +
+coord_plot +
   ggtitle(label = "Cartesian coordinate system")
 ```
 </details>
 
 ```{r echo=FALSE}
-x1 <- c(1, 10)
-y1 <- c(1, 5)
-p <- qplot(x = x1, y = y1, geom = "blank", xlab = NULL, ylab = NULL) +
+vec_x <- c(1, 10)
+vec_y <- c(1, 5)
+coord_plot <- qplot(x = vec_x, y = vec_y, geom = "blank", xlab = NULL, ylab = NULL) +
   theme_bw()
 
-p +
+coord_plot +
   ggtitle(label = "Cartesian coordinate system")
 ```
 
@@ -598,13 +751,13 @@ p +
 
 <summary>**Code**</summary>
 ```{r eval=FALSE}
-p +
+coord_plot +
   coord_fixed()
 ```
 </details>
 
 ```{r echo=FALSE}
-p +
+coord_plot +
   coord_fixed()
 ```
 
@@ -613,13 +766,32 @@ p +
 ```{r echo=FALSE}
 #recode some values that are too long
 els_v2 <- els_v2 %>%
-  mutate(h_degree = recode(f3tzhighdeg,
-                           "Associate's degree" = "Associate's",
-                           "Bachelor's degree or Post-bachelor's certificate" = "Bachelor's",
-                           "Master's degree or Post-master's certificate" = "Master's",
-                           "Doctoral degree" = "Doctorate"
-    
-  ))
+  mutate(
+    h_degree = recode_values(
+      x = f3tzhighdeg,
+      "Associate's degree" ~ "Associate's",
+      "Bachelor's degree or Post-bachelor's certificate" ~ "Bachelor's",
+      "Master's degree or Post-master's certificate" ~ "Master's",
+      "Doctoral degree" ~ "Doctorate",
+      default = f3tzhighdeg
+    )
+  ) %>%
+  mutate(
+    h_degree = factor(
+      x = h_degree,
+      levels = c(
+        "Missing",
+        "Survey component legitimate skip/NA",
+        "Nonrespondent",
+        "Item legitimate skip/NA",
+        "Certificate or diploma",
+        "Associate's",
+        "Bachelor's",
+        "Master's",
+        "Doctorate"
+      )
+    )
+  )
 ```
 
 **Example**: Relationship between highest degree earned and the amount of total loans taken out. 
@@ -678,14 +850,14 @@ els_v2 %>%
 
 <summary>**Code**</summary>
 ```{r eval=FALSE}
-p +
+coord_plot +
   coord_polar() +
   ggtitle(label = "Polar coordinate system")
 ```
 </details>
 
 ```{r echo=FALSE}
-p +
+coord_plot +
   coord_polar() +
   ggtitle(label = "Polar coordinate system")
 ```
@@ -704,7 +876,7 @@ els_v2 %>%
   filter(totloan < 50000 & earn2011 < 100000) %>%
   ggplot() + 
   geom_point(mapping = aes(x = totloan, y = earn2011), position = "jitter") +
-  facet_wrap(~f1race_v2, nrow = 3)
+  facet_wrap(facets = vars(f1race_v2), nrow = 3)
 ```
 </details>
 
@@ -713,7 +885,7 @@ els_v2 %>%
   filter(totloan < 50000 & earn2011 < 100000) %>%
   ggplot() + 
   geom_point(mapping = aes(x = totloan, y = earn2011), position = "jitter") +
-  facet_wrap(~f1race_v2, nrow = 3)
+  facet_wrap(facets = vars(f1race_v2), nrow = 3)
 ```
 
 
@@ -747,38 +919,37 @@ ggplot(data = NULL, mapping = aes())
 ```{r, eval = FALSE}
 ?aes
 
-# SYNTAX
-aes(x, y, ...)
+# SYNTAX TEMPLATE
+aes(x = x_variable, y = y_variable, ...)
 ```
 
 -   Description (from help file)
     -   "Aesthetic mappings describe how variables in the data are mapped to visual properties (aesthetics) of geoms. Aesthetic mappings can be set in `ggplot()` and in individual layers."
 -   Arguments
     -   `x, y, ...`: List of name value pairs giving aesthetics to map to variables
-        -   The names for `x` and `y` aesthetics are typically omitted because they are so common
+        -   Although ggplot2 allows the names for `x` and `y` to be omitted, in this course we explicitly write `x =` and `y =`
         -   All other aesthetics must be named
 
 **Example**: Putting `ggplot()` and `aes()` together
 
--   Specifying `ggplot()` and `aes()` without specifying a geom layer (e.g., `geom_point()`) creates a blank ggplot:
-    -   (The two lines of code below are functionally identical)
+-   Specifying `ggplot()` and `aes()` without specifying a geom layer (e.g., `geom_point()`) creates a blank ggplot
+-   We explicitly name `mapping =` to show that the object created by `aes()` is supplied to the `mapping` argument of `ggplot()`
 
 ```{r}
-ggplot(data = diamonds, aes(x = carat, y = price))
 ggplot(data = diamonds, mapping = aes(x = carat, y = price))
 ```
 
 -   Alternatively, we can use pipes with the dataframe we want to plot, which allows us to omit the first `data` argument of `ggplot()`:
 
 ```{r}
-class(diamonds)
+class(x = diamonds)
 diamonds %>% ggplot(mapping = aes(x = carat, y = price))
 ```
 
 -   We can also create a ggplot object and assign it to an object for later use:
 
 ```{r}
-diam_ggplot <- ggplot(data = diamonds, aes(x = carat, y = price))
+diam_ggplot <- ggplot(data = diamonds, mapping = aes(x = carat, y = price))
 
 diam_ggplot # blank ggplot
 ```
@@ -786,16 +957,16 @@ diam_ggplot # blank ggplot
 -   Investigate ggplot object:
 
 ```{r}
-typeof(diam_ggplot)
-class(diam_ggplot)
+typeof(x = diam_ggplot)
+class(x = diam_ggplot)
 
-#str(diam_ggplot)
+#str(object = diam_ggplot)
 ```
 
 -   Attributes of ggplot object:
 
 ```{r}
-attributes(diam_ggplot)
+attributes(x = diam_ggplot)
 
 diam_ggplot$mapping
 
@@ -819,7 +990,7 @@ Adding a **geometric layer** to a ggplot object dictates how observations are di
 **Example**: Scatterplot of the relationship between `carat` and `price`, using the `diamonds` dataset
 
 ```{r}
-#ggplot(data = diamonds, aes(x = carat, y = price)) + geom_point()
+#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point()
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point()
 ```
 
@@ -834,7 +1005,7 @@ diam_ggplot + geom_point()
 -   Plot the scatterplot:
 
 ```{r, warning = FALSE}
-ggplot(data= els_parphd, mapping = aes(x = hw_time, y = earn2011)) + geom_point()
+ggplot(data = els_parphd, mapping = aes(x = hw_time, y = earn2011)) + geom_point()
 ```
 
 <br>
@@ -887,7 +1058,7 @@ geom_point(mapping = NULL, data = NULL, stat = "identity",
 <summary>Solution</summary>
 
 ```{r, eval = FALSE}
-ggplot(data= els_parphd, aes(x = hw_time, y = earn2011, color = f1sex)) + geom_point()
+ggplot(data = els_parphd, mapping = aes(x = hw_time, y = earn2011, color = f1sex)) + geom_point()
 ```
 
 </details>
@@ -901,13 +1072,13 @@ Why use `geom_smooth()`?
 -   The biggest problem with scatterplots is "overplotting." That is, when you plot many observations, points may be plotted on top of one another and it becomes difficult to visually discern the relationship:
 
 ```{r}
-ggplot(data = els_v2, aes(x = hw_time, y = earn2011)) + geom_point()
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011)) + geom_point()
 ```
 
 -   Instead, using `geom_smooth()` creates smoothed prediction lines with shaded confidence intervals:
 
 ```{r}
-ggplot(data = els_v2, aes(x = hw_time, y = earn2011)) + geom_smooth()
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011)) + geom_smooth()
 ```
 
 <br>
@@ -937,7 +1108,7 @@ geom_smooth(mapping = NULL, data = NULL, stat = "smooth",
 -   This code produces same plot as above, when aesthetics were specified in `ggplot()`:
 
 ```{r}
-ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011))
+ggplot(data = els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011))
 ```
 
 -   Use `group` aesthetic to create separate prediction lines by sex (`f1sex`):
@@ -947,35 +1118,35 @@ ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011))
 els_v2 %>%
   group_by(f1sex) %>%
   summarize(
-    mean_hw = mean(hw_time, na.rm = TRUE),
-    p25_hw = quantile(hw_time, 0.25, na.rm = TRUE),
-    p50_hw = quantile(hw_time, 0.50, na.rm = TRUE),
-    p75_hw = quantile(hw_time, 0.75, na.rm = TRUE),
-    p90_hw = quantile(hw_time, 0.90, na.rm = TRUE),
+    mean_hw = mean(x = hw_time, na.rm = TRUE),
+    p25_hw = quantile(x = hw_time, probs = 0.25, na.rm = TRUE),
+    p50_hw = quantile(x = hw_time, probs = 0.50, na.rm = TRUE),
+    p75_hw = quantile(x = hw_time, probs = 0.75, na.rm = TRUE),
+    p90_hw = quantile(x = hw_time, probs = 0.90, na.rm = TRUE),
   )
 
-#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, group=as_factor(f1sex))) + geom_smooth()
-ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, group=f1sex))
+#ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011, group = as_factor(x = f1sex))) + geom_smooth()
+ggplot(data = els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, group = f1sex))
 ```
 
 -   Alternatively, we could produce the same plot by specifying all aesthetics -- including the `group` aesthetic -- within the `ggplot()` function rather than the `geom_smooth()` function:
 
 ```{r}
-ggplot(data = els_v2, aes(x = hw_time, y = earn2011, group=f1sex)) + geom_smooth()
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011, group = f1sex)) + geom_smooth()
 ```
 
 -   Use `linetype` aesthetic to create separate prediction lines (with different line styles) by sex (`f1sex`):
 
 ```{r}
-#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, linetype=as_factor(f1sex))) + geom_smooth()
-ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, linetype=f1sex))
+#ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011, linetype = as_factor(x = f1sex))) + geom_smooth()
+ggplot(data = els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, linetype = f1sex))
 ```
 
 -   Use `color` aesthetic to create separate prediction lines (with different colors) by sex (`f1sex`):
 
 ```{r}
-#ggplot(data=els_v2, aes(x = hw_time, y = earn2011, color=as_factor(f1sex))) + geom_smooth()
-ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, color=f1sex))
+#ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011, color = as_factor(x = f1sex))) + geom_smooth()
+ggplot(data = els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, color = f1sex))
 ```
 
 ### Plotting multiple geom layers
@@ -983,7 +1154,7 @@ ggplot(data=els_v2) + geom_smooth(mapping = aes(x = hw_time, y = earn2011, color
 **Example**: Layer smoothed prediction lines (`geom_smooth()`) on top of scatterplot (`geom_point()`)
 
 ```{r}
-ggplot(data= els_v2) + 
+ggplot(data = els_v2) +
   geom_point(mapping = aes(x = hw_time, y = earn2011)) + 
   geom_smooth(mapping = aes(x = hw_time, y = earn2011))
 ```
@@ -991,7 +1162,7 @@ ggplot(data= els_v2) +
 -   Equivalently, the same plot can be created using this syntax:
 
 ```{r}
-ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011)) +
   geom_point() +
   geom_smooth()
 ```
@@ -999,7 +1170,7 @@ ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) +
 -   Adjust x-axis and y-axis limits by using `+ xlim()` and `+ ylim()`:
 
 ```{r}
-ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011)) +
   geom_point() +
   geom_smooth() +
   xlim(c(0,21)) + ylim(c(0,100000))
@@ -1009,7 +1180,7 @@ ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) +
     -   **Note**. Observations with income values above the y-axis limit are removed from the plot. This includes being removed from the calculation of the smooted prediction line
 
 ```{r}
-ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) + 
+ggplot(data = els_v2, mapping = aes(x = hw_time, y = earn2011)) +
   geom_point() +
   geom_smooth() +
   xlim(c(0,21)) + ylim(c(0,35000))
@@ -1018,7 +1189,7 @@ ggplot(data= els_v2, aes(x = hw_time, y = earn2011)) +
 -   Layer smoothed prediction lines with different line types by sex (`f1sex`) on top of scatterplot with different point colors by sex:
 
 ```{r}
-ggplot(data= els_v2) + 
+ggplot(data = els_v2) +
   geom_point(mapping = aes(x = hw_time, y = earn2011, color = f1sex)) + 
   geom_smooth(mapping = aes(x = hw_time, y = earn2011, linetype = f1sex)) +
   xlim(c(0,21)) + ylim(c(0,100000))
@@ -1083,7 +1254,7 @@ diamonds %>% count(cut)
 -   note: `geom_bar()` uses `stat = "count"`
 
 ```{r}
-ggplot(data = diamonds, aes(x = cut)) +
+ggplot(data = diamonds, mapping = aes(x = cut)) +
   geom_bar()
 ```
 
@@ -1106,14 +1277,14 @@ cut_count %>% str()
 -   Next, use `ggplot() + geom_col` to plot the data from the object `cut_count`:
 
 ```{r}
-ggplot(data = cut_count, aes(x = cut, y=n)) +
+ggplot(data = cut_count, mapping = aes(x = cut, y = n)) +
   geom_col()
 ```
 
--   note: if we didn't specify the aesthetic `y=n` we would get an error because `y` is a required aesthetic for `geom_col()`
+-   note: if we didn't specify the aesthetic `y = n` we would get an error because `y` is a required aesthetic for `geom_col()`
 
 ```{r, eval = F}
-ggplot(data = cut_count, aes(x = cut)) +
+ggplot(data = cut_count, mapping = aes(x = cut)) +
   geom_col()
 ```
 
@@ -1122,7 +1293,7 @@ ggplot(data = cut_count, aes(x = cut)) +
 ```{r}
 #diamonds %>% count(cut) %>% str()
 diamonds %>% count(cut) %>% str()
-diamonds %>% count(cut) %>% ggplot(aes(x= cut, y=n)) + 
+diamonds %>% count(cut) %>% ggplot(mapping = aes(x = cut, y = n)) +
   geom_col()
 ```
 
@@ -1150,7 +1321,7 @@ els_parphd %>% count(ever_college)
 ***Method 1***: Create bar chart using `geom_bar()`
 
 ```{r}
-ggplot(data = els_parphd, aes(x = ever_college)) +
+ggplot(data = els_parphd, mapping = aes(x = ever_college)) +
   geom_bar()
 ```
 
@@ -1159,12 +1330,12 @@ ggplot(data = els_parphd, aes(x = ever_college)) +
 ```{r}
 
 #check variable f3evratt
-typeof(els_parphd$ever_college)
-class(els_parphd$ever_college)
-str(els_parphd$ever_college)
-attributes(els_parphd$ever_college)$levels
+typeof(x = els_parphd$ever_college)
+class(x = els_parphd$ever_college)
+str(object = els_parphd$ever_college)
+attributes(x = els_parphd$ever_college)$levels
 
-els_parphd %>% filter(ever_college %in% c('No college','Some college')) %>% ggplot(aes(x = ever_college)) +
+els_parphd %>% filter(ever_college %in% c('No college','Some college')) %>% ggplot(mapping = aes(x = ever_college)) +
  geom_bar()
 ```
 
@@ -1177,7 +1348,7 @@ els_parphd %>%
   # use count() to create summary statistics object
   count(ever_college) %>%
   # plot summary statistic object
-  ggplot(aes(x=ever_college, y=n)) + geom_col()
+  ggplot(mapping = aes(x = ever_college, y = n)) + geom_col()
 
 ```
 
@@ -1204,36 +1375,34 @@ Two functions to split your plots into facets:
 ```{r, eval = FALSE}
 ?facet_grid
 
-# SYNTAX AND DEFAULT VALUES
-facet_grid(rows = NULL, cols = NULL, scales = "fixed",
-  space = "fixed", shrink = TRUE, labeller = "label_value",
-  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-  facets = NULL)
+# SYNTAX TEMPLATE
+facet_grid(
+  rows = vars(row_variable),
+  cols = vars(column_variable)
+)
 
 ?facet_wrap
 
-# SYNTAX AND DEFAULT VALUES
-facet_wrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
-  shrink = TRUE, labeller = "label_value", as.table = TRUE,
-  switch = NULL, drop = TRUE, dir = "h", strip.position = "top")
+# SYNTAX TEMPLATE
+facet_wrap(
+  facets = vars(facet_variable),
+  nrow = NULL,
+  ncol = NULL
+)
 ```
 
 Specifying which variable(s) to facet your plot on:
 
 -   `facet_grid()`
     -   Since `facet_grid()` arranges subplots in a grid format, we need to specify how we define the rows and columns
-    -   One way to do this is passing in the `rows` and `cols` arguments, which should be variables quoted by `vars()`
+    -   Pass variables to the `rows` and `cols` arguments using `vars()`
         -   `facet_grid(rows = vars(<var_1>), cols = vars(<var_2>))`: facet into both rows and columns
         -   `facet_grid(rows = vars(<var_1>))`: facet into rows only
         -   `facet_grid(cols = vars(<var_1>))`: facet into columns only
-    -   Alternatively, we can pass in a *formula*, which has the syntax `<row_var> ~ <col_var>`
-        -   `facet_grid(<var_1> ~ <var_2>)`: facet into both rows and columns
-        -   `facet_grid(<var_1> ~ .)`: facet into rows only
-        -   `facet_grid(. ~ <var_1>)`: facet into columns only
 -   `facet_wrap()`
-    -   `facet_wrap()` also accepts a *formula* for its `facets` argument
-        -   `facet_wrap(~ <var_1>)`: facet by one variable
-        -   `facet_wrap(<var_1> ~ <var_2>)`: facet on the combination of two variables
+    -   Pass variables to the `facets` argument using `vars()`
+        -   `facet_wrap(facets = vars(<var_1>))`: facet by one variable
+        -   `facet_wrap(facets = vars(<var_1>, <var_2>))`: facet on the combinations of two variables
 
 ### Faceting by one variable
 
@@ -1261,26 +1430,6 @@ els_parphd %>%
   facet_grid(cols = vars(ever_college))
 ```
 
--   Alternatively, we could specify the input as a *formula* to get the same results:
-
-```{r}
-# Facet into rows
-els_parphd %>%
-  filter(ever_college %in% c("No college", "Some college") & parent_income < 150000 & earn2011 < 150000) %>%
-  ggplot(mapping = aes(x = parent_income, y = earn2011)) +
-  geom_point(position = "jitter") +
-  facet_grid(ever_college ~ .)
-```
-
-```{r}
-# Facet into columns
-els_parphd %>%
-  filter(ever_college %in% c("No college", "Some college") & parent_income < 150000 & earn2011 < 150000) %>%
-  ggplot(mapping = aes(x = parent_income, y = earn2011)) +
-  geom_point(position = "jitter") +
-  facet_grid(. ~ ever_college)
-```
-
 ***Method 2***: Faceting using `facet_wrap()`
 
 -   Unlike `facet_grid()`, `facet_wrap()` is not restricted to either rows or columns:
@@ -1290,7 +1439,7 @@ els_parphd %>%
   filter(ever_college %in% c("No college", "Some college") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point() +
-  facet_wrap(~ ever_college)
+  facet_wrap(facets = vars(ever_college))
 
 ```
 
@@ -1301,7 +1450,7 @@ els_parphd %>%
   filter(ever_college %in% c("No college", "Some college") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point() +
-  facet_wrap(~ ever_college, nrow = 2)
+  facet_wrap(facets = vars(ever_college), nrow = 2)
 ```
 
 ```{r}
@@ -1309,7 +1458,7 @@ els_parphd %>%
   filter(ever_college %in% c("No college", "Some college") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point(position = "jitter") +
-  facet_wrap(~ ever_college, ncol = 1)
+  facet_wrap(facets = vars(ever_college), ncol = 1)
 ```
 
 ### Faceting by two variables
@@ -1329,17 +1478,6 @@ els_parphd %>%
   facet_grid(rows = vars(ever_college), cols = vars(ed_aspiration)) 
 ```
 
--   Alternatively, we could specify the input as a *formula* to get the same results:
-
-```{r}
-els_parphd %>%
-  filter(ever_college %in% c("No college", "Some college") 
-         & ed_aspiration %in% c("Don't know","No HS diploma", "HS diploma or GED", "2-year", "Attend college, no Bachelors ", "Bachelor's", "Master's", "Doctorate") & parent_income < 150000 & earn2011 < 150000) %>%
-  ggplot(mapping = aes(x = parent_income, y = earn2011)) +
-  geom_point(position = "jitter") +
-  facet_grid(ever_college ~ ed_aspiration) 
-```
-
 ***Method 2***: Faceting using `facet_wrap()`
 
 -   Since `facet_wrap()` is not defined by rows and columns, it omits any subplots that do not display any data:
@@ -1350,7 +1488,7 @@ els_parphd %>%
          & ed_aspiration %in% c("Don't know","No HS diploma", "HS diploma or GED", "2-year", "Attend college, no Bachelors ", "Bachelor's", "Master's", "Doctorate") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point(position = "jitter") +
-  facet_wrap(ever_college ~ ed_aspiration) 
+  facet_wrap(facets = vars(ever_college, ed_aspiration))
 ```
 
 -   We are also free to choose the number of rows or columns to display:
@@ -1361,7 +1499,7 @@ els_parphd %>%
          & ed_aspiration %in% c("Don't know","No HS diploma", "HS diploma or GED", "2-year", "Attend college, no Bachelors ", "Bachelor's", "Master's", "Doctorate") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point(position = "jitter") +
-  facet_wrap(ever_college ~ ed_aspiration, nrow = 4)
+  facet_wrap(facets = vars(ever_college, ed_aspiration), nrow = 4)
 ```
 
 ```{r}
@@ -1370,7 +1508,7 @@ els_parphd %>%
          & ed_aspiration %in% c("Don't know","No HS diploma", "HS diploma or GED", "2-year", "Attend college, no Bachelors ", "Bachelor's", "Master's", "Doctorate") & parent_income < 150000 & earn2011 < 150000) %>%
   ggplot(mapping = aes(x = parent_income, y = earn2011)) +
   geom_point(position = "jitter") +
-  facet_wrap(ever_college ~ ed_aspiration, ncol = 5) 
+  facet_wrap(facets = vars(ever_college, ed_aspiration), ncol = 5)
 ```
 
 # Customization
@@ -1397,8 +1535,8 @@ Functions to add title and axis labels:
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price')
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price')
 ```
 
 <br> Alternatively, the `labs()` function can be used to add all titles and labels:
@@ -1524,8 +1662,8 @@ We can use `scale_y_continuous()`, in conjunction with `label_number()` from the
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
 ```
 
@@ -1535,8 +1673,8 @@ diamonds %>%
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = .001, accuracy = 1))
 ```
 
@@ -1594,7 +1732,7 @@ The value of a color is determined by how close the color is to Black or White. 
 
 The `RColorBrewer` package is a helpful tool for managing colors in R. It offers several color palettes to choose from.
 
-<br> Visualization of color palettes (e.g., `scale_color_brewer(palette=Pastel2)`) [![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually) <br>
+<br> Visualization of color palettes (e.g., `scale_color_brewer(palette = Pastel2)`) [![](http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png)](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually) <br>
 
 Palettes are a combination of colors displayed together. In `RColorBrewer`, there are three types of palette scales: sequential, diverging, and qualitative.
 
@@ -1603,7 +1741,7 @@ Palettes are a combination of colors displayed together. In `RColorBrewer`, ther
     -   Sequential palette names: Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd
 
 ```{r}
-display.brewer.all(type="seq")
+display.brewer.all(type = "seq")
 ```
 
 -   **Diverging**: Diverging palettes represent ordered data but in two directions. The middle represents a neutral value and the opposite ends represent two extremes. The hue distinguishes the direction of the values.
@@ -1611,20 +1749,20 @@ display.brewer.all(type="seq")
     -   Diverging palette names: BrBG, PiYG, PRGn, PuOr, RdBu, RdGy, RdYlBu, RdYlGn, Spectral
 
 ```{r}
-display.brewer.all(type="div")
+display.brewer.all(type = "div")
 ```
 
 -   **Qualitative**: Qualitative palettes are best suited for representing nominal or categorical data. There is not particular ordering of categories; every hue represents a different value where chroma and luminance are equal.
     -   Qualitative palette names: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
 
 ```{r}
-display.brewer.all(type="qual")
+display.brewer.all(type = "qual")
 ```
 
 You can run the code below to identify color-blind-friendly palettes.
 
 ```{r}
-display.brewer.all(colorblindFriendly=TRUE)
+display.brewer.all(colorblindFriendly = TRUE)
 ```
 
 Sources: ([R Color Brewer's palettes](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)); ([HCL Color Space](https://hclwizard.org/#somewhere-over-the-rainbow))
@@ -1683,8 +1821,8 @@ First, let's create a scatterplot of the relationship between carat (x-axis) and
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
 ```
 
@@ -1694,8 +1832,8 @@ We can use `scale_color_brewer()` to customize the color palette. This also acce
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', name = 'Diamond color')
 ```
@@ -1706,8 +1844,8 @@ diamonds %>%
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', direction = -1, name = 'Diamond color')
 ```
@@ -1759,7 +1897,7 @@ els_v2 %>%
 We can select a specific palette from the ColorBrewer palette
 
 ```{r}
-#display.brewer.all(type="qual") #qual color palettes
+#display.brewer.all(type = "qual") #qual color palettes
 els_v2 %>%
   ggplot(mapping = aes(x = f1race_v2)) +
   geom_bar(mapping = aes(fill = f1race_v2)) +
@@ -1802,7 +1940,7 @@ Let's color the points by the variable `diamonds$depth`, which represents "diamo
 
 ```{r}
 diamonds %>% select(depth) %>%
-  summarize_all(.funs = list(~ mean(., na.rm = TRUE), ~ sd(., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
+  summarize_all(.funs = list(~ mean(x = ., na.rm = TRUE), ~ sd(x = ., na.rm = TRUE), ~ min(., na.rm = TRUE), ~ max(., na.rm = TRUE)))
 ```
 
 First, color scatterplot by `depth` using the default display palette:
@@ -1811,8 +1949,8 @@ First, color scatterplot by `depth` using the default display palette:
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1))
 ```
 
@@ -1822,8 +1960,8 @@ Next, let's add `scale_color_gradient()` but we'll manually insert the default v
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_gradient(low = '#132B43', high = '#56B1F7')
 ```
@@ -1834,8 +1972,8 @@ We can use `scale_color_gradient()` to customize the color palette. This also ac
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = depth)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_gradient(low = 'white', high = 'purple', name = 'Depth percentage', 
                        labels = label_number(suffix = '%'))
@@ -1853,7 +1991,7 @@ If we want to customize our graph by selecting specific colors we could use `sca
 # SYNTAX AND DEFAULT VALUES
 scale_colour_manual(
   ...,
-  values,
+  values = aesthetic_values,
   aesthetics = "colour",
   breaks = waiver(),
   na.value = "grey50"
@@ -1875,8 +2013,8 @@ We can manually select colors by their name ([An overview of color names in R](h
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_manual(values = c("D" = "darkcyan",
                                 "E" = "beige",
@@ -1894,8 +2032,8 @@ If we want to be more specific, we could manually select colors by their Hex col
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_manual(values = c("D" = "#E73813",
                                 "E" = "#E7B713",
@@ -1917,8 +2055,8 @@ We could also create an object assigning variable values with hex color codes.
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) 
 ```
   
@@ -1947,8 +2085,8 @@ diamond_colors[1:3] #select the first three values (D,E,F)
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_manual(values = diamond_colors, #hex color code object we created
                      name = 'Diamond color') #name of legend
@@ -2007,8 +2145,8 @@ From "[Complete Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)," 
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', name = 'Color') +
   theme_minimal()
@@ -2020,8 +2158,8 @@ diamonds %>%
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', name = 'Color') +
   theme_dark()
@@ -2039,8 +2177,8 @@ diamonds %>%
 diamonds %>% 
   ggplot(mapping = aes(x = carat, y = price, color = color)) + 
   geom_point() +
-  ggtitle('Correlation between diamond carat and price') +
-  xlab('Carat') + ylab('Price') +
+  ggtitle(label = 'Correlation between diamond carat and price') +
+  xlab(label = 'Carat') + ylab(label = 'Price') +
   scale_y_continuous(labels = label_number(prefix = '$', suffix = 'K', scale = 1e-3, accuracy = 1)) +
   scale_color_brewer(palette = 'Spectral', name = 'Color') +
   theme(
@@ -2051,7 +2189,7 @@ diamonds %>%
     axis.title = element_text(face = 'bold'),
     legend.title = element_text(face = 'bold'),
     legend.key = element_blank(),
-    legend.key.size = unit(0.5, 'cm')
+    legend.key.size = unit(x = 0.5, units = 'cm')
   )
 ```
 
@@ -2094,7 +2232,7 @@ The steps for saving a plot:
 
 ```{r, eval = FALSE}
 # Open the file
-pdf('Rplot.pdf') #indicating the file type "pdf" and the name of the file "Rplot.pdf"
+pdf(file = 'Rplot.pdf') #indicating the file type "pdf" and the name of the file "Rplot.pdf"
 
 # Create the plot
 diamonds %>% 
@@ -2109,7 +2247,7 @@ dev.off()
 
 ```{r, eval = FALSE}
 # Open the file
-jpeg('Rplot.jpg', width = 350, height = 350)
+jpeg(filename = 'Rplot.jpg', width = 350, height = 350)
 
 # Create the plot
 diamonds %>% 
