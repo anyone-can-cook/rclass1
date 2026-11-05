@@ -100,13 +100,13 @@ housing_df$ocean_proximity <-
 
   # Q2.1 ----
   # 3 points
-  # Below we provide three character vectors with words to describe the concepts of Hue, Chroma, 
-  # and Luminance, respectively. Some of the words can their concept correctly and _be described_ 
-  # by the concept. Two words in each vector do not fit with the concept at all. 
+  # Below we provide three character vectors of words that describe Hue, Chroma, and
+  # Luminance. In each vector, four words correctly describe the concept. Two words do
+  # not fit the concept at all. Pick out the four that fit.
 
-hue <- c("blue", "red", "purity", "color", "tone", "light")
-chroma <- c("intensity", "purity", "dark", "bright", "color", "black", "white")
-luminance <- c("color", "intensity", "bright", "light", "dark", "tone")
+hue <- c("blue", "red", "green", "yellow", "bright", "purity")
+chroma <- c("intensity", "purity", "vivid", "dull", "dark", "blue")
+luminance <- c("bright", "dark", "lightness", "light", "vivid", "red")
 
   # Create three corresponding objects named `q2_hue`, `q2_chroma`, and `q2_luminance`
   # and assign them the correct values from `hue`, `chroma`, and `luminance` without the incorrect terms.
