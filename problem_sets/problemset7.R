@@ -4,231 +4,252 @@
 ## [ AUTH ] < Your name / GitHub handle >
 ## [ INIT ] < Date you started the file >
 
-# 22 points
+  # 38 points
 
-## Overview:
+## Overview ----
 
-  # In this problem set, you will be using the `stringr` package (part of tidyverse) to work
-  # with strings, and the `lubridate` package for working with dates and times. We will ask you
-  # to load Twitter data (now X) that is saved as an .Rdata file.
- 
-## Question 1: Working with strings ----
+  # In this problem set, you will practice creating visualizations using the `ggplot2` library, 
+  # including labeling axes, customizing colors, and making these plots presentation-ready. The data 
+  # you will be working with is a California housing data set based on the 1990 Census, where each 
+  # observation is a California district.
 
-  # Load the following packages below: `tidyverse` and `lubridate.`
+## Question 1: Explore data and create simple graphs ----
+  # Load the following packages below: `tidyverse`, `ggplot2`, `scales`, and 
+  # `RColorBrewer.` Note that `ggplot2` is part of `tidyverse`, and you do not need to load it separately, 
+  # but we will do so for this problem set.
 
-rm(list=ls())
 library(tidyverse)
-library(lubridate)
+library(ggplot2)
+library(scales)
+library(RColorBrewer)
 
-  # We encourage you to first sketch out what you want to do on some scratch paper.
-  # Recall from the lecture example on "Using str_c() on vectors of different lengths",
-  # when multiple vectors of different length are provided in the str_c() function,
-  # the elements of shorter vectors are recycled. See below.
- 
-str_c("@", c("ozanj", "joebruin", "josiebruin"), sep = "", collapse = ", ")
- 
-  # [1] "@ozanj, @joebruin, @josiebruin" 
- 
+  # Use load() and url() to load the housing_df dataframe from 
+  # https://github.com/anyone-can-cook/rclass1/raw/master/data/housing/housing.RData.
+
+  # This dataset was downloaded from Kaggle and contains data on California housing prices. Each 
+  # observation in the dataset is a California district. Take some time to read about the data and 
+  # the variables it contains. Kaggle California Housing Prices (https://www.kaggle.com/camnugent/
+  # california-housing-prices).
+
+#rm(list=ls())
+load(url('https://github.com/anyone-can-cook/rclass1/raw/master/data/housing/housing.RData'))
+
   # Q1.1 ----
   # 1 point
-  # Now try it yourself. Create the string "Roses are red, Violets are blue"
-  # using str_c() and the following `vec` objects as input. 
+  # Let's investigate the housing_df dataframe. First, use head() and glimpse() to preview the 
+  # data.
 
-vec_1 <- c("Roses", "Violets")
-vec_2 <- c("red", "blue")
-str_1 <- "are"
+  # How many observations (rows) and variables (columns) are there?
+  # Assign your answer as numbers to an object named `q1_1`.
+  # Enter the number of rows first and columns as the second element.
 
-  # Once your code produces the text "Roses are red, Violets are blue", 
-  # assign the working code _in quotes_ to an object named `q1_1`. 
-  # Like this: q1_1 <- "str_c( ... )". We can evaluate if the code in the string produces the phrase.
-
-# Write your code here
 q1_1 <- 
 
   # Q1.2 ----
-  # 2 points
-  # Pig Latin (https://en.wikipedia.org/wiki/Pig_Latin) is a language game in which the
-  # first consonant of each word is moved to the end of the word, then "ay" is appended
-  # to create a suffix. For example, the word "Wikipedia" would become "Ikipediaway".
- 
-  # Using str_c() and str_sub(), turn the given pig_latin vector into the string:
-  # "igpay atinlay"
+  # 1 point
+  # Use ggplot() to create a simple scatterplot with median_income on the x-axis and
+  # median_house_value on the y-axis. Assign the plot itself (not the code as text) to
+  # an object named `q1_2`. For example: q1_2 <- housing_df %>% ggplot(...)
 
-pig_latin <- c('pig', 'latin')
-
-  # We encourage you to first sketch out what you want to do on some scratch paper.
-  # First, think about what the final outcome will look like.
-  # Then, think about how you can get there. Play around with the str_sub() function.
-  # Once your code is working,assign it _in quotes_ to an object named `q1_2`. 
-  # Like this: q1_2 <- "str_c( ... )".
-
-# Write your code here
 q1_2 <- 
 
   # Q1.3 ----
   # 1 point
-  # 4. Using str_c() and str_sub(), decode the given secret_message. Your output should
-  # be a string.
- 
-secret_message <- c('ollowfay', 'ouryay', 'earthay')
+  # In the plot, you should notice there is a line of points spread out along y = 500000. If you 
+  # inspect housing_df, you'll see there are many points with median_house_value of 500001. 
+  # This suggests there was a cap set when data was collected that doesn't reflect a real price and
+  # observations containing median_house_value above 500000 may not be reliable to include in our analysis.
 
-  # Follow the same logic from above.
-  # Sketch out what you want to do on some scratch paper. Break it down step by step.
-  # Play around with different values for the str_sub() function.
-  # Once your code is working,assign it _in quotes_ to an object named `q1_3`. 
-  # Like this: q1_3 <- "str_c( ... )".
+  # Filter the dataframe to only contain observations with `median_house_value` of 500000 or less, 
+  # and reassign this back to the `housing_df` dataframe. If you try running your code from 
+  # question 1.2 again, you should see that the line of points is gone.
 
-# Write your code here
-q1_3 <- 
+housing_df <- 
 
-## Question 2: Working with Twitter data ----
-  
-  # You will be using Twitter data we fetched from the following Twitter (now X) handles
-  # in 2020: UniNoticias, FoxNews, and CNN.
-  # This data has been saved as an Rdata file below:
-  # https://github.com/anyone-can-cook/rclass1/raw/master/data/twitter/twitter_news.RData
- 
+  # Q1.4 ----
+  # 2 points
+  # Next, take some time to investigate the `ocean_proximity` variable in the dataframe (e.g., 
+  # variable type, class, descriptive stats like count). You may comment out these lines of code 
+  # after you're done.
+
+  # Then, copy your code from question 1.2 and update it so that points in the scatterplot have 
+  # different colors for the values of ocean_proximity. 
+  # Once your code works, assign your plot to an object named `q1_4`.
+
+q1_4 <- 
+
+  # Q1.5 ----
+  # 1 point
+  # In the legend, you should notice that the categorical values for `ocean_proximity` are ordered 
+  # alphabetically by default. This might not be the most logical ordering, as it would make more 
+  # sense to arrange them by location.
+
+  # Convert the `ocean_proximity` column into a factor (Hint: using factor() function) 
+  # with the levels in this order: 'ISLAND', 'NEAR BAY', 'NEAR OCEAN', '<1H OCEAN', 'INLAND'. 
+  # Reassign `ocean_proximity`back to the original dataframe. Every value should still appear, and
+  # none should turn into NA.
+
+  # If you try running your code from question 1.4 again, you should see the legend values in the 
+  # updated order.
+
+housing_df$ocean_proximity <- 
+
+## Question 2: Colors in ggplot2 ----
+  # Hue, Chroma, and Luminance are important color concepts, and are helpful specifically when 
+  # working with colors in ggplot2.
+
   # Q2.1 ----
-  # Load the from the url above. Use the dim() function to report the dimensions of `news_df`  
-  # (rows and columns), assigning it to an object named `q2_1`.
+  # 3 points
+  # Below we provide three character vectors with words to describe the concepts of Hue, Chroma, 
+  # and Luminance, respectively. Some of the words can their concept correctly and _be described_ 
+  # by the concept. Two words in each vector do not fit with the concept at all. 
 
-load(url("https://github.com/anyone-can-cook/rclass1/raw/master/data/twitter/twitter_news.RData"))
-q2_1 <- 
+hue <- c("blue", "red", "purity", "color", "tone", "light")
+chroma <- c("intensity", "purity", "dark", "bright", "color", "black", "white")
+luminance <- c("color", "intensity", "bright", "light", "dark", "tone")
+
+  # Create three corresponding objects named `q2_hue`, `q2_chroma`, and `q2_luminance`
+  # and assign them the correct values from `hue`, `chroma`, and `luminance` without the incorrect terms.
+
+q2_hue <- 
+q2_chroma <- 
+q2_luminance <- 
+
+  # The orange palette maintains the hue of orange. As orange is blended with white on the left side, 
+  # the color becomes a lighter orange and lower in chroma. Similarly, as orange is mixed with black 
+  # on the right side, the color becomes darker and lower in chroma. The luminance gets lower from 
+  # left to right as the color goes from bright to dark.
+
+display.brewer.pal(9,"Oranges")
 
   # Q2.2 ----
   # 1 point
-  # Subset your dataframe `news_df` and create a new dataframe called `news_df2` keeping only
-  # the following variables: user_id, status_id, created_at, screen_name, text, followers_count,
-  # profile_expanded_url.
+  # Run the code below to graph the relationship between 
+  # ocean_proximity and population by California district.
 
-news_df2 <- 
+housing_df %>%
+  ggplot(aes(x = ocean_proximity, y = population)) +
+  geom_col(width = 0.8)
+
+  # Considering the bottom x-axis represents relative distance from the ocean;
+  # what kind of variable is `ocean_proximity`? Answer in a single word, assign it to 
+  # an object named `q2_2` (and don't forget to wrap the word in quotation marks).
+
+q2_2 <- 
 
   # Q2.3 ----
   # 1 point
-  # Create a new column in news_df2 called `text_len` that contains the length of the character
-  # variable `text`. Remember to assign your changes to the existing `news_df2` object.
+  # There are three color palette scales to choose from in the RColorBrewer library: 
+  # sequential, qualitative, and diverging, best suited for representing different types of data 
+  # (e.g., categorical, ordered). 
+  # Add a color palette from RColorBrewer that is best suited for the data. Assign the plot
+  # to an object named `q2_3`. 
 
-news_df2 <- 
+q2_3 <- 
 
   # Q2.4 ----
   # 1 point
-  # What is the class and type of this new column? Use the appropriate functions and 
-  # assign the class and type to an object named `q2_4`. The answers should be 2 single words in the q2_4 vector.
+  # Create the same plot as above in grayscale instead of color palettes. 
+  # Assign your plot to an object named `q2_4`. 
+
+  # There are two functions for grayscale: one for continuous and one for categorical/ordinal level 
+  # variables. Use the latter to fill the plot bars in greyscale. 
+  # Also remember that it is generally a bad idea for dots, lines, or bars to be completely white, 
+  # so make sure you choose appropriate values for the start = and end = argument values.
 
 q2_4 <- 
 
-  # Q2.5 ----
-  # 2 points
-  # Create an additional column in `news_df2` called `handle_followers` that stores the twitter
-  # handle and the number of followers associated with that twitter handle in a string. For
-  # example, the entries in the `handle_followers` column should look like this:
-  # @[twitter_handle] has [number] followers.
-  # Remember to assign your changes back to the `news_df2` dataframe. 
+## Question 3: Creating and customizing graphs ----
+  
+  # Q3.1 ----
+  # 4 points
+  # Building from Question 1.4, add the following to customize your plot.
+  # Assign your plot to an object named `q3_1`.
 
-news_df2 <- 
+  # Use ggtitle() to give the plot a title
+  # Use xlab() and ylab() to label the axes
+  # Use scale_color_brewer() to set the color palette and legend title
+  # Use scale_x_continuous() and scale_y_continuous(), along with the label_number() function 
+  # to customize the scale display so they display the dollars in hundreds of thousands
+  # (e.g., $100K, $200K, etc.).
+  # According to the variable descriptions, the median income is reported in tens of thousands -- 
+  # make sure to display this accordingly within the label_number `scale=` argument.
+  # Use theme_minimal() or a custom theme for further customization.
 
-  # Q2.6 ----
-  # 1 point
-  # What is the class and type of this new column? Use the appropriate functions and 
-  # assign the class and type to an object named `q2_6`. The answers should be 2 single words 
-  # stored as characters in the `q2_6` vector.
+q3_1 <- 
 
-q2_6 <- 
-
-  # Q2.7 ----
-  # 1 point
-  # Lastly, create a column in `news_df2` called `short_web` that contains a short version of the
-  # `profile_expanded_url` without the http://www. part of the url. For example, the entries in
-  # that column should look something like: nytimes.com.
-  # Remember to assign your changes back to the `news_df2` dataframe. 
-
-news_df2 <- 
-
-## Question 3: Working with dates/times ----
-
-  # Q3.1
-  # 1 point
-  # Using the column `created_at`, create a new column in `news_df2` called `dt_chr` that is a
-  # character version of `created_at`. Remember to assign changes back to `news_df2`.
-
-news_df2 <- 
- 
   # Q3.2 ----
-  # 1 point
-  # What is the class of the `created_at` and `dt_chr` columns? Use the appropriate functions and 
-  # assign the class and type to an object named `q3_2`. The answers should be 2 single words 
-  # stored as characters in the `q3_2` vector.
+  # 2 points
+  # Create a second graph, the same scatterplot as the previous question (3.1) showing `median_income` 
+  # on the x-axis and `median_house_value` on the y-axis, but with separate subplots (i.e., small 
+  # multiple) for each value of ocean_proximity. Make sure to remove the color aesthetic from the 
+  # previous scatterplot.
+  # Assign the plot to an object named `q3_2`. 
 
 q3_2 <- 
 
   # Q3.3 ----
-  # 1 point
-  # Create another column in `news_df2` called `dt_len` that stores the length of `dt_chr.`
-  # and assign your changes back to `news_df2`.
+  # 3 points
+  # Create a third graph, a scatterplot showing longitude on the x-axis and latitude on the 
+  # y-axis, with the points colored by ocean_proximity. Make sure to include the following:
 
-news_df2 <- 
+  # Plot title
+  # Appropriate axis labels
+  # Legend with an appropriate title and your choice of color palette
+  # Use coord_fixed() to fix the coordinate scaling
+  # Any other theme or style customization.
+  # Assign the plot to an object named `q3_3`.
+
+q3_3 <- 
 
   # Q3.4 ----
-  # 2 points
-  # Next, create five additional columns in `news_df2` for each of the following date/time components:
+  # 3 points
+  # Create a fourth graph, a scatterplot showing longitude on the x-axis and latitude on the 
+  # y-axis, with the points colored by `median_house_value.` Make sure to include the following:
 
-  # a. Create a new column `date_chr` for date (e.g. 2020-03-26) using the column `dt_chr` and the
-  #    str_sub() function.
-  # b. Do the same for year `yr_chr` (e.g. 2020).
-  # c. Do the same for month `mth_chr` (e.g. 03).
-  # d. Do the same for day `day_chr` (e.g. 26).
-  # e. Do the same for time `time_chr` (e.g. 22:41:09).
-  # Remember to assign your changes back to `news_df2`.
+  # Plot title
+  # Appropriate axis labels
+  # Legend with an appropriate title, value labels, and your choice of color palette
+  # (use scale_color_gradient() along with label_number()). 
+  #   Reminder: By "appropriate value labels" we mean for you to also include house values 
+  #   in the legend that read like dollar amounts in the hundreds of thousands.
+  #   (e.g. $100K, $200K etc.)
+  # Use coord_fixed() to fix the coordinate scaling
+  # Any other theme or style customizations
+  # Assign the plot to an object named `q3_4`.
 
-news_df2 <- 
+q3_4 <- 
 
   # Q3.5 ----
-  # 1 point
-  # Using the column `time_chr`, create additional columns in `news_df2` for the following time
-  # components:
- 
-  # a. `hr_chr` for hour (e.g. 22).
-  # b. `min_chr` for minutes (e.g. 41).
-  # c. `sec_chr` for seconds (e.g. 09).
-  # Remember to assign your changes back to `news_df2`.
+  # 3 points
+  # Create a barplot (with `geom_bar(stat = identity)`) showing the average house value by `ocean_proximity`, 
+  # with each category of `ocean_proximity` along the x-axis and the average house value 
+  # on the y-axis. HINT: By default geom_bar() counts rows, and stat = "identity" tells it to use the averages you calculated instead.
 
-news_df2 <- 
+  # First you will need to group `housing_df` by ocean_proximity and calculate the 
+  # average house value per group (use `summarise()` and name this new variable `avg_house_value`).
+  # You can do this all with pipes or assign to a temporary df. 
+  # Whatever you decide, use the new data to create the plot with the following requirements:
 
-  # Q3.6 ----
-  # 1 point
-  # Now let's get some practice with the lubridate package.
- 
-  # a. Using the `year()` function from the lubridate package, create a new column in `news_df2`
-  #    called `yr_num` that contains the year (e.g. 2020) extracted from `date_chr.`
-  # b. Do the same for month `mth_num.`
-  # c. Do the same for day `day_num.`
-  # d. Create a numeric hour variable `hr_num`, but extract it from `created_at` instead of `date_chr.`
-  # e. Do the same for minutes `min_num`.
-  # f. Do the same for seconds `sec_num`.
+  # Plot title
+  # Appropriate axis labels
+  # Appropriate scale display on axis (e.g., $100K, $200K, etc.)
+  # Any other theme or style customizations (e.g., bar width)
+  # Assign the plot to an object named `q3_5`. 
 
-news_df2 <- 
+q3_5 <- 
 
-  # Q3.7 ----
-  # 2 points
-  # Using the new numeric columns (e.g. `day_num`, `mth_num`) you've created in the previous
-  # step, reconstruct the `date` and `datetime` columns. Namely, add the following columns to
-  # `news_df2`:
- 
-  # a. Use make_date() to create new column called `my_date` that contains the date (year, month,
-  #    day).
-  # b. Use make_datetime() to create new column called `my_datetime` that contains the datetime
-  #    (year, month, day, hour, minutes, seconds).
- 
-news_df2 <- 
+## Bonus Question (up to 10% extra credit) ----
+  # Create a graph using any variables you'd like from the housing dataset. It cannot be
+  # a scatterplot, bar plot, or histogram. Title and label the plot, add a color palette
+  # from RColorBrewer (or your own with scale_color_manual()), and customize it how you'd like.
 
-  # Q3.8 ----
-  # 1 point
-  # What is the class of your `my_date` and `my_datetime` columns? Use the appropriate functions and 
-  # assign the classes to an object named `q3_8`. 
-  # The class of `my_date` should be the first element assigned to `q3_8` and 
-  # the class of `my_datetime` should come next.
+  # Save the plot itself to an object named `q_bonus`.
+  # Then write a few sentences (minimum 50 words) describing your chosen graph aesthetic & findings and save them as a single
+  # character string named `bonus_text`. For example: bonus_text <- "Your text here"
 
-q3_8 <- 
+q_bonus <-
+bonus_text <-
 
 ## Create a GitHub issue ----
   # 2 points
@@ -236,17 +257,16 @@ q3_8 <-
   # Refer to rclass1 student issues readme https://github.com/anyone-can-cook/rclass1_student_issues_f26/blob/main/README.md 
   # for instructions on how to post questions or reflections.
   # You are also required to respond to at least one issue posted by another student.
-
+  
   # Create an object named `issue` below and assign it the URL to your new issue, as a character object.  
   # Make sure the URL is in quotes.
-
+  
 issue <- 
-
+  
   # Create an object named `reply` below and assign it the URL to your response to another issue, as a character object. 
   # Make sure the URL is in quotes.
-
+  
 reply <- 
-
-## Submit problem set ----
-  # Submit your R script on Canvas.
+  
+## Submit problem set on Canvas ----
   # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset7.R).
