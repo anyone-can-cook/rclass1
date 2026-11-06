@@ -163,8 +163,9 @@ q2_4 <-
   
   # Q3.1 ----
   # 4 points
-  # Building from Question 1.4, add the following to customize your plot.
-  # Assign your plot to an object named `q3_1`.
+  # Copy the code you wrote for Q1.4 and paste it below. Keep the same x-axis,
+  # y-axis, and color mapping, then add the customizations listed below.
+  # Do not change q1_4 itself. Assign your plot to an object named `q3_1`.
 
   # Use ggtitle() to give the plot a title
   # Use xlab() and ylab() to label the axes
@@ -182,8 +183,7 @@ q3_1 <-
   # 2 points
   # Create a second graph, the same scatterplot as the previous question (3.1) showing `median_income` 
   # on the x-axis and `median_house_value` on the y-axis, but with separate subplots (i.e., small 
-  # multiple) for each value of ocean_proximity. Make sure to remove the color aesthetic from the 
-  # previous scatterplot.
+  # multiple) for each value of ocean_proximity. Do not color the points, since the panels already show the groups.
   # Assign the plot to an object named `q3_2`. 
 
 q3_2 <- 
@@ -226,7 +226,7 @@ q3_4 <-
   # with each category of `ocean_proximity` along the x-axis and the average house value 
   # on the y-axis. HINT: By default geom_bar() counts rows, and stat = "identity" tells it to use the averages you calculated instead.
 
-  # First you will need to group `housing_df` by ocean_proximity and calculate the 
+  # MORE HINTS: First you will need to group `housing_df` by ocean_proximity and calculate the 
   # average house value per group (use `summarise()` and name this new variable `avg_house_value`).
   # You can do this all with pipes or assign to a temporary df. 
   # Whatever you decide, use the new data to create the plot with the following requirements:
