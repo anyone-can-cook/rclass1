@@ -133,7 +133,7 @@ housing_df %>%
   geom_col(width = 0.8)
 
   # Considering the bottom x-axis represents relative distance from the ocean;
-  # what kind of variable is `ocean_proximity`? Answer in a single word, assign it to 
+  # what kind of variable is `ocean_proximity` (BE SPECIFIC)? Answer in a single word, assign it to 
   # an object named `q2_2` (and don't forget to wrap the word in quotation marks).
 
 q2_2 <- 
