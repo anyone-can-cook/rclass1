@@ -52,11 +52,12 @@ q1_1 <-
   # an object named `q1_2`. For example: q1_2 <- housing_df %>% ggplot(...)
 
 q1_2 <- 
+  
 
   # Q1.3 ----
   # 1 point
-  # In the plot, you should notice there is a line of points spread out along y = 500000. If you 
-  # inspect housing_df, you'll see there are many points with median_house_value of 500001. 
+  # In the plot, you should notice there is a line of points spread out along y = 500000. ***not seeing any points?... you may be missing +geom_point()***
+  # If you inspect housing_df, you'll see there are many points with median_house_value of 500001. 
   # This suggests there was a cap set when data was collected that doesn't reflect a real price and
   # observations containing median_house_value above 500000 may not be reliable to include in our analysis.
 
