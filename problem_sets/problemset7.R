@@ -120,7 +120,7 @@ q2_luminance <-
   # on the right side, the color becomes darker and lower in chroma. The luminance gets lower from 
   # left to right as the color goes from bright to dark.
 
-display.brewer.pal(9,"Oranges")
+display.brewer.pal(9,"Oranges") # just run this close to view
 
   # Q2.2 ----
   # 1 point
@@ -141,9 +141,9 @@ q2_2 <-
   # 1 point
   # There are three color palette scales to choose from in the RColorBrewer library: 
   # sequential, qualitative, and diverging, best suited for representing different types of data 
-  # (e.g., categorical, ordered). 
-  # Add a color palette from RColorBrewer that is best suited for the data. Assign the plot
-  # to an object named `q2_3`. 
+  # Use the the bar chart code given to you in Q2.2 and add a color palette from RColorBrewer 
+  # that is best suited for the data. The bars should be colored by ocean_proximity.
+  # Assign the plot to an object named `q2_3`. 
 
 q2_3 <- 
 
