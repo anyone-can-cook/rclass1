@@ -40,7 +40,7 @@ str_1 <- "are"
 
   # Once your code produces the text "Roses are red, Violets are blue", 
   # assign the working code in quotes to an object named `q1_1`. 
-  # Your code will have double quotes inside it, so put single quotes around the whole thing.
+  # Put quotes around the whole thing.
   # Like this: q1_1 <- 'str_c( ... )'.
 
 # Write your code here
