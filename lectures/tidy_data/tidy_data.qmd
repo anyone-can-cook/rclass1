@@ -27,20 +27,20 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", highlight = TRUE)
 **Load packages:**
 
 ```{r, message=F}
-library(tidyverse)
-library(haven)
-library(labelled)
+library(package = tidyverse)
+library(package = haven)
+library(package = labelled)
 ```
 
 **If package not yet installed**, then must install before you load. Install in "console" rather than .qmd file:
 
--   Generic syntax: `install.packages("package_name")`
--   Install "tidyverse": `install.packages("tidyverse")`
+-   Generic syntax: `install.packages(pkgs = "package_name")`
+-   Install "tidyverse": `install.packages(pkgs = "tidyverse")`
 
 **Note**: When we load package, name of package is not in quotes; but when we install package, name of package is in quotes:
 
--   `install.packages("haven")`
--   `library(haven)`
+-   `install.packages(pkgs = "haven")`
+-   `library(package = haven)`
 
 
 ## Datasets we will use 
@@ -54,7 +54,7 @@ We will use public-use data from the *National Center for Education Statistics (
 
 ```{r}
 # NCES Digest Table 204.10
-load(url('https://github.com/anyone-can-cook/rclass1/raw/master/data/nces_digest/nces_digest_tbl_204_10.RData'))
+load(file = url(description = 'https://github.com/anyone-can-cook/rclass1/raw/master/data/nces_digest/nces_digest_tbl_204_10.RData'))
 ```
 
 We will also use data from the Integrated Postsecondary Education Data System (IPEDS), which is collected by the US Department of Education's National Center for Education Statistics (NCES). IPEDS gathers information from all institutions participating in federal student financial aid programs.
@@ -62,7 +62,7 @@ We will also use data from the Integrated Postsecondary Education Data System (I
 -   We are using data on the 12-month unduplicated headcount by race/ethnicity, gender and level of student.
 ```{r}
 # IPEDS EFFY Table
-ipeds_table <- read_dta('https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/effy/ey15-16_hc.dta', encoding = NULL)
+ipeds_table <- read_dta(file = 'https://github.com/anyone-can-cook/rclass1/raw/master/data/ipeds/effy/ey15-16_hc.dta', encoding = NULL)
 ```
 
 ## Lecture overview
@@ -94,8 +94,8 @@ help(package="tidyr")
 # Note that example datasets (table1, table2, etc) are listed in the index alongside functions
 tidyr::table1
 
-df1 <- table1
-str(df1)
+df_x <- table1
+str(object = df_x)
 
 table2
 table3
@@ -242,7 +242,7 @@ Identifying which combination of variables uniquely identifies rows in a data fr
 -   I'll give you some code for one approach; just try to follow along and understand
 
 ```{r}
-names(ipeds_hc_temp)
+names(x = ipeds_hc_temp)
 ipeds_hc_temp %>% head(n=10)
 ```
 
@@ -262,7 +262,7 @@ What does above output tell us?
 
 -   There are 5,127 values of `unitid` that have 2 rows for that value of `unitid`
 -   There are 1,824 values of `unitid` that have 3 rows for that value of `unitid`
--   Note: `2*5127+3*1824==` `r format(round(2*5127+3*1824),nsmall=0, big.mark=",")` which is the number of observations in `ipeds_hc_temp`
+-   Note: `2*5127+3*1824==` `r format(x = round(x = 2*5127+3*1824),nsmall=0, big.mark=",")` which is the number of observations in `ipeds_hc_temp`
 -   **Conclusion**: the variable `unitid` does not uniquely identify rows in the data frame `ipeds_hc_temp`
 
 <br> Second, Let's investigate whether the combination of `unitid` and `lstudy` uniquely identifies rows in data frame `ipeds_hc_temp`.
@@ -431,8 +431,8 @@ Approach the task of "tidying" data -- or more generally, the task of "reshaping
 ```{r, eval = FALSE}
 ?pivot_longer
 
-# SYNTAX AND DEFAULT VALUES
-pivot_longer(data, cols, names_to = "name", names_prefix = NULL,
+# SYNTAX TEMPLATE WITH SELECTED DEFAULT VALUES (not a runnable example)
+pivot_longer(data = df_name, cols = column_selection, names_to = "name", names_prefix = NULL,
              names_sep = NULL, names_pattern = NULL, names_ptypes = list(),
              names_repair = "check_unique", values_to = "value",
              values_drop_na = FALSE, values_ptypes = list())
@@ -608,7 +608,7 @@ nces_table2 %>% head(n=5)
 
 nces_table2 %>%
   pivot_longer(
-    -state,                          # pivot all columns except `state`
+    cols = -state,                   # pivot all columns except `state`
     names_sep = '_',                  # use '_' as column name separator    
     names_to = c('.value', 'year')  # keep `tot` & `frl` as separate columns, pivot year values
   )
@@ -619,7 +619,7 @@ nces_table2 %>%
 ```{r}
 nces_table2 %>%
   pivot_longer(
-    -state,
+    cols = -state,
     names_to = c('measure', '.value'),  # pivot `tot`/`frl`, keep years as separate columns
     names_sep = '_'
   )
@@ -637,8 +637,8 @@ nces_table2 %>%
 ```{r, eval = FALSE}
 ?pivot_wider
 
-# SYNTAX AND DEFAULT VALUES
-pivot_wider(data, id_cols = NULL, names_from = name,
+# SYNTAX TEMPLATE WITH SELECTED DEFAULT VALUES (not a runnable example)
+pivot_wider(data = df_name, id_cols = NULL, names_from = name,
             names_prefix = "", names_sep = "_", names_repair = "check_unique",
             values_from = value, values_fill = NULL, values_fn = NULL)
 ```
@@ -702,10 +702,10 @@ table2 %>%
 ```{r, echo=FALSE}
 ipeds_table1 <- ipeds_table %>%
   select(unitid, lstudy, efytotlt, efytotlm, efytotlw) %>% 
-  mutate(level = recode(as.integer(lstudy),
-    `1` = "ug",
-    `3` = "grad",
-    `999` = "all")
+  mutate(level = recode_values(x = as.integer(x = lstudy),
+    1 ~ "ug",
+    3 ~ "grad",
+    999 ~ "all")
   ) %>%
   select(-lstudy)
 ```
@@ -771,8 +771,8 @@ An implicit missing value is the result of a row not existing. In order to make 
 ```{r, eval = FALSE}
 ?complete
 
-# SYNTAX AND DEFAULT VALUES
-complete(data, ..., fill = list())
+# SYNTAX TEMPLATE WITH SELECTED DEFAULT VALUES (not a runnable example)
+complete(data = df_name, ..., fill = list())
 ```
 
 -   Function: Turns implicit missing values into explicit missing values
@@ -859,12 +859,12 @@ The following dataset is drawn from Table 204.10 of the NCES Digest for Educatio
 
 ```{r}
 #Let's take a look at the data (we read in the data in the wide vs long section)
-glimpse(nces_table)
+glimpse(x = nces_table)
 
 #Create smaller version of data frame for purpose of student exercise
 total<- nces_table %>% 
   select(state,p_frl_2000,p_frl_2010,p_frl_2011,p_frl_2012)
-head(total)
+head(x = total)
 ```
 
 **Task (using the data frame `total`)**:
@@ -899,7 +899,7 @@ head(total)
 ```{r}
 total %>%
   pivot_longer(
-    cols = starts_with("p_frl_"),
+    cols = starts_with(match = "p_frl_"),
     names_to = "year",
     names_prefix = ("p_frl_"),
     values_to = "pct_frl"
@@ -918,8 +918,8 @@ total %>%
 
 ```{r}
 #load these libraries if you haven't already
-#library(haven)
-#library(labelled)
+#library(package = haven)
+#library(package = labelled)
 # ipeds_table <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL)
 ```
 
@@ -933,8 +933,8 @@ ipeds_hc <- ipeds_table %>% select(instnm,unitid,lstudy,efytotlt)
 Get to know data
 
 ```{r}
-head(ipeds_hc)
-str(ipeds_hc)
+head(x = ipeds_hc)
+str(object = ipeds_hc)
 
 #Variable labels
 ipeds_hc %>% var_label()
@@ -961,7 +961,7 @@ ipeds_hc %>% select(lstudy) %>% val_labels()
 
 ```{r}
 ipeds_hc <- ipeds_hc %>% arrange(unitid, lstudy)
-head(ipeds_hc, n=20)
+head(x = ipeds_hc, n=20)
 
 #code to investigate what each observation represents
   #I'll break this code down next week when we talk about joining data frames
@@ -1014,16 +1014,16 @@ Helpful to create a character version of variable lstudy prior to spreading
 
 ```{r}
 ipeds_hc %>% select(lstudy) %>% val_labels()
-str(ipeds_hc$lstudy)
+str(object = ipeds_hc$lstudy)
 
 ipeds_hcv2 <- ipeds_hc %>% 
-  mutate(level = recode(as.integer(lstudy),
-    `1` = "ug",
-    `3` = "grad",
-    `999` = "all")
+  mutate(level = recode_values(x = as.integer(x = lstudy),
+    1 ~ "ug",
+    3 ~ "grad",
+    999 ~ "all")
   ) %>% select(-lstudy) # drop variable lstudy
 
-head(ipeds_hcv2)
+head(x = ipeds_hcv2)
 
 ipeds_hcv2 %>% select(instnm,unitid,level,efytotlt) %>%
     pivot_wider(names_from = level, values_from = efytotlt) #nicer!
@@ -1047,12 +1047,12 @@ But first, it is helpful to create a new version of the IPEDS enrollment dataset
     ```{r}
     ipeds_hc_na <- ipeds_table %>% filter(sector %in% c(3,6,9)) %>% #keep only for-profit colleges
       select(instnm,unitid,lstudy,efytotlt,efybkaam) %>% 
-      mutate(level = recode(as.integer(lstudy), # create recoded version of lstudy
-        `1` = "ug",
-        `3` = "grad",
-        `999` = "all")
+      mutate(level = recode_values(x = as.integer(x = lstudy), # create recoded version of lstudy
+        1 ~ "ug",
+        3 ~ "grad",
+        999 ~ "all")
       ) %>% select(instnm,unitid,level,efytotlt,efybkaam) %>% 
-      arrange(unitid,desc(level))
+      arrange(unitid,desc(x = level))
     ```
 
 Now, let's print some rows
@@ -1070,8 +1070,8 @@ Now let's create new versions of the enrollment variables, that replace `0` with
 ```{r}
 ipeds_hc_na <- ipeds_hc_na %>% 
   mutate(
-    efytotltv2 = ifelse(efytotlt == 0, NA, efytotlt),
-    efybkaamv2 = ifelse(efybkaam == 0, NA, efybkaam)
+    efytotltv2 = ifelse(test = efytotlt == 0, yes = NA, no = efytotlt),
+    efybkaamv2 = ifelse(test = efybkaam == 0, yes = NA, no = efybkaam)
   ) %>% select(instnm,unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
 
 ipeds_hc_na %>% select(unitid,level,efytotlt,efytotltv2,efybkaam,efybkaamv2)
