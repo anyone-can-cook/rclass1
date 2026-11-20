@@ -234,7 +234,7 @@ structure_b
 ipeds_hc_temp <- read_dta(file="https://github.com/ozanj/rclass/raw/master/data/ipeds/effy/ey15-16_hc.dta", encoding=NULL) %>% 
   select(unitid,lstudy,efytotlt) %>% arrange(unitid,lstudy)
 
-ipeds_hc_temp
+#ipeds_hc_temp
 #show variable labels and value labels
 #ipeds_hc_temp %>% var_label()
 #ipeds_hc_temp %>% val_labels()
