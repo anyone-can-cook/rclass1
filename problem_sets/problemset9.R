@@ -199,7 +199,7 @@ q2_1d <-
   # by creating a summary table of the observations per grouped variables.
   # Use a combination of group_by(), summarise(), ungroup(), and count(). Inside summarise(),
   # name the new variable `n_per_group`. Assign the final result to an object named `q2_2`.
-  #   Hint: See section 2.3, "Unit of Analysis", of the Tidy Data lecture for examples.
+  #   Hint: See section 2.3.1, "Unit of Analysis", of the Tidy Data lecture for examples.
   #   Hint: Don't skip ungroup(). Without it, count() will count within each group.
 
 q2_2 <-
