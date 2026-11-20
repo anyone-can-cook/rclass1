@@ -4,19 +4,19 @@
 ## [ AUTH ] < Your name / GitHub handle >
 ## [ INIT ] < Date you started the file >
 
-  # 17 points
+  # 31 points
 
 ## Overview ----
-    
+
   # This problem set has three parts.
- 
+
   # 1. We will ask you some definitional/conceptual questions about the concepts introduced in
   # lecture.
 
   # 2. Tidying untidy data: reshaping from long to wide.
-  # E.g., dataset has one row for each combination of university ID and enrollment age group,
+  # E.g., dataset has one row for each combination of university ID and level of study,
   # but you want a dataset with one row per university ID and one enrollment variable for each
-  # age group.
+  # level of study.
   # For these questions we'll use fall enrollment data from the Integrated Postsecondary Data
   # System (IPEDS), specifically the fall enrollment sub-survey that focuses on enrollment by
   # age group.
@@ -24,10 +24,12 @@
   # 3. Tidying untidy data: reshaping from wide to long
   # For these questions we'll use data from the NCES Digest of Education Statistics that
   # contains data about the total number of teachers in each state.
- 
+
   # Load libraries here
-  # Note: _If you do not have the_ `pivot_wider()` _and_ `pivot_longer()` _functions, you may need
-  # to update your_ `tidyr` _package using_ `install.packages('tidyr')`.
+  # Note: If you do not have the `pivot_wider()` and `pivot_longer()` functions, you may need
+  # to update your `tidyr` package using `install.packages('tidyr')`.
+  # Note: If you get the error "could not find function recode_values" in Q2.8, update your
+  # `dplyr` package using `install.packages('dplyr')`.
 
 library(tidyverse)
 library(haven)
@@ -40,29 +42,34 @@ rm(list = ls()) # remove all objects
   # Q1.1 ----
   # 1 point
 
-  # To which dimension of a dataframe does a "unit of analysis" [our term; not necessarily used outside this
-  # class] belong? Assign a one word answer to an object named `q1_1`.
+  # To which dimension of a dataframe does a "unit of analysis" [our term; not necessarily used
+  # outside this class] belong? Assign a one word answer to an object named `q1_1`.
 
-q1_1 <- 
+q1_1 <-
 
   # Q1.2 ----
   # 3 points
-  # The "three rules of tidy data" state three unique pairings; That each data _concept_ 
-  # (variables, values, etc.) must have their own _structure_ of the 2-dimensional data frame 
-  # (a row, a column, etc.). 
+  # The "three rules of tidy data" each pair a data _concept_ (e.g., variables, values) with a
+  # _structure_ of the 2-dimensional data frame (e.g., a row, a column).
   # What are these three tidy data pairings?
-  # Assign your answers to an object named `q1_2` as a data.frame with three columns,
-  # where each column is one pairing, like this: c("concept", "structure").
+  # Assign your answers to an object named `q1_2` as a data frame with three columns, where
+  # each column is one pairing with the concept first and the structure second, like this:
+  #
+  # q1_2 <- data.frame(
+  #   pair1 = c("concept", "structure"),
+  #   pair2 = c("concept", "structure"),
+  #   pair3 = c("concept", "structure")
+  # )
 
-q1_2 <- 
+q1_2 <-
 
 ## Question 2: Questions about reshaping long to wide ----
 
   # __Description of the data__
- 
+
   # For these questions, we'll be using data from the Fall Enrollment survey component of the
   # Integrated Postsecondary Education Data System (IPEDS)
- 
+
   # Specifically, we'll be using data from the survey sub-component that focuses on enrollment by
   # age-group
   # The dataset we'll be using is from Fall 2016 (i.e., Fall of the 2016-17 academic year)
@@ -77,9 +84,9 @@ q1_2 <-
   # 3. The variable `unitid` is the ID variable for each college/university
   # 4. The dataset has one observation for each combination of the variables `unitid`-`efbage`-
   # `lstudy`
- 
+
   # __Overview of the tasks__
- 
+
   # Load the dataframe and assign it the name `age_f16_allvars_allobs`. [done for you]
   # Create a new dataframe called `agegroup1_obs` based on `age_f16_allvars_allobs`. [done for you]
   # `agegroup1_obs` will have fewer variables than `age_f16_allvars_allobs` and contains
@@ -90,8 +97,8 @@ q1_2 <-
 ## Load data and create `agegroup1_obs`
 
   # Load IPEDS data that contains fall enrollment by age.
- 
-  # __NOTE: IN THIS SECTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE CODE BELOW
+
+  # NOTE: IN THIS SECTION, WE GIVE YOU THE ANSWERS; ALL YOU HAVE TO DO IS RUN THE CODE BELOW
 
 # Read Stata data into R using read_dta() function from haven package
 age_f16_allvars_allobs <- read_dta(
@@ -99,7 +106,9 @@ age_f16_allvars_allobs <- read_dta(
   encoding = NULL
 )
 
-  # Rename a couple of variables (due to re-assignment, this code will throw an error if run a second time. This is okay.)
+  # Rename a couple of variables (due to re-assignment, this code will throw an error if run a
+  # second time. This is okay.)
+  # Note: After this step, the level of study variable is called `levstudy` (not `lstudy`).
 age_f16_allvars_allobs <- age_f16_allvars_allobs %>%
   rename(agegroup = efbage, levstudy = lstudy)
 
@@ -122,7 +131,7 @@ glimpse(agegroup1_obs)
 
   # Q2.1 ----
   # Run whatever investigations seem helpful for you to get to know the data (e.g., list
-  # variable names, list variable labels, list variable values, tabulations). Then answer the 
+  # variable names, list variable labels, list variable values, tabulations). Then answer the
   # questions below
 
 names(agegroup1_obs)
@@ -145,118 +154,134 @@ agegroup1_obs %>% count(sector) %>% as_factor
 
 #frequency of locale variable
 agegroup1_obs %>% select(locale) %>% val_labels()
-agegroup1_obs %>% count(locale) %>% as_factor %>% arrange(desc(n)) 
+agegroup1_obs %>% count(locale) %>% as_factor %>% arrange(desc(n))
 
   # 1 point each
   # Q2.1a
-  # What two variables represent the same thing but using different values in `agegroup1_obs`?
+  # Which two variables in `agegroup1_obs` both identify the institution, one using a number
+  # and one using text?
   # Assign your answer to a new object named `q2_1a` as two character elements:
   # `q2_1a <- c("var1","var2")`
 
-q2_1a <- 
+q2_1a <-
 
   # Q2.1b
-  # What are the levels of student in the `agegroup1_obs` data?
-  # Answer with the actual levels' labels by looking at the value labels (not the numeric values). 
+  # What are the levels of study in the `agegroup1_obs` data?
+  # Answer with the value labels (e.g., "Undergraduate"), not the numeric values (e.g., 2).
   # Assign your answer to a new object named `q2_1b` like this:
-  # `q2_1b <- c("lvl1","lvl2" ... )`. Answers must be assigned in order that the labels appear!
+  # `q2_1b <- c("lvl1","lvl2" ... )`. Answers must be assigned in the order that the labels
+  # appear in the output of val_labels()!
 
-q2_1b <- 
+q2_1b <-
 
   # Q2.1c
-  # How many educational sectors are in the `agegroup1_obs` data?
-  # How many _labels_ does the `sector` variable have? 
-  # Assign the two answers as numbers to a new object named `q2_1c`:
+  # This question has two parts:
+  # 1) How many different sectors actually appear in the `agegroup1_obs` data? (Look at the
+  #    output of count())
+  # 2) How many value _labels_ does the `sector` variable have? (Look at the output of
+  #    val_labels())
+  # Assign the two answers, in that order, as numbers to a new object named `q2_1c`:
   # `q2_1c <- c(123, 456)`
 
-q2_1c <- 
+q2_1c <-
 
   # Q2.1d
   # Which `locale` type is the most frequently observed locale in the `agegroup1_obs` data?
   # Make sure your answer matches the format of the value label (e.g.: "23. Suburb: Small")
-  # Assign the answer to a new object named `q2_1d`. 
-  # `q2_1d <- c("answer")`
+  # Assign the answer to a new object named `q2_1d`.
+  # `q2_1d <- "answer"`
 
-q2_1d <- 
+q2_1d <-
 
   # Q2.2 ----
   # 2 points
   # Confirm that there is one row per each combination of `unitid`-`levstudy`
   # by creating a summary table of the observations per grouped variables.
-  # Use a combination of group_by(), summarise(), ungroup(), and count() to create the 
-  # summary statistic, and name it `n_per_group`. Assign this to an object named
-  # `q2_2`.
+  # Use a combination of group_by(), summarise(), ungroup(), and count(). Inside summarise(),
+  # name the new variable `n_per_group`. Assign the final result to an object named `q2_2`.
   #   Hint: See section 2.3, "Unit of Analysis", of the Tidy Data lecture for examples.
+  #   Hint: Don't skip ungroup(). Without it, count() will count within each group.
 
-q2_2 <- 
+q2_2 <-
 
   # Q2.3 ----
   # 1 point
   # Using the code from the previous question as a guide, confirm that the object
   # `agegroup1_obs` has more than one observation for each value of `unitid` by grouping by
-  # just that variable.
+  # just that variable. Assign the result to an object named `q2_3`.
 
-q2_3 <- 
+q2_3 <-
 
   # Q2.4 ----
   # 1 point each
-  # Does the dataframe `agegroup1_obs` meet each of the three criteria for tidy
-  # data? In an object named `q2_4a` assign a value "yes" or "no".
+  # Q2.4a
+  # Does the dataframe `agegroup1_obs` meet all three criteria for tidy data?
+  # In an object named `q2_4a` assign a value "yes" or "no".
+  #   Hint: Look at the rows for one institution. Is each row the same kind of observation?
+  #   Compare the "All students total" row to the other two rows.
 
-q2_4a <- 
+q2_4a <-
 
+  # Q2.4b
   # Which variable in the `agegroup1_obs` data _should_ be the unique unit of analysis?
   # Assign your answer to an object named `q2_4b` as a character class value.
 
-q2_4b <- 
+q2_4b <-
 
+  # Q2.4c
   # Which variable adds multiple rows of observations, yet should _not_ be considered
-  # the unit of analysis? Assign your answer to an object named `q2_4c` as a character class value.
+  # part of the unit of analysis? Assign your answer to an object named `q2_4c` as a
+  # character class value.
 
-q2_4c <- 
+q2_4c <-
 
   # Q2.5 ----
   # 2 points
-  # To make the `agegroup1_obs` data frame into tidy data, we need to widen the data frame. 
+  # To make the `agegroup1_obs` data frame into tidy data, we need to widen the data frame.
   # This requires using `names_from` and `values_from` in the pivot_wider() function.
-  
+
   # `names_from` draws new column names from which variable's values?
   # `values_from` draws new column values from which variable?
   # Assign your answers (in order) to an object named `q2_5` as character class elements.
 
-q2_5 <- 
- 
+q2_5 <-
+
   # Q2.6 ----
   # 2 points
   # Tidy the dataframe `agegroup1_obs` and assign this to a new object named
   # `agegroup1_obs_tidy`
+  #   Note: The new column names will be the numeric codes of `levstudy` (e.g., `1`). That is
+  #   expected here. You will give them better names in Q2.8.
 
 agegroup1_obs %>% head(n=5)
 
-agegroup1_obs_tidy <- 
+agegroup1_obs_tidy <-
 
 agegroup1_obs_tidy %>% head(n=5)
 
   # Q2.7 ----
   # 1 point
-  # Once more, confirm whether the new object `agegroup1_obs_tidy` contains one observation 
-  # for each value of `unitid`. Assign the summarized object (refer back to q2.2 and q2.3)
+  # Once more, confirm whether the new object `agegroup1_obs_tidy` contains one observation
+  # for each value of `unitid`. Assign the summarized object (refer back to Q2.2 and Q2.3)
   # to a new object named `q2_7`.
 
-q2_7 <- 
+q2_7 <-
 
   # Q2.8 ----
-  # 3 points
+  # 4 points
   # Create a new object `agegroup1_obs_tidy_v2` from the object `agegroup1_obs` by performing
-  # the following steps in one line of code with multiple pipes:
- 
-  # 1) Create a new variable called `level` that is a recoded character version of the 
-  # `levstudy` variable. Check the value labels of `levstudy` with val_labels() to see 
-  # what each numeric value represents. Then recode the corresponding numeric values 
-  # into character values `all`, `ug`, and `grad`. These should become your new column names.
+  # the following steps in one chain of pipes:
 
+  # 1) Create a new variable called `level` that is a recoded character version of the
+  # `levstudy` variable. Check the value labels of `levstudy` with val_labels() to see
+  # what each numeric value represents. Then recode the corresponding numeric values
+  # into character values `all`, `ug`, and `grad`. These should become your new column names.
   # 2) Drop the original variable `levstudy`.
   # 3) Tidy the dataset (similar to Q2.6).
+
+  #   Hint: The `levstudy` codes in this dataset are NOT the same as the `lstudy` codes in the
+  #   lecture example. Check val_labels() below before you recode.
+  #   Hint: The new values must be exactly "all", "ug", and "grad" (all lowercase).
 
 #attributes(agegroup1_obs$levstudy)
 val_labels(agegroup1_obs$levstudy)
@@ -264,12 +289,14 @@ var_label(agegroup1_obs$levstudy)
 
 agegroup1_obs_tidy_v2 <- 
 
-  # Print the first few observations of `agegroup1_obs_tidy_v2`. Why is this dataframe
-  # preferable over `agegroup1_obs_tidy`?
- 
-  # YOUR ANSWER HERE: 
 
+
+  # Look at the first few observations of `agegroup1_obs_tidy_v2`:
 agegroup1_obs_tidy_v2 %>% head(n=5)
+  # Why is this dataframe preferable to `agegroup1_obs_tidy`? Answer in a sentence 
+  # or two and assign your answer to an object named `q2_8` as a character class value.
+
+q2_8 <-
 
 ## Question 3: Questions about reshaping wide to long ----
 
@@ -283,32 +310,35 @@ table208_30[2:6] <- data.frame(lapply(table208_30[2:6], as.integer))
 
   # Q3.1 ----
   # 1 point each
-  # The pivot_longer() function needs several parameters to obtain values and names 
+  # The pivot_longer() function needs several parameters to obtain values and names
   # pulled from multiple columns and their column names. With regard to that,
   # answer the following questions on how to pivot the `table208_30` data frame to longer:
 
-  # What variable information is actually being stored in the column names of the 
-  # `tot_fall_XXXX` variables? Assign your answer as a single word to an object 
-  # named `q3_1a`.  
+  # Q3.1a
+  # What variable information is actually being stored in the column names of the
+  # `tot_fall_XXXX` variables? Assign your answer as a single word to an object
+  # named `q3_1a`.
 
-q3_1a <- 
+q3_1a <-
 
+  # Q3.1b
+  # What exact string/text in the column names comes before the year value, like a prefix?
+  # Include any underscores. Assign your answer as a single string to an object named `q3_1b`.
 
-  # What exact string/text in the column names is like a prefix to the year value? 
-  # Assign your answer as a single string to an object named `q3_1b`.
+q3_1b <-
 
-q3_1b <- 
-
-  # How many rows would there be _per state_ after creating a new `year` variable from the 
+  # Q3.1c
+  # How many rows would there be _per state_ after creating a new `year` variable from the
   # `tot_fall_xxxx` columns?
-  # Assign your answer to an object named `q3_1c`.
+  # Assign your answer as a number to an object named `q3_1c`.
 
-q3_1c <- 
+q3_1c <-
 
-  # What people/professionals are represented by the numeric values in the `tot_fall_xxxx` columns?
-  # Assign your answer as a single word to an object named `q3_1d`.
+  # Q3.1d
+  # What people/professionals are represented by the numeric values in the `tot_fall_xxxx`
+  # columns? Assign your answer as a single word to an object named `q3_1d`.
 
-q3_1d <- 
+q3_1d <-
 
   # Q3.2 ----
   # 2 points
@@ -317,34 +347,47 @@ q3_1d <-
   #   Hint: Specify the column name pattern with `cols = starts_with(...)` to specify the columns
   #   and `names_prefix = ...` to specify the values hidden in the column names.
 
-table208_30_tidy <- 
+table208_30_tidy <-
 
-## Question 4: Bonus (up to 10% extra credit) ----
+## Question 4: Bonus (extra credit) ----
 
-  # Create a graph using data that you used in this problem set. Make sure to title and label the
-  # plot appropriately and customize it how you'd like. Add a color palette from `Rcolorbrewer` or
-  # curate your own color palette. Then, write some text describing your findings or observations.
- 
-  # **Note:** The teaching team will not answer questions related to the bonus question. Instead,
-  # feel free to ask your classmates on GitHub (make sure to include the "bonus" label in your
-  # issue).
+  # There are two bonus questions, worth 1 extra credit point each. You can do one or both.
+
+  # Q4.1 ----
+  # Make a graph using data that you used in this problem set. Make sure to
+  # title and label the plot appropriately and customize it how you'd like.
+  # Assign your graph to an object named `q4_1`.
+  # Remove the # in front of the line below with your answer. 
+  # Leave commented out if you skip this question.
+
+# q4_1 <- 
+
+  # Q4.2 ----
+  # Use an AI tool (e.g., ChatGPT, Claude, Copilot) to make a graph using data that
+  # you used in this problem set. It can be the same data as Q4.1 or different data.
+  # Assign your graph to an object named `q4_2`.
+  # Remove the # in front of the line below with your answer. 
+  # Leave commented out if you skip this question.
+
+# q4_2 <- 
 
 ## Create a GitHub issue ----
   # 2 points
   # Go to the class repository https://github.com/anyone-can-cook/rclass1_student_issues_f26/issues and create a new issue.
-  # Refer to rclass1 student issues readme https://github.com/anyone-can-cook/rclass1_student_issues_f26/blob/main/README.md 
+  # Refer to rclass1 student issues readme https://github.com/anyone-can-cook/rclass1_student_issues_f26/blob/main/README.md
   # for instructions on how to post questions or reflections.
   # You are also required to respond to at least one issue posted by another student.
-  
-  # Create an object named `issue` below and assign it the URL to your new issue, as a character object.  
+
+  # Create an object named `issue` below and assign it the URL to your new issue, as a character object.
   # Make sure the URL is in quotes.
-  
-  issue <- 
-  
-  # Create an object named `reply` below and assign it the URL to your response to another issue, as a character object. 
+
+  issue <-
+
+  # Create an object named `reply` below and assign it the URL to your response to another issue, as a character object.
   # Make sure the URL is in quotes.
-  
-  reply <- 
-  
+
+  reply <-
+
 ## Submit problem set on Canvas ----
-  # Use this naming convention "lastname_firstname_ps#" for your R script (e.g. jaquette_ozan_problemset9.R).
+  # Use this naming convention "lastname_firstname_problemset9.R" for your R script
+  # (e.g. jaquette_ozan_problemset9.R).
