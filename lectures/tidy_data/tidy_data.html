@@ -179,10 +179,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="datasets-we-will-use" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="datasets-we-will-use"><span class="header-section-number">1.1</span> Datasets we will use</h2>
 <p><strong>Load datasets:</strong></p>
-<p>We will use public-use data from the <em>National Center for Education Statistics (NCES) Educational Longitudinal Survey (ELS)</em> of 2002:</p>
+<p>We will be working with the <em>National Center for Education Statistics (NCES)</em> Digest of Education Statistics Table 204.10</p>
 <ul>
-<li>Recall from the lecture on ggplot, this data follows 10th graders from 2002 until 2012</li>
-<li>We will be working with the NCES Digest Table 204.10, which represents the number and percentage of public school students eligible for free or reduced lunch by state for the years 2000, 2010, 2011, and 2012.</li>
+<li>shows the number and percentage of public school students eligible for free or reduced lunch by state for the years 2000, 2010, 2011, and 2012.</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NCES Digest Table 204.10</span></span>
@@ -239,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-structure-vs.-data-semantics" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Data structure vs.&nbsp;data semantics</h1>
 <p>Before we define “tidy data”, we will spend significant time defining and discussing some core terms/concepts about datasets. This discussion draws from the 2014 article <a href="https://www.jstatsoft.org/article/view/v059i10">Tidy Data</a> by Hadley Wickham.</p>
-<p>Wickham (2014) distinguishes between <strong>data structure</strong> (<em>layout</em>) and <strong>data semantics</strong> (<em>concepts</em>).</p>
+<p>Wickham (2014) distinguishes between <strong>data structure</strong> (<em>layout</em>) and <strong>data semantics</strong> (<em>think underlying meaning of the data that is independent of physical layout</em>).</p>
 <section id="dataset-structure" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="dataset-structure"><span class="header-section-number">2.1</span> Dataset structure</h2>
 <p><strong>Dataset structure</strong> refers to the “physical layout” of a dataset.</p>
@@ -248,7 +247,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>A <strong>cell</strong> is the intersection of one column and one row (think cells in Microsoft Excel or Google sheets)</li>
 </ul>
 <p>There are many alternative data structures to present the same underlying data.</p>
-<p><br> <strong>Example</strong>: 2 different ways to structure the same data (rows and columns are transposed)</p>
+<p><br> <strong>Example</strong>: Three ways to structure the same data</p>
+<p>In Structures A and B, the names and treatments swap roles as row and column labels.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -304,6 +304,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">treatment_b</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">11</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover caption-top table-sm small">
+<caption>Structure C: one row per person and treatment</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">person</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">treatment</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">John Smith</td>
+<td style="text-align: left;">treatment_a</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">John Smith</td>
+<td style="text-align: left;">treatment_b</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jane Doe</td>
+<td style="text-align: left;">treatment_a</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jane Doe</td>
+<td style="text-align: left;">treatment_b</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mary Johnson</td>
+<td style="text-align: left;">treatment_a</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mary Johnson</td>
+<td style="text-align: left;">treatment_b</td>
 <td style="text-align: right;">1</td>
 </tr>
 </tbody>
@@ -542,9 +588,15 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <section id="defining-tidy-data" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="defining-tidy-data"><span class="header-section-number">3.1</span> Defining tidy data</h2>
 <blockquote class="blockquote">
-<p>“<em>Tidy data</em> is a standard way of mapping the <em>meaning</em> of a dataset to its <em>structure</em>.”</p>
+<p>“<em>Tidy data</em> is a standard way of mapping the <em>meaning</em> [data semantics] of a dataset to its <em>structure</em> [physical layout].”</p>
 </blockquote>
 <p><em>Source: Wickham (2014, p.&nbsp;4)</em></p>
+<p>Recall these data semantics definitions</p>
+<ul>
+<li><strong>Value</strong>: A single element within some data structure (e.g., an element of an atomic vector)</li>
+<li><strong>Variables</strong>: “A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units”</li>
+<li><strong>Observations</strong>: “An observation contains all values measured on the same unit (e.g., corporation-year) across attributes (variables)”</li>
+</ul>
 <p><br> <strong>Tidy data</strong> always follow these 3 interrelated rules:</p>
 <ol type="1">
 <li>Each <strong>variable</strong> must have its own <strong>column</strong></li>
@@ -1194,7 +1246,21 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 </div>
 </div>
 </div>
-<p><br> This can be achieved using <code>pivot_longer()</code>:</p>
+<p><br> This can be achieved using <code>pivot_longer()</code>, function arguments:</p>
+<ul>
+<li><code>cols</code>: Columns to pivot into longer format
+<ul>
+<li>variables that already exist</li>
+</ul></li>
+<li><code>names_to</code>: Name of the column to create from the data stored in the column names of <code>data</code>
+<ul>
+<li>variables you create</li>
+</ul></li>
+<li><code>values_to</code>: Name of the column to create from the data stored in cell values
+<ul>
+<li>variables you create</li>
+</ul></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>table4b</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
@@ -1284,6 +1350,20 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 41 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> If we pivot the table as is, we can see the <code>tot_</code> prefixes appearing in the <code>year</code> column:</p>
+<ul>
+<li><code>cols</code>: Columns to pivot into longer format
+<ul>
+<li>variables that already exist</li>
+</ul></li>
+<li><code>names_to</code>: Name of the column to create from the data stored in the column names of <code>data</code>
+<ul>
+<li>variables you create</li>
+</ul></li>
+<li><code>values_to</code>: Name of the column to create from the data stored in cell values
+<ul>
+<li>variables you create</li>
+</ul></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nces_table1 <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
@@ -1307,6 +1387,21 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 194 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> To fix this, we can specify the <code>names_prefix</code> argument in <code>pivot_longer()</code> to match and remove the part of the names that we don’t want to keep:</p>
+<ul>
+<li><code>cols</code>: Columns to pivot into longer format
+<ul>
+<li>variables that already exist</li>
+</ul></li>
+<li><code>names_to</code>: Name of the column to create from the data stored in the column names of <code>data</code>
+<ul>
+<li>variables you create</li>
+</ul></li>
+<li><code>names_prefix</code>: text in the variable names of <code>cols</code> we want to remove</li>
+<li><code>values_to</code>: Name of the column to create from the data stored in cell values
+<ul>
+<li>variables you create</li>
+</ul></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>nces_table1 <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
@@ -1337,7 +1432,7 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <strong>Example</strong>: Pivoting columns by name pattern
 </summary>
 <p><br></p>
-<p>Consider the following example where the columns we want to reshape belongs to multiple variables. As seen, the 4 columns starting with <code>tot_</code> shows total student enrollment while the 4 columns starting with <code>frl_</code> shows number of students on free/reduced lunch:</p>
+<p>In the previous example, all the counts were total enrollment, so we could remove <code>tot_</code> from the column names. Here, the beginning of each name tells us what the count measures. The four columns starting with <code>tot_</code> contain total enrollment. The four starting with <code>frl_</code> contain the number of students eligible for free or reduced-price lunch.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>nces_table2</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 51 × 9</span></span>
@@ -1355,14 +1450,14 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Flor…  2434755  2641555  2668037  2691881  1079009  1479519 1535670   1576379</span></span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 41 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Applying the same approach we used for <code>nces_table1</code> doesn’t give us the structure we want</p>
+<p>Try applying the earlier approach to <code>nces_table2</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>nces_table2 <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>state,                </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">'year'</span>,            </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">'tot_'</span>,        <span class="co"># rename pivoted values by striping the prefix 'tot_'</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">'total_students'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>state,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"tot_"</span>,  <span class="co"># remove tot_ from the start of selected column names</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"total_students"</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 408 × 3</span></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state   year     total_students</span></span>
@@ -1379,83 +1474,99 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Alaska  2010             132104</span></span>
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 398 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><br><br></p>
-<p>The goal is to keep enrollment and lunch data in separate columns and only pivot the years part. To do this, we can provide a character vector (instead of the usual string) for <code>names_to</code> and additionally specify the <code>names_sep</code> argument.</p>
-<p>Here, we copy the full description of the <code>names_to</code> and <code>names_sep</code> arguments from the <code>pivot_longer()</code> helpfile</p>
+<p>The result contains <strong>two rows for California in 2010</strong>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>state</th>
+<th>year</th>
+<th style="text-align: right;">total_students</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>California</td>
+<td><code>"2010"</code></td>
+<td style="text-align: right;">6,169,427</td>
+</tr>
+<tr class="even">
+<td>California</td>
+<td><code>"frl_2010"</code></td>
+<td style="text-align: right;">3,335,885</td>
+</tr>
+</tbody>
+</table>
+<p>Both counts land in <code>total_students</code>. The lunch row still says <code>"frl_2010"</code> in the <code>year</code> column because <code>names_prefix = "tot_"</code> removes only the <code>tot_</code> prefix.</p>
+<p>We want <strong>one row per state and year</strong>, with the two counts side by side. For California in 2010, we want this row.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>state</th>
+<th>year</th>
+<th style="text-align: right;">tot</th>
+<th style="text-align: right;">frl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>California</td>
+<td><code>"2010"</code></td>
+<td style="text-align: right;">6,169,427</td>
+<td style="text-align: right;">3,335,885</td>
+</tr>
+</tbody>
+</table>
+<p>To get the row we want, we use both pieces of each column name.</p>
 <ul>
-<li><code>names_sep</code>: If names_to contains multiple values, these arguments control how the column name is broken up.</li>
-<li><code>names_to</code> A string specifying the name of the column to create from the data stored in the column names of data.
+<li><code>cols = -state</code> keeps <code>state</code> and reshapes the other columns.</li>
+<li><code>names_sep = "_"</code> splits each selected column name at the underscore. For example, <code>frl_2010</code> splits into <code>frl</code> and <code>2010</code>.</li>
+<li><code>names_to = c(".value", "year")</code> gives R <strong>one instruction for each piece, in order</strong>.
 <ul>
-<li>can be a character vector, creating multiple columns, if names_sep or names_pattern is provided. In this case, there are two special values you can take advantage of:
-<ul>
-<li><code>NA</code> will discard that component of the name.</li>
-<li><code>.value</code> indicates that component of the name defines the name of the column containing the cell values, overriding values_to.</li>
-</ul></li>
+<li><code>".value"</code> tells R to use the <strong>first piece as a column name</strong>. The count from <code>frl_2010</code> goes into <code>frl</code>, and the count from <code>tot_2010</code> goes into <code>tot</code>.</li>
+<li><code>"year"</code> tells R to put the <strong>second piece into a column called <code>year</code></strong>. Both counts are for California in <code>"2010"</code>, so they go on the same row.</li>
 </ul></li>
 </ul>
-<p><br><br> How we will use these arguments to reshape <code>nces_table2</code>:</p>
-<ul>
-<li><code>names_sep</code> specifies the separator to use to separate the column names to 2 parts (e.g., the <code>tot</code>/<code>frl</code> measure part and the years part).</li>
-<li><code>names_to</code> Then, we can specify how we want to treat each part inside the <code>names_to</code> vector:
-<ul>
-<li>Use <code>.value</code> to indicate the part that we want to retain as separate columns (this replaces the need for the <code>values_to</code> argument)</li>
-<li>Provide a string to indicate the part to pivot to rows, where the string you provide will become the name of that column (like how we’d normally specify <code>names_to</code>)</li>
-</ul></li>
-</ul>
+<p>In the previous example, <code>values_to</code> gave R one name for the column of counts. Here, the old headers supply the two names, <code>tot</code> and <code>frl</code>.</p>
+<p>Take another look at the original layout of <code>nces_table2</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>nces_table2 <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="at">n=</span><span class="dv">5</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 9</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state  tot_2000 tot_2010 tot_2011 tot_2012 frl_2000 frl_2010 frl_2011 frl_2012</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Alaba…   728351   730427   731556   740475   335143   402386  420447    429604</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Alaska   105333   132104   131166   131483    32468    50701   53238     53082</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Arizo…   877696  1067210  1024454   990378   274277   482044  511885    514193</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Arkan…   449959   482114   483114   486157   205058   291608  294324    298573</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Calif…  6050753  6169427  6202862  6178788  2820611  3335885 3353964.  3478407</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>nces_table2 <span class="sc">%&gt;%</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>state,                   <span class="co"># pivot all columns except `state`</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">'_'</span>,                  <span class="co"># use '_' as column name separator    </span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">'.value'</span>, <span class="st">'year'</span>)  <span class="co"># keep `tot` &amp; `frl` as separate columns, pivot year values</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 204 × 4</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state   year      tot    frl</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Alabama 2000   728351 335143</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Alabama 2010   730427 402386</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Alabama 2011   731556 420447</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Alabama 2012   740475 429604</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Alaska  2000   105333  32468</span></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Alaska  2010   132104  50701</span></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Alaska  2011   131166  53238</span></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Alaska  2012   131483  53082</span></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Arizona 2000   877696 274277</span></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Arizona 2010  1067210 482044</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 194 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>nces_table2</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 51 × 9</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state tot_2000 tot_2010 tot_2011 tot_2012 frl_2000 frl_2010 frl_2011 frl_2012</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Alab…   728351   730427   731556   740475   335143   402386  420447    429604</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Alas…   105333   132104   131166   131483    32468    50701   53238     53082</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Ariz…   877696  1067210  1024454   990378   274277   482044  511885    514193</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Arka…   449959   482114   483114   486157   205058   291608  294324    298573</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Cali…  6050753  6169427  6202862  6178788  2820611  3335885 3353964.  3478407</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Colo…   724349   842864   853610   863121   195148   336426  348896    358876</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Conn…   562179   552919   543883   549295   143030   190554  194339    201085</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Dela…   114676   128342   128470   127791    37766    61564   62774     66413</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Dist…    68380    71263    72329    75411    47839    52027   45199     46416</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Flor…  2434755  2641555  2668037  2691881  1079009  1479519 1535670   1576379</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 41 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><br> Note the difference if we used <code>.value</code> as the second element in <code>names_to</code>:</p>
+<p><strong>Before running the code</strong>, which row and which column would California’s <code>frl_2011</code> count go into?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>nces_table2 <span class="sc">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>state,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">'measure'</span>, <span class="st">'.value'</span>),  <span class="co"># pivot `tot`/`frl`, keep years as separate columns</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">'_'</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"year"</span>)</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 102 × 6</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state      measure  `2000`  `2010`   `2011`  `2012`</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Alabama    tot      728351  730427  731556   740475</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Alabama    frl      335143  402386  420447   429604</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Alaska     tot      105333  132104  131166   131483</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Alaska     frl       32468   50701   53238    53082</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Arizona    tot      877696 1067210 1024454   990378</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Arizona    frl      274277  482044  511885   514193</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Arkansas   tot      449959  482114  483114   486157</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Arkansas   frl      205058  291608  294324   298573</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 California tot     6050753 6169427 6202862  6178788</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 California frl     2820611 3335885 3353964. 3478407</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 92 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 204 × 4</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state   year      tot    frl</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Alabama 2000   728351 335143</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Alabama 2010   730427 402386</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Alabama 2011   731556 420447</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Alabama 2012   740475 429604</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Alaska  2000   105333  32468</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Alaska  2010   132104  50701</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Alaska  2011   131166  53238</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Alaska  2012   131483  53082</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Arizona 2000   877696 274277</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Arizona 2010  1067210 482044</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 194 more rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </details>
 <p><br> <strong>Practical example</strong> of using the <code>pivot_longer()</code> function <a href="#appendix">in the Appendix</a></p>
@@ -1476,8 +1587,8 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 <li>Arguments:
 <ul>
 <li><code>data</code>: Dataframe to pivot</li>
-<li><code>names_from</code>: Column(s) to get the name of the output column</li>
-<li><code>values_from</code>: Column(s) to get the cell values from</li>
+<li><code>names_from</code>: Column(s) to get the name of the output column (variable that exists)</li>
+<li><code>values_from</code>: Column(s) to get the cell values from (valuable that exists)</li>
 </ul></li>
 </ul>
 <p><br> <strong>Example</strong>: Tidying <code>table2</code> (reshaping long to wide)</p>

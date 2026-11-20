@@ -47,10 +47,9 @@ library(package = labelled)
 
 **Load datasets:**
 
-We will use public-use data from the *National Center for Education Statistics (NCES) Educational Longitudinal Survey (ELS)* of 2002:
+We will be working with the *National Center for Education Statistics (NCES)* Digest of Education Statistics Table 204.10
 
--   Recall from the lecture on ggplot, this data follows 10th graders from 2002 until 2012
--   We will be working with the NCES Digest Table 204.10, which represents the number and percentage of public school students eligible for free or reduced lunch by state for the years 2000, 2010, 2011, and 2012.
+- shows the number and percentage of public school students eligible for free or reduced lunch by state for the years 2000, 2010, 2011, and 2012.
 
 ```{r}
 # NCES Digest Table 204.10
@@ -105,7 +104,7 @@ table3
 
 Before we define "tidy data", we will spend significant time defining and discussing some core terms/concepts about datasets. This discussion draws from the 2014 article [Tidy Data](https://www.jstatsoft.org/article/view/v059i10) by Hadley Wickham.
 
-Wickham (2014) distinguishes between **data structure** (*layout*) and **data semantics** (*concepts*).
+Wickham (2014) distinguishes between **data structure** (*layout*) and **data semantics** (*think underlying meaning of the data that is independent of physical layout*).
 
 ## Dataset structure
 
@@ -116,7 +115,9 @@ Wickham (2014) distinguishes between **data structure** (*layout*) and **data se
 
 There are many alternative data structures to present the same underlying data.
 
-<br> **Example**: 2 different ways to structure the same data (rows and columns are transposed)
+<br> **Example**: Three ways to structure the same data
+
+In Structures A and B, the names and treatments swap roles as row and column labels.
 
 ```{r, echo=FALSE, results='hide', message=FALSE}
 library(kableExtra)
@@ -135,12 +136,28 @@ structure_b <- tibble(
   `Jane Doe` = c(16, 11),
   `Mary Johnson` = c(3, 1)
 )
+
+# Create structure c: one row per person and treatment
+structure_c <- structure_a %>%
+  rename(person = name) %>%
+  pivot_longer(
+    cols = c(treatment_a, treatment_b),
+    names_to = "treatment",
+    values_to = "result"
+  )
 ```
 
 ```{r, echo=FALSE}
 kable(structure_a, caption = 'Structure A: treatment as columns, names as rows', table.attr = "style='min-width:40%;'") %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
 
 kable(structure_b, caption = 'Structure B: treatment as rows, names as columns') %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
+
+kable(x = structure_c, caption = "Structure C: one row per person and treatment") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "responsive"),
+    full_width = FALSE,
+    position = "left"
+  )
 ```
 
 ## Dataset semantics
@@ -296,9 +313,15 @@ ipeds_hc_temp %>% # start with data frame object ipeds_hc_temp
 
 ## Defining tidy data
 
-> "*Tidy data* is a standard way of mapping the *meaning* of a dataset to its *structure*."
+> "*Tidy data* is a standard way of mapping the *meaning* [data semantics] of a dataset to its *structure* [physical layout]."
 
 *Source: Wickham (2014, p. 4)*
+
+Recall these data semantics definitions
+
+-   **Value**: A single element within some data structure (e.g., an element of an atomic vector)
+-   **Variables**: "A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units"
+-   **Observations**: "An observation contains all values measured on the same unit (e.g., corporation-year) across attributes (variables)"
 
 <br> **Tidy data** always follow these 3 interrelated rules:
 
@@ -460,7 +483,14 @@ kable(table4b) %>% kable_styling(bootstrap_options = c("striped", "hover", "resp
 kable(table1 %>% select(country, year, population)) %>% kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "center")
 ```
 
-<br> This can be achieved using `pivot_longer()`:
+<br> This can be achieved using `pivot_longer()`, function arguments:
+
+-   `cols`: Columns to pivot into longer format
+    - variables that already exist
+-   `names_to`: Name of the column to create from the data stored in the column names of `data`
+    - variables you create
+-   `values_to`: Name of the column to create from the data stored in cell values
+    - variables you create
 
 ```{r}
 table4b
@@ -530,6 +560,12 @@ nces_table1
 
 <br> If we pivot the table as is, we can see the `tot_` prefixes appearing in the `year` column:
 
+-   `cols`: Columns to pivot into longer format
+    - variables that already exist
+-   `names_to`: Name of the column to create from the data stored in the column names of `data`
+    - variables you create
+-   `values_to`: Name of the column to create from the data stored in cell values
+    - variables you create
 ```{r}
 nces_table1 %>%
   pivot_longer(
@@ -540,6 +576,14 @@ nces_table1 %>%
 ```
 
 <br> To fix this, we can specify the `names_prefix` argument in `pivot_longer()` to match and remove the part of the names that we don't want to keep:
+
+-   `cols`: Columns to pivot into longer format
+    - variables that already exist
+-   `names_to`: Name of the column to create from the data stored in the column names of `data`
+    - variables you create
+-   `names_prefix`: text in the variable names of `cols` we want to remove
+-   `values_to`: Name of the column to create from the data stored in cell values
+    - variables you create
 
 ```{r}
 nces_table1 %>%
@@ -566,64 +610,64 @@ nces_table2 <- nces_table %>%
   select(state, tot_2000, tot_2010, tot_2011, tot_2012, frl_2000, frl_2010, frl_2011, frl_2012)
 ```
 
-Consider the following example where the columns we want to reshape belongs to multiple variables. As seen, the 4 columns starting with `tot_` shows total student enrollment while the 4 columns starting with `frl_` shows number of students on free/reduced lunch:
+In the previous example, all the counts were total enrollment, so we could remove `tot_` from the column names. Here, the beginning of each name tells us what the count measures. The four columns starting with `tot_` contain total enrollment. The four starting with `frl_` contain the number of students eligible for free or reduced-price lunch.
 
 ```{r}
 nces_table2
 ```
 
-Applying the same approach we used for `nces_table1` doesn't give us the structure we want
-
-```{r}
-nces_table2 %>%
-  pivot_longer(
-    cols = -state,                
-    names_to = 'year',            
-    names_prefix = 'tot_',        # rename pivoted values by striping the prefix 'tot_'
-    values_to = 'total_students'
-  )
-```
-
-<br><br>
-
-The goal is to keep enrollment and lunch data in separate columns and only pivot the years part. To do this, we can provide a character vector (instead of the usual string) for `names_to` and additionally specify the `names_sep` argument.
-
-Here, we copy the full description of the `names_to` and `names_sep` arguments from the `pivot_longer()` helpfile
-
--   `names_sep`: If names_to contains multiple values, these arguments control how the column name is broken up.
--   `names_to` A string specifying the name of the column to create from the data stored in the column names of data.
-    -   can be a character vector, creating multiple columns, if names_sep or names_pattern is provided. In this case, there are two special values you can take advantage of:
-        -   `NA` will discard that component of the name.
-        -   `.value` indicates that component of the name defines the name of the column containing the cell values, overriding values_to.
-
-<br><br> How we will use these arguments to reshape `nces_table2`:
-
--   `names_sep` specifies the separator to use to separate the column names to 2 parts (e.g., the `tot`/`frl` measure part and the years part).
--   `names_to` Then, we can specify how we want to treat each part inside the `names_to` vector:
-    -   Use `.value` to indicate the part that we want to retain as separate columns (this replaces the need for the `values_to` argument)
-    -   Provide a string to indicate the part to pivot to rows, where the string you provide will become the name of that column (like how we'd normally specify `names_to`)
-
-```{r}
-nces_table2 %>% head(n=5)
-
-nces_table2 %>%
-  pivot_longer(
-    cols = -state,                   # pivot all columns except `state`
-    names_sep = '_',                  # use '_' as column name separator    
-    names_to = c('.value', 'year')  # keep `tot` & `frl` as separate columns, pivot year values
-  )
-```
-
-<br> Note the difference if we used `.value` as the second element in `names_to`:
+Try applying the earlier approach to `nces_table2`.
 
 ```{r}
 nces_table2 %>%
   pivot_longer(
     cols = -state,
-    names_to = c('measure', '.value'),  # pivot `tot`/`frl`, keep years as separate columns
-    names_sep = '_'
+    names_to = "year",
+    names_prefix = "tot_",  # remove tot_ from the start of selected column names
+    values_to = "total_students"
   )
+```
 
+The result contains **two rows for California in 2010**.
+
+| state | year | total_students |
+| --- | --- | ---: |
+| California | `"2010"` | 6,169,427 |
+| California | `"frl_2010"` | 3,335,885 |
+
+Both counts land in `total_students`. The lunch row still says `"frl_2010"` in the `year` column because `names_prefix = "tot_"` removes only the `tot_` prefix.
+
+We want **one row per state and year**, with the two counts side by side. For California in 2010, we want this row.
+
+| state | year | tot | frl |
+| --- | --- | ---: | ---: |
+| California | `"2010"` | 6,169,427 | 3,335,885 |
+
+To get the row we want, we use both pieces of each column name.
+
+-   `cols = -state` keeps `state` and reshapes the other columns.
+-   `names_sep = "_"` splits each selected column name at the underscore. For example, `frl_2010` splits into `frl` and `2010`.
+-   `names_to = c(".value", "year")` gives R **one instruction for each piece, in order**.
+    -   `".value"` tells R to use the **first piece as a column name**. The count from `frl_2010` goes into `frl`, and the count from `tot_2010` goes into `tot`.
+    -   `"year"` tells R to put the **second piece into a column called `year`**. Both counts are for California in `"2010"`, so they go on the same row.
+
+In the previous example, `values_to` gave R one name for the column of counts. Here, the old headers supply the two names, `tot` and `frl`.
+
+Take another look at the original layout of `nces_table2`.
+
+```{r}
+nces_table2
+```
+
+**Before running the code**, which row and which column would California’s `frl_2011` count go into?
+
+```{r}
+nces_table2 %>%
+  pivot_longer(
+    cols = -state,
+    names_sep = "_",
+    names_to = c(".value", "year")
+  )
 ```
 
 </details>
@@ -646,8 +690,8 @@ pivot_wider(data = df_name, id_cols = NULL, names_from = name,
 -   Function: "widens" data, increasing the number of columns and decreasing the number of rows
 -   Arguments:
     -   `data`: Dataframe to pivot
-    -   `names_from`: Column(s) to get the name of the output column
-    -   `values_from`: Column(s) to get the cell values from
+    -   `names_from`: Column(s) to get the name of the output column (variable that exists)
+    -   `values_from`: Column(s) to get the cell values from (valuable that exists)
 
 <br> **Example**: Tidying `table2` (reshaping long to wide)
 
